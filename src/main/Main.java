@@ -1,4 +1,4 @@
-package sample;
+package main;
 
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -21,6 +21,6 @@ public class Main extends Application {
     }
     public static void main(String[] args) {
         launch(args);
-        System.out.println(javafx.scene.text.Font.getFamilies());
+        //System.out.println(javafx.scene.text.Font.getFamilies());
     }
 }
