@@ -1,6 +1,8 @@
 package main;
 
+import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
+import main.recipeModel.Unit;
 import main.userModel.User;
 
 import java.util.LinkedList;
@@ -9,8 +11,8 @@ import java.util.List;
 public class Core {
     private List<User> users;
     private List<Recipe> recipes;
-    // TODO private List<Ingredient> ingredients;
-    // TODO private List<Unit> units;
+    private List<Ingredient> ingredients;
+    private List<Unit> units;
 
     public Core() {
         users = new LinkedList<>();
@@ -22,8 +24,8 @@ public class Core {
     public void deleteAccount(User account) {
         users.remove(account);
     }
-    public void addRecipe() {
-        recipes.add(new Recipe()); // TODO
+    public void addRecipe(String name, String prepareMethod, boolean accessibility) {
+        recipes.add(new Recipe(name, prepareMethod, accessibility));
     }
     public void deleteRecipe(Recipe recipe) {
         recipes.remove(recipe);
