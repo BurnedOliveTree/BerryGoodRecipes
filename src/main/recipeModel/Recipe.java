@@ -1,12 +1,11 @@
 package main.recipeModel;
-
+import main.userModel.User;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class Recipe {
-    // @TODO private User
+    private User author;
     private int cost;
     private String name;
     private boolean accessibility; // enum in future?
@@ -14,15 +13,16 @@ public class Recipe {
     private String prepareMethod;
     private int prepareTime; // in minutes
     // @TODO private LinkList<Opinion> opinions = new LinkList<Opinion>();
-    // @TODO private ArrayList<Triplet<String, int, Unit>> ingredientList = new ArrayList<Triplet<String, int, Unit>>()
+    private ArrayList<Ingredient> ingredientList;
     private double avgRate;
 
 
-    public Recipe(String name, String prepareMethod, boolean accessibility) {
+    public Recipe(String name, User author, String prepareMethod, boolean accessibility,  ArrayList<Ingredient> ingredientList) {
         this.name = name;
+        this.author = author;
         this.accessibility = accessibility;
         this.prepareMethod = prepareMethod;
-        // @TODO this.ingredientList = ingredientList;
+        this.ingredientList = ingredientList;
     }
 
 //    public void addOpinion(String opinionText, int rate, User user)
@@ -43,20 +43,39 @@ public class Recipe {
         this.prepareTime = prepareTime;
     }
 
-//    public void editIngredientList(int quantity, String ingredient)
-//    {
-//        Iterator<Triplet<String, int, Unit>> = this.ingredientList.iterator();
-//        while(iter.hasNext())
-//        {
-//
-//        }
-//    }
+    private Ingredient findInIngredientList(String ingredientName)
+    {
+        for (Ingredient ingredient : this.ingredientList) {
+            if (ingredientName.equals(ingredient.getName()))
+                return ingredient;
+        }
+        return null;
+    }
+
+    public void editIngredientQuantity(int quantity, String ingredientName)
+    {
+        Ingredient ingredient = findInIngredientList(ingredientName);
+        if (quantity > 0 && ingredient != null)
+            ingredient.setQuantity(quantity);
+        else
+            throw new IllegalArgumentException("Value must be greater than 0");
+    }
+
+    public void editIngredientUnit(Unit unit, String ingredientName)
+    {
+        Ingredient ingredient = findInIngredientList(ingredientName);
+        // @TODO calculate method from unit
+    }
+
+
 
     public void saveToFile(String filename) {
         try {
             FileWriter file = new FileWriter(filename);
             file.write(this.name + "\nIngredients:\n");
-            // @TODO ingredientList
+            for (Ingredient ingredient: this.ingredientList){
+                file.write(ingredient.getQuantity() + ingredient.getUnit().toString() + ingredient.getName());
+            }
             file.write("\nPreparation method:\n" + this.prepareMethod);
             file.write("Additional information:" );
             file.write("Cost: " + this.cost);
