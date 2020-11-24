@@ -5,6 +5,7 @@ import main.recipeModel.Recipe;
 import main.recipeModel.Unit;
 import main.userModel.User;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,8 +25,8 @@ public class Core {
     public void deleteAccount(User account) {
         users.remove(account);
     }
-    public void addRecipe(String name, String prepareMethod, boolean accessibility) {
-        recipes.add(new Recipe(name, prepareMethod, accessibility));
+    public void addRecipe(String name, User author, String prepareMethod, boolean accessibility,  ArrayList<Ingredient> ingredientList) {
+        recipes.add(new Recipe(name, author, prepareMethod, accessibility, ingredientList));
     }
     public void deleteRecipe(Recipe recipe) {
         recipes.remove(recipe);
