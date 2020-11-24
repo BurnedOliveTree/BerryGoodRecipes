@@ -1,6 +1,7 @@
 package main.userModel;
 
 import main.recipeModel.Recipe;
+import main.recipeModel.Unit;
 
 import java.util.List;
 import java.util.LinkedList;
@@ -51,7 +52,10 @@ public class User {
     public void unfollowUser(User oldFollowedUser) {
         followed.remove(oldFollowedUser);
     }
-    public void setShoppingList() {
-        // TODO shoppingList.edit();
+    public void addToShoppingList(Integer quantity, Unit unit, String ingredientName) {
+        shoppingList.addToShoppingList(quantity, unit, ingredientName); // basic unit is always the same
+    }
+    public void removeFromShoppingList(Integer quantity, String ingredientName) {
+        shoppingList.removeFromShoppingList(quantity, ingredientName);
     }
 }
