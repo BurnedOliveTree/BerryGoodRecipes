@@ -10,3 +10,9 @@
     -fx-mid-text-color: -fx-light-text-color ;
     -fx-dark-text-color: -fx-light-text-color ;
 }
+.pane {
+    -fx-background-color: -fx-control-inner-background;
+}
+.scroll-bar:vertical > .thumb {
+    -fx-background-color: #0ae;
+}

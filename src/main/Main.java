@@ -3,16 +3,23 @@ package main;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
-import javafx.scene.control.TextField;
+
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+
+import javafx.scene.layout.GridPane;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Button;
+import javafx.geometry.Insets;
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import main.controller.MainPane;
 
 import javafx.scene.Group;
 import javafx.scene.text.Text;
 import javafx.scene.text.Font;
-
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
 import java.io.IOException;
 
@@ -38,13 +45,16 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         primaryStage.setTitle("BerryGood Recipes");
-        Text text1 = new Text(300, 230, "Miłego dnia :D");
-        text1.setFill(Color.rgb(240, 240, 240));
-        text1.setFont(Font.font(java.awt.Font.SERIF, 20));
-        Group root2 = new Group(text1);
-        primaryStage.setScene(new Scene(root2, 640, 480, Color.web("#111")));
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(this.getClass().getResource("/resources/mainPage.fxml"));
+        Pane pane = loader.load();
+        Scene scene = new Scene(pane);
+        scene.getStylesheets().add(getClass().getResource("../resources/darkTheme.css").toExternalForm());
+        primaryStage.setScene(scene);
         primaryStage.show();
 
+
+        MainPane controller = loader.getController();
         loginFXML(new Stage());
     }
     public static void main(String[] args) {
