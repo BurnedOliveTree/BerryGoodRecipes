@@ -20,9 +20,9 @@ import java.io.IOException;
 
 public class Main extends Application {
     public void FXMLogin(Stage stage) throws IOException {
-        Parent loginWindow = FXMLLoader.load(getClass().getResource("login.fxml"));
+        Parent loginWindow = FXMLLoader.load(getClass().getResource("../resources/login.fxml"));
         Scene scene = new Scene(loginWindow);
-        scene.getStylesheets().add(getClass().getResource("darkTheme.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("../resources/darkTheme.css").toExternalForm());
         stage.setTitle("Login");
         stage.setScene(scene);
         stage.show();
