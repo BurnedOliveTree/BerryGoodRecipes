@@ -12,3 +12,6 @@
 .pane {
     -fx-background-color: -fx-control-inner-background;
 }
+.scroll-bar:vertical > .thumb {
+    -fx-background-color: #0ae;
+}
