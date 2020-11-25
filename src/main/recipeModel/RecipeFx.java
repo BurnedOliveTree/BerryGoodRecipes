@@ -1,23 +1,62 @@
 package main.recipeModel;
 
-import javafx.application.Application;
-import javafx.scene.Group;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class RecipeFx extends Application {
 
-    @Override
-    public void start(Stage stage) throws Exception {
-        stage.setTitle("BerryGood Recipes");
-        Text text1 = new Text(300, 230, "Miłego dnia :D");
-        text1.setFill(Color.rgb(100, 20, 0));
-        text1.setFont(Font.font(java.awt.Font.SERIF, 20));
-        Group root2 = new Group(text1);
-        stage.setScene(new Scene(root2, 640, 480, Color.web("#111")));
-        stage.show();
+import javafx.event.EventHandler;
+import java.io.IOException;
+
+public class RecipeFx {
+    private Recipe recipe;
+    @FXML
+    public Button timepieceButton;
+    public Button scaleButton;
+    public TextField numPortionField;
+    public ListView ingredientListView;
+    public Label titleLabel;
+    public Label timeLabel;
+    public Label costLabel;
+    public Button shoppingListButton;
+    public Button exitButton;
+    public Label descLabel;
+
+    public RecipeFx(Recipe recipe) {
+        this.recipe = recipe;
     }
+
+    @FXML
+    void initialize() {
+        descLabel.setText(this.recipe.getPrepareMethod());
+        titleLabel.setText(this.recipe.getName());
+        timeLabel.setText(String.valueOf(this.recipe.getPrepareTime()));
+        costLabel.setText(String.valueOf(this.recipe.getCost()));
+        numPortionField.setText(String.valueOf(this.recipe.getPortionNumber()));
+        
+        EventHandler<ActionEvent> handler = new EventHandler<>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    Parent mainPage = FXMLLoader.load(getClass().getResource("/resources/mainPage.fxml"));
+                    Scene mainPageScene = new Scene(mainPage);
+                    Stage stage = (Stage) exitButton.getScene().getWindow();
+                    mainPageScene.getStylesheets().add(getClass().getResource("/resources/darkTheme.css").toExternalForm());
+                    stage.setScene(mainPageScene);
+                    stage.show();
+                } catch (IOException e) {
+                    System.err.println(String.format("Error: %s", e.getMessage()));
+                }
+            }
+        };
+        exitButton.addEventHandler(ActionEvent.ACTION, handler);
+    }
+
 }

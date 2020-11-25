@@ -97,5 +97,39 @@ public class Recipe {
         // @TODO with Opinion class
     }
 
+    public User getAuthor() {
+        return author;
+    }
 
+    public int getCost() {
+        return cost;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isAccessibility() {
+        return accessibility;
+    }
+
+    public int getPortionNumber() {
+        return portionNumber;
+    }
+
+    public String getPrepareMethod() {
+        return prepareMethod;
+    }
+
+    public int getPrepareTime() {
+        return prepareTime;
+    }
+
+    public ArrayList<Ingredient> getIngredientList() {
+        return ingredientList;
+    }
+
+    public double getAvgRate() {
+        return avgRate;
+    }
 }

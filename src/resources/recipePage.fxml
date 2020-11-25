@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button fx:id="exitButton" layoutX="564.0" layoutY="14.0" mnemonicParsing="false" prefHeight="8.0" prefWidth="20.0" text="x" />
+      <Button fx:id="timepieceButton" layoutX="495.0" layoutY="14.0" mnemonicParsing="false" text="T" />
+      <Button fx:id="scaleButton" layoutX="460.0" layoutY="14.0" mnemonicParsing="false" text="S" />
+      <Label fx:id="descLabel" layoutX="193.0" layoutY="92.0" prefHeight="265.0" prefWidth="360.0" style="-fx-border-color: black;" />
+      <TextField fx:id="numPortionField" layoutX="69.0" layoutY="58.0" prefHeight="3.0" prefWidth="48.0" />
+      <Label layoutX="117.0" layoutY="62.0" text="Portions" />
+      <Button fx:id="shoppingListButton" layoutX="428.0" layoutY="14.0" mnemonicParsing="false" text="L" />
+      <ListView fx:id="ingredientListView" layoutX="18.0" layoutY="92.0" prefHeight="265.0" prefWidth="149.0" />
+      <Label fx:id="titleLabel" layoutX="22.0" layoutY="16.0" prefHeight="32.0" prefWidth="190.0" />
+      <Label layoutX="228.0" layoutY="24.0" text="Time:" />
+      <Label layoutX="228.0" layoutY="40.0" text="Cost:" />
+      <Label fx:id="timeLabel" layoutX="262.0" layoutY="24.0" prefHeight="17.0" prefWidth="76.0" />
+      <Label fx:id="costLabel" layoutX="262.0" layoutY="40.0" prefHeight="17.0" prefWidth="76.0" />
+   </children>
+</Pane>
