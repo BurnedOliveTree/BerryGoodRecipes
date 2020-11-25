@@ -14,7 +14,19 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Button;
 import javafx.geometry.Insets;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import java.io.IOException;
+
 public class Main extends Application {
+    public void FXMLogin(Stage stage) throws IOException {
+        Parent loginWindow = FXMLLoader.load(getClass().getResource("login.fxml"));
+        Scene scene = new Scene(loginWindow);
+        scene.getStylesheets().add(getClass().getResource("darkTheme.css").toExternalForm());
+        stage.setTitle("Login");
+        stage.setScene(scene);
+        stage.show();
+    }
     public void login(Stage loginStage) {
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(10, 10, 10, 10));
@@ -42,16 +54,16 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws IOException {
         primaryStage.setTitle("BerryGood Recipes");
         Text text1 = new Text(300, 230, "Miłego dnia :D");
         text1.setFill(Color.rgb(240, 240, 240));
         text1.setFont(Font.font(java.awt.Font.SERIF, 20));
         Group root2 = new Group(text1);
-        primaryStage.setScene(new Scene(root2, 640, 480, Color.rgb(16, 16, 16)));
+        primaryStage.setScene(new Scene(root2, 640, 480, Color.web("#111")));
         primaryStage.show();
 
-        login(new Stage());
+        FXMLogin(new Stage());
     }
     public static void main(String[] args) {
         launch(args);
