@@ -1,14 +1,12 @@
 .root {
     -fx-base: #111;
+    -fx-background-color: -fx-base;
     -fx-accent: #eee ;
-    -fx-control-inner-background: #333 ;
     -fx-focus-color: -fx-accent;
+    -fx-control-inner-background: #333 ;
     -fx-default-button: -fx-control-inner-background ;
 
     -fx-light-text-color: #0ae ;
     -fx-mid-text-color: -fx-light-text-color ;
     -fx-dark-text-color: -fx-light-text-color ;
-}
-.pane {
-    -fx-background-color: -fx-control-inner-background;
 }
