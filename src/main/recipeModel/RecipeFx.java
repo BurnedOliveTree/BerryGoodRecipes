@@ -1,23 +1,26 @@
 package main.recipeModel;
 
-import javafx.application.Application;
-import javafx.scene.Group;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
-public class RecipeFx extends Application {
+import java.io.IOException;
 
-    @Override
-    public void start(Stage stage) throws Exception {
-        stage.setTitle("BerryGood Recipes");
-        Text text1 = new Text(300, 230, "Miłego dnia :D");
-        text1.setFill(Color.rgb(100, 20, 0));
-        text1.setFont(Font.font(java.awt.Font.SERIF, 20));
-        Group root2 = new Group(text1);
-        stage.setScene(new Scene(root2, 640, 480, Color.web("#111")));
+public class RecipeFx {
+    @FXML
+    public Button exitButton;
+    @FXML
+    void initialize() {}
+    @FXML
+    public void onExitButton() throws IOException {
+        Parent mainPage = FXMLLoader.load(getClass().getResource("/resources/mainPage.fxml"));
+        Scene mainPageScene = new Scene(mainPage);
+        Stage stage = (Stage) exitButton.getScene().getWindow();
+        mainPageScene.getStylesheets().add(getClass().getResource("/resources/darkTheme.css").toExternalForm());
+        stage.setScene(mainPageScene);
         stage.show();
     }
 }

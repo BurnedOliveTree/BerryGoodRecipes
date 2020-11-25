@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.Pane?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.recipeModel.RecipeFx">
+   <children>
+      <Button fx:id="exitButton" layoutX="564.0" layoutY="14.0" mnemonicParsing="false" onAction="#onExitButton" prefHeight="8.0" prefWidth="20.0" text="x" />
+   </children>
+</Pane>
