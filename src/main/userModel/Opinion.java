@@ -1,8 +1,6 @@
 package main.userModel;
 
 
-
-
 public class Opinion {
     User user;
     int score;
