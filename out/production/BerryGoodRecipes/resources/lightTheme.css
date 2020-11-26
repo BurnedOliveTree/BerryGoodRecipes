@@ -1,9 +1,9 @@
 .root {
-    -fx-base: #222;
+    -fx-base: #ddd;
     -fx-background-color: -fx-base;
-    -fx-accent: #eee ;
+    -fx-accent: #111 ;
     -fx-focus-color: -fx-accent;
-    -fx-control-inner-background: #444 ;
+    -fx-control-inner-background: #bbb ;
     -fx-default-button: -fx-control-inner-background ;
 
     -fx-light-text-color: #0ae ;

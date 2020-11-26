@@ -1,18 +1,15 @@
 .root {
-    -fx-base: #F7D4BA;
+    -fx-base: #222;
     -fx-background-color: -fx-base;
-    -fx-accent: #7A695C ;
+    -fx-accent: #eee ;
     -fx-focus-color: -fx-accent;
-    -fx-control-inner-background: #AB9380;
+    -fx-control-inner-background: #444 ;
     -fx-default-button: -fx-control-inner-background ;
 
-    -fx-light-text-color: #3B3938;
+    -fx-light-text-color: #0ae ;
     -fx-mid-text-color: -fx-light-text-color ;
     -fx-dark-text-color: -fx-light-text-color ;
 }
-.pane {
-    -fx-background-color: -fx-control-inner-background;
-}
 .scroll-bar:vertical > .thumb {
-    -fx-background-color:#B95306;
+    -fx-background-color: #0ae;
 }
