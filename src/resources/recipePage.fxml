@@ -12,7 +12,7 @@
       <Button fx:id="exitButton" layoutX="663.0" layoutY="11.0" mnemonicParsing="false" prefHeight="8.0" prefWidth="20.0" text="x" />
       <Button fx:id="timepieceButton" layoutX="584.0" layoutY="11.0" mnemonicParsing="false" text="T" />
       <Button fx:id="scaleButton" layoutX="549.0" layoutY="11.0" mnemonicParsing="false" text="S" />
-      <Label fx:id="descLabel" layoutX="266.0" layoutY="125.0" prefHeight="316.0" prefWidth="369.0" style="-fx-border-color: black;" />
+      <Label fx:id="descLabel" layoutX="266.0" layoutY="125.0" prefHeight="265.0" prefWidth="369.0" style="-fx-border-color: black;" />
       <TextField fx:id="numPortionField" layoutX="98.0" layoutY="96.0" prefHeight="3.0" prefWidth="48.0" />
       <Label layoutX="157.0" layoutY="100.0" text="Portions" />
       <Button fx:id="shoppingListButton" layoutX="517.0" layoutY="11.0" mnemonicParsing="false" text="L" />
@@ -27,5 +27,6 @@
       <Label fx:id="costLabel" layoutX="104.0" layoutY="420.0" prefHeight="17.0" prefWidth="76.0" />
       <Label layoutX="266.0" layoutY="100.0" text="Description:" />
       <Button fx:id="favoriteButton" layoutX="480.0" layoutY="11.0" mnemonicParsing="false" text="U" />
+      <Button fx:id="commentButton" layoutX="266.0" layoutY="401.0" mnemonicParsing="false" text="Comment" />
    </children>
 </Pane>

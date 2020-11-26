@@ -30,7 +30,7 @@ public class MainPane {
 //        stage.close();
         try {
             FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
-            RecipeFx controller = new RecipeFx(new Recipe("Placki", new User(3, "Karolina", "1234"), "Zrób farsz i nagrzej patelnie", true, new ArrayList<Ingredient>(){{add(new Ingredient(200, new Unit(), "Twaróg"));}}));
+            RecipePane controller = new RecipePane(new Recipe("Placki", new User(3, "Karolina", "1234"), "Zrób farsz i nagrzej patelnie", true, new ArrayList<Ingredient>(){{add(new Ingredient(200, new Unit(), "Twaróg"));}}));
             loader.setController(controller);
             Parent recipePage = loader.load();
             Scene recipePageScene = new Scene(recipePage);
