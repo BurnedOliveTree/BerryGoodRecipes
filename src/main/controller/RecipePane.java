@@ -11,7 +11,7 @@ import main.recipeModel.Recipe;
 
 import java.io.IOException;
 
-public class RecipeFx {
+public class RecipePane {
     private Recipe recipe;
     @FXML
     public TextField numPortionField;
@@ -25,8 +25,9 @@ public class RecipeFx {
     public Button timepieceButton;
     public Button scaleButton;
     public Button favoriteButton;
+    public Button commentButton;
 
-    public RecipeFx(Recipe recipe) {
+    public RecipePane(Recipe recipe) {
         this.recipe = recipe;
     }
 
@@ -43,6 +44,7 @@ public class RecipeFx {
         shoppingListButton.setOnAction( e->{ onAction(shoppingListButton, "/resources/shoppingListPage.fxml"); });
         timepieceButton.setOnAction( e->{ onAction(timepieceButton, "/resources/timepiecePage.fxml"); });
         favoriteButton.setOnAction( e->{ onAction(favoriteButton, "/resources/favoritePage.fxml"); });
+        commentButton.setOnAction( e->{ onAction(favoriteButton, "/resources/opinionPage.fxml"); });
         for (Ingredient ingredient: this.recipe.getIngredientList()) {
         ingredientListView.getItems().add(String.format("%d %s %s", ingredient.getQuantity(), ingredient.getUnit(), ingredient.getName()));
         ingredientListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
