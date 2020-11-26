@@ -10,7 +10,6 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
-import main.recipeModel.RecipeFx;
 import main.recipeModel.Unit;
 import main.userModel.User;
 
