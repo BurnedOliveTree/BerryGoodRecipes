@@ -1,35 +1,23 @@
 package main;
 
-import javafx.application.Application;
-import javafx.fxml.FXML;
-import javafx.scene.Scene;
-
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
-
-import javafx.scene.layout.GridPane;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Button;
-import javafx.geometry.Insets;
-
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import main.controller.MainPane;
 
-import javafx.scene.Group;
-import javafx.scene.text.Text;
-import javafx.scene.text.Font;
-import javafx.scene.input.MouseEvent;
 import java.io.IOException;
+import javafx.application.Application;
+import javafx.stage.Stage;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 
 public class Main extends Application {
     public TextField usernameField;
     public TextField passwordField;
 
     public void loginFXML(Stage stage) throws IOException {
-        Parent loginWindow = FXMLLoader.load(getClass().getResource("../resources/login.fxml"));
-        Scene scene = new Scene(loginWindow);
+        Scene scene = new Scene(FXMLLoader.load(getClass().getResource("../resources/login.fxml")));
         scene.getStylesheets().add(getClass().getResource("../resources/darkTheme.css").toExternalForm());
         stage.setTitle("Login");
         stage.setScene(scene);
