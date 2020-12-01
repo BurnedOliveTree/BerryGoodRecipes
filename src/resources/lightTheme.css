@@ -6,10 +6,14 @@
     -fx-control-inner-background: #bbb ;
     -fx-default-button: -fx-control-inner-background ;
 
-    -fx-light-text-color: #0ae ;
+    -fx-light-text-color: #47609F ;
     -fx-mid-text-color: -fx-light-text-color ;
     -fx-dark-text-color: -fx-light-text-color ;
 }
 .scroll-bar:vertical > .thumb {
-    -fx-background-color: #0ae;
+    -fx-background-color: -fx-light-text-color;
 }
+.berry-text {
+    -fx-fill: -fx-light-text-color;
+    -fx-font-smoothing-type: lcd;
+ }

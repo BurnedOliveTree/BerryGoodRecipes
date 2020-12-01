@@ -17,7 +17,7 @@ public class Main extends Application {
         loader.setLocation(this.getClass().getResource("/resources/mainPage.fxml"));
         Pane pane = loader.load();
         Scene scene = new Scene(pane);
-        scene.getStylesheets().add(getClass().getResource("../resources/darkTheme.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/resources/darkTheme.css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
 

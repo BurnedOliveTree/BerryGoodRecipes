@@ -5,6 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -13,6 +15,8 @@ import main.recipeModel.Recipe;
 import main.recipeModel.Unit;
 import main.userModel.User;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -20,11 +24,19 @@ public class MainPane {
     @FXML
     public Button recipeLink;
     public Pane recipePane;
+    public ImageView logo;
 
     @FXML
-    void initialize() { recipeLink.setText("Placki"); }
+    void initialize() {
+        recipeLink.setText("Placki");
+        try {
+            logo.setImage(new Image(new FileInputStream("src/resources/raspLogo.png"))); // unnecessary, ultimately there will be berryLogo.png here with a check if light mode is enabled
+        } catch (FileNotFoundException e) {
+            System.err.printf("Error: %s%n", e.getMessage());
+        }
+    }
 
-    @FXML
+        @FXML
     public void onClickButton() {
         // change main Stage Scene to recipe Scene
         try {
