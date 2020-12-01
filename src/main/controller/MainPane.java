@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import main.recipeModel.Ingredient;
@@ -22,12 +23,10 @@ public class MainPane {
     public Pane recipePane;
 
     @FXML
-    void initialize() {recipeLink.setText("Placki");}
+    void initialize() { recipeLink.setText("Placki"); }
     // Change Scene to RecipeScene
     @FXML
-    public void onClickButton(ActionEvent actionEvent){
-//        Stage stage = (Stage) recipeLink.getScene().getWindow();
-//        stage.close();
+    public void onClickButton(ActionEvent actionEvent) {
         try {
             FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
             RecipePane controller = new RecipePane(new Recipe("Placki", new User(3, "Karolina", "1234"), "Zrób farsz i nagrzej patelnie", true, new ArrayList<Ingredient>(){{add(new Ingredient(200, new Unit(), "Twaróg"));}}));
@@ -41,6 +40,23 @@ public class MainPane {
 
 
         } catch (IOException e) {
-            System.err.println(String.format("Error: %s", e.getMessage()));
-        }}
+            System.err.printf("Error: %s%n", e.getMessage());
+        }
+    }
+
+    public void onLogInButtonClick(MouseEvent mouseEvent) {
+        try {
+            mouseEvent.consume();
+            FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/logInWindow.fxml"));
+            loader.setController(new LogInWindow());
+            Scene scene = new Scene(loader.load());
+            scene.getStylesheets().add(getClass().getResource("/resources/darkTheme.css").toExternalForm());
+            Stage stage = new Stage();
+            stage.setTitle("Login");
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            System.err.printf("Error: %s%n", e.getMessage());
+        }
+    }
 }

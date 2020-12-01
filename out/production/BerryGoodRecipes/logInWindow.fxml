@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="120.0" prefWidth="150.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Main">
+<AnchorPane prefHeight="120.0" prefWidth="150.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <GridPane alignment="CENTER" hgap="10.0" layoutY="-1.0" prefHeight="121.0" prefWidth="150.0" vgap="10.0">
         <columnConstraints>
