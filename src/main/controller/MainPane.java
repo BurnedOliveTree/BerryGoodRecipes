@@ -1,6 +1,5 @@
 package main.controller;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -24,12 +23,13 @@ public class MainPane {
 
     @FXML
     void initialize() { recipeLink.setText("Placki"); }
-    // Change Scene to RecipeScene
+
     @FXML
-    public void onClickButton(ActionEvent actionEvent) {
+    public void onClickButton() {
+        // change main Stage Scene to recipe Scene
         try {
             FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
-            RecipePane controller = new RecipePane(new Recipe("Placki", new User(3, "Karolina", "1234"), "Zrób farsz i nagrzej patelnie", true, new ArrayList<Ingredient>(){{add(new Ingredient(200, new Unit(), "Twaróg"));}}));
+            RecipePane controller = new RecipePane(new Recipe("Placki", new User(3, "Karolina", "1234"), "Zrób farsz i nagrzej patelnie", true, new ArrayList<>(){{add(new Ingredient(200, new Unit(), "Twaróg"));}}));
             loader.setController(controller);
             Parent recipePage = loader.load();
             Scene recipePageScene = new Scene(recipePage);
@@ -37,19 +37,16 @@ public class MainPane {
             recipePageScene.getStylesheets().add(getClass().getResource("/resources/darkTheme.css").toExternalForm());
             stage.setScene(recipePageScene);
             stage.show();
-
-
         } catch (IOException e) {
             System.err.printf("Error: %s%n", e.getMessage());
         }
     }
 
     public void onLogInButtonClick(MouseEvent mouseEvent) {
+        // create a new Window with log in
         try {
             mouseEvent.consume();
-            FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/logInWindow.fxml"));
-            loader.setController(new LogInWindow());
-            Scene scene = new Scene(loader.load());
+            Scene scene = new Scene(new FXMLLoader(getClass().getResource("/resources/logInWindow.fxml")).load());
             scene.getStylesheets().add(getClass().getResource("/resources/darkTheme.css").toExternalForm());
             Stage stage = new Stage();
             stage.setTitle("Login");
