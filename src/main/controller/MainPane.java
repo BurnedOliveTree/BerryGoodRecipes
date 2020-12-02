@@ -10,6 +10,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+
+import main.Core;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
 import main.recipeModel.Unit;
@@ -29,14 +31,16 @@ public class MainPane {
     @FXML
     void initialize() {
         recipeLink.setText("Placki");
-        try {
-            logo.setImage(new Image(new FileInputStream("src/resources/raspLogo.png"))); // unnecessary, ultimately there will be berryLogo.png here with a check if light mode is enabled
-        } catch (FileNotFoundException e) {
-            System.err.printf("Error: %s%n", e.getMessage());
+        if (Core.theme.equals("lightTheme")) {
+            try {
+                logo.setImage(new Image(new FileInputStream("src/resources/berryLogo.png")));
+            } catch (FileNotFoundException e) {
+                System.err.printf("Error: %s%n", e.getMessage());
+            }
         }
     }
 
-        @FXML
+    @FXML
     public void onClickButton() {
         // change main Stage Scene to recipe Scene
         try {
@@ -46,7 +50,7 @@ public class MainPane {
             Parent recipePage = loader.load();
             Scene recipePageScene = new Scene(recipePage);
             Stage stage = (Stage) recipeLink.getScene().getWindow();
-            recipePageScene.getStylesheets().add(getClass().getResource("/resources/darkTheme.css").toExternalForm());
+            recipePageScene.getStylesheets().add(getClass().getResource("/resources/"+Core.theme+".css").toExternalForm());
             stage.setScene(recipePageScene);
             stage.show();
         } catch (IOException e) {
@@ -59,7 +63,7 @@ public class MainPane {
         try {
             mouseEvent.consume();
             Scene scene = new Scene(new FXMLLoader(getClass().getResource("/resources/logInWindow.fxml")).load());
-            scene.getStylesheets().add(getClass().getResource("/resources/darkTheme.css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/resources/"+Core.theme+".css").toExternalForm());
             Stage stage = new Stage();
             stage.setTitle("Login");
             stage.setScene(scene);

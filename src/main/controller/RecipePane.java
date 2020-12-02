@@ -6,6 +6,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+
+import main.Core;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
 
@@ -56,7 +58,7 @@ public class RecipePane {
             Parent mainPage = FXMLLoader.load(getClass().getResource(namePath));
             Scene mainPageScene = new Scene(mainPage);
             Stage stage = (Stage) button.getScene().getWindow();
-            mainPageScene.getStylesheets().add(getClass().getResource("/resources/darkTheme.css").toExternalForm());
+            mainPageScene.getStylesheets().add(getClass().getResource("/resources/"+Core.theme+".css").toExternalForm());
             stage.setScene(mainPageScene);
             stage.show();
         } catch (IOException e) {
