@@ -9,6 +9,8 @@ package main;
 //import java.util.LinkedList;
 //import java.util.List;
 
+import main.userModel.User;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -19,6 +21,7 @@ public class Core {
     public static String theme;
     public static String databaseLogin;
     public static String databasePassword;
+    public static User activeUser;
 //    private List<User> users;
 //    private List<Recipe> recipes;
 //    private List<Ingredient> ingredients;
