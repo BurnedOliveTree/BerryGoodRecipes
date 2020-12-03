@@ -27,9 +27,9 @@ public class Main extends Application {
     }
 
     private void setup() {
+        new Core();
         DataBaseTest test = new DataBaseTest();
         test.test();
-        new Core(test.theme);
     }
 
     public static void main(String[] args) {
