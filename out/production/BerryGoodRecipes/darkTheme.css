@@ -1,16 +1,16 @@
 .root {
     -fx-base: #222;
+    -fx-control-inner-background: #444;
+    -fx-accent: #BE1B6B;
     -fx-background-color: -fx-base;
-    -fx-accent: #eee ;
     -fx-focus-color: -fx-accent;
-    -fx-control-inner-background: #444 ;
-    -fx-default-button: -fx-control-inner-background ;
+    -fx-default-button: -fx-control-inner-background;
 
-    -fx-light-text-color: #BE1B6B ;
-    -fx-mid-text-color: -fx-light-text-color ;
-    -fx-dark-text-color: -fx-light-text-color ;
+    -fx-light-text-color: -fx-accent;
+    -fx-mid-text-color: -fx-light-text-color;
+    -fx-dark-text-color: -fx-light-text-color;
 }
-.scroll-bar:vertical > .thumb {
+.scroll-bar > .thumb {
     -fx-background-color: -fx-light-text-color;
 }
 .berry-text {

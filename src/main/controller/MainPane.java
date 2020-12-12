@@ -31,7 +31,7 @@ public class MainPane {
     @FXML
     void initialize() {
         recipeLink.setText("Placki");
-        if (Core.theme.equals("lightTheme")) {
+        if (Core.theme.equals("lightTheme") || Core.theme.equals("winter")) {
             try {
                 logo.setImage(new Image(new FileInputStream("src/resources/berryLogo.png")));
             } catch (FileNotFoundException e) {
