@@ -1,2 +1,12 @@
 insert into USERS values (null, 'BerryRootUser', 'BerryHardPassword', null);
+insert into USERS values (null, 'Abacki', 'aword', null);
+insert into USERS values (null, 'Babacki', 'bword', null);
+insert into USERS values (null, 'Cabacki', 'cword', null);
+insert into USERS values (null, 'Dabacki', 'dword', null);
+insert into USERS values (null, 'Ebacki', 'eword', null);
+insert into USERS values (null, 'Fabacki', 'fword', null);
+insert into USERS values (null, 'Gabacki', 'gword', null);
+insert into USERS values (null, 'Habacki', 'hword', null);
+insert into USERS values (null, 'Ibacki', 'iword', null);
+insert into USERS values (null, 'Jabacki', 'jword', null);
 commit;
