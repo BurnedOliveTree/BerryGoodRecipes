@@ -45,16 +45,15 @@ public class LogInWindow {
 
             try (Statement stmt = conn.createStatement()) {
                 // check if such a username exists in the database
-                ResultSet queryResult = stmt.executeQuery("select * from USERS where NAME = '"+username+"'");
+                ResultSet queryResult = stmt.executeQuery("select * from \"USER\" where USERNAME = '"+username+"'");
                 if (queryResult.next()) {
                     // check if password is correct
-                    String gotID = queryResult.getString("USER_ID");
                     String gotPassword = queryResult.getString("PASSWORD");
                     if (gotPassword.equals(password)) {
                         // everything is correct, create a user
-                        String name = queryResult.getString("NAME");
+                        String name = queryResult.getString("USERNAME");
                         // TODO add all the other columns in the future
-                        Core.activeUser = new User(Integer.parseInt(gotID), username, password);
+                        Core.activeUser = new User(username, password);
                         System.out.println("Successfully logged in!");
                     } else {
                         System.out.println("Incorrect password!");
@@ -86,7 +85,7 @@ public class LogInWindow {
             conn = DriverManager.getConnection("jdbc:oracle:thin:@//ora4.ii.pw.edu.pl:1521/pdb1.ii.pw.edu.pl", Core.databaseLogin, Core.databasePassword);
 
             try (Statement stmt = conn.createStatement()) {
-                if (!stmt.execute("insert into USERS values(null, '"+username+"', '"+password+"')")) {
+                if (!stmt.execute("insert into \"USER\" values('"+username+"', '"+password+"', null)")) {
                     System.out.println("Successfully created an account!");
                 }
                 else {
