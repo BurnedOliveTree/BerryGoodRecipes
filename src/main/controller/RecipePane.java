@@ -5,6 +5,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.TextFlow;
@@ -14,24 +16,18 @@ import main.Core;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class RecipePane {
     private Recipe recipe;
     @FXML
-    public TextField numPortionField;
-    public ListView<String> ingredientListView;
-    public Label titleLabel;
-    public Label timeLabel;
-    public Label costLabel;
-    public Label descLabel;
-    public Button shoppingListButton;
-    public Button exitButton;
-    public Button timepieceButton;
-    public Button scaleButton;
-    public Button favoriteButton;
-    public Button commentButton;
     public TextFlow descText;
+    public ImageView ScalePic;
+    public ImageView ShoppingPic;
+    public ImageView LikePic;
+    public ImageView TimePic;
 
     public RecipePane(Recipe recipe) {
         this.recipe = recipe;
@@ -39,25 +35,18 @@ public class RecipePane {
 
     @FXML
     void initialize() {
-
+        if (Core.theme.equals("lightTheme") || Core.theme.equals("winter")) {
+            try {
+                ScalePic.setImage(new Image(new FileInputStream("src/resources/berryScale.png")));
+                ShoppingPic.setImage(new Image(new FileInputStream("src/resources/berryBasket.png")));
+                TimePic.setImage(new Image(new FileInputStream("src/resources/berryStoper.png")));
+            } catch (FileNotFoundException e) {
+                System.err.printf("Error: %s%n", e.getMessage());
+            }
+        }
         descText.getChildren().add(new Text("ala ma kota"));
 
-//        descLabel.setText(this.recipe.getPrepareMethod());
-//        titleLabel.setText(this.recipe.getName());
-//        timeLabel.setText(String.valueOf(this.recipe.getPrepareTime()));
-//        costLabel.setText(String.valueOf(this.recipe.getCost()));
-//        numPortionField.setText(String.valueOf(this.recipe.getPortionNumber()));
-////        exitButton.setOnAction( new EventHandler<>() { @Override public void handle(ActionEvent event) { onAction(exitButton, "/resources/mainPage.fxml"); }});
-//        exitButton.setOnAction( e->{ onAction(exitButton, "/resources/mainPage.fxml"); });
-//        scaleButton.setOnAction( e->{ onAction(scaleButton, "/resources/scalePage.fxml"); });
-//        shoppingListButton.setOnAction( e->{ onAction(shoppingListButton, "/resources/shoppingListPage.fxml"); });
-//        timepieceButton.setOnAction( e->{ onAction(timepieceButton, "/resources/timepiecePage.fxml"); });
-//        favoriteButton.setOnAction( e->{ onAction(favoriteButton, "/resources/favoritePage.fxml"); });
-//        commentButton.setOnAction( e->{ onAction(favoriteButton, "/resources/opinionPage.fxml"); });
-//        for (Ingredient ingredient: this.recipe.getIngredientList()) {
-//        ingredientListView.getItems().add(String.format("%d %s %s", ingredient.getQuantity(), ingredient.getUnit(), ingredient.getName()));
-//        ingredientListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-//        }
+
     }
 
     private void  onAction(Button button, String namePath) {
