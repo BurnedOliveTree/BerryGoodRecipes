@@ -5,6 +5,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 import main.Core;
@@ -28,6 +31,7 @@ public class RecipePane {
     public Button scaleButton;
     public Button favoriteButton;
     public Button commentButton;
+    public TextFlow descText;
 
     public RecipePane(Recipe recipe) {
         this.recipe = recipe;
@@ -35,22 +39,25 @@ public class RecipePane {
 
     @FXML
     void initialize() {
-        descLabel.setText(this.recipe.getPrepareMethod());
-        titleLabel.setText(this.recipe.getName());
-        timeLabel.setText(String.valueOf(this.recipe.getPrepareTime()));
-        costLabel.setText(String.valueOf(this.recipe.getCost()));
-        numPortionField.setText(String.valueOf(this.recipe.getPortionNumber()));
-//        exitButton.setOnAction( new EventHandler<>() { @Override public void handle(ActionEvent event) { onAction(exitButton, "/resources/mainPage.fxml"); }});
-        exitButton.setOnAction( e->{ onAction(exitButton, "/resources/mainPage.fxml"); });
-        scaleButton.setOnAction( e->{ onAction(scaleButton, "/resources/scalePage.fxml"); });
-        shoppingListButton.setOnAction( e->{ onAction(shoppingListButton, "/resources/shoppingListPage.fxml"); });
-        timepieceButton.setOnAction( e->{ onAction(timepieceButton, "/resources/timepiecePage.fxml"); });
-        favoriteButton.setOnAction( e->{ onAction(favoriteButton, "/resources/favoritePage.fxml"); });
-        commentButton.setOnAction( e->{ onAction(favoriteButton, "/resources/opinionPage.fxml"); });
-        for (Ingredient ingredient: this.recipe.getIngredientList()) {
-        ingredientListView.getItems().add(String.format("%d %s %s", ingredient.getQuantity(), ingredient.getUnit(), ingredient.getName()));
-        ingredientListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        }
+
+        descText.getChildren().add(new Text("ala ma kota"));
+
+//        descLabel.setText(this.recipe.getPrepareMethod());
+//        titleLabel.setText(this.recipe.getName());
+//        timeLabel.setText(String.valueOf(this.recipe.getPrepareTime()));
+//        costLabel.setText(String.valueOf(this.recipe.getCost()));
+//        numPortionField.setText(String.valueOf(this.recipe.getPortionNumber()));
+////        exitButton.setOnAction( new EventHandler<>() { @Override public void handle(ActionEvent event) { onAction(exitButton, "/resources/mainPage.fxml"); }});
+//        exitButton.setOnAction( e->{ onAction(exitButton, "/resources/mainPage.fxml"); });
+//        scaleButton.setOnAction( e->{ onAction(scaleButton, "/resources/scalePage.fxml"); });
+//        shoppingListButton.setOnAction( e->{ onAction(shoppingListButton, "/resources/shoppingListPage.fxml"); });
+//        timepieceButton.setOnAction( e->{ onAction(timepieceButton, "/resources/timepiecePage.fxml"); });
+//        favoriteButton.setOnAction( e->{ onAction(favoriteButton, "/resources/favoritePage.fxml"); });
+//        commentButton.setOnAction( e->{ onAction(favoriteButton, "/resources/opinionPage.fxml"); });
+//        for (Ingredient ingredient: this.recipe.getIngredientList()) {
+//        ingredientListView.getItems().add(String.format("%d %s %s", ingredient.getQuantity(), ingredient.getUnit(), ingredient.getName()));
+//        ingredientListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+//        }
     }
 
     private void  onAction(Button button, String namePath) {

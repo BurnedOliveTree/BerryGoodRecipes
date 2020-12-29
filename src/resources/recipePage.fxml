@@ -1,32 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="485.0" prefWidth="693.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <Button fx:id="exitButton" layoutX="663.0" layoutY="11.0" mnemonicParsing="false" prefHeight="8.0" prefWidth="20.0" text="x" />
-      <Button fx:id="timepieceButton" layoutX="584.0" layoutY="11.0" mnemonicParsing="false" text="T" />
-      <Button fx:id="scaleButton" layoutX="549.0" layoutY="11.0" mnemonicParsing="false" text="S" />
-      <Label fx:id="descLabel" layoutX="266.0" layoutY="125.0" prefHeight="265.0" prefWidth="369.0" style="-fx-border-color: black;" />
-      <TextField fx:id="numPortionField" layoutX="98.0" layoutY="96.0" prefHeight="3.0" prefWidth="48.0" />
-      <Label layoutX="157.0" layoutY="100.0" text="Portions" />
-      <Button fx:id="shoppingListButton" layoutX="517.0" layoutY="11.0" mnemonicParsing="false" text="L" />
-      <ListView fx:id="ingredientListView" layoutX="58.0" layoutY="121.0" prefHeight="265.0" prefWidth="149.0" />
-      <Label fx:id="titleLabel" layoutX="141.0" layoutY="14.0" prefHeight="65.0" prefWidth="250.0">
-         <font>
-            <Font size="45.0" />
-         </font></Label>
-      <Label layoutX="58.0" layoutY="396.0" text="Time:" />
-      <Label layoutX="59.0" layoutY="420.0" text="Cost:" />
-      <Label fx:id="timeLabel" layoutX="104.0" layoutY="396.0" prefHeight="17.0" prefWidth="76.0" />
-      <Label fx:id="costLabel" layoutX="104.0" layoutY="420.0" prefHeight="17.0" prefWidth="76.0" />
-      <Label layoutX="266.0" layoutY="100.0" text="Description:" />
-      <Button fx:id="favoriteButton" layoutX="480.0" layoutY="11.0" mnemonicParsing="false" text="U" />
-      <Button fx:id="commentButton" layoutX="266.0" layoutY="401.0" mnemonicParsing="false" text="Comment" />
-   </children>
-</Pane>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <left>
+      <VBox prefHeight="360.0" prefWidth="186.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label alignment="CENTER" prefHeight="78.0" prefWidth="203.0" text="Label" />
+            <ListView prefHeight="200.0" prefWidth="186.0" />
+         </children></VBox>
+   </left>
+   <center>
+      <TextFlow fx:id="descText" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+   </center>
+   <top>
+      <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <items>
+          <Button mnemonicParsing="false" text="x" />
+            <Button mnemonicParsing="false" text="Button" />
+            <Button mnemonicParsing="false" text="Button" />
+            <Button mnemonicParsing="false" text="Button" />
+            <Button mnemonicParsing="false" text="Button" />
+        </items>
+      </ToolBar>
+   </top>
+</BorderPane>

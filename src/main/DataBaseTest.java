@@ -14,7 +14,7 @@ public class DataBaseTest {
         try {
             conn = DriverManager.getConnection("jdbc:oracle:thin:@//ora4.ii.pw.edu.pl:1521/pdb1.ii.pw.edu.pl", Core.databaseLogin, Core.databasePassword);
 
-            String query = "select * from INGREDIENTS";
+            String query = "select * from INGREDIENT";
             try (Statement stmt = conn.createStatement()) {
                 ResultSet rs = stmt.executeQuery(query);
                 while (rs.next()) {
