@@ -3,6 +3,8 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollBar?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -110,8 +112,15 @@
             <Button mnemonicParsing="false" prefHeight="32.0" prefWidth="64.0" text="followed" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
             <Button mnemonicParsing="false" prefHeight="32.0" prefWidth="64.0" text="shopping list" GridPane.halignment="CENTER" GridPane.rowIndex="7" />
             <Button mnemonicParsing="false" prefHeight="32.0" prefWidth="64.0" text="groups" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
-            <Button mnemonicParsing="false" prefHeight="32.0" prefWidth="64.0" text="theme" GridPane.halignment="CENTER" GridPane.rowIndex="9" />
             <Button mnemonicParsing="false" prefHeight="32.0" prefWidth="64.0" text="unit system" GridPane.halignment="CENTER" GridPane.rowIndex="10" />
+            <MenuButton mnemonicParsing="false" text="Theme" GridPane.halignment="CENTER" GridPane.rowIndex="9">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#onThemeDarkSelection" text="Dark" />
+                <MenuItem mnemonicParsing="false" onAction="#onThemeLightSelection" text="Light" />
+                  <MenuItem mnemonicParsing="false" onAction="#onThemeSpringSelection" text="Spring" />
+                  <MenuItem mnemonicParsing="false" onAction="#onThemeWinterSelection" text="Winter" />
+              </items>
+            </MenuButton>
          </children>
       </GridPane>
    </left>

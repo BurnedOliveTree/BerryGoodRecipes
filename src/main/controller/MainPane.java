@@ -62,8 +62,6 @@ public class MainPane {
         }
     }
 
-    // TODO these buttons should only show up when Core.activeUser = null, else they should disappear
-
     @FXML
     public void onSignInButtonClick(MouseEvent mouseEvent) {
         // create a new Window with sign in
@@ -90,6 +88,49 @@ public class MainPane {
             stage.show();
         } catch (IOException e) {
             System.err.printf("Error: %s%n", e.getMessage());
+        }
+    }
+
+    @FXML
+    public void onThemeLightSelection() {
+        DatabaseConnection.theme = "lightTheme";
+        resetTheme();
+    }
+
+    @FXML
+    public void onThemeDarkSelection() {
+        DatabaseConnection.theme = "darkTheme";
+        resetTheme();
+    }
+
+    @FXML
+    public void onThemeWinterSelection() {
+        DatabaseConnection.theme = "winter";
+        resetTheme();
+    }
+
+    @FXML
+    public void onThemeSpringSelection() {
+        DatabaseConnection.theme = "spring";
+        resetTheme();
+    }
+
+    public void resetTheme() {
+        logo.getScene().getStylesheets().remove(0);
+        logo.getScene().getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
+        if (DatabaseConnection.theme.equals("lightTheme") || DatabaseConnection.theme.equals("winter")) {
+            try {
+                logo.setImage(new Image(new FileInputStream("src/resources/berryLogo.png")));
+            } catch (FileNotFoundException e) {
+                System.err.printf("Error: %s%n", e.getMessage());
+            }
+        }
+        else {
+            try {
+                logo.setImage(new Image(new FileInputStream("src/resources/raspLogo.png")));
+            } catch (FileNotFoundException e) {
+                System.err.printf("Error: %s%n", e.getMessage());
+            }
         }
     }
 }
