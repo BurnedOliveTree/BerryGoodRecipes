@@ -1,7 +1,5 @@
 package main.controller;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -87,12 +85,12 @@ public class RecipePane {
         } else {
             timePrepLabel.setText("Preparation time: " + this.recipe.getPrepareTime());
         }
-        exitButton.setOnAction( e->{ onExitAction(exitButton, "/resources/mainPage.fxml"); });
-        scaleButton.setOnAction(e->{onScaleAction(scaleButton, "/resources/scalePage.fxml");});
+        exitButton.setOnAction( e->{ onExitAction(exitButton); });
+        scaleButton.setOnAction(e->{onScaleAction(scaleButton);});
 //        shoppingListButton.setOnAction( e->{ onShoppingAction(shoppingListButton, "/resources/shoppingListPage.fxml"); });
 //        timeButton.setOnAction( e->{ onTimeAction(timeButton, "/resources/timepiecePage.fxml"); });
         likeButton.setOnAction( e->{ onLikeAction(likeButton); });
-        commentButton.setOnAction( e->{ onCommentAction(commentButton, "/resources/opinionPage.fxml"); });
+        commentButton.setOnAction( e->{ onCommentAction(commentButton); });
         portionArea.textProperty().addListener((observableValue, s, t1) -> {
             try {
                 Double currNumPortions = Double.parseDouble(t1);
@@ -137,23 +135,22 @@ public class RecipePane {
         }
     }
 
-
-    private void onCommentAction(Button button, String namePath){
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(namePath));
+    private void onCommentAction(Button button){
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/opinionPage.fxml"));
         ScalePane controller = new ScalePane(this.recipe, activeUser);
         loader.setController(controller);
         changeScene(button, loader);
     }
 
-    private void onScaleAction(Button button, String namePath){
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(namePath));
+    private void onScaleAction(Button button){
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/scalePage.fxml"));
         ScalePane controller = new ScalePane(this.recipe, activeUser);
         loader.setController(controller);
         changeScene(button, loader);
     }
 
-    private void onExitAction(Button button, String namePath){
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(namePath));
+    private void onExitAction(Button button){
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/mainPage.fxml"));
         ScalePane controller = new ScalePane(this.recipe, activeUser);
         loader.setController(controller);
         changeScene(button, loader);
