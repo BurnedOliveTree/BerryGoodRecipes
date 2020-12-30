@@ -14,7 +14,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-        setup();
+        new DatabaseConnection();
 
         primaryStage.setTitle("BerryGood Recipes");
         FXMLLoader loader = new FXMLLoader();
@@ -27,10 +27,6 @@ public class Main extends Application {
         primaryStage.show();
 
 //        MainPane controller = loader.getController();
-    }
-
-    private void setup() throws IOException {
-        new DatabaseConnection();
     }
 
     public static void main(String[] args) {

@@ -5,7 +5,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import main.DatabaseConnection;
-import main.Main;
 
 import java.sql.*;
 
@@ -21,8 +20,7 @@ public class LogInWindow {
     }
 
     @FXML
-    void initialize() {
-    }
+    void initialize() { }
 
     @FXML
     private void getData(MouseEvent event) throws SQLException {
