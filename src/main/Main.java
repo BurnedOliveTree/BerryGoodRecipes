@@ -28,8 +28,6 @@ public class Main extends Application {
 
     private void setup() {
         new Core();
-        DataBaseTest test = new DataBaseTest();
-        test.test();
     }
 
     public static void main(String[] args) {

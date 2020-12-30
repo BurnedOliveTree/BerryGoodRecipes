@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.HashMap;
 
 public class User {
-    private final int ID;
     private String username;
     private String password;
     private List<Recipe> userRecipes;
@@ -18,8 +17,7 @@ public class User {
     // TODO private UnitSystem defaultUnitSystem;
     private ShoppingList shoppingList;
 
-    public User(int argID, String argUsername, String argPassword) {
-        ID = argID;
+    public User(String argUsername, String argPassword) {
         username = argUsername;
         password = argPassword;
         userRecipes = new LinkedList<>();
