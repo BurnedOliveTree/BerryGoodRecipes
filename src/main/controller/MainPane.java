@@ -2,13 +2,11 @@ package main.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import main.DatabaseConnection;
@@ -24,7 +22,6 @@ public class MainPane {
     public User activeUser;
     @FXML
     public Button recipeLink;
-    public Pane recipePane;
     public ImageView logo;
 
     public MainPane(User activeUser) {
@@ -48,14 +45,10 @@ public class MainPane {
         // change main Stage Scene to recipe Scene
         try {
             FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
-
-            Recipe recipe = DatabaseConnection.getRecipe(1);
-
 //            RecipePane controller = new RecipePane(new Recipe(1,"Placki", new User("Karolina", "1234"), "Zrób farsz i nagrzej patelnie", 0, "2020-01-01", 10, 20, 4,  new ArrayList<>(){{add(new Ingredient(200, new Unit(), "Twaróg"));}}));
-            RecipePane controller = new RecipePane(recipe, activeUser);
-            loader.setController(controller);
-            Parent recipePage = loader.load();
-            Scene recipePageScene = new Scene(recipePage);
+            Recipe recipe = DatabaseConnection.getRecipe(1);
+            loader.setController(new RecipePane(recipe, activeUser));
+            Scene recipePageScene = new Scene(loader.load());
             Stage stage = (Stage) recipeLink.getScene().getWindow();
             recipePageScene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
             stage.setScene(recipePageScene);
