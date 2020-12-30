@@ -52,11 +52,8 @@ public class OpinionPane {
         try {
             FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
 
-            DatabaseConnection connection = new DatabaseConnection();
-            Recipe recipe = connection.getRecipe(1);
-
 //            RecipePane controller = new RecipePane(new Recipe(1,"Placki", new User("Karolina", "1234"), "Zrób farsz i nagrzej patelnie", 0, "2020-01-01", 10, 20, 4,  new ArrayList<>(){{add(new Ingredient(200, new Unit(), "Twaróg"));}}));
-            RecipePane controller = new RecipePane(recipe);
+            RecipePane controller = new RecipePane(this.recipe);
             loader.setController(controller);
             Parent recipePage = loader.load();
             Scene recipePageScene = new Scene(recipePage);
@@ -64,7 +61,7 @@ public class OpinionPane {
             recipePageScene.getStylesheets().add(getClass().getResource("/resources/"+Core.theme+".css").toExternalForm());
             stage.setScene(recipePageScene);
             stage.show();
-        } catch (IOException | SQLException e) {
+        } catch (IOException e) {
             System.err.println(String.format("Error: %s", e.getMessage()));}
     }
 
