@@ -8,13 +8,16 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import main.DatabaseConnection;
 import main.recipeModel.Recipe;
+import main.userModel.User;
 
 import java.io.IOException;
 
 public class ScalePane {
-    private Recipe recipe;
-    public ScalePane(Recipe recipe) {
+    private final Recipe recipe;
+    private final User activeUser;
+    public ScalePane(Recipe recipe, User activeUser) {
         this.recipe = recipe;
+        this.activeUser = activeUser;
     };
 
     @FXML
@@ -27,7 +30,7 @@ public class ScalePane {
     private void  onAction(Button button, String namePath) {
         try {
             FXMLLoader loader =  new FXMLLoader(getClass().getResource(namePath));
-            RecipePane controller = new RecipePane(this.recipe);
+            RecipePane controller = new RecipePane(this.recipe, activeUser);
             loader.setController(controller);
             Parent recipePage = loader.load();
             Scene recipePageScene = new Scene(recipePage);

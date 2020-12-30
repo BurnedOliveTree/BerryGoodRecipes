@@ -27,8 +27,9 @@ import java.util.ArrayList;
 
 public class OpinionPane {
     private Opinion opinion;
+    private final User activeUser;
+    private final Recipe recipe;
     ObservableList<String> scoreList = FXCollections.observableArrayList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
-    private Recipe recipe;
     @FXML
     public Button okButton;
     public Button exitButton;
@@ -37,8 +38,9 @@ public class OpinionPane {
     @FXML
     public ChoiceBox scoreBox;
 
-    public OpinionPane(Recipe recipe) {
+    public OpinionPane(Recipe recipe, User activeUser) {
         this.recipe = recipe;
+        this.activeUser = activeUser;
     };
 
     @FXML
@@ -50,7 +52,7 @@ public class OpinionPane {
     private void  onAction(Button button, String namePath) {
         try {
             FXMLLoader loader =  new FXMLLoader(getClass().getResource(namePath));
-            RecipePane controller = new RecipePane(this.recipe);
+            RecipePane controller = new RecipePane(this.recipe, activeUser);
             loader.setController(controller);
             Parent recipePage = loader.load();
             Scene recipePageScene = new Scene(recipePage);

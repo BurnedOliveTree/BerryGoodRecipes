@@ -12,22 +12,24 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import main.DatabaseConnection;
-import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
-import main.recipeModel.Unit;
 import main.userModel.User;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class MainPane {
+    private final User activeUser;
     @FXML
     public Button recipeLink;
     public Pane recipePane;
     public ImageView logo;
+
+    public MainPane(User activeUser) {
+        this.activeUser = activeUser;
+    }
 
     @FXML
     void initialize() {
@@ -51,7 +53,7 @@ public class MainPane {
             Recipe recipe = connection.getRecipe(1);
 
 //            RecipePane controller = new RecipePane(new Recipe(1,"Placki", new User("Karolina", "1234"), "Zrób farsz i nagrzej patelnie", 0, "2020-01-01", 10, 20, 4,  new ArrayList<>(){{add(new Ingredient(200, new Unit(), "Twaróg"));}}));
-            RecipePane controller = new RecipePane(recipe);
+            RecipePane controller = new RecipePane(recipe, activeUser);
             loader.setController(controller);
             Parent recipePage = loader.load();
             Scene recipePageScene = new Scene(recipePage);
