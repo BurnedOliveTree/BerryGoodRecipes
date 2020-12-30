@@ -1,5 +1,7 @@
 package main.controller;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -67,12 +69,15 @@ public class RecipePane {
         } else {
             costLabel.setText("Cost: " + this.recipe.getCost());
         }
-        portionArea.setText(String.valueOf(this.recipe.getPortionNumber()));
 
-        for (Ingredient ingredient: this.recipe.getIngredientList()) {
-            ingredientListView.getItems().add(String.format("%d %s %s", ingredient.getQuantity(), ingredient.getUnit(), ingredient.getName()));
-            ingredientListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        }
+        if (this.recipe.getPortionNumber() % 1 == 0)
+            portionArea.setText(String.valueOf((int)this.recipe.getPortionNumber()));
+        else
+            portionArea.setText(String.valueOf(this.recipe.getPortionNumber()));
+
+        setIngredListView();
+
+        ingredientListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         String x = "Author: " + this.recipe.getAuthor();
 
         authorLabel.setText("Author: " + this.recipe.getAuthor());
@@ -83,11 +88,45 @@ public class RecipePane {
             timePrepLabel.setText("Preparation time: " + this.recipe.getPrepareTime());
         }
         exitButton.setOnAction( e->{ onAction(exitButton, "/resources/mainPage.fxml"); });
+        scaleButton.setOnAction(e->{onAction(scaleButton, "/resources/scalePage.fxml");});
         shoppingListButton.setOnAction( e->{ onAction(shoppingListButton, "/resources/shoppingListPage.fxml"); });
         timeButton.setOnAction( e->{ onAction(timeButton, "/resources/timepiecePage.fxml"); });
         likeButton.setOnAction( e->{ onAction(likeButton, null); });
         commentButton.setOnAction( e->{ onAction(commentButton, "/resources/opinionPage.fxml"); });
-        scaleButton.setOnAction(e->{onAction(scaleButton, "/resources/scalePage.fxml");});
+        portionArea.textProperty().addListener((observableValue, s, t1) -> {
+            try {
+                Double currNumPortions = Double.parseDouble(t1);
+                if (currNumPortions > 0)
+                    changeIngredListViewScale(currNumPortions);
+                else
+                    portionArea.clear();
+            } catch (IllegalArgumentException e) {
+                portionArea.clear();
+                return;
+            }
+        });
+
+    }
+
+    private void setIngredListView() {
+        ingredientListView.getItems().clear();
+        for (Ingredient ingredient: this.recipe.getIngredientList()) {
+            if (ingredient.getQuantity() % 1 == 0)
+                ingredientListView.getItems().add(String.format("%d %s %s", (int)Math.round(ingredient.getQuantity()), ingredient.getUnit().getName(), ingredient.getName()));
+            else
+                ingredientListView.getItems().add(String.format("%f %s %s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
+        }
+
+    }
+
+    private void changeIngredListViewScale(Double numPortions) {
+        double currNumPortions = this.recipe.getPortionNumber();
+        if (!numPortions.equals(currNumPortions)) {
+            double scale = numPortions / currNumPortions;
+            this.recipe.setPortionNumber(numPortions);
+            this.recipe.scaleIngredientList(scale);
+            setIngredListView();
+        }
     }
 
     private void onAction(Button button, String namePath) {

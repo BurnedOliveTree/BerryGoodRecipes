@@ -1,11 +1,11 @@
 package main.recipeModel;
 
 public class Ingredient {
-    Integer quantity;
+    Double quantity;
     Unit unit;
     String name;
 
-    public Ingredient(Integer quantity, Unit unit, String name) {
+    public Ingredient(Double quantity, Unit unit, String name) {
         this.quantity = quantity;
         this.unit = unit;
         this.name = name;
@@ -15,7 +15,7 @@ public class Ingredient {
         return name;
     }
 
-    public Integer getQuantity() {
+    public Double getQuantity() {
         return quantity;
     }
 
@@ -23,7 +23,7 @@ public class Ingredient {
         return unit;
     }
 
-    public void setQuantity(Integer quantity) {
+    public void setQuantity(Double quantity) {
         this.quantity = quantity;
     }
 
