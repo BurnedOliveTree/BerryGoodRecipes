@@ -6,8 +6,12 @@ import javafx.stage.WindowEvent;
 import main.controller.MainPane;
 import main.userModel.User;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.io.InputStream;
+import java.util.Properties;
 
 import javafx.fxml.FXMLLoader;
 import javafx.application.Application;
@@ -39,13 +43,19 @@ public class Main extends Application {
                 } catch (SQLException throwables) {
                     throwables.printStackTrace();
                 }
+                try {
+                    Properties prop = new Properties();
+                    prop.load(new FileInputStream("src/resources/app.config"));
+                    prop.setProperty("app.theme", DatabaseConnection.theme);
+                    prop.store(new FileOutputStream("src/resources/app.config"), null);
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
                 Platform.exit();
                 System.exit(0);
             }
         });
-
-
-//        MainPane controller = loader.getController();
+        
     }
 
     public static void main(String[] args) {
