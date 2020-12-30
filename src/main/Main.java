@@ -10,7 +10,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.io.InputStream;
 import java.util.Properties;
 
 import javafx.fxml.FXMLLoader;
@@ -55,7 +54,7 @@ public class Main extends Application {
                 System.exit(0);
             }
         });
-        
+
     }
 
     public static void main(String[] args) {

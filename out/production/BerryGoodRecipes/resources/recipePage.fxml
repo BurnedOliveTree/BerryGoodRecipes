@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"  prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
     <center>
         <TextFlow fx:id="descText" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <BorderPane.margin>
@@ -16,9 +16,9 @@
     <top>
         <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
             <items>
-                <Button fx:id="exitButton" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" text="x" />
+                <Button fx:id="exitButton"  onAction="#onExitButtonAction" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" text="x" />
                 <Label minWidth="30.0" />
-                <Button fx:id="scaleButton" minWidth="30.0" mnemonicParsing="false">
+                <Button fx:id="scaleButton" onAction="#onScaleButtonAction" minWidth="30.0" mnemonicParsing="false">
                     <graphic>
                         <ImageView fx:id="ScalePic" fitHeight="30.0" fitWidth="30.0">
                             <image>
@@ -27,7 +27,7 @@
                         </ImageView>
                     </graphic>
                 </Button>
-                <Button fx:id="shoppingListButton" minWidth="30.0" mnemonicParsing="false">
+                <Button fx:id="shoppingListButton" onAction="#onShoppingListButtonAction" minWidth="30.0" mnemonicParsing="false">
                     <graphic>
                         <ImageView fx:id="ShoppingPic" fitHeight="30.0" fitWidth="30.0">
                             <image>
@@ -36,7 +36,7 @@
                         </ImageView>
                     </graphic>
                 </Button>
-                <Button fx:id="likeButton" minWidth="30.0" mnemonicParsing="false">
+                <Button fx:id="likeButton" onAction="#onLikeButtonAction" minWidth="30.0" mnemonicParsing="false">
                     <graphic>
                         <ImageView fx:id="LikePic" fitHeight="30.0" fitWidth="30.0">
                             <image>
@@ -45,7 +45,7 @@
                         </ImageView>
                     </graphic>
                 </Button>
-                <Button fx:id="timeButton" minWidth="30.0" mnemonicParsing="false">
+                <Button fx:id="timeButton" onAction="#onTimeButtonAction" minWidth="30.0" mnemonicParsing="false">
                     <graphic>
                         <ImageView fx:id="TimePic" fitHeight="30.0" fitWidth="30.0">
                             <image>
@@ -60,7 +60,7 @@
     <left>
         <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="TOP_RIGHT">
             <bottom>
-                <Button fx:id="commentButton" mnemonicParsing="false" prefHeight="31.0" prefWidth="235.0" text="Comment" BorderPane.alignment="CENTER" />
+                <Button fx:id="commentButton" onAction="#onCommentButtonAction" mnemonicParsing="false" prefHeight="31.0" prefWidth="235.0" text="Comment" BorderPane.alignment="CENTER" />
             </bottom>
             <center>
                 <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">

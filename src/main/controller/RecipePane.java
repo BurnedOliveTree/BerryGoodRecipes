@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
@@ -91,18 +92,9 @@ public class RecipePane  implements OrdinaryButtonAction{
 
 
         // options for logged in users
-        if (activeUser == null){
-            likeButton.setDisable(true);;
+        if (activeUser == null) {
+            likeButton.setDisable(true);
         }
-        else{
-            likeButton.setOnAction( e->{ onLikeAction(likeButton); });
-        }
-        exitButton.setOnAction( e->{ onExitAction(exitButton); });
-        scaleButton.setOnAction(e->{onScaleAction(scaleButton);});
-        commentButton.setOnAction( e->{ onCommentAction(commentButton); });
-
-//        shoppingListButton.setOnAction( e->{ onShoppingAction(shoppingListButton, "/resources/shoppingListPage.fxml"); });
-//        timeButton.setOnAction( e->{ onTimeAction(timeButton, "/resources/timepiecePage.fxml"); });
 
         portionArea.textProperty().addListener((observableValue, s, t1) -> {
             try {
@@ -116,8 +108,6 @@ public class RecipePane  implements OrdinaryButtonAction{
                 return;
             }
         });
-
-
 
     }
 
@@ -141,8 +131,8 @@ public class RecipePane  implements OrdinaryButtonAction{
             setIngredListView();
         }
     }
-
-    private void onLikeAction(Button button) {
+    @FXML
+    public void onLikeButtonAction() {
         try {
             boolean state = activeUser.checkIfRecipeFavorite(recipe.getId());
             if (activeUser.checkIfRecipeFavorite(recipe.getId())) {
@@ -158,25 +148,36 @@ public class RecipePane  implements OrdinaryButtonAction{
         }
     }
 
-    private void onCommentAction(Button button){
+    @FXML
+    public void onCommentButtonAction(){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/opinionPage.fxml"));
         OpinionPane controller = new OpinionPane(this.recipe, activeUser);
         loader.setController(controller);
-        changeScene(button, loader);
+        changeScene(commentButton, loader);
     }
-
-    private void onScaleAction(Button button){
+    @FXML
+    public void onScaleButtonAction(){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/scalePage.fxml"));
         ScalePane controller = new ScalePane(this.recipe, activeUser);
         loader.setController(controller);
-        changeScene(button, loader);
+        changeScene(scaleButton, loader);
     }
-
-    public void onExitAction(Button button){
+    @FXML
+    public void onExitButtonAction(){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/mainPage.fxml"));
         MainPane controller = new MainPane(activeUser);
         loader.setController(controller);
-        changeScene(button, loader);
+        changeScene(exitButton, loader);
+    }
+
+    @FXML
+    public void onShoppingListButtonAction(){
+
+    }
+
+    @FXML
+    public void onTimeButtonAction(){
+
     }
 
 }

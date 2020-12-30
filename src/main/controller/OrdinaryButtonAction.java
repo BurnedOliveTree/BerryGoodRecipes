@@ -12,7 +12,7 @@ import java.io.IOException;
 public interface OrdinaryButtonAction {
 
 
-    void onExitAction(Button button);
+    void onExitButtonAction();
 
     default void changeScene(Button button,FXMLLoader loader) {
         try {

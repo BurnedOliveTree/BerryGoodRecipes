@@ -7,7 +7,7 @@
    <top>
       <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
-          <Button mnemonicParsing="false" text="X" />
+          <Button fx:id="exitButton" onAction="#onExitButtonAction" mnemonicParsing="false" text="X" />
         </items>
       </ToolBar>
    </top>
