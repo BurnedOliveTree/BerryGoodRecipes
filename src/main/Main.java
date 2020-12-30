@@ -13,7 +13,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-    public static User activeUser;
+    public static User activeUser = null;
 
     @Override
     public void start(Stage primaryStage) throws IOException {
