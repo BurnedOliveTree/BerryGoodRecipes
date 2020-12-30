@@ -44,18 +44,18 @@
       <ChoiceBox fx:id="IHaveBox" layoutX="419.0" layoutY="447.0" prefWidth="150.0" />
       <Label fx:id="inRecipeSize" layoutX="68.0" layoutY="495.0" prefHeight="25.0" prefWidth="67.0" />
       <Label fx:id="IHaveSize" layoutX="371.0" layoutY="503.0" prefHeight="17.0" prefWidth="67.0" />
-      <TextArea fx:id="inRecipeText1" layoutX="141.0" layoutY="493.0" prefHeight="17.0" prefWidth="16.0" visible="false" />
-      <TextArea fx:id="inRecipeText2" layoutX="219.0" layoutY="493.0" prefHeight="21.0" prefWidth="16.0" visible="false" />
-      <TextArea fx:id="IHaveText1" layoutX="453.0" layoutY="493.0" prefHeight="17.0" prefWidth="16.0" visible="false" />
-      <TextArea layoutX="538.0" layoutY="489.0" prefHeight="38.0" prefWidth="22.0" visible="false" />
-      <Label layoutX="190.0" layoutY="504.0" prefHeight="17.0" prefWidth="22.0" fx:id="x1" />
+      <TextArea fx:id="inRecipeArea1" layoutX="141.0" layoutY="493.0" prefHeight="17.0" prefWidth="16.0" visible="false" />
+      <TextArea fx:id="inRecipeArea2" layoutX="219.0" layoutY="493.0" prefHeight="21.0" prefWidth="16.0" visible="false" />
+      <TextArea fx:id="IHaveArea1" layoutX="453.0" layoutY="493.0" prefHeight="17.0" prefWidth="16.0" visible="false" />
+      <Label layoutX="190.0" layoutY="499.0" prefHeight="17.0" prefWidth="34.0" fx:id="x1" />
       <Label layoutX="506.0" layoutY="504.0" prefHeight="17.0" prefWidth="16.0" fx:id="x2" />
       <Label fx:id="cm1" layoutX="273.0" layoutY="504.0" prefHeight="17.0" prefWidth="22.0" />
       <Label fx:id="cm2" layoutX="587.0" layoutY="505.0" prefHeight="17.0" prefWidth="22.0" />
-      <TextArea layoutX="57.0" layoutY="176.0" prefHeight="31.0" prefWidth="22.0" />
+      <TextArea fx:id="ml" layoutX="57.0" layoutY="176.0" prefHeight="31.0" prefWidth="22.0" />
       <TextArea fx:id="glass" layoutX="57.0" layoutY="230.0" prefHeight="0.0" prefWidth="7.0" />
       <TextArea fx:id="tbls" layoutX="201.0" layoutY="176.0" prefHeight="21.0" prefWidth="2.0" />
       <TextArea fx:id="teas" layoutX="201.0" layoutY="230.0" prefHeight="0.0" prefWidth="5.0" />
       <TextArea fx:id="gram" layoutX="494.0" layoutY="203.0" prefHeight="25.0" prefWidth="35.0" />
+      <TextArea fx:id="IHaveArea2" layoutX="534.0" layoutY="494.0" prefHeight="6.0" prefWidth="0.0" visible="false" />
    </children>
 </Pane>
