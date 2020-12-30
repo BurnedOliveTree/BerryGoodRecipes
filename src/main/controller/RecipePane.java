@@ -93,6 +93,21 @@ public class RecipePane {
             } catch ( FileNotFoundException e) {
                 System.err.println(String.format("Error: %s", e.getMessage()));
             }
+        if (button.getId().equals("commentButton")){
+            try {
+                FXMLLoader loader =  new FXMLLoader(getClass().getResource(namePath));
+                OpinionPane controller = new OpinionPane(this.recipe);
+                loader.setController(controller);
+                Parent mainPage = loader.load();
+                Scene mainPageScene = new Scene(mainPage);
+                Stage stage = (Stage) button.getScene().getWindow();
+                mainPageScene.getStylesheets().add(getClass().getResource("/resources/"+Core.theme+".css").toExternalForm());
+                stage.setScene(mainPageScene);
+                stage.show();
+            } catch (IOException e) {
+                System.err.println(String.format("Error: %s", e.getMessage()));}
+
+        }
         else {
             try {
                 Parent mainPage = FXMLLoader.load(getClass().getResource(namePath));
@@ -104,6 +119,7 @@ public class RecipePane {
             } catch (IOException e) {
                 System.err.println(String.format("Error: %s", e.getMessage()));}
         }
+
     }
 
 }
