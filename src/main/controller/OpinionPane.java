@@ -44,14 +44,12 @@ public class OpinionPane {
     @FXML
     private void initialize(){
         scoreBox.setItems(scoreList);
-        exitButton.setOnAction( e->{ onAction(exitButton, "/resources/mainPage.fxml"); });
+        exitButton.setOnAction( e->{ onAction(exitButton, "/resources/recipePage.fxml"); });
 
     }
     private void  onAction(Button button, String namePath) {
         try {
-            FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
-
-//            RecipePane controller = new RecipePane(new Recipe(1,"Placki", new User("Karolina", "1234"), "Zrób farsz i nagrzej patelnie", 0, "2020-01-01", 10, 20, 4,  new ArrayList<>(){{add(new Ingredient(200, new Unit(), "Twaróg"));}}));
+            FXMLLoader loader =  new FXMLLoader(getClass().getResource(namePath));
             RecipePane controller = new RecipePane(this.recipe);
             loader.setController(controller);
             Parent recipePage = loader.load();
