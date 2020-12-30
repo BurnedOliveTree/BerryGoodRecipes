@@ -23,7 +23,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class RecipePane {
+public class RecipePane  implements OrdinaryButtonAction{
     private final Recipe recipe;
     private final User activeUser;
     @FXML
@@ -172,23 +172,11 @@ public class RecipePane {
         changeScene(button, loader);
     }
 
-    private void onExitAction(Button button){
+    public void onExitAction(Button button){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/mainPage.fxml"));
         MainPane controller = new MainPane(activeUser);
         loader.setController(controller);
         changeScene(button, loader);
     }
 
-    private void changeScene(Button button,FXMLLoader loader) {
-        try {
-
-            Parent mainPage = loader.load();
-            Scene mainPageScene = new Scene(mainPage);
-            Stage stage = (Stage) button.getScene().getWindow();
-            mainPageScene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
-            stage.setScene(mainPageScene);
-            stage.show();
-        } catch (IOException e) {
-            System.err.println(String.format("Error: %s", e.getMessage()));}
-    }
 }
