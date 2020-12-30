@@ -53,7 +53,7 @@ public class RecipePane  implements OrdinaryButtonAction{
     }
 
     @FXML
-    void initialize() {
+    void initialize() throws FileNotFoundException {
         if (DatabaseConnection.theme.equals("lightTheme") || DatabaseConnection.theme.equals("winter")) {
             try {
                 ScalePic.setImage(new Image(new FileInputStream("src/resources/berryScale.png")));
@@ -94,7 +94,10 @@ public class RecipePane  implements OrdinaryButtonAction{
         // options for logged in users
         if (activeUser == null) {
             likeButton.setDisable(true);
+        } else if (activeUser.checkIfRecipeFavorite(this.recipe.getId())){
+            LikePic.setImage(new Image(new FileInputStream("src/resources/favoriteClicked.png")));
         }
+
 
         portionArea.textProperty().addListener((observableValue, s, t1) -> {
             try {

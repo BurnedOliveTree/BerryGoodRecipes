@@ -76,4 +76,6 @@ public class User {
         else
             return false;
     };
+
+    public List<Integer> getFavorites() {return favorites;}
 }
