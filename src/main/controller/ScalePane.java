@@ -114,4 +114,4 @@ public class ScalePane {
             stage.show();
         } catch (IOException e) {
             System.err.println(String.format("Error: %s", e.getMessage()));}
-}}
+    }}
