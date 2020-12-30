@@ -90,12 +90,12 @@
             <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Button mnemonicParsing="false" onMouseClicked="#onLogInButtonClick" prefHeight="32.0" prefWidth="64.0" text="Log in" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+            <Button mnemonicParsing="false" onMouseClicked="#onSignInButtonClick" prefHeight="32.0" prefWidth="64.0" text="Sign in" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
             </Button>
-            <Button mnemonicParsing="false" onMouseClicked="#onRegisterButtonClick" prefHeight="32.0" prefWidth="64.0" text="Register" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+            <Button mnemonicParsing="false" prefHeight="32.0" prefWidth="64.0" text="TBD" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
          </children>
       </GridPane>
    </left>

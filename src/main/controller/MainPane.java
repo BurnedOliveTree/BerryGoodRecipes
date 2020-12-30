@@ -61,8 +61,8 @@ public class MainPane {
     // TODO these buttons should only show up when Core.activeUser = null, else they should disappear
 
     @FXML
-    public void onLogInButtonClick(MouseEvent mouseEvent) {
-        // create a new Window with log in
+    public void onSignInButtonClick(MouseEvent mouseEvent) {
+        // create a new Window with sign in
         try {
             mouseEvent.consume();
             try {
@@ -75,25 +75,7 @@ public class MainPane {
             Scene scene = new Scene(loader.load());
             scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
             Stage stage = new Stage();
-            stage.setTitle("Login");
-            stage.setScene(scene);
-            stage.show();
-        } catch (IOException e) {
-            System.err.printf("Error: %s%n", e.getMessage());
-        }
-    }
-
-    @FXML
-    public void onRegisterButtonClick(MouseEvent mouseEvent) {
-        // create a new Window with log in
-        try {
-            mouseEvent.consume();
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/logInWindow.fxml"));
-            loader.setController(new LogInWindow(this));
-            Scene scene = new Scene(loader.load());
-            scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
-            Stage stage = new Stage();
-            stage.setTitle("Register");
+            stage.setTitle("Sign In");
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {

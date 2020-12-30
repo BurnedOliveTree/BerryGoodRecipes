@@ -16,6 +16,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Properties;
+import javafx.scene.control.Label;
 
 public class DatabaseConnection {
     static Connection connection;
@@ -99,7 +100,7 @@ public class DatabaseConnection {
         return newRecipe;
     }
 
-    public static User login(String username, String password) throws SQLException {
+    public static User login(String username, String password, Label errMess) throws SQLException {
         setConnection();
 
         User activeUser = null;
@@ -114,13 +115,13 @@ public class DatabaseConnection {
                 // everything is correct, create a user
                 activeUser = new User(username, password);
                 // TODO add all the other columns in the future
-                System.out.println("Successfully logged in!");
+                errMess.setText("Successfully logged in!");
             } else {
-                System.out.println("Incorrect password!");
+                errMess.setText("Incorrect password!");
             }
         }
         else {
-            System.out.println("User with such a username does not exist in the database!");
+            errMess.setText("Username does not exist!");
         }
 
         resultSet.close();
@@ -130,7 +131,7 @@ public class DatabaseConnection {
         return activeUser;
     }
 
-    public static User register(String username, String password) throws SQLException {
+    public static User register(String username, String password, Label errMess) throws SQLException {
         setConnection();
 
         User activeUser = null;
@@ -139,15 +140,15 @@ public class DatabaseConnection {
         // check if such a username exists in the database
         ResultSet resultSet = statement.executeQuery("select * from \"USER\" where USERNAME = '"+username+"'");
         if (resultSet.next()) {
-            System.out.println("User with such a username already exists in the database!");
+            errMess.setText("Username already exists!");
         }
         else {
             if (!statement.execute("insert into \"USER\" values('"+username+"', '"+password+"', null)")) {
                 activeUser = new User(username, password);
-                System.out.println("Successfully created an account!");
+                errMess.setText("Successfully created an account!");
             }
             else {
-                System.out.println("Creating the account failed, somehow");
+                errMess.setText("Creating the account failed!");
             }
         }
 
