@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
+import main.userModel.Opinion;
 import main.userModel.User;
 
 import java.io.FileInputStream;
@@ -137,7 +138,7 @@ public class RecipePane {
 
     private void onCommentAction(Button button){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/opinionPage.fxml"));
-        ScalePane controller = new ScalePane(this.recipe, activeUser);
+        OpinionPane controller = new OpinionPane(this.recipe, activeUser);
         loader.setController(controller);
         changeScene(button, loader);
     }
@@ -151,7 +152,7 @@ public class RecipePane {
 
     private void onExitAction(Button button){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/mainPage.fxml"));
-        ScalePane controller = new ScalePane(this.recipe, activeUser);
+        MainPane controller = new MainPane(activeUser);
         loader.setController(controller);
         changeScene(button, loader);
     }
