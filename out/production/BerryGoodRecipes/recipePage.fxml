@@ -18,7 +18,7 @@
             <items>
                 <Button fx:id="exitButton" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" text="x" />
                 <Label minWidth="30.0" />
-                <Button fx:id="scaleButton" minWidth="30.0" mnemonicParsing="false">
+                <Button fx:id="scaleButton" onMouseClicked="#onScaleAction" minWidth="30.0" mnemonicParsing="false">
                     <graphic>
                         <ImageView fx:id="ScalePic" fitHeight="30.0" fitWidth="30.0">
                             <image>
@@ -60,7 +60,7 @@
     <left>
         <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="TOP_RIGHT">
             <bottom>
-                <Button fx:id="commentButton" mnemonicParsing="false" prefHeight="31.0" prefWidth="235.0" text="Comment" BorderPane.alignment="CENTER" />
+                <Button fx:id="commentButton" onMouseClicked="#onCommentAction" mnemonicParsing="false" prefHeight="31.0" prefWidth="235.0" text="Comment" BorderPane.alignment="CENTER" />
             </bottom>
             <center>
                 <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
