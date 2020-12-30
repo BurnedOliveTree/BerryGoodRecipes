@@ -1,10 +1,14 @@
 package main.controller;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.stage.Stage;
 import main.DatabaseConnection;
 import main.recipeModel.Recipe;
@@ -15,6 +19,7 @@ import java.io.IOException;
 public class ScalePane {
     private final Recipe recipe;
     private final User activeUser;
+    ObservableList<String> shapeList = FXCollections.observableArrayList("Round", "Rectangular");
     public ScalePane(Recipe recipe, User activeUser) {
         this.recipe = recipe;
         this.activeUser = activeUser;
@@ -22,9 +27,13 @@ public class ScalePane {
 
     @FXML
     public Button exitButton;
+    public ChoiceBox IHaveBox;
+    public ChoiceBox inRecipeBox;
     @FXML
     private void initialize(){
         exitButton.setOnAction( e->{ onAction(exitButton, "/resources/recipePage.fxml"); });
+        IHaveBox.setItems(shapeList);
+        inRecipeBox.setItems(shapeList);
     }
 
     private void  onAction(Button button, String namePath) {
