@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class MainPane {
-    private final User activeUser;
+    public User activeUser;
     @FXML
     public Button recipeLink;
     public Pane recipePane;
@@ -72,7 +72,14 @@ public class MainPane {
         // create a new Window with log in
         try {
             mouseEvent.consume();
-            Scene scene = new Scene(new FXMLLoader(getClass().getResource("/resources/logInWindow.fxml")).load());
+            try {
+                System.out.println("Active user: "+activeUser.getUsername());
+            } catch (NullPointerException e) {
+                System.err.println("No active user");
+            }
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/logInWindow.fxml"));
+            loader.setController(new LogInWindow(this));
+            Scene scene = new Scene(loader.load());
             scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
             Stage stage = new Stage();
             stage.setTitle("Login");
@@ -88,7 +95,9 @@ public class MainPane {
         // create a new Window with log in
         try {
             mouseEvent.consume();
-            Scene scene = new Scene(new FXMLLoader(getClass().getResource("/resources/logInWindow.fxml")).load());
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/logInWindow.fxml"));
+            loader.setController(new LogInWindow(this));
+            Scene scene = new Scene(loader.load());
             scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
             Stage stage = new Stage();
             stage.setTitle("Register");

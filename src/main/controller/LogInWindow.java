@@ -5,22 +5,22 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import main.DatabaseConnection;
-import main.userModel.User;
 
 import java.sql.*;
 
 public class LogInWindow {
-    private User activeUser;
+    private final MainPane mainPane;
     public TextField usernameField;
     public TextField passwordField;
     private String username;
     private String password;
 
-    public LogInWindow() {}
+    public LogInWindow(MainPane mainPane) {
+        this.mainPane = mainPane;
+    }
 
     @FXML
-    void initialize() {
-    }
+    void initialize() { }
 
     @FXML
     private void getData(MouseEvent event) throws SQLException {
@@ -39,10 +39,10 @@ public class LogInWindow {
     }
 
     public void login() throws SQLException {
-        activeUser = DatabaseConnection.login(username, password);
+        mainPane.activeUser = DatabaseConnection.login(username, password);
     }
 
     public void register() throws SQLException {
-        activeUser = DatabaseConnection.register(username, password);
+        mainPane.activeUser = DatabaseConnection.register(username, password);
     }
 }
