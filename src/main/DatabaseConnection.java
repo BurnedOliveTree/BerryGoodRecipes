@@ -5,15 +5,29 @@ import main.recipeModel.Recipe;
 import main.recipeModel.Unit;
 import oracle.jdbc.pool.OracleDataSource;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Properties;
 
 public class DatabaseConnection {
     Connection connection;
+    public static String theme;
+    public static String databaseLogin;
+    public static String databasePassword;
+    public static String databasePort;
+    public static String databaseServiceName;
+    public static String databaseHost;
+
+    public DatabaseConnection() throws IOException {
+        loadFile();
+    }
 
 //    public void connect() {
 //        Connection conn = null;
@@ -48,24 +62,37 @@ public class DatabaseConnection {
 //        connect();
 //    }
 
+    private void loadFile() throws IOException {
+        Properties prop = new Properties();
+        String fileName = "src/resources/app.config";
+        InputStream is = new FileInputStream(fileName);
+        prop.load(is);
+        theme = prop.getProperty("app.theme");
+        databaseLogin = prop.getProperty("app.login");
+        databasePassword = prop.getProperty("app.password");
+        databasePort = prop.getProperty("app.port");
+        databaseServiceName = prop.getProperty("app.service.name");
+        databaseHost = prop.getProperty("app.host");
+    }
+
     public void setConnection() throws SQLException {
 
         String connectionURL = String.format(
                 "jdbc:oracle:thin:%s/%s@//%s:%s/%s",
-                Core.databaseLogin, Core.databasePassword, Core.databaseHost, Core.databasePort, Core.databaseServiceName);
+                databaseLogin, databasePassword, databaseHost, databasePort, databaseServiceName);
         OracleDataSource ods = new OracleDataSource();
         ods.setURL(connectionURL);
-        this.connection = ods.getConnection();
+        connection = ods.getConnection();
     };
 
     public void closeConnection() throws SQLException {
-        this.connection.close();
+        connection.close();
         System.out.println("Connection with database closed.");
     }
 
     public Recipe getRecipe(int recipeId) throws SQLException {
         setConnection();
-        Statement statement = this.connection.createStatement();
+        Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery(String.format("SELECT * FROM RECIPE WHERE RECIPE_ID = %s", recipeId));
         result.next();
         String ownerName = result.getString("OWNER_NAME");

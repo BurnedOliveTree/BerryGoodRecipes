@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import main.Core;
+import main.DatabaseConnection;
 import main.userModel.User;
 
 import java.sql.*;
@@ -41,7 +41,7 @@ public class LogInWindow {
         Connection conn = null;
 
         try {
-            conn = DriverManager.getConnection("jdbc:oracle:thin:@//ora4.ii.pw.edu.pl:1521/pdb1.ii.pw.edu.pl", Core.databaseLogin, Core.databasePassword);
+            conn = DriverManager.getConnection("jdbc:oracle:thin:@//ora4.ii.pw.edu.pl:1521/pdb1.ii.pw.edu.pl", DatabaseConnection.databaseLogin, DatabaseConnection.databasePassword);
 
             try (Statement stmt = conn.createStatement()) {
                 // check if such a username exists in the database
@@ -53,7 +53,7 @@ public class LogInWindow {
                         // everything is correct, create a user
                         String name = queryResult.getString("USERNAME");
                         // TODO add all the other columns in the future
-                        Core.activeUser = new User(username, password);
+//                        DatabaseConnection.activeUser = new User(username, password);
                         System.out.println("Successfully logged in!");
                     } else {
                         System.out.println("Incorrect password!");
@@ -82,7 +82,7 @@ public class LogInWindow {
         Connection conn = null;
 
         try {
-            conn = DriverManager.getConnection("jdbc:oracle:thin:@//ora4.ii.pw.edu.pl:1521/pdb1.ii.pw.edu.pl", Core.databaseLogin, Core.databasePassword);
+            conn = DriverManager.getConnection("jdbc:oracle:thin:@//ora4.ii.pw.edu.pl:1521/pdb1.ii.pw.edu.pl", DatabaseConnection.databaseLogin, DatabaseConnection.databasePassword);
 
             try (Statement stmt = conn.createStatement()) {
                 if (!stmt.execute("insert into \"USER\" values('"+username+"', '"+password+"', null)")) {

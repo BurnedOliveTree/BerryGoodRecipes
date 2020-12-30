@@ -9,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 
 import javafx.stage.Stage;
-import main.Core;
 import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
@@ -58,7 +57,7 @@ public class OpinionPane {
             Parent recipePage = loader.load();
             Scene recipePageScene = new Scene(recipePage);
             Stage stage = (Stage) exitButton.getScene().getWindow();
-            recipePageScene.getStylesheets().add(getClass().getResource("/resources/"+Core.theme+".css").toExternalForm());
+            recipePageScene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
             stage.setScene(recipePageScene);
             stage.show();
         } catch (IOException e) {

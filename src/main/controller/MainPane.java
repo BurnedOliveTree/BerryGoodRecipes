@@ -11,7 +11,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import main.Core;
 import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
@@ -33,7 +32,7 @@ public class MainPane {
     @FXML
     void initialize() {
         recipeLink.setText("Placki");
-        if (Core.theme.equals("lightTheme") || Core.theme.equals("winter")) {
+        if (DatabaseConnection.theme.equals("lightTheme") || DatabaseConnection.theme.equals("winter")) {
             try {
                 logo.setImage(new Image(new FileInputStream("src/resources/berryLogo.png")));
             } catch (FileNotFoundException e) {
@@ -57,7 +56,7 @@ public class MainPane {
             Parent recipePage = loader.load();
             Scene recipePageScene = new Scene(recipePage);
             Stage stage = (Stage) recipeLink.getScene().getWindow();
-            recipePageScene.getStylesheets().add(getClass().getResource("/resources/"+Core.theme+".css").toExternalForm());
+            recipePageScene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
             stage.setScene(recipePageScene);
             stage.show();
         } catch (IOException | SQLException e) {
@@ -73,7 +72,7 @@ public class MainPane {
         try {
             mouseEvent.consume();
             Scene scene = new Scene(new FXMLLoader(getClass().getResource("/resources/logInWindow.fxml")).load());
-            scene.getStylesheets().add(getClass().getResource("/resources/"+Core.theme+".css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
             Stage stage = new Stage();
             stage.setTitle("Login");
             stage.setScene(scene);
@@ -89,7 +88,7 @@ public class MainPane {
         try {
             mouseEvent.consume();
             Scene scene = new Scene(new FXMLLoader(getClass().getResource("/resources/logInWindow.fxml")).load());
-            scene.getStylesheets().add(getClass().getResource("/resources/"+Core.theme+".css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
             Stage stage = new Stage();
             stage.setTitle("Register");
             stage.setScene(scene);

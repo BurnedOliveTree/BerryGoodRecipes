@@ -11,7 +11,7 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
-import main.Core;
+import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
 
@@ -46,7 +46,7 @@ public class RecipePane {
 
     @FXML
     void initialize() {
-        if (Core.theme.equals("lightTheme") || Core.theme.equals("winter")) {
+        if (DatabaseConnection.theme.equals("lightTheme") || DatabaseConnection.theme.equals("winter")) {
             try {
                 ScalePic.setImage(new Image(new FileInputStream("src/resources/berryScale.png")));
                 ShoppingPic.setImage(new Image(new FileInputStream("src/resources/berryBasket.png")));
@@ -101,7 +101,7 @@ public class RecipePane {
                 Parent mainPage = loader.load();
                 Scene mainPageScene = new Scene(mainPage);
                 Stage stage = (Stage) button.getScene().getWindow();
-                mainPageScene.getStylesheets().add(getClass().getResource("/resources/"+Core.theme+".css").toExternalForm());
+                mainPageScene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
                 stage.setScene(mainPageScene);
                 stage.show();
             } catch (IOException e) {
@@ -113,7 +113,7 @@ public class RecipePane {
                 Parent mainPage = FXMLLoader.load(getClass().getResource(namePath));
                 Scene mainPageScene = new Scene(mainPage);
                 Stage stage = (Stage) button.getScene().getWindow();
-                mainPageScene.getStylesheets().add(getClass().getResource("/resources/"+Core.theme+".css").toExternalForm());
+                mainPageScene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
                 stage.setScene(mainPageScene);
                 stage.show();
             } catch (IOException e) {

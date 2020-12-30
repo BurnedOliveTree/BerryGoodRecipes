@@ -10,6 +10,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+//    public static User activeUser;
     @Override
     public void start(Stage primaryStage) throws IOException {
         setup();
@@ -19,15 +20,15 @@ public class Main extends Application {
         loader.setLocation(this.getClass().getResource("/resources/mainPage.fxml"));
         Pane pane = loader.load();
         Scene scene = new Scene(pane);
-        scene.getStylesheets().add(getClass().getResource("/resources/"+Core.theme+".css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
 
         MainPane controller = loader.getController();
     }
 
-    private void setup() {
-        new Core();
+    private void setup() throws IOException {
+        new DatabaseConnection();
     }
 
     public static void main(String[] args) {
