@@ -93,7 +93,7 @@ public class RecipePane {
             } catch ( FileNotFoundException e) {
                 System.err.println(String.format("Error: %s", e.getMessage()));
             }
-        if (button.getId().equals("commentButton")){
+        else if (button.getId().equals("commentButton")){
             try {
                 FXMLLoader loader =  new FXMLLoader(getClass().getResource(namePath));
                 OpinionPane controller = new OpinionPane(this.recipe);
