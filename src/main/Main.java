@@ -1,5 +1,8 @@
 package main;
 
+import javafx.application.Platform;
+import javafx.event.EventHandler;
+import javafx.stage.WindowEvent;
 import main.controller.MainPane;
 import main.userModel.User;
 
@@ -25,6 +28,16 @@ public class Main extends Application {
         scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent e) {
+
+                Platform.exit();
+                System.exit(0);
+            }
+        });
+
+
 
 //        MainPane controller = loader.getController();
     }
