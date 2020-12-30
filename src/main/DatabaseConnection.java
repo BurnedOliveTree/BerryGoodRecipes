@@ -1,5 +1,6 @@
 package main;
 
+import main.userModel.User;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
 import main.recipeModel.Unit;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 public class DatabaseConnection {
-    Connection connection;
+    static Connection connection;
     public static String theme;
     public static String databaseLogin;
     public static String databasePassword;
@@ -28,39 +29,6 @@ public class DatabaseConnection {
     public DatabaseConnection() throws IOException {
         loadFile();
     }
-
-//    public void connect() {
-//        Connection conn = null;
-//        try {
-//            conn = DriverManager.getConnection("jdbc:oracle:thin:@//ora4.ii.pw.edu.pl:1521/pdb1.ii.pw.edu.pl", Core.databaseLogin, Core.databasePassword);
-//
-//            String query = "select * from INGREDIENT";
-//            try (Statement stmt = conn.createStatement()) {
-//                ResultSet rs = stmt.executeQuery(query);
-//                while (rs.next()) {
-//                    String name = rs.getString("NAME");
-//                    System.out.println(name);
-//                }
-//            } catch (SQLException e) {
-//                throw new Error("Problem", e);
-//            }
-//
-//        } catch (SQLException e) {
-//            throw new Error("Problem", e);
-//        } finally {
-//            try {
-//                if (conn != null) {
-//                    conn.close();
-//                }
-//            } catch (SQLException ex) {
-//                System.out.println(ex.getMessage());
-//            }
-//        }
-//    }
-//
-//    public void test() {
-//        connect();
-//    }
 
     private void loadFile() throws IOException {
         Properties prop = new Properties();
@@ -75,7 +43,7 @@ public class DatabaseConnection {
         databaseHost = prop.getProperty("app.host");
     }
 
-    public void setConnection() throws SQLException {
+    public static void setConnection() throws SQLException {
 
         String connectionURL = String.format(
                 "jdbc:oracle:thin:%s/%s@//%s:%s/%s",
@@ -85,12 +53,12 @@ public class DatabaseConnection {
         connection = ods.getConnection();
     };
 
-    public void closeConnection() throws SQLException {
+    public static void closeConnection() throws SQLException {
         connection.close();
         System.out.println("Connection with database closed.");
     }
 
-    public Recipe getRecipe(int recipeId) throws SQLException {
+    public static Recipe getRecipe(int recipeId) throws SQLException {
         setConnection();
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery(String.format("SELECT * FROM RECIPE WHERE RECIPE_ID = %s", recipeId));
@@ -129,5 +97,64 @@ public class DatabaseConnection {
         closeConnection();
 
         return newRecipe;
+    }
+
+    public static User login(String username, String password) throws SQLException {
+        setConnection();
+
+        User activeUser = null;
+        Statement statement = connection.createStatement();
+
+        // check if such a username exists in the database
+        ResultSet resultSet = statement.executeQuery("select * from \"USER\" where USERNAME = '"+username+"'");
+        if (resultSet.next()) {
+            // check if password is correct
+            String gotPassword = resultSet.getString("PASSWORD");
+            if (gotPassword.equals(password)) {
+                // everything is correct, create a user
+                activeUser = new User(username, password);
+                // TODO add all the other columns in the future
+                System.out.println("Successfully logged in!");
+            } else {
+                System.out.println("Incorrect password!");
+            }
+        }
+        else {
+            System.out.println("User with such a username does not exist in the database!");
+        }
+
+        resultSet.close();
+        statement.close();
+        closeConnection();
+
+        return activeUser;
+    }
+
+    public static User register(String username, String password) throws SQLException {
+        setConnection();
+
+        User activeUser = null;
+        Statement statement = connection.createStatement();
+
+        // check if such a username exists in the database
+        ResultSet resultSet = statement.executeQuery("select * from \"USER\" where USERNAME = '"+username+"'");
+        if (resultSet.next()) {
+            System.out.println("User with such a username already exists in the database!");
+        }
+        else {
+            if (!statement.execute("insert into \"USER\" values('"+username+"', '"+password+"', null)")) {
+                activeUser = new User(username, password);
+                System.out.println("Successfully created an account!");
+            }
+            else {
+                System.out.println("Creating the account failed, somehow");
+            }
+        }
+
+        resultSet.close();
+        statement.close();
+        closeConnection();
+
+        return activeUser;
     }
 }

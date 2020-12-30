@@ -10,6 +10,7 @@ import main.userModel.User;
 import java.sql.*;
 
 public class LogInWindow {
+    private User activeUser;
     public TextField usernameField;
     public TextField passwordField;
     private String username;
@@ -22,7 +23,7 @@ public class LogInWindow {
     }
 
     @FXML
-    private void getData(MouseEvent event) {
+    private void getData(MouseEvent event) throws SQLException {
         event.consume();
         System.out.println("Hello "+usernameField.getText()+", your password is "+passwordField.getText());
         username = usernameField.getText();
@@ -37,74 +38,11 @@ public class LogInWindow {
         stage.close();
     }
 
-    public void login() {
-        Connection conn = null;
-
-        try {
-            conn = DriverManager.getConnection("jdbc:oracle:thin:@//ora4.ii.pw.edu.pl:1521/pdb1.ii.pw.edu.pl", DatabaseConnection.databaseLogin, DatabaseConnection.databasePassword);
-
-            try (Statement stmt = conn.createStatement()) {
-                // check if such a username exists in the database
-                ResultSet queryResult = stmt.executeQuery("select * from \"USER\" where USERNAME = '"+username+"'");
-                if (queryResult.next()) {
-                    // check if password is correct
-                    String gotPassword = queryResult.getString("PASSWORD");
-                    if (gotPassword.equals(password)) {
-                        // everything is correct, create a user
-                        String name = queryResult.getString("USERNAME");
-                        // TODO add all the other columns in the future
-//                        DatabaseConnection.activeUser = new User(username, password);
-                        System.out.println("Successfully logged in!");
-                    } else {
-                        System.out.println("Incorrect password!");
-                    }
-                }
-                else {
-                    System.out.println("User with such a username does not exist in the database!");
-                }
-            } catch (SQLException e) {
-                throw new Error("Problem", e);
-            }
-        } catch (SQLException e) {
-            throw new Error("Problem", e);
-        } finally {
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
-            }
-        }
+    public void login() throws SQLException {
+        activeUser = DatabaseConnection.login(username, password);
     }
 
-    public void register() {
-        Connection conn = null;
-
-        try {
-            conn = DriverManager.getConnection("jdbc:oracle:thin:@//ora4.ii.pw.edu.pl:1521/pdb1.ii.pw.edu.pl", DatabaseConnection.databaseLogin, DatabaseConnection.databasePassword);
-
-            try (Statement stmt = conn.createStatement()) {
-                if (!stmt.execute("insert into \"USER\" values('"+username+"', '"+password+"', null)")) {
-                    System.out.println("Successfully created an account!");
-                }
-                else {
-                    System.out.println("Creating the account failed, somehow");
-                }
-            } catch (SQLException e) {
-                throw new Error("Problem", e);
-            }
-        } catch (SQLException e) {
-            throw new Error("Problem", e);
-        } finally {
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
-            }
-        }
-
+    public void register() throws SQLException {
+        activeUser = DatabaseConnection.register(username, password);
     }
 }

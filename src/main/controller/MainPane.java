@@ -49,8 +49,7 @@ public class MainPane {
         try {
             FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
 
-            DatabaseConnection connection = new DatabaseConnection();
-            Recipe recipe = connection.getRecipe(1);
+            Recipe recipe = DatabaseConnection.getRecipe(1);
 
 //            RecipePane controller = new RecipePane(new Recipe(1,"Placki", new User("Karolina", "1234"), "Zrób farsz i nagrzej patelnie", 0, "2020-01-01", 10, 20, 4,  new ArrayList<>(){{add(new Ingredient(200, new Unit(), "Twaróg"));}}));
             RecipePane controller = new RecipePane(recipe, activeUser);
