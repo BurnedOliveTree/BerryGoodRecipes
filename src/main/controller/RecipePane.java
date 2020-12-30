@@ -77,8 +77,8 @@ public class RecipePane {
             portionArea.setText(String.valueOf(this.recipe.getPortionNumber()));
 
         setIngredListView();
-
         ingredientListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
         String x = "Author: " + this.recipe.getAuthor();
 
         authorLabel.setText("Author: " + this.recipe.getAuthor());
@@ -191,6 +191,4 @@ public class RecipePane {
         } catch (IOException e) {
             System.err.println(String.format("Error: %s", e.getMessage()));}
     }
-
-
 }

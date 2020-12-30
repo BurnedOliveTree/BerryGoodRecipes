@@ -10,6 +10,7 @@ public class Recipe {
     private double cost = 0;
     private String name;
     private int accessibility;
+    private String groupName;
     private double portionNumber;
     private String dateAdded;
     private String prepareMethod;
@@ -31,6 +32,14 @@ public class Recipe {
         this.cost = cost;
         this.prepareTime = prepareTime;
         this.id = id;
+    }
+
+    public Recipe(int id, String name, String groupName, String dateAdded)
+    {
+        this.id = id;
+        this.name = name;
+        this.groupName = groupName;
+        this.dateAdded = dateAdded;
     }
 
 //    public void addOpinion(String opinionText, int rate, User user)
@@ -156,6 +165,8 @@ public class Recipe {
     }
 
     public String getDateAdded() {return dateAdded;}
+
+    public String getGroupName() {return groupName;}
 
     public int getId() {return id;}
 }

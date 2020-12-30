@@ -10,14 +10,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
+
 import javafx.scene.control.Label;
 
 public class DatabaseConnection {
@@ -113,7 +110,8 @@ public class DatabaseConnection {
             String gotPassword = resultSet.getString("PASSWORD");
             if (gotPassword.equals(password)) {
                 // everything is correct, create a user
-                activeUser = new User(username, password);
+                List<Recipe> userRecipes = getUserRecipes(username);
+                activeUser = new User(username, password, userRecipes);
                 // TODO add all the other columns in the future
                 errMess.setText("Successfully logged in!");
             } else {
@@ -131,6 +129,28 @@ public class DatabaseConnection {
         return activeUser;
     }
 
+    public static List<Recipe> getUserRecipes(String username) throws SQLException {
+        setConnection();
+        Statement statement = connection.createStatement();
+        ResultSet result = statement.executeQuery(String.format("SELECT RECIPE_ID, NAME, DATE_ADDED FROM RECIPE WHERE UPPER(OWNER_NAME) = '%s'", username.toUpperCase()));
+        List<Recipe> UserRecipes = new ArrayList<Recipe>();
+        while (result.next()) {
+            int id = result.getInt("RECIPE_ID");
+            String name = result.getString("NAME");
+            String dateAdded = result.getString("DATE_ADDED");
+            Statement stat = connection.createStatement();
+            ResultSet resPublicity = stat.executeQuery(String.format("SELECT G.NAME FROM \"GROUP\" G WHERE G.GROUP_ID = (SELECT P.GROUP_ID FROM PUBLICITY P WHERE P.RECIPE_ID = %d)", id));
+            resPublicity.next();
+            String groupName = resPublicity.getString("NAME");
+//            resPublicity.close();
+            Recipe recipe = new Recipe(id, name, groupName, dateAdded);
+            UserRecipes.add(recipe);
+        }
+        result.close();
+        closeConnection();
+        return UserRecipes;
+    }
+
     public static User register(String username, String password, Label errMess) throws SQLException {
         setConnection();
 
@@ -144,7 +164,8 @@ public class DatabaseConnection {
         }
         else {
             if (!statement.execute("insert into \"USER\" values('"+username+"', '"+password+"', null)")) {
-                activeUser = new User(username, password);
+                List<Recipe> userRecipes = getUserRecipes(username);
+                activeUser = new User(username, password, userRecipes);
                 errMess.setText("Successfully created an account!");
             }
             else {

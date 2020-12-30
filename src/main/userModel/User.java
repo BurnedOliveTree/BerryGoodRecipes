@@ -5,8 +5,6 @@ import main.recipeModel.Unit;
 
 import java.util.List;
 import java.util.LinkedList;
-import java.util.Map;
-import java.util.HashMap;
 
 public class User {
     private String username;
@@ -19,10 +17,10 @@ public class User {
     // TODO private UnitSystem defaultUnitSystem;
     private ShoppingList shoppingList;
 
-    public User(String argUsername, String argPassword) {
+    public User(String argUsername, String argPassword, List<Recipe> userRecipes ) {
         username = argUsername;
         password = argPassword;
-        userRecipes = new LinkedList<>();
+        this.userRecipes = userRecipes;
         favorites = new LinkedList<>();
         followed = new LinkedList<>();
         // TODO defaultUnitSystem = argUnitSystem;
@@ -36,12 +34,15 @@ public class User {
     public void setNewPassword(String newPassword) {
         password = newPassword;
     }
-    public void addRecipe(Recipe newRecipe) {
-        userRecipes.add(newRecipe);
-    }
-    public void removeRecipe(Recipe oldRecipe) {
-        userRecipes.remove(oldRecipe);
-    }
+//    public void addRecipe(Recipe newRecipe) {
+//        userRecipes.add(newRecipe);
+//    }
+//    public void removeRecipe(Recipe oldRecipe) {
+//        userRecipes.remove(oldRecipe);
+//    }
+    // @TODO przenieść powyższe funkcje do BD
+
+    public List<Recipe> getUserRecipes() {return userRecipes;}
     public void addFavorite(Integer newFavRecipe) {
         favorites.add(newFavRecipe);
         newFavorites.add(newFavRecipe);

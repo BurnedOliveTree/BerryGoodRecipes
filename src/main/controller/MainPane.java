@@ -2,6 +2,7 @@ package main.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -24,6 +25,7 @@ public class MainPane {
     public Button recipeLink;
     public Button loginButton;
     public ImageView logo;
+    public Button myRecipesButton;
 
     public MainPane(User activeUser) {
         this.activeUser = activeUser;
@@ -42,7 +44,32 @@ public class MainPane {
         if (activeUser != null) {
             loginButton.setText("Sign out");
         }
+        myRecipesButton.setOnAction( e->{ onMyRecipesAction(myRecipesButton); });
+        if (activeUser == null)
+            myRecipesButton.setDisable(true);
+        else
+            myRecipesButton.setDisable(false);
 
+    }
+
+    public void onMyRecipesAction(Button button){
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/RecipeAdminPage.fxml"));
+        RecipeAdminPane controller = new RecipeAdminPane(activeUser);
+        loader.setController(controller);
+        changeScene(button, loader);
+    }
+
+    private void changeScene(Button button,FXMLLoader loader) {
+        try {
+
+            Parent mainPage = loader.load();
+            Scene mainPageScene = new Scene(mainPage);
+            Stage stage = (Stage) button.getScene().getWindow();
+            mainPageScene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
+            stage.setScene(mainPageScene);
+            stage.show();
+        } catch (IOException e) {
+            System.err.println(String.format("Error: %s", e.getMessage()));}
     }
 
     @FXML
@@ -53,12 +80,8 @@ public class MainPane {
 //            RecipePane controller = new RecipePane(new Recipe(1,"Placki", new User("Karolina", "1234"), "Zrób farsz i nagrzej patelnie", 0, "2020-01-01", 10, 20, 4,  new ArrayList<>(){{add(new Ingredient(200, new Unit(), "Twaróg"));}}));
             Recipe recipe = DatabaseConnection.getRecipe(1);
             loader.setController(new RecipePane(recipe, activeUser));
-            Scene recipePageScene = new Scene(loader.load());
-            Stage stage = (Stage) recipeLink.getScene().getWindow();
-            recipePageScene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
-            stage.setScene(recipePageScene);
-            stage.show();
-        } catch (IOException | SQLException e) {
+            changeScene(recipeLink, loader);
+        } catch (SQLException e) {
             System.err.printf("Error: %s%n", e.getMessage());
         }
     }
@@ -72,6 +95,7 @@ public class MainPane {
                 // log user out
                 activeUser = null;
                 loginButton.setText("Sign in");
+                myRecipesButton.setDisable(true);
                 return;
             }
             try {

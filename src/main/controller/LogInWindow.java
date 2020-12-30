@@ -37,6 +37,7 @@ public class LogInWindow {
         login();
         if (mainPane.activeUser != null) {
             mainPane.loginButton.setText("Sign out");
+            mainPane.myRecipesButton.setDisable(false);
             stage.close();
         }
     }
