@@ -11,6 +11,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import main.DatabaseConnection;
+import main.Main;
 import main.recipeModel.Recipe;
 import main.userModel.User;
 
@@ -94,6 +95,7 @@ public class MainPane {
             if (activeUser != null) {
                 // log user out
                 activeUser = null;
+                Main.activeUser = null;
                 loginButton.setText("Sign in");
                 myRecipesButton.setDisable(true);
                 return;

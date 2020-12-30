@@ -6,6 +6,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import main.DatabaseConnection;
+import main.Main;
 
 import java.sql.*;
 
@@ -57,9 +58,11 @@ public class LogInWindow {
 
     public void login() throws SQLException {
         mainPane.activeUser = DatabaseConnection.login(username, password, errMess);
+        Main.activeUser = mainPane.activeUser;
     }
 
     public void register() throws SQLException {
         mainPane.activeUser = DatabaseConnection.register(username, password, errMess);
+        Main.activeUser = mainPane.activeUser;
     }
 }
