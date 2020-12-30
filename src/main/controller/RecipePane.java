@@ -157,8 +157,6 @@ public class RecipePane {
         changeScene(button, loader);
     }
 
-
-
     private void changeScene(Button button,FXMLLoader loader) {
         try {
 
