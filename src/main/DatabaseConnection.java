@@ -15,6 +15,8 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import javafx.scene.control.Label;
 
@@ -27,7 +29,7 @@ public class DatabaseConnection {
     public static String databaseServiceName;
     public static String databaseHost;
 
-    public DatabaseConnection() throws IOException {
+    public DatabaseConnection() throws IOException, SQLException {
         loadFile();
     }
 
@@ -52,6 +54,7 @@ public class DatabaseConnection {
         OracleDataSource ods = new OracleDataSource();
         ods.setURL(connectionURL);
         connection = ods.getConnection();
+        connection.setAutoCommit(false);
     };
 
     public static void closeConnection() throws SQLException {
@@ -73,12 +76,9 @@ public class DatabaseConnection {
         int prepareTime = result.getInt("PREPARATION_TIME");
         int portions = result.getInt("PORTIONS");
 
-        result.close();
-
         result = statement.executeQuery(String.format("SELECT GROUP_ID FROM PUBLICITY WHERE RECIPE_ID = %s", recipeId));
         result.next();
         int accessibility = result.getInt("GROUP_ID");
-        result.close();
 
         result = statement.executeQuery(String.format("SELECT AMOUNT, INGREDIENT_UNIT, INGREDIENT_NAME FROM INGREDIENT_LIST WHERE RECIPE_ID = %s", recipeId));
         ArrayList<Ingredient> ingredientList = new ArrayList<Ingredient>();
@@ -157,5 +157,22 @@ public class DatabaseConnection {
         closeConnection();
 
         return activeUser;
+    }
+
+
+    public static void saveUser(User user) throws SQLException {
+        if (user != null) {
+            setConnection();
+            Statement statement = connection.createStatement();
+            if (user.getNewFavorites().size() != 0) {
+                List<Integer> newFavorites = user.getNewFavorites();
+                for (int recipeId : newFavorites) {
+                    statement.executeUpdate(String.format("INSERT INTO FAVORITE VALUES(null, %s, %d)", user.getUsername(), recipeId));
+                }
+            }
+            statement.close();
+            connection.commit();
+            closeConnection();
+        }
     }
 }

@@ -42,6 +42,7 @@ public class MainPane {
         if (activeUser != null) {
             loginButton.setText("Sign out");
         }
+
     }
 
     @FXML

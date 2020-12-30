@@ -7,6 +7,8 @@ import main.controller.MainPane;
 import main.userModel.User;
 
 import java.io.IOException;
+import java.sql.SQLException;
+
 import javafx.fxml.FXMLLoader;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -16,7 +18,7 @@ public class Main extends Application {
     public static User activeUser = null;
 
     @Override
-    public void start(Stage primaryStage) throws IOException {
+    public void start(Stage primaryStage) throws IOException, SQLException {
         new DatabaseConnection();
 
         primaryStage.setTitle("BerryGood Recipes");
@@ -29,14 +31,18 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+
             @Override
             public void handle(WindowEvent e) {
-
+                try {
+                    DatabaseConnection.saveUser(activeUser);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
                 Platform.exit();
                 System.exit(0);
             }
         });
-
 
 
 //        MainPane controller = loader.getController();

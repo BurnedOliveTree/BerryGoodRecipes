@@ -88,12 +88,22 @@ public class RecipePane {
         } else {
             timePrepLabel.setText("Preparation time: " + this.recipe.getPrepareTime());
         }
+
+
+        // options for logged in users
+        if (activeUser == null){
+            likeButton.setDisable(true);;
+        }
+        else{
+            likeButton.setOnAction( e->{ onLikeAction(likeButton); });
+        }
         exitButton.setOnAction( e->{ onExitAction(exitButton); });
         scaleButton.setOnAction(e->{onScaleAction(scaleButton);});
+        commentButton.setOnAction( e->{ onCommentAction(commentButton); });
+
 //        shoppingListButton.setOnAction( e->{ onShoppingAction(shoppingListButton, "/resources/shoppingListPage.fxml"); });
 //        timeButton.setOnAction( e->{ onTimeAction(timeButton, "/resources/timepiecePage.fxml"); });
-        likeButton.setOnAction( e->{ onLikeAction(likeButton); });
-        commentButton.setOnAction( e->{ onCommentAction(commentButton); });
+
         portionArea.textProperty().addListener((observableValue, s, t1) -> {
             try {
                 Double currNumPortions = Double.parseDouble(t1);
@@ -106,6 +116,8 @@ public class RecipePane {
                 return;
             }
         });
+
+
 
     }
 
@@ -132,7 +144,15 @@ public class RecipePane {
 
     private void onLikeAction(Button button) {
         try {
-            LikePic.setImage(new Image(new FileInputStream("src/resources/favoriteClicked.png")));
+            boolean state = activeUser.checkIfRecipeFavorite(recipe.getId());
+            if (activeUser.checkIfRecipeFavorite(recipe.getId())) {
+                LikePic.setImage(new Image(new FileInputStream("src/resources/favoriteUnclicked.png")));
+                activeUser.removeFavorite(recipe.getId());
+            }
+            else{
+                LikePic.setImage(new Image(new FileInputStream("src/resources/favoriteClicked.png")));
+                activeUser.addFavorite(recipe.getId());
+            }
         } catch ( FileNotFoundException e) {
             System.err.println(String.format("Error: %s", e.getMessage()));
         }
