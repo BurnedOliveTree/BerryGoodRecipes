@@ -1,59 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
-   <left>
-      <VBox prefHeight="360.0" prefWidth="186.0" BorderPane.alignment="CENTER">
-         <children>
-            <Label alignment="CENTER" prefHeight="78.0" prefWidth="203.0" text="Label" />
-            <ListView prefHeight="200.0" prefWidth="186.0" />
-         </children></VBox>
-   </left>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <center>
       <TextFlow fx:id="descText" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </center>
    <top>
       <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
-          <Button mnemonicParsing="false" text="x" />
+          <Button fx:id="exitButton" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" text="x" />
             <Label minWidth="30.0" />
             <Button fx:id="scaleButton" minWidth="30.0" mnemonicParsing="false">
                 <graphic>
-                    <ImageView fx:id="ScalePic" fitWidth="30.0" fitHeight="30.0">
+                    <ImageView fx:id="ScalePic" fitHeight="30.0" fitWidth="30.0">
                         <image>
-                            <Image url="@raspScale.png"/>
+                            <Image url="@raspScale.png" />
                         </image>
                     </ImageView>
                 </graphic>
             </Button>
-            <Button fx:id="shoppingButton" minWidth="30.0" mnemonicParsing="false">
+            <Button fx:id="shoppingListButton" minWidth="30.0" mnemonicParsing="false">
                 <graphic>
-                    <ImageView fx:id="ShoppingPic" fitWidth="30.0" fitHeight="30.0">
+                    <ImageView fx:id="ShoppingPic" fitHeight="30.0" fitWidth="30.0">
                         <image>
-                            <Image url="@raspBasket.png"/>
+                            <Image url="@raspBasket.png" />
                         </image>
                     </ImageView>
                 </graphic>
             </Button>
-            <Button fx:id="LikeButton" minWidth="30.0" mnemonicParsing="false">
+            <Button fx:id="likeButton" minWidth="30.0" mnemonicParsing="false">
                 <graphic>
-                    <ImageView fx:id="LikePic" fitWidth="30.0" fitHeight="30.0">
+                    <ImageView fx:id="LikePic" fitHeight="30.0" fitWidth="30.0">
                         <image>
-                            <Image url="@favoriteUnclicked.png"/>
+                            <Image url="@favoriteUnclicked.png" />
                         </image>
                     </ImageView>
                 </graphic>
             </Button>
-            <Button fx:id="TimeButton" minWidth="30.0" mnemonicParsing="false" >
+            <Button fx:id="timeButton" minWidth="30.0" mnemonicParsing="false">
                 <graphic>
-                    <ImageView fx:id="TimePic" fitWidth="30.0" fitHeight="30.0">
+                    <ImageView fx:id="TimePic" fitHeight="30.0" fitWidth="30.0">
                         <image>
-                            <Image url="@raspStoper.png"/>
+                            <Image url="@raspStoper.png" />
                         </image>
                     </ImageView>
                 </graphic>
@@ -61,4 +53,67 @@
         </items>
       </ToolBar>
    </top>
+   <left>
+      <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="TOP_RIGHT">
+         <bottom>
+            <Button fx:id="commentButton" mnemonicParsing="false" prefHeight="31.0" prefWidth="235.0" text="Comment" BorderPane.alignment="CENTER" />
+         </bottom>
+         <center>
+            <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <bottom>
+                  <VBox BorderPane.alignment="CENTER">
+                     <children>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="30.0" prefWidth="160.0" style="-fx-background-color: transparent;">
+                           <children>
+                              <Label fx:id="costLabel" layoutX="77.0" layoutY="6.0" style="-fx-background-color: transparent;" styleClass="InfoPane" text="Cost:" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane prefHeight="30.0" prefWidth="160.0">
+                           <children>
+                              <Label fx:id="timePrepLabel" layoutX="44.0" layoutY="14.0" text="Time preparation:" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane prefHeight="30.0" prefWidth="160.0">
+                           <children>
+                              <Label fx:id="authorLabel" layoutY="36.0" prefHeight="20.0" prefWidth="200.0" text="Author:" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane prefHeight="30.0" prefWidth="160.0">
+                           <children>
+                              <Label fx:id="dateAddedLabel" layoutX="86.0" layoutY="110.0" text="Date added:" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </VBox>
+               </bottom>
+               <center>
+                  <ListView fx:id="ingredientListView" prefHeight="315.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+               </center>
+               <top>
+                  <HBox BorderPane.alignment="CENTER">
+                     <children>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="28.0" prefWidth="156.0">
+                           <children>
+                              <Label alignment="CENTER" layoutX="54.0" layoutY="6.0" minHeight="-Infinity" minWidth="-Infinity" text="Portions:" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="28.0" prefWidth="88.0">
+                           <children>
+                              <TextArea fx:id="portionArea" layoutX="-16.0" prefHeight="28.0" prefWidth="82.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </HBox>
+               </top>
+            </BorderPane>
+         </center>
+         <top>
+            <AnchorPane prefHeight="83.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Label fx:id="titleLabel" alignment="CENTER" layoutX="115.0" layoutY="42.0" text="Title" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
+         </top>
+      </BorderPane>
+   </left>
 </BorderPane>

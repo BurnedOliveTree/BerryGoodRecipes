@@ -58,4 +58,5 @@ public class User {
     public void removeFromShoppingList(Integer quantity, String ingredientName) {
         shoppingList.removeFromShoppingList(quantity, ingredientName);
     }
+    public String getUsername() {return username;}
 }

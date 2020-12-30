@@ -6,10 +6,12 @@ import java.util.ArrayList;
 
 public class Recipe {
     private User author;
-    private int cost;
+    private int id;
+    private int cost = 0;
     private String name;
-    private boolean accessibility; // enum in future?
+    private int accessibility;
     private int portionNumber;
+    private String dateAdded;
     private String prepareMethod;
     private int prepareTime; // in minutes
     // @TODO private LinkList<Opinion> opinions = new LinkList<Opinion>();
@@ -17,12 +19,17 @@ public class Recipe {
     private double avgRate;
 
 
-    public Recipe(String name, User author, String prepareMethod, boolean accessibility,  ArrayList<Ingredient> ingredientList) {
+    public Recipe(int id, String name, User author, String prepareMethod, int accessibility, String dateAdded, int prepareTime, int cost, int portion_number, ArrayList<Ingredient> ingredientList) {
         this.name = name;
         this.author = author;
         this.accessibility = accessibility;
         this.prepareMethod = prepareMethod;
         this.ingredientList = ingredientList;
+        this.dateAdded = dateAdded;
+        this.portionNumber = portion_number;
+        this.cost = cost;
+        this.prepareTime = prepareTime;
+        this.id = id;
     }
 
 //    public void addOpinion(String opinionText, int rate, User user)
@@ -109,7 +116,7 @@ public class Recipe {
         return name;
     }
 
-    public boolean isAccessibility() {
+    public int isAccessibility() {
         return accessibility;
     }
 
@@ -132,4 +139,8 @@ public class Recipe {
     public double getAvgRate() {
         return avgRate;
     }
+
+    public String getDateAdded() {return dateAdded;}
+
+    public int getId() {return id;}
 }
