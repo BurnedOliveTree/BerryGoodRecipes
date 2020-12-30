@@ -11,6 +11,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import main.DatabaseConnection;
+import main.Main;
 import main.recipeModel.Recipe;
 import main.userModel.User;
 
@@ -43,20 +44,20 @@ public class MainPane {
         }
         if (activeUser != null) {
             loginButton.setText("Sign out");
-        }
-        myRecipesButton.setOnAction( e->{ onMyRecipesAction(myRecipesButton); });
-        if (activeUser == null)
-            myRecipesButton.setDisable(true);
-        else
             myRecipesButton.setDisable(false);
+        }
+        else
+            myRecipesButton.setDisable(true);
 
     }
 
-    public void onMyRecipesAction(Button button){
+    @FXML
+    public void onMyRecipesAction(MouseEvent mouseEvent) {
+        mouseEvent.consume();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/RecipeAdminPage.fxml"));
         RecipeAdminPane controller = new RecipeAdminPane(activeUser);
         loader.setController(controller);
-        changeScene(button, loader);
+        changeScene(myRecipesButton, loader);
     }
 
     private void changeScene(Button button,FXMLLoader loader) {
@@ -94,6 +95,7 @@ public class MainPane {
             if (activeUser != null) {
                 // log user out
                 activeUser = null;
+                Main.activeUser = null;
                 loginButton.setText("Sign in");
                 myRecipesButton.setDisable(true);
                 return;
