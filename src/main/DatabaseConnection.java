@@ -87,7 +87,7 @@ public class DatabaseConnection {
         result = statement.executeQuery(String.format("SELECT AMOUNT, INGREDIENT_UNIT, INGREDIENT_NAME FROM INGREDIENT_LIST WHERE RECIPE_ID = %s", recipeId));
         ArrayList<Ingredient> ingredientList = new ArrayList<Ingredient>();
         while (result.next()) {
-            int amount = result.getInt("AMOUNT");
+            Double amount = result.getDouble("AMOUNT");
             String unitName = result.getString("INGREDIENT_UNIT");
             String name = result.getString("INGREDIENT_NAME");
             Unit unit = new Unit(unitName);

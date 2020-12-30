@@ -50,7 +50,7 @@ public class User {
     public void unfollowUser(User oldFollowedUser) {
         followed.remove(oldFollowedUser);
     }
-    public void addToShoppingList(Integer quantity, Unit unit, String ingredientName) {
+    public void addToShoppingList(Double quantity, Unit unit, String ingredientName) {
         shoppingList.addToShoppingList(quantity, unit, ingredientName); // basic unit is always the same
     }
     public void removeFromShoppingList(Integer quantity, String ingredientName) {

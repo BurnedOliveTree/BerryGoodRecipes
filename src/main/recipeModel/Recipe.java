@@ -10,7 +10,7 @@ public class Recipe {
     private double cost = 0;
     private String name;
     private int accessibility;
-    private int portionNumber;
+    private double portionNumber;
     private String dateAdded;
     private String prepareMethod;
     private int prepareTime; // in minutes
@@ -20,7 +20,7 @@ public class Recipe {
 
     public Recipe() {};
 
-    public Recipe(int id, String name, String author, String prepareMethod, int accessibility, String dateAdded, int prepareTime, double cost, int portion_number, ArrayList<Ingredient> ingredientList) {
+    public Recipe(int id, String name, String author, String prepareMethod, int accessibility, String dateAdded, int prepareTime, double cost, double portion_number, ArrayList<Ingredient> ingredientList) {
         this.name = name;
         this.author = author;
         this.accessibility = accessibility;
@@ -53,6 +53,7 @@ public class Recipe {
 
     private Ingredient findInIngredientList(String ingredientName)
     {
+
         for (Ingredient ingredient : this.ingredientList) {
             if (ingredientName.equals(ingredient.getName()))
                 return ingredient;
@@ -60,7 +61,7 @@ public class Recipe {
         return null;
     }
 
-    public void editIngredientQuantity(int quantity, String ingredientName)
+    public void editIngredientQuantity(Double quantity, String ingredientName)
     {
         Ingredient ingredient = findInIngredientList(ingredientName);
         if (quantity > 0 && ingredient != null)
@@ -75,6 +76,15 @@ public class Recipe {
         // @TODO calculate method from unit
     }
 
+    public void scaleIngredientList(double scale) {
+        for (Ingredient ingredient : this.ingredientList) {
+            if (scale > 0) {
+                ingredient.setQuantity(ingredient.getQuantity()*scale);
+            }
+            else
+                throw new IllegalArgumentException("Value must be greater than 0");
+        }
+    }
 
 
     public void saveToFile(String filename) {
@@ -121,7 +131,11 @@ public class Recipe {
         return accessibility;
     }
 
-    public int getPortionNumber() {
+    public void setPortionNumber(double portionNumber) {
+         this.portionNumber = portionNumber;
+    }
+
+    public double getPortionNumber() {
         return portionNumber;
     }
 
