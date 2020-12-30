@@ -9,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 
 import javafx.stage.Stage;
-import main.Core;
 import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
@@ -28,8 +27,9 @@ import java.util.ArrayList;
 
 public class OpinionPane {
     private Opinion opinion;
+    private final User activeUser;
+    private final Recipe recipe;
     ObservableList<String> scoreList = FXCollections.observableArrayList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
-    private Recipe recipe;
     @FXML
     public Button okButton;
     public Button exitButton;
@@ -38,27 +38,26 @@ public class OpinionPane {
     @FXML
     public ChoiceBox scoreBox;
 
-    public OpinionPane(Recipe recipe) {
+    public OpinionPane(Recipe recipe, User activeUser) {
         this.recipe = recipe;
+        this.activeUser = activeUser;
     };
 
     @FXML
     private void initialize(){
         scoreBox.setItems(scoreList);
-        exitButton.setOnAction( e->{ onAction(exitButton, "/resources/mainPage.fxml"); });
+        exitButton.setOnAction( e->{ onAction(exitButton, "/resources/recipePage.fxml"); });
 
     }
     private void  onAction(Button button, String namePath) {
         try {
-            FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
-
-//            RecipePane controller = new RecipePane(new Recipe(1,"Placki", new User("Karolina", "1234"), "Zrób farsz i nagrzej patelnie", 0, "2020-01-01", 10, 20, 4,  new ArrayList<>(){{add(new Ingredient(200, new Unit(), "Twaróg"));}}));
-            RecipePane controller = new RecipePane(this.recipe);
+            FXMLLoader loader =  new FXMLLoader(getClass().getResource(namePath));
+            RecipePane controller = new RecipePane(this.recipe, activeUser);
             loader.setController(controller);
             Parent recipePage = loader.load();
             Scene recipePageScene = new Scene(recipePage);
             Stage stage = (Stage) exitButton.getScene().getWindow();
-            recipePageScene.getStylesheets().add(getClass().getResource("/resources/"+Core.theme+".css").toExternalForm());
+            recipePageScene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
             stage.setScene(recipePageScene);
             stage.show();
         } catch (IOException e) {

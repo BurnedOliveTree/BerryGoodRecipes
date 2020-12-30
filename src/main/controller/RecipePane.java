@@ -13,16 +13,18 @@ import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
-import main.Core;
+import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
+import main.userModel.User;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class RecipePane {
-    private Recipe recipe;
+    private final Recipe recipe;
+    private final User activeUser;
     @FXML
     public TextFlow descText;
     public ImageView ScalePic;
@@ -41,14 +43,16 @@ public class RecipePane {
     public Button likeButton;
     public Button timeButton;
     public Button commentButton;
+    public Button scaleButton;
 
-    public RecipePane(Recipe recipe) {
+    public RecipePane(Recipe recipe, User activeUser) {
         this.recipe = recipe;
+        this.activeUser = activeUser;
     }
 
     @FXML
     void initialize() {
-        if (Core.theme.equals("lightTheme") || Core.theme.equals("winter")) {
+        if (DatabaseConnection.theme.equals("lightTheme") || DatabaseConnection.theme.equals("winter")) {
             try {
                 ScalePic.setImage(new Image(new FileInputStream("src/resources/berryScale.png")));
                 ShoppingPic.setImage(new Image(new FileInputStream("src/resources/berryBasket.png")));
@@ -84,6 +88,7 @@ public class RecipePane {
             timePrepLabel.setText("Preparation time: " + this.recipe.getPrepareTime());
         }
         exitButton.setOnAction( e->{ onAction(exitButton, "/resources/mainPage.fxml"); });
+        scaleButton.setOnAction(e->{onAction(scaleButton, "/resources/scalePage.fxml");});
         shoppingListButton.setOnAction( e->{ onAction(shoppingListButton, "/resources/shoppingListPage.fxml"); });
         timeButton.setOnAction( e->{ onAction(timeButton, "/resources/timepiecePage.fxml"); });
         likeButton.setOnAction( e->{ onAction(likeButton, null); });
@@ -122,10 +127,9 @@ public class RecipePane {
             this.recipe.scaleIngredientList(scale);
             setIngredListView();
         }
-
     }
 
-    private void  onAction(Button button, String namePath) {
+    private void onAction(Button button, String namePath) {
         if (button.getId().equals("likeButton"))
             try {
                 LikePic.setImage(new Image(new FileInputStream("src/resources/favoriteClicked.png")));
@@ -135,24 +139,53 @@ public class RecipePane {
         else if (button.getId().equals("commentButton")){
             try {
                 FXMLLoader loader =  new FXMLLoader(getClass().getResource(namePath));
-                OpinionPane controller = new OpinionPane(this.recipe);
+                OpinionPane controller = new OpinionPane(this.recipe, activeUser);
                 loader.setController(controller);
                 Parent mainPage = loader.load();
                 Scene mainPageScene = new Scene(mainPage);
                 Stage stage = (Stage) button.getScene().getWindow();
-                mainPageScene.getStylesheets().add(getClass().getResource("/resources/"+Core.theme+".css").toExternalForm());
+                mainPageScene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
                 stage.setScene(mainPageScene);
                 stage.show();
             } catch (IOException e) {
                 System.err.println(String.format("Error: %s", e.getMessage()));}
 
         }
-        else {
+        else if (button.getId().equals("scaleButton")) {
             try {
-                Parent mainPage = FXMLLoader.load(getClass().getResource(namePath));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource(namePath));
+                ScalePane controller = new ScalePane(this.recipe, activeUser);
+                loader.setController(controller);
+                Parent mainPage = loader.load();
                 Scene mainPageScene = new Scene(mainPage);
                 Stage stage = (Stage) button.getScene().getWindow();
-                mainPageScene.getStylesheets().add(getClass().getResource("/resources/"+Core.theme+".css").toExternalForm());
+                mainPageScene.getStylesheets().add(getClass().getResource("/resources/" + DatabaseConnection.theme + ".css").toExternalForm());
+                stage.setScene(mainPageScene);
+                stage.show();
+            } catch (IOException e) {
+                System.err.println(String.format("Error: %s", e.getMessage()));
+            }
+        }
+        else if (button.getId().equals("exitButton")) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource(namePath));
+                MainPane controller = new MainPane(activeUser);
+                loader.setController(controller);
+                Scene scene = new Scene(loader.load());
+                Stage stage = (Stage) button.getScene().getWindow();
+                scene.getStylesheets().add(getClass().getResource("/resources/" + DatabaseConnection.theme + ".css").toExternalForm());
+                stage.setScene(scene);
+                stage.show();
+            } catch (IOException e) {
+                System.err.println(String.format("Error: %s", e.getMessage()));
+            }
+        }
+        else {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource(namePath));
+                Scene mainPageScene = new Scene(loader.load());
+                Stage stage = (Stage) button.getScene().getWindow();
+                mainPageScene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
                 stage.setScene(mainPageScene);
                 stage.show();
             } catch (IOException e) {

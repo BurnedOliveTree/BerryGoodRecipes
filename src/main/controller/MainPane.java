@@ -11,29 +11,30 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import main.Core;
 import main.DatabaseConnection;
-import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
-import main.recipeModel.Unit;
 import main.userModel.User;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class MainPane {
+    private final User activeUser;
     @FXML
     public Button recipeLink;
     public Pane recipePane;
     public ImageView logo;
 
+    public MainPane(User activeUser) {
+        this.activeUser = activeUser;
+    }
+
     @FXML
     void initialize() {
         recipeLink.setText("Placki");
-        if (Core.theme.equals("lightTheme") || Core.theme.equals("winter")) {
+        if (DatabaseConnection.theme.equals("lightTheme") || DatabaseConnection.theme.equals("winter")) {
             try {
                 logo.setImage(new Image(new FileInputStream("src/resources/berryLogo.png")));
             } catch (FileNotFoundException e) {
@@ -48,16 +49,15 @@ public class MainPane {
         try {
             FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
 
-            DatabaseConnection connection = new DatabaseConnection();
-            Recipe recipe = connection.getRecipe(1);
+            Recipe recipe = DatabaseConnection.getRecipe(1);
 
 //            RecipePane controller = new RecipePane(new Recipe(1,"Placki", new User("Karolina", "1234"), "Zrób farsz i nagrzej patelnie", 0, "2020-01-01", 10, 20, 4,  new ArrayList<>(){{add(new Ingredient(200, new Unit(), "Twaróg"));}}));
-            RecipePane controller = new RecipePane(recipe);
+            RecipePane controller = new RecipePane(recipe, activeUser);
             loader.setController(controller);
             Parent recipePage = loader.load();
             Scene recipePageScene = new Scene(recipePage);
             Stage stage = (Stage) recipeLink.getScene().getWindow();
-            recipePageScene.getStylesheets().add(getClass().getResource("/resources/"+Core.theme+".css").toExternalForm());
+            recipePageScene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
             stage.setScene(recipePageScene);
             stage.show();
         } catch (IOException | SQLException e) {
@@ -73,7 +73,7 @@ public class MainPane {
         try {
             mouseEvent.consume();
             Scene scene = new Scene(new FXMLLoader(getClass().getResource("/resources/logInWindow.fxml")).load());
-            scene.getStylesheets().add(getClass().getResource("/resources/"+Core.theme+".css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
             Stage stage = new Stage();
             stage.setTitle("Login");
             stage.setScene(scene);
@@ -89,7 +89,7 @@ public class MainPane {
         try {
             mouseEvent.consume();
             Scene scene = new Scene(new FXMLLoader(getClass().getResource("/resources/logInWindow.fxml")).load());
-            scene.getStylesheets().add(getClass().getResource("/resources/"+Core.theme+".css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
             Stage stage = new Stage();
             stage.setTitle("Register");
             stage.setScene(scene);

@@ -1,10 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.ScalePane">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Button layoutX="764.0" layoutY="14.0" mnemonicParsing="false" text="x" />
+      <Button fx:id="exitButton" layoutX="764.0" layoutY="14.0" mnemonicParsing="false" text="x" />
+      <Label layoutX="68.0" layoutY="375.0" prefHeight="31.0" prefWidth="129.0" text="Cake mold scale">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <Label layoutX="69.0" layoutY="451.0" prefHeight="17.0" prefWidth="55.0" text="Shape:" />
+      <CheckBox fx:id="checkboxRound1" layoutX="119.0" layoutY="451.0" mnemonicParsing="false" text="Round" />
+      <CheckBox fx:id="checkboxRec1" layoutX="185.0" layoutY="451.0" mnemonicParsing="false" text="Rectangular" />
+      <Label layoutX="69.0" layoutY="416.0" text="In recipe:" />
+      <Label layoutX="69.0" layoutY="484.0" text="Size:" />
+      <Label layoutX="369.0" layoutY="416.0" text="I have:" />
+      <Label layoutX="369.0" layoutY="451.0" text="Shape:" />
+      <CheckBox fx:id="checkboxRound2" layoutX="420.0" layoutY="451.0" mnemonicParsing="false" text="Round" />
+      <CheckBox fx:id="checkboxRec2" layoutX="490.0" layoutY="451.0" mnemonicParsing="false" text="Rectangular" />
+      <Label layoutX="369.0" layoutY="484.0" prefHeight="17.0" prefWidth="34.0" text="Size:" />
+      <Label layoutX="69.0" layoutY="47.0" prefHeight="25.0" prefWidth="56.0" text="Product">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Label>
+      <ChoiceBox layoutX="144.0" layoutY="47.0" prefWidth="150.0" />
+      <Label layoutX="107.0" layoutY="186.0" text="ML" />
+      <Label layoutX="105.0" layoutY="240.0" prefHeight="17.0" prefWidth="56.0" text="GLASSES" />
+      <Label layoutX="254.0" layoutY="186.0" text="TABLESPOONS" />
+      <Label layoutX="254.0" layoutY="240.0" text="TEASPOONS" />
+      <Label layoutX="71.0" layoutY="118.0" text="Volume:">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label layoutX="494.0" layoutY="120.0" text="Weight:">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label layoutX="545.0" layoutY="213.0" text="GRAM" />
    </children>
 </Pane>
