@@ -35,8 +35,10 @@ public class LogInWindow {
         password = passwordField.getText();
         Stage stage = (Stage) usernameField.getScene().getWindow();
         login();
-        if (mainPane.activeUser != null)
+        if (mainPane.activeUser != null) {
+            mainPane.loginButton.setText("Sign out");
             stage.close();
+        }
     }
 
     @FXML
@@ -46,8 +48,10 @@ public class LogInWindow {
         password = passwordField.getText();
         Stage stage = (Stage) usernameField.getScene().getWindow();
         register();
-        if (mainPane.activeUser != null)
+        if (mainPane.activeUser != null) {
+            mainPane.loginButton.setText("Sign out");
             stage.close();
+        }
     }
 
     public void login() throws SQLException {

@@ -22,6 +22,7 @@ public class MainPane {
     public User activeUser;
     @FXML
     public Button recipeLink;
+    public Button loginButton;
     public ImageView logo;
 
     public MainPane(User activeUser) {
@@ -37,6 +38,9 @@ public class MainPane {
             } catch (FileNotFoundException e) {
                 System.err.printf("Error: %s%n", e.getMessage());
             }
+        }
+        if (activeUser != null) {
+            loginButton.setText("Sign out");
         }
     }
 
@@ -65,6 +69,12 @@ public class MainPane {
         // create a new Window with sign in
         try {
             mouseEvent.consume();
+            if (activeUser != null) {
+                // log user out
+                activeUser = null;
+                loginButton.setText("Sign in");
+                return;
+            }
             try {
                 System.out.println("Active user: "+activeUser.getUsername());
             } catch (NullPointerException e) {
