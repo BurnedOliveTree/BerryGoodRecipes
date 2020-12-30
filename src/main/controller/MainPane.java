@@ -12,6 +12,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import main.Core;
+import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
 import main.recipeModel.Unit;
@@ -20,6 +21,7 @@ import main.userModel.User;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class MainPane {
@@ -45,8 +47,12 @@ public class MainPane {
         // change main Stage Scene to recipe Scene
         try {
             FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
-            RecipePane controller = new RecipePane(new Recipe(1,"Placki", new User("Karolina", "1234"), "Zrób farsz i nagrzej patelnie", 0, "2020-01-01", 10, 20, 4,  new ArrayList<>(){{add(new Ingredient(200, new Unit(), "Twaróg"));}}));
 
+            DatabaseConnection connection = new DatabaseConnection();
+            Recipe recipe = connection.getRecipe(1);
+
+//            RecipePane controller = new RecipePane(new Recipe(1,"Placki", new User("Karolina", "1234"), "Zrób farsz i nagrzej patelnie", 0, "2020-01-01", 10, 20, 4,  new ArrayList<>(){{add(new Ingredient(200, new Unit(), "Twaróg"));}}));
+            RecipePane controller = new RecipePane(recipe);
             loader.setController(controller);
             Parent recipePage = loader.load();
             Scene recipePageScene = new Scene(recipePage);
@@ -54,7 +60,7 @@ public class MainPane {
             recipePageScene.getStylesheets().add(getClass().getResource("/resources/"+Core.theme+".css").toExternalForm());
             stage.setScene(recipePageScene);
             stage.show();
-        } catch (IOException e) {
+        } catch (IOException | SQLException e) {
             System.err.printf("Error: %s%n", e.getMessage());
         }
     }

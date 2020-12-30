@@ -21,6 +21,9 @@ public class Core {
     public static String theme;
     public static String databaseLogin;
     public static String databasePassword;
+    public static String databasePort;
+    public static String databaseServiceName;
+    public static String databaseHost;
     public static User activeUser;
 //    private List<User> users;
 //    private List<Recipe> recipes;
@@ -50,6 +53,10 @@ public class Core {
         theme = prop.getProperty("app.theme");
         databaseLogin = prop.getProperty("app.login");
         databasePassword = prop.getProperty("app.password");
+        databasePort = prop.getProperty("app.port");
+        databaseServiceName = prop.getProperty("app.service.name");
+        databaseHost = prop.getProperty("app.host");
+
     }
 //    public void addAccount(int argID, String argUsername, String argPassword) {
 //        users.add(new User(argID, argUsername, argPassword));

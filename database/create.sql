@@ -80,7 +80,7 @@ create table RECIPE
   OWNER_NAME varchar2(40 byte) not null constraint OWNER_USER_FK references "USER" (USERNAME),
   NAME varchar2(1000 BYTE) not null,
   PREPARATION_METHOD varchar2(4000 BYTE) not null,
-  COST number(4),
+  COST number(4, 2),
   DATE_ADDED date default sysdate not null,
   PREPARATION_TIME date,
   PORTIONS number(4) default 0 not null CHECK (PORTIONS >= 0)

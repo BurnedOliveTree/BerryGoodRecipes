@@ -69,9 +69,9 @@ public class RecipePane {
             ingredientListView.getItems().add(String.format("%d %s %s", ingredient.getQuantity(), ingredient.getUnit(), ingredient.getName()));
             ingredientListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         }
-        String x = "Author: " + this.recipe.getAuthor().getUsername();
+        String x = "Author: " + this.recipe.getAuthor();
 
-        authorLabel.setText("Author: " + this.recipe.getAuthor().getUsername());
+        authorLabel.setText("Author: " + this.recipe.getAuthor());
         dateAddedLabel.setText("Date added: " + this.recipe.getDateAdded());
         if (this.recipe.getPrepareTime() == 0) {
             timePrepLabel.setText("Preparation time: Unknown");

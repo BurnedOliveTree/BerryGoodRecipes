@@ -5,9 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Recipe {
-    private User author;
+    private String author;
     private int id;
-    private int cost = 0;
+    private double cost = 0;
     private String name;
     private int accessibility;
     private int portionNumber;
@@ -18,8 +18,9 @@ public class Recipe {
     private ArrayList<Ingredient> ingredientList;
     private double avgRate;
 
+    public Recipe() {};
 
-    public Recipe(int id, String name, User author, String prepareMethod, int accessibility, String dateAdded, int prepareTime, int cost, int portion_number, ArrayList<Ingredient> ingredientList) {
+    public Recipe(int id, String name, String author, String prepareMethod, int accessibility, String dateAdded, int prepareTime, double cost, int portion_number, ArrayList<Ingredient> ingredientList) {
         this.name = name;
         this.author = author;
         this.accessibility = accessibility;
@@ -104,11 +105,11 @@ public class Recipe {
         // @TODO with Opinion class
     }
 
-    public User getAuthor() {
+    public String getAuthor() {
         return author;
     }
 
-    public int getCost() {
+    public double getCost() {
         return cost;
     }
 
