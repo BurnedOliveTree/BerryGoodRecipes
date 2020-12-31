@@ -1,5 +1,6 @@
 package main.controller;
 
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,8 +17,9 @@ public class RecipeAdminPane implements OrdinaryButtonAction {
     private User activeUser;
 
     @FXML
-    TableView<Recipe> myRecipesTable;
+    public TableView<Recipe> myRecipesTable;
     public Button exitButton;
+    public TableView<Recipe> favTable;
 
     public RecipeAdminPane( User activeUser) {
         this.activeUser = activeUser;
@@ -26,7 +28,9 @@ public class RecipeAdminPane implements OrdinaryButtonAction {
     @FXML
     void initialize() {
         setMyRecipesTable();
+        setFavTable();
     }
+
 
     private void setMyRecipesTable() {
         ObservableList<Recipe> RecipeList = FXCollections.observableArrayList(activeUser.getUserRecipes());
@@ -40,6 +44,22 @@ public class RecipeAdminPane implements OrdinaryButtonAction {
         myRecipesTable.setItems(RecipeList);
         myRecipesTable.getColumns().addAll(nameColumn, groupNameColumn, dateAddedColumn);
     }
+    private void setFavTable() {
+        ObservableList<Recipe> FavList = FXCollections.observableList(activeUser.getFavorites());
+        TableColumn<Recipe,String> nameColumn = new TableColumn<>("Name");
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        TableColumn<Recipe, String> dateAddedColumn = new TableColumn<>("Date added");
+        dateAddedColumn.setCellValueFactory(new PropertyValueFactory<>("dateAdded"));
+        TableColumn<Recipe, String> authorColumn = new TableColumn<>("Author");
+        authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
+        TableColumn<Recipe, Integer>  costColumn = new TableColumn<>("Cost");
+        costColumn.setCellValueFactory(new PropertyValueFactory<>("cost"));
+        TableColumn<Recipe, Integer> timeColumn = new TableColumn<>("Preparation time");
+        timeColumn.setCellValueFactory(new PropertyValueFactory<>("prepareTime"));
+        favTable.setItems(FavList);
+        favTable.getColumns().addAll(nameColumn, authorColumn, dateAddedColumn, costColumn, timeColumn);
+    }
+
 
     @Override
     @FXML
