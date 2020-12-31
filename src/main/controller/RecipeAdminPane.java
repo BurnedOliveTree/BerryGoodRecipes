@@ -83,23 +83,19 @@ public class RecipeAdminPane implements OrdinaryButtonAction {
     }
 
     public void ShowRecipe(Recipe recipe) throws SQLException {
-//        FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
-////        RecipePane controller = new RecipePane(recipe, activeUser);
-////        loader.setController(controller);
-////        try {
-////            Parent mainPage = loader.load();
-////            Scene mainPageScene = new Scene(mainPage);
-////            Stage stage = (Stage) favTable.getScene().getWindow();
-////            mainPageScene.getStylesheets().add(getClass().getResource("/resources/"+ DatabaseConnection.theme+".css").toExternalForm());
-////            stage.setScene(mainPageScene);
-////            stage.showAndWait();
-////        } catch (IOException e) {
-////            System.err.println(String.format("Error: %s", e.getMessage()));}
-
         FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
         Recipe loadRecipe = DatabaseConnection.getRecipe(recipe.getId());
         loader.setController(new RecipePane(loadRecipe, activeUser));
-        changeScene(exitButton, loader);
+        try {
+            Parent mainPage = loader.load();
+            Scene mainPageScene = new Scene(mainPage);
+            Stage stage = (Stage) favTable.getScene().getWindow();
+            mainPageScene.getStylesheets().add(getClass().getResource("/resources/"+ DatabaseConnection.theme+".css").toExternalForm());
+            stage.setScene(mainPageScene);
+            stage.show();
+        } catch (IOException e) {
+            System.err.printf("Error: %s%n", e.getMessage());
+        }
     }
 
 
@@ -110,6 +106,7 @@ public class RecipeAdminPane implements OrdinaryButtonAction {
         MainPane controller = new MainPane(activeUser);
         loader.setController(controller);
         changeScene(exitButton, loader);
+
     }
 
 
