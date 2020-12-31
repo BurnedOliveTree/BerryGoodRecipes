@@ -38,16 +38,24 @@ public class RecipeAdminPane implements OrdinaryButtonAction {
     void initialize() {
         setMyRecipesTable();
         setFavTable();
-        favTable.setOnMousePressed(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if (mouseEvent.isPrimaryButtonDown() && mouseEvent.getClickCount() == 2) {
-                    Recipe recipe = favTable.getSelectionModel().getSelectedItem();
-                    try {
-                        ShowRecipe(recipe);
-                    } catch (SQLException throwables) {
-                        throwables.printStackTrace();
-                    }
+        favTable.setOnMousePressed(mouseEvent -> {
+            if (mouseEvent.isPrimaryButtonDown() && mouseEvent.getClickCount() == 2) {
+                Recipe recipe = favTable.getSelectionModel().getSelectedItem();
+                try {
+                    ShowRecipe(recipe);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            }
+        });
+
+        myRecipesTable.setOnMousePressed(mouseEvent -> {
+            if (mouseEvent.isPrimaryButtonDown() && mouseEvent.getClickCount() == 2) {
+                Recipe recipe = myRecipesTable.getSelectionModel().getSelectedItem();
+                try {
+                    ShowRecipe(recipe);
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
                 }
             }
         });

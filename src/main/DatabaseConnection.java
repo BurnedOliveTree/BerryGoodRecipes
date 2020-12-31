@@ -59,45 +59,6 @@ public class DatabaseConnection {
         System.out.println("Connection with database closed.");
     }
 
-    public static Recipe getSelectedRecipe(int recipeId) throws SQLException {
-        setConnection();
-        Recipe recipe = getRecipe(recipeId);
-        closeConnection();
-        return recipe;
-    }
-
-    private static Recipe getRecipe(int recipeId) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet result = statement.executeQuery(String.format("SELECT * FROM RECIPE WHERE RECIPE_ID = %s", recipeId));
-        result.next();
-        String ownerName = result.getString("OWNER_NAME");
-        System.out.println(ownerName);
-        String recipeName = result.getString("NAME");
-        String preparationMethod = result.getString("PREPARATION_METHOD");
-        double cost = result.getDouble("COST");
-        String dateAdded = result.getString("DATE_ADDED");
-        int prepareTime = result.getInt("PREPARATION_TIME");
-        int portions = result.getInt("PORTIONS");
-
-        result = statement.executeQuery(String.format("SELECT GROUP_ID FROM PUBLICITY WHERE RECIPE_ID = %s", recipeId));
-        result.next();
-        int accessibility = result.getInt("GROUP_ID");
-
-        result = statement.executeQuery(String.format("SELECT AMOUNT, INGREDIENT_UNIT, INGREDIENT_NAME FROM INGREDIENT_LIST WHERE RECIPE_ID = %s", recipeId));
-        ArrayList<Ingredient> ingredientList = new ArrayList<Ingredient>();
-        while (result.next()) {
-            Double amount = result.getDouble("AMOUNT");
-            String unitName = result.getString("INGREDIENT_UNIT");
-            String name = result.getString("INGREDIENT_NAME");
-            Unit unit = new Unit(unitName);
-            Ingredient ingredient = new Ingredient(amount, unit, name);
-            ingredientList.add(ingredient);
-        }
-        result.close();
-        Recipe newRecipe = new Recipe(recipeId, recipeName, ownerName, preparationMethod, accessibility, dateAdded, prepareTime, cost, portions, ingredientList);
-        return newRecipe;
-    }
-
     public static User login(String username, String password, Label errMess) throws SQLException {
         setConnection();
 
@@ -156,10 +117,12 @@ public class DatabaseConnection {
         while (result.next()) {
             int id = result.getInt("RECIPE_ID");
             Recipe recipe = getRecipe(id);
-            ResultSet resPublicity = statement.executeQuery(String.format("SELECT G.NAME FROM \"GROUP\" G WHERE G.GROUP_ID = (SELECT P.GROUP_ID FROM PUBLICITY P WHERE P.RECIPE_ID = %d)", id));
+            Statement stat = connection.createStatement();
+            ResultSet resPublicity = stat.executeQuery(String.format("SELECT G.NAME FROM \"GROUP\" G WHERE G.GROUP_ID = (SELECT P.GROUP_ID FROM PUBLICITY P WHERE P.RECIPE_ID = %d)", id));
             resPublicity.next();
             String groupName = resPublicity.getString("NAME");
             resPublicity.close();
+            stat.close();
             recipe.setGroupName(groupName);
             UserRecipes.add(recipe);
         }
@@ -219,5 +182,43 @@ public class DatabaseConnection {
             connection.commit();
             closeConnection();
         }
+    }
+
+    public static Recipe getSelectedRecipe(int recipeId) throws SQLException {
+        setConnection();
+        Recipe recipe = getRecipe(recipeId);
+        closeConnection();
+        return recipe;
+    }
+
+    private static Recipe getRecipe(int recipeId) throws SQLException {
+        Statement statement = connection.createStatement();
+        ResultSet result = statement.executeQuery(String.format("SELECT * FROM RECIPE WHERE RECIPE_ID = %s", recipeId));
+        result.next();
+        String ownerName = result.getString("OWNER_NAME");
+        String recipeName = result.getString("NAME");
+        String preparationMethod = result.getString("PREPARATION_METHOD");
+        double cost = result.getDouble("COST");
+        String dateAdded = result.getString("DATE_ADDED");
+        int prepareTime = result.getInt("PREPARATION_TIME");
+        int portions = result.getInt("PORTIONS");
+
+        result = statement.executeQuery(String.format("SELECT GROUP_ID FROM PUBLICITY WHERE RECIPE_ID = %s", recipeId));
+        result.next();
+        int accessibility = result.getInt("GROUP_ID");
+
+        result = statement.executeQuery(String.format("SELECT AMOUNT, INGREDIENT_UNIT, INGREDIENT_NAME FROM INGREDIENT_LIST WHERE RECIPE_ID = %s", recipeId));
+        ArrayList<Ingredient> ingredientList = new ArrayList<Ingredient>();
+        while (result.next()) {
+            Double amount = result.getDouble("AMOUNT");
+            String unitName = result.getString("INGREDIENT_UNIT");
+            String name = result.getString("INGREDIENT_NAME");
+            Unit unit = new Unit(unitName);
+            Ingredient ingredient = new Ingredient(amount, unit, name);
+            ingredientList.add(ingredient);
+        }
+        result.close();
+        Recipe newRecipe = new Recipe(recipeId, recipeName, ownerName, preparationMethod, accessibility, dateAdded, prepareTime, cost, portions, ingredientList);
+        return newRecipe;
     }
 }
