@@ -72,7 +72,7 @@ public class MainPane {
     public void onRecipeClick(Button button, int RecipeID) {
         try {
             FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
-            loader.setController(new RecipePane(DatabaseConnection.getRecipe(RecipeID), activeUser));   // TODO apparently it's about to not work
+            loader.setController(new RecipePane(DatabaseConnection.getSelectedRecipe(RecipeID), activeUser));
             Scene mainPageScene = new Scene(loader.load());
             Stage stage = new Stage();
             mainPageScene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
