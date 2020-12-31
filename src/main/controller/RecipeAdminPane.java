@@ -89,10 +89,13 @@ public class RecipeAdminPane implements OrdinaryButtonAction {
         try {
             Parent mainPage = loader.load();
             Scene mainPageScene = new Scene(mainPage);
-            Stage stage = (Stage) favTable.getScene().getWindow();
+            Stage oldStage = (Stage) favTable.getScene().getWindow();
+            Stage stage = new Stage();
             mainPageScene.getStylesheets().add(getClass().getResource("/resources/"+ DatabaseConnection.theme+".css").toExternalForm());
             stage.setScene(mainPageScene);
-            stage.show();
+//            oldStage.hide();
+            stage.showAndWait();
+//            oldStage.show();
         } catch (IOException e) {
             System.err.printf("Error: %s%n", e.getMessage());
         }

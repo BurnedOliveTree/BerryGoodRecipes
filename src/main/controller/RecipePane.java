@@ -167,10 +167,11 @@ public class RecipePane  implements OrdinaryButtonAction{
     }
     @FXML
     public void onExitButtonAction(){
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/mainPage.fxml"));
-        MainPane controller = new MainPane(activeUser);
-        loader.setController(controller);
-        changeScene(exitButton, loader);
+        exitButton.getScene().getWindow().hide();
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/mainPage.fxml"));
+//        MainPane controller = new MainPane(activeUser);
+//        loader.setController(controller);
+//        changeScene(exitButton, loader);
     }
 
     @FXML

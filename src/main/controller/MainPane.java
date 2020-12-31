@@ -74,15 +74,30 @@ public class MainPane {
     }
 
     @FXML
-    public void onClickButton() {
+    public void onClickButton() throws SQLException {
         // change main Stage Scene to recipe Scene
+//        try {
+//            FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
+//            Recipe recipe = DatabaseConnection.getRecipe(1);
+//            loader.setController(new RecipePane(recipe, activeUser));
+//            changeScene(recipeLink, loader);
+//        } catch (SQLException e) {
+//            System.err.printf("Error: %s%n", e.getMessage());
+//        }
+        FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
+        Recipe loadRecipe = DatabaseConnection.getRecipe(1);
+        loader.setController(new RecipePane(loadRecipe, activeUser));
         try {
-            FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
-//            RecipePane controller = new RecipePane(new Recipe(1,"Placki", new User("Karolina", "1234"), "Zrób farsz i nagrzej patelnie", 0, "2020-01-01", 10, 20, 4,  new ArrayList<>(){{add(new Ingredient(200, new Unit(), "Twaróg"));}}));
-            Recipe recipe = DatabaseConnection.getRecipe(1);
-            loader.setController(new RecipePane(recipe, activeUser));
-            changeScene(recipeLink, loader);
-        } catch (SQLException e) {
+            Parent mainPage = loader.load();
+            Scene mainPageScene = new Scene(mainPage);
+            Stage oldStage = (Stage) recipeLink.getScene().getWindow();
+            Stage stage = new Stage();
+            mainPageScene.getStylesheets().add(getClass().getResource("/resources/"+ DatabaseConnection.theme+".css").toExternalForm());
+            stage.setScene(mainPageScene);
+//            oldStage.hide();
+            stage.showAndWait();
+//            oldStage.show();
+        } catch (IOException e) {
             System.err.printf("Error: %s%n", e.getMessage());
         }
     }
