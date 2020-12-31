@@ -85,7 +85,7 @@ public class MainPane {
 //            System.err.printf("Error: %s%n", e.getMessage());
 //        }
         FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
-        Recipe loadRecipe = DatabaseConnection.getRecipe(1);
+        Recipe loadRecipe = DatabaseConnection.getSelectedRecipe(1);
         loader.setController(new RecipePane(loadRecipe, activeUser));
         try {
             Parent mainPage = loader.load();

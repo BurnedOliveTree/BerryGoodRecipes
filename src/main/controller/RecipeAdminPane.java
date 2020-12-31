@@ -84,8 +84,7 @@ public class RecipeAdminPane implements OrdinaryButtonAction {
 
     public void ShowRecipe(Recipe recipe) throws SQLException {
         FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
-        Recipe loadRecipe = DatabaseConnection.getRecipe(recipe.getId());
-        loader.setController(new RecipePane(loadRecipe, activeUser));
+        loader.setController(new RecipePane(recipe, activeUser));
         try {
             Parent mainPage = loader.load();
             Scene mainPageScene = new Scene(mainPage);

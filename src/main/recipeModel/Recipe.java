@@ -190,4 +190,6 @@ public class Recipe {
     public String getGroupName() {return groupName;}
 
     public Integer getId() {return id;}
+
+    public void setGroupName(String groupName) {this.groupName = groupName; }
 }

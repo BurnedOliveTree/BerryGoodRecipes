@@ -59,8 +59,14 @@ public class DatabaseConnection {
         System.out.println("Connection with database closed.");
     }
 
-    public static Recipe getRecipe(int recipeId) throws SQLException {
+    public static Recipe getSelectedRecipe(int recipeId) throws SQLException {
         setConnection();
+        Recipe recipe = getRecipe(recipeId);
+        closeConnection();
+        return recipe;
+    }
+
+    private static Recipe getRecipe(int recipeId) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery(String.format("SELECT * FROM RECIPE WHERE RECIPE_ID = %s", recipeId));
         result.next();
@@ -88,12 +94,7 @@ public class DatabaseConnection {
             ingredientList.add(ingredient);
         }
         result.close();
-
         Recipe newRecipe = new Recipe(recipeId, recipeName, ownerName, preparationMethod, accessibility, dateAdded, prepareTime, cost, portions, ingredientList);
-
-        statement.close();
-        closeConnection();
-
         return newRecipe;
     }
 
@@ -137,17 +138,7 @@ public class DatabaseConnection {
         LinkedList<Recipe> favorites = new LinkedList<>();
         while (result.next()) {
             int id = result.getInt("RECIPE_ID");
-            Statement stat = connection.createStatement();
-            ResultSet res = stat.executeQuery(String.format("SELECT NAME, OWNER_NAME, DATE_ADDED, COST, PREPARATION_TIME FROM RECIPE WHERE RECIPE_ID = %d", id));
-            res.next();
-            String name = res.getString("NAME");
-            String dateAdded = res.getString("DATE_ADDED");
-            String author = res.getString("OWNER_NAME");
-            int cost = res.getInt("COST");
-            int time = res.getInt("PREPARATION_TIME");
-            res.close();
-            stat.close();
-            Recipe recipe = new Recipe(id, name, author, dateAdded, cost, time);
+            Recipe recipe = getRecipe(id);
             favorites.add(recipe);
         }
         result.close();
@@ -164,15 +155,12 @@ public class DatabaseConnection {
         List<Recipe> UserRecipes = new ArrayList<Recipe>();
         while (result.next()) {
             int id = result.getInt("RECIPE_ID");
-            String name = result.getString("NAME");
-            String dateAdded = result.getString("DATE_ADDED");
-            Statement stat = connection.createStatement();
-            ResultSet resPublicity = stat.executeQuery(String.format("SELECT G.NAME FROM \"GROUP\" G WHERE G.GROUP_ID = (SELECT P.GROUP_ID FROM PUBLICITY P WHERE P.RECIPE_ID = %d)", id));
+            Recipe recipe = getRecipe(id);
+            ResultSet resPublicity = statement.executeQuery(String.format("SELECT G.NAME FROM \"GROUP\" G WHERE G.GROUP_ID = (SELECT P.GROUP_ID FROM PUBLICITY P WHERE P.RECIPE_ID = %d)", id));
             resPublicity.next();
             String groupName = resPublicity.getString("NAME");
             resPublicity.close();
-            stat.close();
-            Recipe recipe = new Recipe(id, name, groupName, dateAdded);
+            recipe.setGroupName(groupName);
             UserRecipes.add(recipe);
         }
         result.close();
