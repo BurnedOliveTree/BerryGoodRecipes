@@ -24,6 +24,7 @@ public interface OrdinaryButtonAction {
             stage.setScene(mainPageScene);
             stage.show();
         } catch (IOException e) {
-            System.err.println(String.format("Error: %s", e.getMessage()));}
+            System.err.printf("Error: %s%n", e.getMessage());
+        }
     }
 }

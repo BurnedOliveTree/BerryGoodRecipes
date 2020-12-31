@@ -19,6 +19,7 @@ import main.recipeModel.Recipe;
 import main.userModel.User;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 
 public class RecipeAdminPane implements OrdinaryButtonAction {
@@ -41,7 +42,12 @@ public class RecipeAdminPane implements OrdinaryButtonAction {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 if (mouseEvent.isPrimaryButtonDown() && mouseEvent.getClickCount() == 2) {
-                    System.out.println(favTable.getSelectionModel().getSelectedItem());
+                    Recipe recipe = favTable.getSelectionModel().getSelectedItem();
+                    try {
+                        ShowRecipe(recipe);
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
                 }
             }
         });
@@ -74,6 +80,26 @@ public class RecipeAdminPane implements OrdinaryButtonAction {
         timeColumn.setCellValueFactory(new PropertyValueFactory<>("prepareTime"));
         favTable.setItems(FavList);
         favTable.getColumns().addAll(nameColumn, authorColumn, dateAddedColumn, costColumn, timeColumn);
+    }
+
+    public void ShowRecipe(Recipe recipe) throws SQLException {
+//        FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
+////        RecipePane controller = new RecipePane(recipe, activeUser);
+////        loader.setController(controller);
+////        try {
+////            Parent mainPage = loader.load();
+////            Scene mainPageScene = new Scene(mainPage);
+////            Stage stage = (Stage) favTable.getScene().getWindow();
+////            mainPageScene.getStylesheets().add(getClass().getResource("/resources/"+ DatabaseConnection.theme+".css").toExternalForm());
+////            stage.setScene(mainPageScene);
+////            stage.showAndWait();
+////        } catch (IOException e) {
+////            System.err.println(String.format("Error: %s", e.getMessage()));}
+
+        FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
+        Recipe loadRecipe = DatabaseConnection.getRecipe(recipe.getId());
+        loader.setController(new RecipePane(loadRecipe, activeUser));
+        changeScene(exitButton, loader);
     }
 
 
