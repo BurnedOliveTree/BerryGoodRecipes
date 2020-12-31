@@ -218,7 +218,8 @@ public class DatabaseConnection {
             Statement statement = connection.createStatement();
             if (user.getNewFavorites().size() != 0) {
                 for (Recipe recipe : user.getNewFavorites()) {
-                    statement.executeUpdate(String.format("INSERT INTO FAVORITE VALUES(null, '%s', %d)", user.getUsername(), recipe.getId()));
+                    statement.executeUpdate("INSERT INTO FAVORITE SELECT null, '" + user.getUsername() + "', "+ recipe.getId() + " FROM DUAL\n" +
+                            "WHERE NOT EXISTS (SELECT NULL FROM FAVORITE WHERE RECIPE_ID=" +  recipe.getId() + "AND USERNAME='" + user.getUsername() + "')");
                 }
             }
             if (user.getDeletedFavorites().size() != 0) {
