@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Recipe {
     private String author;
-    private int id;
+    private Integer id;
     private double cost = 0;
     private String name;
     private int accessibility;
@@ -32,6 +32,15 @@ public class Recipe {
         this.cost = cost;
         this.prepareTime = prepareTime;
         this.id = id;
+    }
+
+    public Recipe(int id,String name,String author,String dateAdded,int cost,int time){
+        this.id = id;
+        this.name = name;
+        this.author = author;
+        this.dateAdded = dateAdded;
+        this.cost = cost;
+        this.prepareTime = time;
     }
 
     public Recipe(int id, String name, String groupName, String dateAdded)
@@ -93,6 +102,18 @@ public class Recipe {
             else
                 throw new IllegalArgumentException("Value must be greater than 0");
         }
+    }
+
+    @Override
+    public boolean equals(Object r){
+        if (r == this) {
+            return true;
+        } else if (!(r instanceof Recipe)) {
+            return false;
+        } else  {
+            return id.equals(((Recipe) r).getId());
+        }
+
     }
 
 
@@ -168,5 +189,5 @@ public class Recipe {
 
     public String getGroupName() {return groupName;}
 
-    public int getId() {return id;}
+    public Integer getId() {return id;}
 }

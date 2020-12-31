@@ -2,7 +2,6 @@ package main.controller;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -13,7 +12,6 @@ import javafx.stage.Stage;
 
 import main.DatabaseConnection;
 import main.Main;
-import main.recipeModel.Recipe;
 import main.userModel.User;
 
 import java.io.FileInputStream;
@@ -24,7 +22,6 @@ import java.sql.SQLException;
 public class MainPane {
     public User activeUser;
     @FXML
-    public Button recipeLink;
     public Button loginButton;
     public ImageView logo;
     public Button myRecipesButton;
@@ -36,7 +33,6 @@ public class MainPane {
 
     @FXML
     void initialize() {
-//        recipeLink.setText("Placki");
         try {
             DatabaseConnection.fillResults(this, tilePain);
         } catch (SQLException e) { e.printStackTrace(); }
@@ -74,12 +70,15 @@ public class MainPane {
     }
 
     public void onRecipeClick(Button button, int RecipeID) {
-        // change main Stage Scene to recipe Scene
         try {
             FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
             loader.setController(new RecipePane(DatabaseConnection.getRecipe(RecipeID), activeUser));   // TODO apparently it's about to not work
-            changeScene(button, loader);
-        } catch (SQLException e) {
+            Scene mainPageScene = new Scene(loader.load());
+            Stage stage = new Stage();
+            mainPageScene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
+            stage.setScene(mainPageScene);
+            stage.showAndWait();
+        } catch (SQLException | IOException e) {
             System.err.printf("Error: %s%n", e.getMessage());
         }
     }

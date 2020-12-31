@@ -18,10 +18,8 @@ import java.sql.Statement;
 import java.util.*;
 
 import javafx.geometry.HPos;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.ColumnConstraints;
@@ -36,7 +34,7 @@ public class DatabaseConnection {
     public static String databaseServiceName;
     public static String databaseHost;
 
-    public DatabaseConnection() throws IOException, SQLException {
+    public DatabaseConnection() throws IOException {
         loadFile();
     }
 
@@ -62,7 +60,7 @@ public class DatabaseConnection {
         ods.setURL(connectionURL);
         connection = ods.getConnection();
         connection.setAutoCommit(false);
-    };
+    }
 
     public static void closeConnection() throws SQLException {
         connection.close();
@@ -107,28 +105,6 @@ public class DatabaseConnection {
         return newRecipe;
     }
 
-    public static List<Recipe> getUserRecipes(String username) throws SQLException {
-        setConnection();
-        Statement statement = connection.createStatement();
-        ResultSet result = statement.executeQuery(String.format("SELECT RECIPE_ID, NAME, DATE_ADDED FROM RECIPE WHERE UPPER(OWNER_NAME) = '%s'", username.toUpperCase()));
-        List<Recipe> UserRecipes = new ArrayList<Recipe>();
-        while (result.next()) {
-            int id = result.getInt("RECIPE_ID");
-            String name = result.getString("NAME");
-            String dateAdded = result.getString("DATE_ADDED");
-            Statement stat = connection.createStatement();
-            ResultSet resPublicity = stat.executeQuery(String.format("SELECT G.NAME FROM \"GROUP\" G WHERE G.GROUP_ID = (SELECT P.GROUP_ID FROM PUBLICITY P WHERE P.RECIPE_ID = %d)", id));
-            resPublicity.next();
-            String groupName = resPublicity.getString("NAME");
-//            resPublicity.close();
-            Recipe recipe = new Recipe(id, name, groupName, dateAdded);
-            UserRecipes.add(recipe);
-        }
-        result.close();
-        closeConnection();
-        return UserRecipes;
-    }
-
     public static User login(String username, String password, Label errMess) throws SQLException {
         setConnection();
 
@@ -143,7 +119,8 @@ public class DatabaseConnection {
             if (gotPassword.equals(password)) {
                 // everything is correct, create a user
                 List<Recipe> userRecipes = getUserRecipes(username);
-                activeUser = new User(username, password, userRecipes);
+                List<Recipe> favorites = getUserFavorites(username);
+                activeUser = new User(username, password, userRecipes, favorites);
                 // TODO add all the other columns in the future
                 errMess.setText("Successfully logged in!");
             } else {
@@ -161,6 +138,56 @@ public class DatabaseConnection {
         return activeUser;
     }
 
+    private static List<Recipe> getUserFavorites(String username) throws SQLException {
+        setConnection();
+        Statement statement = connection.createStatement();
+        ResultSet result = statement.executeQuery(String.format("SELECT RECIPE_ID FROM FAVORITE WHERE UPPER(USERNAME) = '%s'", username.toUpperCase()));
+        LinkedList<Recipe> favorites = new LinkedList<>();
+        while (result.next()) {
+            int id = result.getInt("RECIPE_ID");
+            Statement stat = connection.createStatement();
+            ResultSet res = stat.executeQuery(String.format("SELECT NAME, OWNER_NAME, DATE_ADDED, COST, PREPARATION_TIME FROM RECIPE WHERE RECIPE_ID = %d", id));
+            res.next();
+            String name = res.getString("NAME");
+            String dateAdded = res.getString("DATE_ADDED");
+            String author = res.getString("OWNER_NAME");
+            int cost = res.getInt("COST");
+            int time = res.getInt("PREPARATION_TIME");
+            res.close();
+            stat.close();
+            Recipe recipe = new Recipe(id, name, author, dateAdded, cost, time);
+            favorites.add(recipe);
+        }
+        result.close();
+        statement.close();
+        closeConnection();
+        return favorites;
+    }
+
+    public static List<Recipe> getUserRecipes(String username) throws SQLException {
+        setConnection();
+        Statement statement = connection.createStatement();
+        ResultSet result = statement.executeQuery(String.format("SELECT RECIPE_ID, NAME, DATE_ADDED FROM RECIPE WHERE UPPER(OWNER_NAME) = '%s'", username.toUpperCase()));
+        List<Recipe> UserRecipes = new ArrayList<Recipe>();
+        while (result.next()) {
+            int id = result.getInt("RECIPE_ID");
+            String name = result.getString("NAME");
+            String dateAdded = result.getString("DATE_ADDED");
+            Statement stat = connection.createStatement();
+            ResultSet resPublicity = stat.executeQuery(String.format("SELECT G.NAME FROM \"GROUP\" G WHERE G.GROUP_ID = (SELECT P.GROUP_ID FROM PUBLICITY P WHERE P.RECIPE_ID = %d)", id));
+            resPublicity.next();
+            String groupName = resPublicity.getString("NAME");
+            resPublicity.close();
+            stat.close();
+            Recipe recipe = new Recipe(id, name, groupName, dateAdded);
+            UserRecipes.add(recipe);
+        }
+        result.close();
+        statement.close();
+        closeConnection();
+        return UserRecipes;
+    }
+
     public static User register(String username, String password, Label errMess) throws SQLException {
         setConnection();
 
@@ -175,7 +202,8 @@ public class DatabaseConnection {
         else {
             if (!statement.execute("insert into \"USER\" values('"+username+"', '"+password+"', null)")) {
                 List<Recipe> userRecipes = getUserRecipes(username);
-                activeUser = new User(username, password, userRecipes);
+                List<Recipe> favorites = getUserFavorites(username);
+                activeUser = new User(username, password, userRecipes, favorites);
                 errMess.setText("Successfully created an account!");
             }
             else {
@@ -195,9 +223,13 @@ public class DatabaseConnection {
             setConnection();
             Statement statement = connection.createStatement();
             if (user.getNewFavorites().size() != 0) {
-                List<Integer> newFavorites = user.getNewFavorites();
-                for (int recipeId : newFavorites) {
-                    statement.executeUpdate(String.format("INSERT INTO FAVORITE VALUES(null, %s, %d)", user.getUsername(), recipeId));
+                for (Recipe recipe : user.getNewFavorites()) {
+                    statement.executeUpdate(String.format("INSERT INTO FAVORITE VALUES(null, '%s', %d)", user.getUsername(), recipe.getId()));
+                }
+            }
+            if (user.getDeletedFavorites().size() != 0) {
+                for (Recipe recipe: user.getDeletedFavorites()) {
+                    statement.executeUpdate(String.format("DELETE FROM FAVORITE WHERE RECIPE_ID = %d AND USERNAME = '%s'", recipe.getId(),  user.getUsername()));
                 }
             }
             statement.close();
@@ -225,9 +257,7 @@ public class DatabaseConnection {
             tempButton.setTextAlignment(TextAlignment.CENTER);
             tempButton.setPrefSize(192, 64);
             String tempString = resultSet.getString("RECIPE_ID");
-            tempButton.setOnMouseClicked(e -> {
-                mainPane.onRecipeClick(tempButton, Integer.parseInt(tempString));
-            });
+            tempButton.setOnMouseClicked(e -> mainPane.onRecipeClick(tempButton, Integer.parseInt(tempString)));
             tempPane.add(tempButton, 0, 0, 3, 2);
             tempPane.add(new Label("Rating"), 0, 2, 1, 1);
             tempPane.add(new Label("Time"), 1, 2, 1, 1);

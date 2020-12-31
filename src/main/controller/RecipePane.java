@@ -53,7 +53,7 @@ public class RecipePane  implements OrdinaryButtonAction{
     }
 
     @FXML
-    void initialize() {
+    void initialize() throws FileNotFoundException {
         if (DatabaseConnection.theme.equals("lightTheme") || DatabaseConnection.theme.equals("winter")) {
             try {
                 ScalePic.setImage(new Image(new FileInputStream("src/resources/berryScale.png")));
@@ -92,16 +92,12 @@ public class RecipePane  implements OrdinaryButtonAction{
 
 
         // options for logged in users
-        if (activeUser == null){
-            likeButton.setDisable(true);;
+        if (activeUser == null) {
+            likeButton.setDisable(true);
+        } else if (activeUser.checkIfRecipeFavorite(this.recipe)){
+            LikePic.setImage(new Image(new FileInputStream("src/resources/favoriteClicked.png")));
         }
-        else{
-            likeButton.setOnAction( e->{ onLikeAction(likeButton); });
-        }
-        exitButton.setOnAction( e->{ onExitAction(exitButton); });
 
-//        shoppingListButton.setOnAction( e->{ onShoppingAction(shoppingListButton, "/resources/shoppingListPage.fxml"); });
-//        timeButton.setOnAction( e->{ onTimeAction(timeButton, "/resources/timepiecePage.fxml"); });
 
         portionArea.textProperty().addListener((observableValue, s, t1) -> {
             try {
@@ -115,8 +111,6 @@ public class RecipePane  implements OrdinaryButtonAction{
                 return;
             }
         });
-
-
 
     }
 
@@ -140,17 +134,17 @@ public class RecipePane  implements OrdinaryButtonAction{
             setIngredListView();
         }
     }
-
-    private void onLikeAction(Button button) {
+    @FXML
+    public void onLikeButtonAction() {
         try {
-            boolean state = activeUser.checkIfRecipeFavorite(recipe.getId());
-            if (activeUser.checkIfRecipeFavorite(recipe.getId())) {
+            boolean state = activeUser.checkIfRecipeFavorite(recipe);
+            if (activeUser.checkIfRecipeFavorite(recipe)) {
                 LikePic.setImage(new Image(new FileInputStream("src/resources/favoriteUnclicked.png")));
-                activeUser.removeFavorite(recipe.getId());
+                activeUser.removeFavorite(recipe);
             }
             else{
                 LikePic.setImage(new Image(new FileInputStream("src/resources/favoriteClicked.png")));
-                activeUser.addFavorite(recipe.getId());
+                activeUser.addFavorite(recipe);
             }
         } catch ( FileNotFoundException e) {
             System.err.println(String.format("Error: %s", e.getMessage()));
@@ -158,28 +152,36 @@ public class RecipePane  implements OrdinaryButtonAction{
     }
 
     @FXML
-    private void onCommentAction(MouseEvent mouseEvent) {
-        mouseEvent.consume();
+    public void onCommentButtonAction(){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/opinionPage.fxml"));
         OpinionPane controller = new OpinionPane(this.recipe, activeUser);
         loader.setController(controller);
         changeScene(commentButton, loader);
     }
-
     @FXML
-    private void onScaleAction(MouseEvent mouseEvent) {
-        mouseEvent.consume();
+    public void onScaleButtonAction(){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/scalePage.fxml"));
         ScalePane controller = new ScalePane(this.recipe, activeUser);
         loader.setController(controller);
         changeScene(scaleButton, loader);
     }
+    @FXML
+    public void onExitButtonAction(){
+        exitButton.getScene().getWindow().hide();
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/mainPage.fxml"));
+//        MainPane controller = new MainPane(activeUser);
+//        loader.setController(controller);
+//        changeScene(exitButton, loader);
+    }
 
-    public void onExitAction(Button button){
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/mainPage.fxml"));
-        MainPane controller = new MainPane(activeUser);
-        loader.setController(controller);
-        changeScene(button, loader);
+    @FXML
+    public void onShoppingListButtonAction(){
+
+    }
+
+    @FXML
+    public void onTimeButtonAction(){
+
     }
 
 }
