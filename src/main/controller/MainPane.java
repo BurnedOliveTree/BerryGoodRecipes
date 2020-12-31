@@ -8,6 +8,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.TilePane;
 import javafx.stage.Stage;
 
 import main.DatabaseConnection;
@@ -27,6 +28,7 @@ public class MainPane {
     public Button loginButton;
     public ImageView logo;
     public Button myRecipesButton;
+    public TilePane tilePain;
 
     public MainPane(User activeUser) {
         this.activeUser = activeUser;
@@ -34,13 +36,14 @@ public class MainPane {
 
     @FXML
     void initialize() {
-        recipeLink.setText("Placki");
+//        recipeLink.setText("Placki");
+        try {
+            DatabaseConnection.fillResults(this, tilePain);
+        } catch (SQLException e) { e.printStackTrace(); }
         if (DatabaseConnection.theme.equals("lightTheme") || DatabaseConnection.theme.equals("winter")) {
             try {
                 logo.setImage(new Image(new FileInputStream("src/resources/berryLogo.png")));
-            } catch (FileNotFoundException e) {
-                System.err.printf("Error: %s%n", e.getMessage());
-            }
+            } catch (FileNotFoundException e) { System.err.printf("Error: %s%n", e.getMessage()); }
         }
         if (activeUser != null) {
             loginButton.setText("Sign out");
@@ -48,7 +51,6 @@ public class MainPane {
         }
         else
             myRecipesButton.setDisable(true);
-
     }
 
     @FXML
@@ -62,26 +64,21 @@ public class MainPane {
 
     private void changeScene(Button button,FXMLLoader loader) {
         try {
-
-            Parent mainPage = loader.load();
-            Scene mainPageScene = new Scene(mainPage);
+            Scene mainPageScene = new Scene(loader.load());
             Stage stage = (Stage) button.getScene().getWindow();
             mainPageScene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
             stage.setScene(mainPageScene);
             stage.show();
         } catch (IOException e) {
-            System.err.println(String.format("Error: %s", e.getMessage()));}
+            System.err.printf("Error: %s%n", e.getMessage());}
     }
 
-    @FXML
-    public void onClickButton() {
+    public void onRecipeClick(Button button, int RecipeID) {
         // change main Stage Scene to recipe Scene
         try {
             FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
-//            RecipePane controller = new RecipePane(new Recipe(1,"Placki", new User("Karolina", "1234"), "Zrób farsz i nagrzej patelnie", 0, "2020-01-01", 10, 20, 4,  new ArrayList<>(){{add(new Ingredient(200, new Unit(), "Twaróg"));}}));
-            Recipe recipe = DatabaseConnection.getRecipe(1);
-            loader.setController(new RecipePane(recipe, activeUser));
-            changeScene(recipeLink, loader);
+            loader.setController(new RecipePane(DatabaseConnection.getRecipe(RecipeID), activeUser));   // TODO apparently it's about to not work
+            changeScene(button, loader);
         } catch (SQLException e) {
             System.err.printf("Error: %s%n", e.getMessage());
         }

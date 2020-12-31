@@ -1,5 +1,7 @@
 package main;
 
+import javafx.scene.text.TextAlignment;
+import main.controller.MainPane;
 import main.userModel.User;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
@@ -15,7 +17,15 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.*;
 
+import javafx.geometry.HPos;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.TilePane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.RowConstraints;
 
 public class DatabaseConnection {
     static Connection connection;
@@ -97,6 +107,28 @@ public class DatabaseConnection {
         return newRecipe;
     }
 
+    public static List<Recipe> getUserRecipes(String username) throws SQLException {
+        setConnection();
+        Statement statement = connection.createStatement();
+        ResultSet result = statement.executeQuery(String.format("SELECT RECIPE_ID, NAME, DATE_ADDED FROM RECIPE WHERE UPPER(OWNER_NAME) = '%s'", username.toUpperCase()));
+        List<Recipe> UserRecipes = new ArrayList<Recipe>();
+        while (result.next()) {
+            int id = result.getInt("RECIPE_ID");
+            String name = result.getString("NAME");
+            String dateAdded = result.getString("DATE_ADDED");
+            Statement stat = connection.createStatement();
+            ResultSet resPublicity = stat.executeQuery(String.format("SELECT G.NAME FROM \"GROUP\" G WHERE G.GROUP_ID = (SELECT P.GROUP_ID FROM PUBLICITY P WHERE P.RECIPE_ID = %d)", id));
+            resPublicity.next();
+            String groupName = resPublicity.getString("NAME");
+//            resPublicity.close();
+            Recipe recipe = new Recipe(id, name, groupName, dateAdded);
+            UserRecipes.add(recipe);
+        }
+        result.close();
+        closeConnection();
+        return UserRecipes;
+    }
+
     public static User login(String username, String password, Label errMess) throws SQLException {
         setConnection();
 
@@ -129,28 +161,6 @@ public class DatabaseConnection {
         return activeUser;
     }
 
-    public static List<Recipe> getUserRecipes(String username) throws SQLException {
-        setConnection();
-        Statement statement = connection.createStatement();
-        ResultSet result = statement.executeQuery(String.format("SELECT RECIPE_ID, NAME, DATE_ADDED FROM RECIPE WHERE UPPER(OWNER_NAME) = '%s'", username.toUpperCase()));
-        List<Recipe> UserRecipes = new ArrayList<Recipe>();
-        while (result.next()) {
-            int id = result.getInt("RECIPE_ID");
-            String name = result.getString("NAME");
-            String dateAdded = result.getString("DATE_ADDED");
-            Statement stat = connection.createStatement();
-            ResultSet resPublicity = stat.executeQuery(String.format("SELECT G.NAME FROM \"GROUP\" G WHERE G.GROUP_ID = (SELECT P.GROUP_ID FROM PUBLICITY P WHERE P.RECIPE_ID = %d)", id));
-            resPublicity.next();
-            String groupName = resPublicity.getString("NAME");
-//            resPublicity.close();
-            Recipe recipe = new Recipe(id, name, groupName, dateAdded);
-            UserRecipes.add(recipe);
-        }
-        result.close();
-        closeConnection();
-        return UserRecipes;
-    }
-
     public static User register(String username, String password, Label errMess) throws SQLException {
         setConnection();
 
@@ -180,7 +190,6 @@ public class DatabaseConnection {
         return activeUser;
     }
 
-
     public static void saveUser(User user) throws SQLException {
         if (user != null) {
             setConnection();
@@ -195,5 +204,40 @@ public class DatabaseConnection {
             connection.commit();
             closeConnection();
         }
+    }
+
+    public static void fillResults(MainPane mainPane, TilePane tilePain) throws SQLException {
+        setConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("select RECIPE_ID, NAME from RECIPE");
+        List<GridPane> panelist = new ArrayList<>();
+        while (resultSet.next()) {
+            GridPane tempPane = new GridPane();
+            for (int i=0; i<3; i++) {
+                ColumnConstraints columnConstraints = new ColumnConstraints(64);
+                columnConstraints.setHalignment(HPos.CENTER);
+                tempPane.getColumnConstraints().add(columnConstraints);
+                tempPane.getRowConstraints().add(new RowConstraints(32));
+            }
+            tempPane.setPrefSize(192, 96);
+            Button tempButton = new Button(resultSet.getString("NAME"));
+            tempButton.setWrapText(true);
+            tempButton.setTextAlignment(TextAlignment.CENTER);
+            tempButton.setPrefSize(192, 64);
+            String tempString = resultSet.getString("RECIPE_ID");
+            tempButton.setOnMouseClicked(e -> {
+                mainPane.onRecipeClick(tempButton, Integer.parseInt(tempString));
+            });
+            tempPane.add(tempButton, 0, 0, 3, 2);
+            tempPane.add(new Label("Rating"), 0, 2, 1, 1);
+            tempPane.add(new Label("Time"), 1, 2, 1, 1);
+            tempPane.add(new Label("Cost"), 2, 2, 1, 1);
+            panelist.add(tempPane);
+        }
+        tilePain.getChildren().clear();
+        tilePain.getChildren().addAll(panelist);
+        resultSet.close();
+        statement.close();
+        closeConnection();
     }
 }
