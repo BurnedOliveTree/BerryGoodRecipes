@@ -24,7 +24,7 @@ public class ShoppingList {
     public void removeFromShoppingList(Integer quantity, String ingredientName) {
         for (Ingredient ingredient : this.shoppingList) {
             if (ingredientName.equals(ingredient.getName())) {
-                Double currQuantity = ingredient.getQuantity() - quantity;
+                double currQuantity = ingredient.getQuantity() - quantity;
                 if (currQuantity > 0) {
                     ingredient.setQuantity(currQuantity);
                 }

@@ -120,7 +120,7 @@ public class DatabaseConnection {
         setConnection();
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery(String.format("SELECT RECIPE_ID, NAME, DATE_ADDED FROM RECIPE WHERE UPPER(OWNER_NAME) = '%s'", username.toUpperCase()));
-        List<Recipe> UserRecipes = new ArrayList<Recipe>();
+        List<Recipe> UserRecipes = new ArrayList<>();
         while (result.next()) {
             int id = result.getInt("RECIPE_ID");
             Recipe recipe = getRecipe(id);
@@ -247,7 +247,7 @@ public class DatabaseConnection {
         int accessibility = result.getInt("GROUP_ID");
 
         result = statement.executeQuery(String.format("SELECT AMOUNT, INGREDIENT_UNIT, INGREDIENT_NAME FROM INGREDIENT_LIST WHERE RECIPE_ID = %s", recipeId));
-        ArrayList<Ingredient> ingredientList = new ArrayList<Ingredient>();
+        ArrayList<Ingredient> ingredientList = new ArrayList<>();
         while (result.next()) {
             Double amount = result.getDouble("AMOUNT");
             String unitName = result.getString("INGREDIENT_UNIT");
@@ -257,7 +257,6 @@ public class DatabaseConnection {
             ingredientList.add(ingredient);
         }
         result.close();
-        Recipe newRecipe = new Recipe(recipeId, recipeName, ownerName, preparationMethod, accessibility, dateAdded, prepareTime, cost, portions, ingredientList);
-        return newRecipe;
+        return new Recipe(recipeId, recipeName, ownerName, preparationMethod, accessibility, dateAdded, prepareTime, cost, portions, ingredientList);
     }
 }

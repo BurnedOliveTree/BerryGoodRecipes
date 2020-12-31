@@ -18,5 +18,5 @@
     -fx-font-smoothing-type: lcd;
 }
 Text {
-    -fx-fill: -fx-accent;
+    -fx-fill: -fx-light-text-color;
 }

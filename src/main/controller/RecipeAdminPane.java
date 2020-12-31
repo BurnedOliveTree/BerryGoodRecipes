@@ -1,9 +1,5 @@
 package main.controller;
 
-import javafx.beans.Observable;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,8 +8,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import main.DatabaseConnection;
 import main.recipeModel.Recipe;
 import main.userModel.User;
@@ -96,13 +94,10 @@ public class RecipeAdminPane implements OrdinaryButtonAction {
         try {
             Parent mainPage = loader.load();
             Scene mainPageScene = new Scene(mainPage);
-            Stage oldStage = (Stage) favTable.getScene().getWindow();
             Stage stage = new Stage();
             mainPageScene.getStylesheets().add(getClass().getResource("/resources/"+ DatabaseConnection.theme+".css").toExternalForm());
             stage.setScene(mainPageScene);
-//            oldStage.hide();
             stage.showAndWait();
-//            oldStage.show();
         } catch (IOException e) {
             System.err.printf("Error: %s%n", e.getMessage());
         }

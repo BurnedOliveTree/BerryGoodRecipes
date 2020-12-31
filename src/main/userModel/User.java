@@ -46,14 +46,12 @@ public class User {
     public void addFavorite(Recipe newFavRecipe) {
         favorites.add(newFavRecipe);
         newFavorites.add(newFavRecipe);
-        if (deletedFavorites.contains(newFavRecipe))
-            deletedFavorites.remove(newFavRecipe);
+        deletedFavorites.remove(newFavRecipe);
     }
     public void removeFavorite(Recipe oldFavRecipe) {
         favorites.remove(oldFavRecipe);
         deletedFavorites.add(oldFavRecipe);
-        if (newFavorites.contains(oldFavRecipe))
-            newFavorites.remove(oldFavRecipe);
+        newFavorites.remove(oldFavRecipe);
     }
 
     public void followUser(User newFollowedUser) {
@@ -73,7 +71,6 @@ public class User {
     public String getUsername() {return username;}
     public boolean checkIfRecipeFavorite(Recipe recipe) {
         return favorites.stream().anyMatch(r -> r.getId().equals(recipe.getId()));
-    };
-
+    }
     public List<Recipe> getFavorites() {return favorites;}
 }

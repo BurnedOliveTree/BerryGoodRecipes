@@ -1,28 +1,20 @@
 package main.controller;
 
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
-import javafx.stage.Stage;
 
 import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
-import main.userModel.Opinion;
 import main.userModel.User;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 
 public class RecipePane  implements OrdinaryButtonAction{
     private final Recipe recipe;
@@ -80,8 +72,6 @@ public class RecipePane  implements OrdinaryButtonAction{
         setIngredListView();
         ingredientListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-        String x = "Author: " + this.recipe.getAuthor();
-
         authorLabel.setText("Author: " + this.recipe.getAuthor());
         dateAddedLabel.setText("Date added: " + this.recipe.getDateAdded());
         if (this.recipe.getPrepareTime() == 0) {
@@ -101,14 +91,13 @@ public class RecipePane  implements OrdinaryButtonAction{
 
         portionArea.textProperty().addListener((observableValue, s, t1) -> {
             try {
-                Double currNumPortions = Double.parseDouble(t1);
+                double currNumPortions = Double.parseDouble(t1);
                 if (currNumPortions > 0)
                     changeIngredListViewScale(currNumPortions);
                 else
                     portionArea.clear();
             } catch (IllegalArgumentException e) {
                 portionArea.clear();
-                return;
             }
         });
 
@@ -137,7 +126,6 @@ public class RecipePane  implements OrdinaryButtonAction{
     @FXML
     public void onLikeButtonAction() {
         try {
-            boolean state = activeUser.checkIfRecipeFavorite(recipe);
             if (activeUser.checkIfRecipeFavorite(recipe)) {
                 LikePic.setImage(new Image(new FileInputStream("src/resources/favoriteUnclicked.png")));
                 activeUser.removeFavorite(recipe);
@@ -147,7 +135,7 @@ public class RecipePane  implements OrdinaryButtonAction{
                 activeUser.addFavorite(recipe);
             }
         } catch ( FileNotFoundException e) {
-            System.err.println(String.format("Error: %s", e.getMessage()));
+            System.err.printf("Error: %s%n", e.getMessage());
         }
     }
 

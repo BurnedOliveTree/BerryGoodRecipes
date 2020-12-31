@@ -1,8 +1,6 @@
 package main;
 
 import javafx.application.Platform;
-import javafx.event.EventHandler;
-import javafx.stage.WindowEvent;
 import main.controller.MainPane;
 import main.userModel.User;
 
@@ -21,7 +19,7 @@ public class Main extends Application {
     public static User activeUser = null;
 
     @Override
-    public void start(Stage primaryStage) throws IOException, SQLException {
+    public void start(Stage primaryStage) throws IOException {
         new DatabaseConnection();
 
         primaryStage.setTitle("BerryGood Recipes");
@@ -33,26 +31,22 @@ public class Main extends Application {
         scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
         primaryStage.setScene(scene);
         primaryStage.show();
-        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-
-            @Override
-            public void handle(WindowEvent e) {
-                try {
-                    DatabaseConnection.saveUser(activeUser);
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
-                try {
-                    Properties prop = new Properties();
-                    prop.load(new FileInputStream("src/resources/app.config"));
-                    prop.setProperty("app.theme", DatabaseConnection.theme);
-                    prop.store(new FileOutputStream("src/resources/app.config"), null);
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                }
-                Platform.exit();
-                System.exit(0);
+        primaryStage.setOnCloseRequest(e -> {
+            try {
+                DatabaseConnection.saveUser(activeUser);
+            } catch (SQLException err) {
+                err.printStackTrace();
             }
+            try {
+                Properties prop = new Properties();
+                prop.load(new FileInputStream("src/resources/app.config"));
+                prop.setProperty("app.theme", DatabaseConnection.theme);
+                prop.store(new FileOutputStream("src/resources/app.config"), null);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            }
+            Platform.exit();
+            System.exit(0);
         });
 
     }

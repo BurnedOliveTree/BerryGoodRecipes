@@ -1,5 +1,4 @@
 package main.recipeModel;
-import main.userModel.User;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ public class Recipe {
     private ArrayList<Ingredient> ingredientList;
     private double avgRate;
 
-    public Recipe() {};
+    public Recipe() {}
 
     public Recipe(int id, String name, String author, String prepareMethod, int accessibility, String dateAdded, int prepareTime, double cost, double portion_number, ArrayList<Ingredient> ingredientList) {
         this.name = name;

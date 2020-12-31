@@ -19,7 +19,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class MainPane {
+public class MainPane implements OrdinaryButtonAction {
     public User activeUser;
     @FXML
     public Button loginButton;
@@ -56,17 +56,6 @@ public class MainPane {
         RecipeAdminPane controller = new RecipeAdminPane(activeUser);
         loader.setController(controller);
         changeScene(myRecipesButton, loader);
-    }
-
-    private void changeScene(Button button,FXMLLoader loader) {
-        try {
-            Scene mainPageScene = new Scene(loader.load());
-            Stage stage = (Stage) button.getScene().getWindow();
-            mainPageScene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
-            stage.setScene(mainPageScene);
-            stage.show();
-        } catch (IOException e) {
-            System.err.printf("Error: %s%n", e.getMessage());}
     }
 
     public void onRecipeClick(Button button, int RecipeID) {
@@ -156,4 +145,7 @@ public class MainPane {
             }
         }
     }
+
+    @Override
+    public void onExitButtonAction() { }
 }
