@@ -94,7 +94,7 @@ public class RecipePane  implements OrdinaryButtonAction{
         // options for logged in users
         if (activeUser == null) {
             likeButton.setDisable(true);
-        } else if (activeUser.checkIfRecipeFavorite(this.recipe.getId())){
+        } else if (activeUser.checkIfRecipeFavorite(this.recipe)){
             LikePic.setImage(new Image(new FileInputStream("src/resources/favoriteClicked.png")));
         }
 
@@ -137,14 +137,14 @@ public class RecipePane  implements OrdinaryButtonAction{
     @FXML
     public void onLikeButtonAction() {
         try {
-            boolean state = activeUser.checkIfRecipeFavorite(recipe.getId());
-            if (activeUser.checkIfRecipeFavorite(recipe.getId())) {
+            boolean state = activeUser.checkIfRecipeFavorite(recipe);
+            if (activeUser.checkIfRecipeFavorite(recipe)) {
                 LikePic.setImage(new Image(new FileInputStream("src/resources/favoriteUnclicked.png")));
-                activeUser.removeFavorite(recipe.getId());
+                activeUser.removeFavorite(recipe);
             }
             else{
                 LikePic.setImage(new Image(new FileInputStream("src/resources/favoriteClicked.png")));
-                activeUser.addFavorite(recipe.getId());
+                activeUser.addFavorite(recipe);
             }
         } catch ( FileNotFoundException e) {
             System.err.println(String.format("Error: %s", e.getMessage()));

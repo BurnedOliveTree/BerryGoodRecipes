@@ -10,18 +10,18 @@ public class User {
     private String username;
     private String password;
     private List<Recipe> userRecipes;
-    private List<Integer> favorites;
+    private List<Recipe> favorites;
     private List<User> followed;
-    private List<Integer> newFavorites;
-    private List<Integer> deletedFavorites;
+    private List<Recipe> newFavorites;
+    private List<Recipe> deletedFavorites;
     // TODO private UnitSystem defaultUnitSystem;
     private ShoppingList shoppingList;
 
-    public User(String argUsername, String argPassword, List<Recipe> userRecipes ) {
+    public User(String argUsername, String argPassword, List<Recipe> userRecipes, List<Recipe> favorites) {
         username = argUsername;
         password = argPassword;
         this.userRecipes = userRecipes;
-        favorites = new LinkedList<>();
+        this.favorites = favorites;
         followed = new LinkedList<>();
         // TODO defaultUnitSystem = argUnitSystem;
         shoppingList = new ShoppingList();
@@ -43,19 +43,19 @@ public class User {
     // @TODO przenieść powyższe funkcje do BD
 
     public List<Recipe> getUserRecipes() {return userRecipes;}
-    public void addFavorite(Integer newFavRecipe) {
+    public void addFavorite(Recipe newFavRecipe) {
         favorites.add(newFavRecipe);
         newFavorites.add(newFavRecipe);
         if (deletedFavorites.contains(newFavRecipe))
             deletedFavorites.remove(newFavRecipe);
     }
-    public void removeFavorite(Integer oldFavRecipe) {
+    public void removeFavorite(Recipe oldFavRecipe) {
         favorites.remove(oldFavRecipe);
         deletedFavorites.add(oldFavRecipe);
         if (newFavorites.contains(oldFavRecipe))
             newFavorites.remove(oldFavRecipe);
-
     }
+
     public void followUser(User newFollowedUser) {
         followed.add(newFollowedUser);
     }
@@ -68,14 +68,12 @@ public class User {
     public void removeFromShoppingList(Integer quantity, String ingredientName) {
         shoppingList.removeFromShoppingList(quantity, ingredientName);
     }
-    public List<Integer> getNewFavorites() {return newFavorites;}
+    public List<Recipe> getNewFavorites() {return newFavorites;}
+    public List<Recipe> getDeletedFavorites() {return deletedFavorites;}
     public String getUsername() {return username;}
-    public boolean checkIfRecipeFavorite(int recipe_id) {
-        if (favorites.contains(recipe_id))
-            return true;
-        else
-            return false;
+    public boolean checkIfRecipeFavorite(Recipe recipe) {
+        return favorites.stream().anyMatch(r -> r.getId().equals(recipe.getId()));
     };
 
-    public List<Integer> getFavorites() {return favorites;}
+    public List<Recipe> getFavorites() {return favorites;}
 }

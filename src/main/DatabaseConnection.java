@@ -111,7 +111,8 @@ public class DatabaseConnection {
             if (gotPassword.equals(password)) {
                 // everything is correct, create a user
                 List<Recipe> userRecipes = getUserRecipes(username);
-                activeUser = new User(username, password, userRecipes);
+                List<Recipe> favorites = getUserFavorites(username);
+                activeUser = new User(username, password, userRecipes, favorites);
                 // TODO add all the other columns in the future
                 errMess.setText("Successfully logged in!");
             } else {
@@ -129,6 +130,33 @@ public class DatabaseConnection {
         return activeUser;
     }
 
+    private static List<Recipe> getUserFavorites(String username) throws SQLException {
+        setConnection();
+        Statement statement = connection.createStatement();
+        ResultSet result = statement.executeQuery(String.format("SELECT RECIPE_ID FROM FAVORITE WHERE UPPER(USERNAME) = '%s'", username.toUpperCase()));
+        LinkedList<Recipe> favorites = new LinkedList<>();
+        while (result.next()) {
+            int id = result.getInt("RECIPE_ID");
+            Statement stat = connection.createStatement();
+            ResultSet res = stat.executeQuery(String.format("SELECT NAME, OWNER_NAME, DATE_ADDED, COST, PREPARATION_TIME FROM RECIPE WHERE RECIPE_ID = %d", id));
+            res.next();
+            String name = res.getString("NAME");
+            String dateAdded = res.getString("DATE_ADDED");
+            String author = res.getString("OWNER_NAME");
+            int cost = res.getInt("COST");
+            int time = res.getInt("PREPARATION_TIME");
+            res.close();
+            stat.close();
+            Recipe recipe = new Recipe(id, name, author, dateAdded, cost, time);
+            favorites.add(recipe);
+        }
+        result.close();
+        statement.close();
+        closeConnection();
+        return favorites;
+    }
+
+
     public static List<Recipe> getUserRecipes(String username) throws SQLException {
         setConnection();
         Statement statement = connection.createStatement();
@@ -142,11 +170,13 @@ public class DatabaseConnection {
             ResultSet resPublicity = stat.executeQuery(String.format("SELECT G.NAME FROM \"GROUP\" G WHERE G.GROUP_ID = (SELECT P.GROUP_ID FROM PUBLICITY P WHERE P.RECIPE_ID = %d)", id));
             resPublicity.next();
             String groupName = resPublicity.getString("NAME");
-//            resPublicity.close();
+            resPublicity.close();
+            stat.close();
             Recipe recipe = new Recipe(id, name, groupName, dateAdded);
             UserRecipes.add(recipe);
         }
         result.close();
+        statement.close();
         closeConnection();
         return UserRecipes;
     }
@@ -165,7 +195,8 @@ public class DatabaseConnection {
         else {
             if (!statement.execute("insert into \"USER\" values('"+username+"', '"+password+"', null)")) {
                 List<Recipe> userRecipes = getUserRecipes(username);
-                activeUser = new User(username, password, userRecipes);
+                List<Recipe> favorites = getUserFavorites(username);
+                activeUser = new User(username, password, userRecipes, favorites);
                 errMess.setText("Successfully created an account!");
             }
             else {
@@ -186,9 +217,13 @@ public class DatabaseConnection {
             setConnection();
             Statement statement = connection.createStatement();
             if (user.getNewFavorites().size() != 0) {
-                List<Integer> newFavorites = user.getNewFavorites();
-                for (int recipeId : newFavorites) {
-                    statement.executeUpdate(String.format("INSERT INTO FAVORITE VALUES(null, %s, %d)", user.getUsername(), recipeId));
+                for (Recipe recipe : user.getNewFavorites()) {
+                    statement.executeUpdate(String.format("INSERT INTO FAVORITE VALUES(null, '%s', %d)", user.getUsername(), recipe.getId()));
+                }
+            }
+            if (user.getDeletedFavorites().size() != 0) {
+                for (Recipe recipe: user.getDeletedFavorites()) {
+                    statement.executeUpdate(String.format("DELETE FROM FAVORITE WHERE RECIPE_ID = %d AND USERNAME = '%s'", recipe.getId(),  user.getUsername()));
                 }
             }
             statement.close();
