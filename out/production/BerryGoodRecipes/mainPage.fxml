@@ -28,7 +28,7 @@
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <TextField prefHeight="27.0" prefWidth="336.0" promptText="Search" GridPane.columnSpan="2">
+            <TextField fx:id="search" onAction="#search" prefHeight="27.0" prefWidth="336.0" promptText="Search" GridPane.columnSpan="2">
                <GridPane.margin>
                   <Insets left="10.0" right="10.0" />
                </GridPane.margin>

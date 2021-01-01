@@ -1,9 +1,11 @@
 package main.controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -26,6 +28,7 @@ public class MainPane implements OrdinaryButtonAction {
     public ImageView logo;
     public Button myRecipesButton;
     public TilePane tilePain;
+    public TextField search;
 
     public MainPane(User activeUser) {
         this.activeUser = activeUser;
@@ -47,6 +50,41 @@ public class MainPane implements OrdinaryButtonAction {
         }
         else
             myRecipesButton.setDisable(true);
+    }
+
+    @FXML
+    public void search(ActionEvent ae) {
+        String query = search.getText();
+        System.out.println(query);
+        if (query.contains(":")) {
+            int withPosStart = query.indexOf("with:");
+//            System.out.println(withPosStart);
+            query = query.replaceFirst("with:", "");
+            System.out.println("query: "+query);
+            String with = query.substring(withPosStart);
+            System.out.println("with: "+with);
+            int withPosEnd = with.indexOf(" ");
+//            System.out.println(withPosEnd);
+            if (withPosEnd == -1) {
+                query = query.replaceFirst("[ ]?"+query.substring(withPosStart), "");
+            }
+            else {
+                with = with.substring(0, withPosEnd);
+                query = query.replaceFirst("[ ]?"+query.substring(withPosStart, withPosStart + withPosEnd + 1), "");
+            }
+            System.out.println("with: "+with);
+            System.out.println("query: "+query);
+            if (!query.equals(""))
+                query = "lower(rcp.name) like lower('%" + query + "%') and lower(ing.ingredient_name) like lower('%" + with + "%')";
+            else
+                query = "lower(ing.ingredient_name) like lower('%" + with + "%')";
+            System.out.println("query: "+query);
+        }
+        else
+            query = "lower(rcp.name) like lower('%" + query + "%')";
+        try {
+            DatabaseConnection.fillResults(this, tilePain, query);
+        } catch (SQLException throwables) { throwables.printStackTrace(); }
     }
 
     @FXML

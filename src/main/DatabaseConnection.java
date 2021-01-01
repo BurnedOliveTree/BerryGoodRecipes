@@ -191,9 +191,16 @@ public class DatabaseConnection {
     }
 
     public static void fillResults(MainPane mainPane, TilePane tilePain) throws SQLException {
+        fillResults(mainPane, tilePain, null);
+    }
+
+    public static void fillResults(MainPane mainPane, TilePane tilePain, String whereStatement) throws SQLException {
         setConnection();
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("select RECIPE_ID, NAME from RECIPE");
+        String query = "select distinct rcp.RECIPE_ID, rcp.NAME from RECIPE rcp join INGREDIENT_LIST ing on rcp.RECIPE_ID = ing.RECIPE_ID";
+        if (whereStatement != null)
+            query = query + " WHERE " + whereStatement;
+        ResultSet resultSet = statement.executeQuery(query);
         List<GridPane> panelist = new ArrayList<>();
         while (resultSet.next()) {
             GridPane tempPane = new GridPane();
