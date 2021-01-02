@@ -3,10 +3,7 @@ package main.userModel;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 public class User {
     private final String username;
@@ -64,7 +61,23 @@ public class User {
     public List<Recipe> getFavorites() {return favorites;}
     public void addToShoppingList(Ingredient ingredient) {shoppingList.put(ingredient.getId(), ingredient);}
     public void removeFromShoppingList(int ingredientId) {shoppingList.remove(ingredientId);}
-    public boolean checkIfIngredientInShoppingList(int ingredientId) {return shoppingList.get(ingredientId) != null;}
+    public boolean checkIfIngredientInShoppingList(int ingredientId) {return shoppingList.containsKey(ingredientId);}
+    public Map<String, Ingredient> showShoppingList() {
+        Map<String, Ingredient> showMap = new HashMap<>();
+        for (Map.Entry<Integer, Ingredient> entry : shoppingList.entrySet()) {
+            //@TODO zamiana składników na jednostke domyślną podczas dodawania
+            Ingredient ingredient = entry.getValue();
+            Ingredient shopIngredient = showMap.get(ingredient.getName());
+            if (shopIngredient != null && shopIngredient.getUnit().getName().equals(ingredient.getUnit().getName()) ){
+                double quantity =  ingredient.getQuantity() + shopIngredient.getQuantity();
+                shopIngredient.setQuantity(quantity);
+            }
+            else {
+                showMap.put(ingredient.getName(), ingredient);
+            }
+        }
+        return showMap;
+        }
 //
 //    public void saveToFile()
 //    {

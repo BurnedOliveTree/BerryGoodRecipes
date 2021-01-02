@@ -1,33 +1,25 @@
 package main.controller;
 
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
+
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.text.*;
 
-import javafx.util.Callback;
 import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
 import main.userModel.User;
 
+import javax.swing.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class RecipePane  extends OrdinaryButtonAction{
     private final Recipe recipe;
@@ -99,7 +91,6 @@ public class RecipePane  extends OrdinaryButtonAction{
             timePrepLabel.setText("Preparation time: " + this.recipe.getPrepareTime());
         }
 
-
         // options for logged in users
         if (activeUser == null) {
             likeButton.setDisable(true);
@@ -107,7 +98,7 @@ public class RecipePane  extends OrdinaryButtonAction{
         } else if (activeUser.checkIfRecipeFavorite(this.recipe)){
             LikePic.setImage(new Image(new FileInputStream("src/resources/favoriteClicked.png")));
         }
-
+        //@TODO rozmiar listview
 
         portionArea.textProperty().addListener((observableValue, s, t1) -> {
             try {
@@ -129,24 +120,27 @@ public class RecipePane  extends OrdinaryButtonAction{
         Label label = new Label("(empty)");
         Ingredient selectedIngredient;
         User activeUser;
+        private ImageView view;
 
         public ButtonCell(User activeUser) {
             super();
             Image image = new Image("./resources/plus.png");
-            ImageView view = new ImageView(image);
+            view = new ImageView(image);
             view.setFitHeight(20);
             view.setFitWidth(20);
-            box.getChildren().addAll(label, pane, view);
+////            box.getChildren().addAll(label, pane, view);
+//            box.getChildren().addAll(view, pane, label);
+            box.getChildren().addAll(view, label, pane);
             box.setHgrow(pane, Priority.ALWAYS);
             this.activeUser = activeUser;
             view.setOnMouseClicked(mouseEvent -> {
                 if (!activeUser.checkIfIngredientInShoppingList(selectedIngredient.getId())) {
-                    Image image1 = new Image("./resources/minus.png");
-                    view.setImage(image1);
+                    Image changedImage = new Image("./resources/minus.png");
+                    view.setImage(changedImage);
                     activeUser.addToShoppingList(selectedIngredient);
                 } else {
-                    Image image1 = new Image("./resources/plus.png");
-                    view.setImage(image1);
+                    Image changedImage = new Image("./resources/plus.png");
+                    view.setImage(changedImage);
                     activeUser.removeFromShoppingList(selectedIngredient.getId());
                 }
             });
@@ -161,9 +155,19 @@ public class RecipePane  extends OrdinaryButtonAction{
             } else {
                 selectedIngredient = ingredient;
                 if (ingredient.getQuantity() % 1 == 0)
-                    label.setText(String.format("%d %s %s", (int)Math.round(ingredient.getQuantity()), ingredient.getUnit().getName(), ingredient.getName()));
+                    label.setText(String.format(" %d %s %s", (int)Math.round(ingredient.getQuantity()), ingredient.getUnit().getName(), ingredient.getName()));
                 else
-                    label.setText(String.format("%f %s %s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
+                    label.setText(String.format(" %f %s %s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
+
+                if (!activeUser.checkIfIngredientInShoppingList(selectedIngredient.getId())) {
+                    Image image = new Image("./resources/plus.png");
+                    view.setImage(image);
+                }
+                else{
+                    Image image = new Image("./resources/minus.png");
+                    view.setImage(image);
+                }
+
                 setGraphic(box);
             }
         }
@@ -236,7 +240,11 @@ public class RecipePane  extends OrdinaryButtonAction{
 
     @FXML
     public void onShoppingListButtonAction(){
-        System.out.println("Yay");
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/shoppingListPage.fxml"));
+        RecipePane returnPane = new RecipePane(recipe, activeUser);
+        ShoppingListPane controller = new ShoppingListPane(activeUser, returnPane);
+        loader.setController(controller);
+        changeScene(shoppingListButton, loader);
     }
 
     @FXML

@@ -149,9 +149,10 @@ public class MainPane extends OrdinaryButtonAction {
     public void onBasketButtonClick(MouseEvent mouseEvent) {
         mouseEvent.consume();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/shoppingListPage.fxml"));
-//        ShoppingListPane controller = new ShoppingListPane(activeUser);
-//        loader.setController(controller);
-        changeScene(socialButton, loader);
+        MainPane returnPane = new MainPane(activeUser);
+        ShoppingListPane controller = new ShoppingListPane(activeUser, returnPane);
+        loader.setController(controller);
+        changeScene(basketButton, loader);
     }
 
     public void onRecipeClick(Button button, int RecipeID) {
