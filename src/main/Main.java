@@ -1,6 +1,7 @@
 package main;
 
 import javafx.application.Platform;
+import javafx.scene.image.Image;
 import main.controller.MainPane;
 import main.userModel.User;
 
@@ -29,6 +30,8 @@ public class Main extends Application {
         loader.setController(controller);
         Scene scene = new Scene(loader.load());
         scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
+        Image image = new Image("/resources/raspLogo.png");
+        primaryStage.getIcons().add(image);
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.setOnCloseRequest(e -> {

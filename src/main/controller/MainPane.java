@@ -50,6 +50,7 @@ public class MainPane implements OrdinaryButtonAction {
         }
         else
             myRecipesButton.setDisable(true);
+
     }
 
     @FXML
