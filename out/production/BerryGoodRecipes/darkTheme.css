@@ -13,6 +13,12 @@
 .scroll-bar > .thumb {
     -fx-background-color: -fx-light-text-color;
 }
+.menu-button > .arrow-button {
+    -fx-padding: 0;
+}
+.menu-button > .arrow-button > .arrow {
+    -fx-padding: 0;
+}
 .berry-text {
     -fx-fill: -fx-light-text-color;
     -fx-font-smoothing-type: lcd;

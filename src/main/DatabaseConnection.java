@@ -1,5 +1,6 @@
 package main;
 
+import javafx.scene.control.ListView;
 import javafx.scene.text.TextAlignment;
 import main.controller.MainPane;
 import main.userModel.User;
@@ -208,6 +209,22 @@ public class DatabaseConnection {
         }
         tilePane.getChildren().clear();
         tilePane.getChildren().addAll(panelist);
+        resultSet.close();
+        statement.close();
+        closeConnection();
+    }
+
+    public static void getFollowed(ListView<String> listView, User user) throws SQLException {
+        setConnection();
+        Statement statement = connection.createStatement();
+        String query = "select FOLLOWING_USERNAME, FOLLOWED_USERNAME from FOLLOWED where lower(FOLLOWING_USERNAME) = '"+(user.getUsername()).toLowerCase()+"'";
+        ResultSet resultSet = statement.executeQuery(query);
+        List<String> stringList = new ArrayList<>();
+        while (resultSet.next()) {
+            stringList.add(resultSet.getString("FOLLOWED_USERNAME"));
+        }
+        listView.getItems().clear();
+        listView.getItems().addAll(stringList);
         resultSet.close();
         statement.close();
         closeConnection();
