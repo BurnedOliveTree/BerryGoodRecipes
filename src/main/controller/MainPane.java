@@ -21,7 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class MainPane implements OrdinaryButtonAction {
+public class MainPane extends OrdinaryButtonAction {
     public User activeUser;
     @FXML
     public ImageView logo;
