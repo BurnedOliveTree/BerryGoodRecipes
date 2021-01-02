@@ -4,12 +4,16 @@ public class Ingredient {
     Double quantity;
     Unit unit;
     String name;
+    int id;
 
-    public Ingredient(Double quantity, Unit unit, String name) {
+    public Ingredient(int id, Double quantity, Unit unit, String name) {
+        this.id = id;
         this.quantity = quantity;
         this.unit = unit;
         this.name = name;
     }
+
+    public int getId() {return id;}
 
     public String getName() {
         return name;

@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -43,7 +44,7 @@ public class RecipePane  extends OrdinaryButtonAction{
     public Label dateAddedLabel;
     public Label timePrepLabel;
     public TextArea portionArea;
-    public ListView<Ingredient> ingredientListView;
+    public ListView ingredientListView;
     public Button exitButton;
     public Button shoppingListButton;
     public Button likeButton;
@@ -102,6 +103,7 @@ public class RecipePane  extends OrdinaryButtonAction{
         // options for logged in users
         if (activeUser == null) {
             likeButton.setDisable(true);
+            shoppingListButton.setDisable(true);
         } else if (activeUser.checkIfRecipeFavorite(this.recipe)){
             LikePic.setImage(new Image(new FileInputStream("src/resources/favoriteClicked.png")));
         }
@@ -125,20 +127,31 @@ public class RecipePane  extends OrdinaryButtonAction{
         HBox box = new HBox();
         Pane pane = new Pane();
         Label label = new Label("(empty)");
-        Button button = new Button("+");
         Ingredient selectedIngredient;
+        User activeUser;
 
-        public ButtonCell(){
+        public ButtonCell(User activeUser) {
             super();
-            box.getChildren().addAll(label, pane, button);
+            Image image = new Image("./resources/plus.png");
+            ImageView view = new ImageView(image);
+            view.setFitHeight(20);
+            view.setFitWidth(20);
+            box.getChildren().addAll(label, pane, view);
             box.setHgrow(pane, Priority.ALWAYS);
-            button.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent actionEvent) {
-                    System.out.println(selectedIngredient + " : " + actionEvent);
+            this.activeUser = activeUser;
+            view.setOnMouseClicked(mouseEvent -> {
+                if (!activeUser.checkIfIngredientInShoppingList(selectedIngredient)) {
+                    Image image1 = new Image("./resources/minus.png");
+                    view.setImage(image1);
+                    activeUser.addToShoppingList(selectedIngredient);
+                } else {
+                    Image image1 = new Image("./resources/plus.png");
+                    view.setImage(image1);
+                    activeUser.removeFromShoppingList(selectedIngredient);
                 }
             });
         }
+
         @Override
         protected void updateItem(Ingredient ingredient, boolean empty) {
             super.updateItem(ingredient, empty);
@@ -157,30 +170,19 @@ public class RecipePane  extends OrdinaryButtonAction{
     }
 
     private void setIngredListView() {
-//        ingredientListView.getItems().clear();
-//        List<String> modList = new ArrayList<String>();
-//        for (Ingredient ingredient: this.recipe.getIngredientList()) {
-//            if (ingredient.getQuantity() % 1 == 0)
-//                modList.add(String.format("%d %s %s", (int)Math.round(ingredient.getQuantity()), ingredient.getUnit().getName(), ingredient.getName()));
-//            else
-//                modList.add(String.format("%f %s %s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
-//        }
-//        ObservableList<String> list = FXCollections.observableArrayList(modList);
-
         ingredientListView.getItems().clear();
-        ingredientListView.getItems().addAll(this.recipe.getIngredientList());
-//        for (Ingredient ingredient: this.recipe.getIngredientList()) {
-//            if (ingredient.getQuantity() % 1 == 0)
-//                ingredientListView.getItems().add(String.format("%d %s %s", (int)Math.round(ingredient.getQuantity()), ingredient.getUnit().getName(), ingredient.getName()));
-//            else
-//                ingredientListView.getItems().add(String.format("%f %s %s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
-//        }
-        ingredientListView.setCellFactory(new Callback<ListView<Ingredient>, ListCell<Ingredient>>() {
-            @Override
-            public ListCell<Ingredient> call(ListView<Ingredient> ingredientListView) {
-                return new ButtonCell();
+        if (activeUser != null) {
+            ingredientListView.getItems().addAll(this.recipe.getIngredientList());
+            ingredientListView.setCellFactory(ingredientListView -> new ButtonCell(activeUser));
+        } else {
+            for (Ingredient ingredient: this.recipe.getIngredientList()) {
+                if (ingredient.getQuantity() % 1 == 0)
+                    ingredientListView.getItems().add(String.format("%d %s %s", (int)Math.round(ingredient.getQuantity()), ingredient.getUnit().getName(), ingredient.getName()));
+                else
+                    ingredientListView.getItems().add(String.format("%f %s %s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
             }
-        });
+
+        }
 
     }
 
@@ -234,7 +236,7 @@ public class RecipePane  extends OrdinaryButtonAction{
 
     @FXML
     public void onShoppingListButtonAction(){
-
+        System.out.println("Yay");
     }
 
     @FXML
