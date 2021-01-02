@@ -1,6 +1,9 @@
 package main.controller;
 
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -12,11 +15,10 @@ import java.sql.*;
 
 public class LogInWindow {
     private final MainPane mainPane;
-    private String username;
-    private String password;
     @FXML
     public TextField usernameField;
     public TextField passwordField;
+    public Button loginButton;
     public Label errMess;
 
     public LogInWindow(MainPane mainPane) {
@@ -26,42 +28,47 @@ public class LogInWindow {
     @FXML
     void initialize() {
         errMess.setText("");
+        Platform.runLater(() -> usernameField.requestFocus());
+    }
+
+    @FXML
+    private void onLoginEnter(ActionEvent ae) {
+        passwordField.requestFocus();
+    }
+
+    @FXML
+    private void onPasswordEnter(ActionEvent ae) {
+        try {
+            login(usernameField.getText(), passwordField.getText());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
     @FXML
     private void getDataLogin(MouseEvent event) throws SQLException {
         event.consume();
         System.out.println("Hello "+usernameField.getText()+", your password is "+passwordField.getText());
-        username = usernameField.getText();
-        password = passwordField.getText();
-        Stage stage = (Stage) usernameField.getScene().getWindow();
-        login();
-        if (mainPane.activeUser != null) {
-            mainPane.setButtonActivity();
-            stage.close();
-        }
+        login(usernameField.getText(), passwordField.getText());
     }
 
     @FXML
     private void getDataRegister(MouseEvent event) throws SQLException {
         event.consume();
-        username = usernameField.getText();
-        password = passwordField.getText();
-        Stage stage = (Stage) usernameField.getScene().getWindow();
-        register();
+        mainPane.activeUser = DatabaseConnection.register(usernameField.getText(), passwordField.getText(), errMess);
+        checkLoginStatus();
+    }
+
+    public void login(String username, String password) throws SQLException {
+        mainPane.activeUser = DatabaseConnection.login(username, password, errMess);
+        checkLoginStatus();
+    }
+
+    private void checkLoginStatus() {
+        Main.activeUser = mainPane.activeUser;
         if (mainPane.activeUser != null) {
             mainPane.setButtonActivity();
-            stage.close();
+            ((Stage) usernameField.getScene().getWindow()).close();
         }
-    }
-
-    public void login() throws SQLException {
-        mainPane.activeUser = DatabaseConnection.login(username, password, errMess);
-        Main.activeUser = mainPane.activeUser;
-    }
-
-    public void register() throws SQLException {
-        mainPane.activeUser = DatabaseConnection.register(username, password, errMess);
-        Main.activeUser = mainPane.activeUser;
     }
 }
