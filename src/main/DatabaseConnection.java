@@ -82,7 +82,7 @@ public class DatabaseConnection {
                 // everything is correct, create a user
                 List<Recipe> userRecipes = getUserRecipes(username);
                 List<Recipe> favorites = getUserFavorites(username);
-                activeUser = new User(username, password, userRecipes, favorites);
+                activeUser = new User(username, userRecipes, favorites);
                 // TODO add all the other columns in the future
                 errMess.setText("Successfully logged in!");
             } else {
@@ -154,7 +154,7 @@ public class DatabaseConnection {
             if (!statement.execute("insert into \"USER\" values('"+username+"', '"+password+"', null)")) {
                 List<Recipe> userRecipes = getUserRecipes(username);
                 List<Recipe> favorites = getUserFavorites(username);
-                activeUser = new User(username, password, userRecipes, favorites);
+                activeUser = new User(username, userRecipes, favorites);
                 errMess.setText("Successfully created an account!");
             }
             else {

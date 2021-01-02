@@ -8,32 +8,27 @@ import java.util.LinkedList;
 
 public class User {
     private String username;
-    private String password;
     private List<Recipe> userRecipes;
     private List<Recipe> favorites;
     private List<User> followed;
     private List<Recipe> newFavorites;
     private List<Recipe> deletedFavorites;
-    // TODO private UnitSystem defaultUnitSystem;
+    private String defaultUnitSystem;
     private ShoppingList shoppingList;
 
-    public User(String argUsername, String argPassword, List<Recipe> userRecipes, List<Recipe> favorites) {
+    public User(String argUsername, List<Recipe> userRecipes, List<Recipe> favorites) {
         username = argUsername;
-        password = argPassword;
         this.userRecipes = userRecipes;
         this.favorites = favorites;
         followed = new LinkedList<>();
-        // TODO defaultUnitSystem = argUnitSystem;
+//        defaultUnitSystem = argUnitSystem;
         shoppingList = new ShoppingList();
         newFavorites = new LinkedList<>();
         deletedFavorites = new LinkedList<>();
     }
-    public void setNewUsername(String newUsername) {
-        username = newUsername;
-    }
-    public void setNewPassword(String newPassword) {
-        password = newPassword;
-    }
+//    public void setNewPassword(String newPassword) {
+//        password = newPassword;
+//    }
 //    public void addRecipe(Recipe newRecipe) {
 //        userRecipes.add(newRecipe);
 //    }
