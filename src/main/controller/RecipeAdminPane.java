@@ -1,12 +1,12 @@
 package main.controller;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.collections.FXCollections;
@@ -15,12 +15,13 @@ import javafx.collections.ObservableList;
 import main.DatabaseConnection;
 import main.recipeModel.Recipe;
 import main.userModel.User;
-
+import javafx.scene.input.*;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Optional;
 
 
-public class RecipeAdminPane implements OrdinaryButtonAction {
+public class RecipeAdminPane extends OrdinaryButtonAction {
     private User activeUser;
 
     @FXML
@@ -57,6 +58,10 @@ public class RecipeAdminPane implements OrdinaryButtonAction {
                 }
             }
         });
+
+        setContentMenu(favTable, createDeleteFavItem());
+        setContentMenu(myRecipesTable, createDeleteMyRecipeItem());
+
     }
 
 
@@ -89,20 +94,20 @@ public class RecipeAdminPane implements OrdinaryButtonAction {
     }
 
     public void ShowRecipe(Recipe recipe) throws SQLException {
-        FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
         loader.setController(new RecipePane(recipe, activeUser));
         try {
             Parent mainPage = loader.load();
             Scene mainPageScene = new Scene(mainPage);
             Stage stage = new Stage();
-            mainPageScene.getStylesheets().add(getClass().getResource("/resources/"+ DatabaseConnection.theme+".css").toExternalForm());
+            mainPageScene.getStylesheets().add(getClass().getResource("/resources/" + DatabaseConnection.theme + ".css").toExternalForm());
             stage.setScene(mainPageScene);
             stage.showAndWait();
+            favTable.refresh();
         } catch (IOException e) {
             System.err.printf("Error: %s%n", e.getMessage());
         }
     }
-
 
     @Override
     @FXML
@@ -113,6 +118,42 @@ public class RecipeAdminPane implements OrdinaryButtonAction {
         changeScene(exitButton, loader);
 
     }
+
+    public MenuItem createDeleteFavItem() {
+        MenuItem delete = new MenuItem("Delete");
+        delete.setOnAction(actionEvent -> {
+            Recipe recipe = favTable.getSelectionModel().getSelectedItem();
+            if (recipe != null) {
+                activeUser.removeFavorite(recipe);
+                favTable.refresh();
+            }
+        });
+        return delete;
+    }
+
+    public MenuItem createDeleteMyRecipeItem() {
+        MenuItem delete = new MenuItem("Delete");
+        delete.setOnAction(actionEvent -> {
+            Recipe recipe = myRecipesTable.getSelectionModel().getSelectedItem();
+            if (recipe != null) {
+                // @TODO zapytaj czy na pewno chce usunac
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Delete Recipe");
+                alert.setHeaderText(null);
+                alert.setGraphic(null);
+                alert.setContentText("You are now deleting your recipe.\n Are you sure?");
+
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK){
+
+                    // @TODO usun przepis
+                    myRecipesTable.refresh();
+                }
+            }
+        });
+        return delete;
+    }
+
 
 
 }

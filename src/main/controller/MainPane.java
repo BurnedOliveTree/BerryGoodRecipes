@@ -21,7 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class MainPane implements OrdinaryButtonAction {
+public class MainPane extends OrdinaryButtonAction {
     private String query;
     public User activeUser;
     @FXML
@@ -246,7 +246,4 @@ public class MainPane implements OrdinaryButtonAction {
             System.err.printf("Error: %s%n", e.getMessage());
         }
     }
-
-    @Override
-    public void onExitButtonAction() { }
 }

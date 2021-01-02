@@ -11,7 +11,7 @@ import javafx.fxml.FXML;
 
 import java.sql.SQLException;
 
-public class UserAdminPane implements OrdinaryButtonAction {
+public class UserAdminPane extends OrdinaryButtonAction {
     private final User activeUser;
     @FXML
     public Button exitButton;
