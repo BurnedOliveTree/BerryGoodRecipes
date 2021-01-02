@@ -2,6 +2,7 @@ package main;
 
 import javafx.scene.text.TextAlignment;
 import main.controller.MainPane;
+import main.userModel.Opinion;
 import main.userModel.User;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
@@ -167,6 +168,21 @@ public class DatabaseConnection {
         closeConnection();
 
         return activeUser;
+    }
+
+    public static void createOpinion(Opinion opinion, Label opinionLabel)throws SQLException {
+        setConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("select * from OPINION where USERNAME = '"+opinion.getUsername()+"'");
+        if (resultSet.next()) {
+            opinionLabel.setText("You have already added your opinion!");
+        }
+        else {
+            statement.execute("insert into OPINION values(null,'" + opinion.getUsername() + "','" + opinion.getRecipeId() + "', '" + opinion.getScore() + "', '" + opinion.getOpinionText() + "')");
+            opinionLabel.setText("Opinion saved!");
+            statement.close();
+            closeConnection();
+        }
     }
 
     public static void saveUser(User user) throws SQLException {

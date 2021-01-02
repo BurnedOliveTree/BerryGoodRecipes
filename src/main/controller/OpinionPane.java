@@ -35,6 +35,7 @@ public class OpinionPane {
     public Button exitButton;
     public Label scoreLabel;
     public TextField commentTextField;
+    public Label opinionLabel;
     @FXML
     public ChoiceBox scoreBox;
 
@@ -49,12 +50,26 @@ public class OpinionPane {
         exitButton.setOnAction( e->{ exitAction("/resources/recipePage.fxml"); });
         okButton.setDisable(true);
         scoreBox.setOnAction(e->okButtonActivity());
+        okButton.setOnAction(e-> {
+            try {
+                okButtonAction();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        });
     }
 
     private void okButtonActivity(){
         if (activeUser != null){
             okButton.setDisable(false);
         }
+    }
+
+    private void okButtonAction() throws SQLException {
+        String comment = commentTextField.getText();
+        int score = Integer.parseInt(scoreBox.getValue().toString());
+        opinion = new Opinion(comment, score, activeUser, recipe);
+        DatabaseConnection.createOpinion(opinion, opinionLabel);
     }
 
     private void  exitAction(String namePath) {
