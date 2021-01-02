@@ -108,10 +108,17 @@ public class MainPane implements OrdinaryButtonAction {
                 args = args + ")";
             }
             if (query.contains("maxcost:")) {
-                String[] tempList = split_search("max_cost:");
+                String[] tempList = split_search("maxcost:");
                 args = args + " and (rcp.cost < " + tempList[tempList.length - 1];
                 for (int i = tempList.length - 2; i >= 0; i--)
                     args = args + "or rcp.cost < " + tempList[i];
+                args = args + ")";
+            }
+            if (query.contains("time:")) {
+                String[] tempList = split_search("time:");
+                args = args + " and (rcp.preparation_time < " + tempList[tempList.length - 1];
+                for (int i = tempList.length - 2; i >= 0; i--)
+                    args = args + "or rcp.preparation_time < " + tempList[i];
                 args = args + ")";
             }
         }
