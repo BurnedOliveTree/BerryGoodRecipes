@@ -3,13 +3,21 @@ package main.controller;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.text.*;
 
+import javafx.util.Callback;
 import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
@@ -17,6 +25,8 @@ import main.userModel.User;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RecipePane  extends OrdinaryButtonAction{
     private final Recipe recipe;
@@ -33,7 +43,7 @@ public class RecipePane  extends OrdinaryButtonAction{
     public Label dateAddedLabel;
     public Label timePrepLabel;
     public TextArea portionArea;
-    public ListView<String> ingredientListView;
+    public ListView<Ingredient> ingredientListView;
     public Button exitButton;
     public Button shoppingListButton;
     public Button likeButton;
@@ -111,14 +121,66 @@ public class RecipePane  extends OrdinaryButtonAction{
 
     }
 
-    private void setIngredListView() {
-        ingredientListView.getItems().clear();
-        for (Ingredient ingredient: this.recipe.getIngredientList()) {
-            if (ingredient.getQuantity() % 1 == 0)
-                ingredientListView.getItems().add(String.format("%d %s %s", (int)Math.round(ingredient.getQuantity()), ingredient.getUnit().getName(), ingredient.getName()));
-            else
-                ingredientListView.getItems().add(String.format("%f %s %s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
+    static class ButtonCell extends ListCell<Ingredient> {
+        HBox box = new HBox();
+        Pane pane = new Pane();
+        Label label = new Label("(empty)");
+        Button button = new Button("+");
+        Ingredient selectedIngredient;
+
+        public ButtonCell(){
+            super();
+            box.getChildren().addAll(label, pane, button);
+            box.setHgrow(pane, Priority.ALWAYS);
+            button.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    System.out.println(selectedIngredient + " : " + actionEvent);
+                }
+            });
         }
+        @Override
+        protected void updateItem(Ingredient ingredient, boolean empty) {
+            super.updateItem(ingredient, empty);
+            if (empty) {
+                selectedIngredient = null;
+                setGraphic(null);
+            } else {
+                selectedIngredient = ingredient;
+                if (ingredient.getQuantity() % 1 == 0)
+                    label.setText(String.format("%d %s %s", (int)Math.round(ingredient.getQuantity()), ingredient.getUnit().getName(), ingredient.getName()));
+                else
+                    label.setText(String.format("%f %s %s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
+                setGraphic(box);
+            }
+        }
+    }
+
+    private void setIngredListView() {
+//        ingredientListView.getItems().clear();
+//        List<String> modList = new ArrayList<String>();
+//        for (Ingredient ingredient: this.recipe.getIngredientList()) {
+//            if (ingredient.getQuantity() % 1 == 0)
+//                modList.add(String.format("%d %s %s", (int)Math.round(ingredient.getQuantity()), ingredient.getUnit().getName(), ingredient.getName()));
+//            else
+//                modList.add(String.format("%f %s %s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
+//        }
+//        ObservableList<String> list = FXCollections.observableArrayList(modList);
+
+        ingredientListView.getItems().clear();
+        ingredientListView.getItems().addAll(this.recipe.getIngredientList());
+//        for (Ingredient ingredient: this.recipe.getIngredientList()) {
+//            if (ingredient.getQuantity() % 1 == 0)
+//                ingredientListView.getItems().add(String.format("%d %s %s", (int)Math.round(ingredient.getQuantity()), ingredient.getUnit().getName(), ingredient.getName()));
+//            else
+//                ingredientListView.getItems().add(String.format("%f %s %s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
+//        }
+        ingredientListView.setCellFactory(new Callback<ListView<Ingredient>, ListCell<Ingredient>>() {
+            @Override
+            public ListCell<Ingredient> call(ListView<Ingredient> ingredientListView) {
+                return new ButtonCell();
+            }
+        });
 
     }
 

@@ -136,7 +136,6 @@ public class RecipeAdminPane extends OrdinaryButtonAction {
         delete.setOnAction(actionEvent -> {
             Recipe recipe = myRecipesTable.getSelectionModel().getSelectedItem();
             if (recipe != null) {
-                // @TODO zapytaj czy na pewno chce usunac
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Delete Recipe");
                 alert.setHeaderText(null);
@@ -145,7 +144,6 @@ public class RecipeAdminPane extends OrdinaryButtonAction {
 
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.get() == ButtonType.OK){
-
                     // @TODO usun przepis
                     myRecipesTable.refresh();
                 }
