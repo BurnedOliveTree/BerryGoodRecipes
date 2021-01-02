@@ -3,8 +3,10 @@ package main.userModel;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class User {
     private String username;
@@ -15,7 +17,7 @@ public class User {
     private List<Recipe> newFavorites;
     private List<Recipe> deletedFavorites;
     // TODO private UnitSystem defaultUnitSystem;
-    private ShoppingList shoppingList;
+    private Map<Integer, Ingredient> shoppingList;
 
     public User(String argUsername, String argPassword, List<Recipe> userRecipes, List<Recipe> favorites) {
         username = argUsername;
@@ -24,7 +26,7 @@ public class User {
         this.favorites = favorites;
         followed = new LinkedList<>();
         // TODO defaultUnitSystem = argUnitSystem;
-        shoppingList = new ShoppingList();
+        shoppingList = new HashMap<Integer, Ingredient>();
         newFavorites = new LinkedList<>();
         deletedFavorites = new LinkedList<>();
     }
@@ -60,12 +62,27 @@ public class User {
     public void unfollowUser(User oldFollowedUser) {
         followed.remove(oldFollowedUser);
     }
-    public void addToShoppingList(Ingredient ingredient) { shoppingList.addToShoppingList(ingredient); }
-    public void removeFromShoppingList(Ingredient ingredient) { shoppingList.removeFromShoppingList(ingredient.getId()); }
     public List<Recipe> getNewFavorites() {return newFavorites;}
     public List<Recipe> getDeletedFavorites() {return deletedFavorites;}
     public String getUsername() {return username;}
     public boolean checkIfRecipeFavorite(Recipe recipe) { return favorites.stream().anyMatch(r -> r.getId().equals(recipe.getId())); }
     public List<Recipe> getFavorites() {return favorites;}
-    public boolean checkIfIngredientInShoppingList(Ingredient ingredient) {return shoppingList.checkIfInShoppingList(ingredient.getId());}
+    public void addToShoppingList(Ingredient ingredient) {shoppingList.put(ingredient.getId(), ingredient);}
+    public void removeFromShoppingList(int ingredientId) {shoppingList.remove(ingredientId);}
+    public boolean checkIfIngredientInShoppingList(int ingredientId) {return shoppingList.get(ingredientId) != null;}
+//
+//    public void saveToFile()
+//    {
+//        try {
+//            FileWriter file = new FileWriter("shoppinglist.txt");
+//            for (Ingredient ingredient: this.shoppingList){
+//                file.write(ingredient.getQuantity() + ingredient.getUnit().toString() + ingredient.getName());
+//            }
+//            file.close();
+//
+//        } catch (IOException err) {
+//            System.out.println("Error: ");
+//            err.printStackTrace();
+//    }
+//    }
 }
