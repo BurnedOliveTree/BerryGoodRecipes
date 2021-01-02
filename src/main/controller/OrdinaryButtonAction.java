@@ -17,6 +17,12 @@ import java.io.IOException;
 public class OrdinaryButtonAction {
     public void onExitButtonAction() {};
 
+    public FXMLLoader loadFXML(Object c, String path) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
+        loader.setController(c);
+        return loader;
+    }
+
     public void changeScene(Button button, FXMLLoader loader) {
         changeScene(button, loader, false);
     }

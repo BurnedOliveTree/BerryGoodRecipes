@@ -15,9 +15,6 @@ import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
 import main.userModel.User;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-
 public class RecipePane  extends OrdinaryButtonAction{
     private final Recipe recipe;
     private final User activeUser;
@@ -206,10 +203,6 @@ public class RecipePane  extends OrdinaryButtonAction{
     @FXML
     public void onExitButtonAction(){
         exitButton.getScene().getWindow().hide();
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/mainPage.fxml"));
-//        MainPane controller = new MainPane(activeUser);
-//        loader.setController(controller);
-//        changeScene(exitButton, loader);
     }
 
     @FXML

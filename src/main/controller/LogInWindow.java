@@ -1,24 +1,23 @@
 package main.controller;
 
+import main.DatabaseConnection;
+import main.Main;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import main.DatabaseConnection;
-import main.Main;
 
-import java.sql.*;
+import java.sql.SQLException;
 
 public class LogInWindow {
     private final MainPane mainPane;
     @FXML
     public TextField usernameField;
     public TextField passwordField;
-    public Button loginButton;
     public Label errMess;
 
     public LogInWindow(MainPane mainPane) {
@@ -37,12 +36,8 @@ public class LogInWindow {
     }
 
     @FXML
-    private void onPasswordEnter(ActionEvent ae) {
-        try {
-            login(usernameField.getText(), passwordField.getText());
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+    private void onPasswordEnter(ActionEvent ae) throws SQLException {
+        login(usernameField.getText(), passwordField.getText());
     }
 
     @FXML
