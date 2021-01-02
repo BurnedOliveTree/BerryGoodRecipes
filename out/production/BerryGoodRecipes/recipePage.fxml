@@ -62,10 +62,38 @@
             <bottom>
                 <Button fx:id="commentButton" mnemonicParsing="false" onAction="#onCommentButtonAction" prefHeight="31.0" prefWidth="235.0" text="Comment" BorderPane.alignment="CENTER" />
             </bottom>
-            <center>
-                <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                    <bottom>
-                        <VBox BorderPane.alignment="CENTER">
+            <top>
+                <AnchorPane prefHeight="83.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <Label fx:id="titleLabel" alignment="CENTER" layoutX="115.0" layoutY="42.0" text="Title" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                            <font>
+                                <Font size="17.0" />
+                            </font></Label>
+                    </children>
+                </AnchorPane>
+            </top>
+            <BorderPane.margin>
+                <Insets bottom="10.0" left="20.0" />
+            </BorderPane.margin>
+         <center>
+            <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+               <children>
+                        <HBox>
+                            <children>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="28.0" prefWidth="156.0">
+                                    <children>
+                                        <Label alignment="CENTER" layoutX="54.0" layoutY="6.0" minHeight="-Infinity" minWidth="-Infinity" text="Portions:" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="28.0" prefWidth="88.0">
+                                    <children>
+                                        <TextArea fx:id="portionArea" layoutX="-16.0" prefHeight="28.0" prefWidth="82.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                    </children>
+                                </AnchorPane>
+                            </children>
+                        </HBox>
+                  <ListView fx:id="ingredientListView" prefHeight="283.0" prefWidth="200.0" />
+                        <VBox>
                             <children>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="30.0" prefWidth="160.0">
                                     <children>
@@ -89,41 +117,9 @@
                                 </AnchorPane>
                             </children>
                         </VBox>
-                    </bottom>
-                    <center>
-                        <ListView fx:id="ingredientListView" prefHeight="315.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-                    </center>
-                    <top>
-                        <HBox BorderPane.alignment="CENTER">
-                            <children>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="28.0" prefWidth="156.0">
-                                    <children>
-                                        <Label alignment="CENTER" layoutX="54.0" layoutY="6.0" minHeight="-Infinity" minWidth="-Infinity" text="Portions:" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                    </children>
-                                </AnchorPane>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="28.0" prefWidth="88.0">
-                                    <children>
-                                        <TextArea fx:id="portionArea" layoutX="-16.0" prefHeight="28.0" prefWidth="82.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                    </children>
-                                </AnchorPane>
-                            </children>
-                        </HBox>
-                    </top>
-                </BorderPane>
-            </center>
-            <top>
-                <AnchorPane prefHeight="83.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                    <children>
-                        <Label fx:id="titleLabel" alignment="CENTER" layoutX="115.0" layoutY="42.0" text="Title" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                            <font>
-                                <Font size="17.0" />
-                            </font></Label>
-                    </children>
-                </AnchorPane>
-            </top>
-            <BorderPane.margin>
-                <Insets bottom="10.0" left="20.0" />
-            </BorderPane.margin>
+               </children>
+            </VBox>
+         </center>
         </BorderPane>
     </left>
 </BorderPane>

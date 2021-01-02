@@ -295,14 +295,15 @@ public class DatabaseConnection {
         int portions = result.getInt("PORTIONS");
         int accessibility = result.getInt("GROUP_ID");
 
-        result = statement.executeQuery(String.format("SELECT AMOUNT, INGREDIENT_UNIT, INGREDIENT_NAME FROM INGREDIENT_LIST WHERE RECIPE_ID = %s", recipeId));
+        result = statement.executeQuery(String.format("SELECT * FROM INGREDIENT_LIST WHERE RECIPE_ID = %s", recipeId));
         ArrayList<Ingredient> ingredientList = new ArrayList<>();
         while (result.next()) {
             Double amount = result.getDouble("AMOUNT");
             String unitName = result.getString("INGREDIENT_UNIT");
             String name = result.getString("INGREDIENT_NAME");
+            int id = result.getInt("INGREDIENT_LIST_ID");
             Unit unit = new Unit(unitName);
-            Ingredient ingredient = new Ingredient(amount, unit, name);
+            Ingredient ingredient = new Ingredient(id, amount, unit, name);
             ingredientList.add(ingredient);
         }
         result.close();
