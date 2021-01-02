@@ -1,5 +1,7 @@
 package main;
 
+import javafx.scene.control.Accordion;
+import javafx.scene.control.TitledPane;
 import javafx.scene.text.TextAlignment;
 import main.controller.MainPane;
 import main.userModel.Opinion;
@@ -170,7 +172,7 @@ public class DatabaseConnection {
         return activeUser;
     }
 
-    public static void createOpinion(Opinion opinion, Label opinionLabel)throws SQLException {
+    public static void createOpinion(Opinion opinion, Label opinionLabel, Accordion opinionsAccordion)throws SQLException {
         setConnection();
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("select * from OPINION where USERNAME = '"+opinion.getUsername()+"'");
@@ -178,8 +180,12 @@ public class DatabaseConnection {
             opinionLabel.setText("You have already added your opinion!");
         }
         else {
-            statement.execute("insert into OPINION values(null,'" + opinion.getUsername() + "','" + opinion.getRecipeId() + "', '" + opinion.getScore() + "', '" + opinion.getOpinionText() + "')");
+            statement.execute("insert into OPINION values(null,'" + opinion.getUsername() + "','" + opinion.getRecipe().getId() + "', '" + opinion.getScore() + "', '" + opinion.getOpinionText() + "')");
             opinionLabel.setText("Opinion saved!");
+            String username = opinion.getUsername();
+            String score = String.valueOf(opinion.getScore());
+            TitledPane pane = new TitledPane("User: " + username + "    Score: " +score , new Label(opinion.getOpinionText()));
+            opinionsAccordion.getPanes().add(pane);
             statement.close();
             closeConnection();
         }
@@ -224,6 +230,21 @@ public class DatabaseConnection {
         }
         tilePane.getChildren().clear();
         tilePane.getChildren().addAll(panelist);
+        resultSet.close();
+        statement.close();
+        closeConnection();
+    }
+
+    public static void fillOpinions(Recipe recipe, Accordion opinionsAccordion) throws SQLException {
+        setConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("select * from OPINION where RECIPE_ID = " +recipe.getId());
+        while (resultSet.next()){
+            String username = resultSet.getString("USERNAME");
+            String score = String.valueOf(resultSet.getInt("SCORE"));
+            TitledPane pane = new TitledPane("User: " + username + "    Score: " +score , new Label(resultSet.getString("COMMENT")));
+            opinionsAccordion.getPanes().add(pane);
+        }
         resultSet.close();
         statement.close();
         closeConnection();

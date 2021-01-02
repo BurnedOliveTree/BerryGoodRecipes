@@ -28,8 +28,8 @@ public class Opinion {
         return opinionText;
     }
 
-    public Integer getRecipeId(){
-        return recipe.getId();
+    public Recipe getRecipe(){
+        return recipe;
     }
 
     private void setOpinionText(String text)  {this.opinionText = text;} // do edytowania komentarzy

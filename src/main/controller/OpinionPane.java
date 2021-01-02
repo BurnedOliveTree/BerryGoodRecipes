@@ -36,6 +36,7 @@ public class OpinionPane {
     public Label scoreLabel;
     public TextField commentTextField;
     public Label opinionLabel;
+    public Accordion opinionsAccordion;
     @FXML
     public ChoiceBox scoreBox;
 
@@ -45,7 +46,7 @@ public class OpinionPane {
     };
 
     @FXML
-    private void initialize(){
+    private void initialize() throws SQLException {
         scoreBox.setItems(scoreList);
         exitButton.setOnAction( e->{ exitAction("/resources/recipePage.fxml"); });
         okButton.setDisable(true);
@@ -57,6 +58,7 @@ public class OpinionPane {
                 throwables.printStackTrace();
             }
         });
+        DatabaseConnection.fillOpinions(recipe, opinionsAccordion);
     }
 
     private void okButtonActivity(){
@@ -69,7 +71,7 @@ public class OpinionPane {
         String comment = commentTextField.getText();
         int score = Integer.parseInt(scoreBox.getValue().toString());
         opinion = new Opinion(comment, score, activeUser, recipe);
-        DatabaseConnection.createOpinion(opinion, opinionLabel);
+        DatabaseConnection.createOpinion(opinion, opinionLabel, opinionsAccordion);
     }
 
     private void  exitAction(String namePath) {
