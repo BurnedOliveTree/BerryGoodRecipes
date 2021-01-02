@@ -37,9 +37,7 @@ public class LogInWindow {
         Stage stage = (Stage) usernameField.getScene().getWindow();
         login();
         if (mainPane.activeUser != null) {
-            mainPane.loginButton.setText("Sign out");
-            mainPane.myRecipesButton.setDisable(false);
-            mainPane.socialButton.setDisable(false);
+            mainPane.setButtonActivity();
             stage.close();
         }
     }
@@ -52,9 +50,7 @@ public class LogInWindow {
         Stage stage = (Stage) usernameField.getScene().getWindow();
         register();
         if (mainPane.activeUser != null) {
-            mainPane.loginButton.setText("Sign out");
-            mainPane.myRecipesButton.setDisable(false);
-            mainPane.socialButton.setDisable(false);
+            mainPane.setButtonActivity();
             stage.close();
         }
     }

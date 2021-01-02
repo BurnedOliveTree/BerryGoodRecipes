@@ -90,17 +90,45 @@
                   <Insets />
                </GridPane.margin>
             </Button>
-            <Button fx:id="myRecipesButton" mnemonicParsing="false" onMouseClicked="#onMyRecipesAction" prefHeight="64.0" prefWidth="64.0" text="My recipes" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-            <Button fx:id="socialButton" mnemonicParsing="false" onMouseClicked="#onSocialButtonClick" prefHeight="64.0" prefWidth="64.0" text="Social" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-            <Button mnemonicParsing="false" prefHeight="64.0" prefWidth="64.0" text="shopping list" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+            <Button fx:id="myRecipesButton" mnemonicParsing="false" onMouseClicked="#onMyRecipesAction" prefHeight="64.0" prefWidth="64.0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+               <graphic>
+                  <ImageView fx:id="recipePic" fitHeight="46.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@raspRecipe.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+            <Button fx:id="socialButton" mnemonicParsing="false" onMouseClicked="#onSocialButtonClick" prefHeight="64.0" prefWidth="64.0" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+               <graphic>
+                  <ImageView fx:id="socialPic" fitHeight="46.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@raspGroup.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+            <Button fx:id="basketButton" mnemonicParsing="false" onMouseClicked="#onBasketButtonClick" prefHeight="64.0" prefWidth="64.0" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+               <graphic>
+                  <ImageView fx:id="basketPic" fitHeight="46.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@raspBasket.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
             <Button mnemonicParsing="false" prefHeight="64.0" prefWidth="64.0" text="unit system" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
-            <MenuButton mnemonicParsing="false" prefHeight="64.0" prefWidth="64.0" text="Theme" GridPane.halignment="CENTER" GridPane.rowIndex="4">
+            <MenuButton mnemonicParsing="false" prefHeight="64.0" prefWidth="64.0" GridPane.halignment="CENTER" GridPane.rowIndex="4">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#onThemeDarkSelection" text="Dark" />
                 <MenuItem mnemonicParsing="false" onAction="#onThemeLightSelection" text="Light" />
                   <MenuItem mnemonicParsing="false" onAction="#onThemeSpringSelection" text="Spring" />
                   <MenuItem mnemonicParsing="false" onAction="#onThemeWinterSelection" text="Winter" />
               </items>
+               <graphic>
+                  <ImageView fx:id="palettePic" fitHeight="46.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@raspPalette.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
             </MenuButton>
          </children>
       </GridPane>

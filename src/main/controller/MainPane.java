@@ -24,10 +24,15 @@ import java.sql.SQLException;
 public class MainPane implements OrdinaryButtonAction {
     public User activeUser;
     @FXML
-    public Button loginButton;
     public ImageView logo;
+    public Button loginButton;
     public Button myRecipesButton;
     public Button socialButton;
+    public Button basketButton;
+    public ImageView recipePic;
+    public ImageView socialPic;
+    public ImageView basketPic;
+    public ImageView palettePic;
     public TilePane tilePain;
     public TextField search;
 
@@ -43,16 +48,28 @@ public class MainPane implements OrdinaryButtonAction {
         if (DatabaseConnection.theme.equals("lightTheme") || DatabaseConnection.theme.equals("winter")) {
             try {
                 logo.setImage(new Image(new FileInputStream("src/resources/berryLogo.png")));
+                recipePic.setImage(new Image(new FileInputStream("src/resources/berryRecipe.png")));
+                socialPic.setImage(new Image(new FileInputStream("src/resources/berryGroup.png")));
+                basketPic.setImage(new Image(new FileInputStream("src/resources/berryBasket.png")));
+                palettePic.setImage(new Image(new FileInputStream("src/resources/berryPalette.png")));
             } catch (FileNotFoundException e) { System.err.printf("Error: %s%n", e.getMessage()); }
         }
+        setButtonActivity();
+    }
+
+    public void setButtonActivity() {
         if (activeUser != null) {
             loginButton.setText("Sign out");
             socialButton.setDisable(false);
             myRecipesButton.setDisable(false);
+            basketButton.setDisable(false);
         }
-        else
+        else {
+            loginButton.setText("Sign in");
             socialButton.setDisable(true);
             myRecipesButton.setDisable(true);
+            basketButton.setDisable(true);
+        }
     }
 
     @FXML
@@ -108,6 +125,15 @@ public class MainPane implements OrdinaryButtonAction {
         changeScene(socialButton, loader);
     }
 
+    @FXML
+    public void onBasketButtonClick(MouseEvent mouseEvent) {
+        mouseEvent.consume();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/shoppingListPage.fxml"));
+//        ShoppingListPane controller = new ShoppingListPane(activeUser);
+//        loader.setController(controller);
+        changeScene(socialButton, loader);
+    }
+
     public void onRecipeClick(Button button, int RecipeID) {
         try {
             FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
@@ -131,9 +157,7 @@ public class MainPane implements OrdinaryButtonAction {
                 // log user out
                 activeUser = null;
                 Main.activeUser = null;
-                loginButton.setText("Sign in");
-                myRecipesButton.setDisable(true);
-                socialButton.setDisable(true);
+                setButtonActivity();
                 return;
             }
             try {
@@ -181,19 +205,23 @@ public class MainPane implements OrdinaryButtonAction {
     public void resetTheme() {
         logo.getScene().getStylesheets().remove(0);
         logo.getScene().getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
-        if (DatabaseConnection.theme.equals("lightTheme") || DatabaseConnection.theme.equals("winter")) {
-            try {
+        try {
+            if (DatabaseConnection.theme.equals("lightTheme") || DatabaseConnection.theme.equals("winter")) {
                 logo.setImage(new Image(new FileInputStream("src/resources/berryLogo.png")));
-            } catch (FileNotFoundException e) {
-                System.err.printf("Error: %s%n", e.getMessage());
+                recipePic.setImage(new Image(new FileInputStream("src/resources/berryRecipe.png")));
+                socialPic.setImage(new Image(new FileInputStream("src/resources/berryGroup.png")));
+                basketPic.setImage(new Image(new FileInputStream("src/resources/berryBasket.png")));
+                palettePic.setImage(new Image(new FileInputStream("src/resources/berryPalette.png")));
             }
-        }
-        else {
-            try {
+            else {
                 logo.setImage(new Image(new FileInputStream("src/resources/raspLogo.png")));
-            } catch (FileNotFoundException e) {
-                System.err.printf("Error: %s%n", e.getMessage());
+                recipePic.setImage(new Image(new FileInputStream("src/resources/raspRecipe.png")));
+                socialPic.setImage(new Image(new FileInputStream("src/resources/raspGroup.png")));
+                basketPic.setImage(new Image(new FileInputStream("src/resources/raspBasket.png")));
+                palettePic.setImage(new Image(new FileInputStream("src/resources/raspPalette.png")));
             }
+        } catch (FileNotFoundException e) {
+            System.err.printf("Error: %s%n", e.getMessage());
         }
     }
 
