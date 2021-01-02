@@ -2,6 +2,7 @@ package main.controller;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.TilePane;
 import main.DatabaseConnection;
 import main.userModel.User;
@@ -15,6 +16,7 @@ public class UserAdminPane extends OrdinaryButtonAction {
     @FXML
     public Button exitButton;
     public TilePane tilePane;
+    public ListView<String> followedList;
 
     public UserAdminPane(User activeUser) {
         this.activeUser = activeUser;
@@ -24,6 +26,7 @@ public class UserAdminPane extends OrdinaryButtonAction {
     void initialize() {
         try {
             DatabaseConnection.getGroups(tilePane, activeUser);
+            DatabaseConnection.getFollowed(followedList, activeUser);
         } catch (SQLException e) { e.printStackTrace(); }
     }
 
