@@ -47,8 +47,16 @@ public class OpinionPane {
     private void initialize(){
         scoreBox.setItems(scoreList);
         exitButton.setOnAction( e->{ onAction(exitButton, "/resources/recipePage.fxml"); });
-
+        okButton.setDisable(true);
+        scoreBox.setOnAction(e->okButtonActivity());
     }
+
+    private void okButtonActivity(){
+        if (activeUser != null){
+            okButton.setDisable(false);
+        }
+    }
+
     private void  onAction(Button button, String namePath) {
         try {
             FXMLLoader loader =  new FXMLLoader(getClass().getResource(namePath));
