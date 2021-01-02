@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class MainPane implements OrdinaryButtonAction {
+    private String query;
     public User activeUser;
     @FXML
     public ImageView logo;
@@ -72,67 +73,50 @@ public class MainPane implements OrdinaryButtonAction {
         }
     }
 
+    private String[] split_search(String arg) {
+        int argPosStart = query.indexOf(arg);
+        query = query.replaceFirst(arg, "");
+        String result = query.substring(argPosStart);
+        int argPosEnd = result.indexOf(" ");
+        if (argPosEnd == -1) {
+            query = query.replaceFirst("[ ]?" + query.substring(argPosStart), "");
+        } else {
+            result = result.substring(0, argPosEnd);
+            query = query.replaceFirst("[ ]?" + query.substring(argPosStart, argPosStart + argPosEnd + 1), "");
+        }
+        return result.split(",");
+    }
+
     @FXML
     public void search(ActionEvent ae) {
-        String query = search.getText();
+        query = search.getText();
         System.out.println(query);
+        String args = "";
         if (query.contains(":")) {
-            String args = "";
             if (query.contains("with:")) {
-                int withPosStart = query.indexOf("with:");
-                query = query.replaceFirst("with:", "");
-                String with = query.substring(withPosStart);
-                int withPosEnd = with.indexOf(" ");
-                if (withPosEnd == -1) {
-                    query = query.replaceFirst("[ ]?" + query.substring(withPosStart), "");
-                } else {
-                    with = with.substring(0, withPosEnd);
-                    query = query.replaceFirst("[ ]?" + query.substring(withPosStart, withPosStart + withPosEnd + 1), "");
-                }
-                String[] tempList = with.split(",");
+                String[] tempList = split_search("with:");
                 args = args + " and (lower(ing.ingredient_name) like lower('%" + tempList[tempList.length - 1] + "%')";
                 for (int i = tempList.length - 2; i >= 0; i--)
                     args = args + "or lower(ing.ingredient_name) like lower('%" + tempList[i] + "%')";
                 args = args + ")";
             }
             if (query.contains("user:")) {
-                int userPosStart = query.indexOf("user:");
-                query = query.replaceFirst("user:", "");
-                String user = query.substring(userPosStart);
-                int userPosEnd = user.indexOf(" ");
-                if (userPosEnd == -1) {
-                    query = query.replaceFirst("[ ]?" + query.substring(userPosStart), "");
-                } else {
-                    user = user.substring(0, userPosEnd);
-                    query = query.replaceFirst("[ ]?" + query.substring(userPosStart, userPosStart + userPosEnd + 1), "");
-                }
-                String[] tempList = user.split(",");
+                String[] tempList = split_search("user:");
                 args = args + " and (lower(rcp.owner_name) like lower('%" + tempList[tempList.length - 1] + "%')";
                 for (int i = tempList.length - 2; i >= 0; i--)
                     args = args + "or (lower(rcp.owner_name) like lower('%" + tempList[i] + "%')";
                 args = args + ")";
             }
             if (query.contains("maxcost:")) {
-                int costPosStart = query.indexOf("maxcost:");
-                query = query.replaceFirst("maxcost:", "");
-                String cost = query.substring(costPosStart);
-                int costPosEnd = cost.indexOf(" ");
-                if (costPosEnd == -1) {
-                    query = query.replaceFirst("[ ]?" + query.substring(costPosStart), "");
-                } else {
-                    cost = cost.substring(0, costPosEnd);
-                    query = query.replaceFirst("[ ]?" + query.substring(costPosStart, costPosStart + costPosEnd + 1), "");
-                }
-                String[] tempList = cost.split(",");
+                String[] tempList = split_search("max_cost:");
                 args = args + " and (rcp.cost < " + tempList[tempList.length - 1];
                 for (int i = tempList.length - 2; i >= 0; i--)
                     args = args + "or rcp.cost < " + tempList[i];
                 args = args + ")";
             }
-            query = "lower(rcp.name) like lower('%" + query + "%')" + args;
         }
-        else
-            query = "lower(rcp.name) like lower('%" + query + "%')";
+        query = "lower(rcp.name) like lower('%" + query + "%')" + args;
+        System.out.println(query);
         try {
             DatabaseConnection.fillResults(this, tilePain, query);
         } catch (SQLException throwables) { throwables.printStackTrace(); }
