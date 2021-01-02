@@ -1,6 +1,5 @@
 package main.controller;
 
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -19,17 +18,27 @@ public class OrdinaryButtonAction {
     public void onExitButtonAction() {};
 
     public void changeScene(Button button, FXMLLoader loader) {
+        changeScene(button, loader, false);
+    }
+
+    public void changeScene(Button button, FXMLLoader loader, boolean showAndWait) {
         try {
-            Scene mainPageScene = new Scene(loader.load());
-            Stage stage = (Stage) button.getScene().getWindow();
-            mainPageScene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
-            stage.setScene(mainPageScene);
-            stage.show();
+            Scene scene = new Scene(loader.load());
+            Stage stage;
+            if (showAndWait)
+                stage = new Stage();
+            else
+                stage = (Stage) button.getScene().getWindow();
+            scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
+            stage.setScene(scene);
+            if (showAndWait)
+                stage.showAndWait();
+            else
+                stage.show();
         } catch (IOException e) {
             System.err.printf("Error: %s%n", e.getMessage());
         }
     }
-
 
     public void setContentMenu(Control control, MenuItem...  menuItems) {
         ContextMenu menu = new ContextMenu();

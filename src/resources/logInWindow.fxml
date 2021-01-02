@@ -28,13 +28,13 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#getDataLogin" prefHeight="27.0" prefWidth="80.0" text="Log in" GridPane.columnSpan="3" GridPane.rowIndex="3">
+            <Button fx:id="loginButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#getDataLogin" prefHeight="27.0" prefWidth="80.0" text="Log in" GridPane.columnSpan="3" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
             </Button>
-            <TextField fx:id="usernameField" prefHeight="0.0" prefWidth="217.0" promptText="Username" GridPane.columnSpan="2147483647" />
-            <PasswordField fx:id="passwordField" promptText="Password" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
+            <TextField fx:id="usernameField" onAction="#onLoginEnter" prefHeight="0.0" prefWidth="217.0" promptText="Username" GridPane.columnSpan="2147483647" />
+            <PasswordField fx:id="passwordField" onAction="#onPasswordEnter" promptText="Password" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
             <Label fx:id="errMess" text="error message" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
             <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#getDataRegister" prefHeight="27.0" prefWidth="80.0" text="Sign up" GridPane.columnIndex="3" GridPane.columnSpan="3" GridPane.rowIndex="3" />
          </children>
