@@ -313,7 +313,7 @@ public class DatabaseConnection {
     public static void createOpinion(Opinion opinion, Label opinionLabel, Accordion opinionsAccordion)throws SQLException {
         setConnection();
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("select * from OPINION where USERNAME = '"+opinion.getUsername()+"'");
+        ResultSet resultSet = statement.executeQuery("select * from OPINION where USERNAME = '"+opinion.getUsername()+ "' and RECIPE_ID = " + opinion.getRecipe().getId() );
         if (resultSet.next()) {
             opinionLabel.setText("You have already added your opinion!");
         }
