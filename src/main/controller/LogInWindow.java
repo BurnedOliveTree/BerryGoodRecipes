@@ -39,6 +39,7 @@ public class LogInWindow {
         if (mainPane.activeUser != null) {
             mainPane.loginButton.setText("Sign out");
             mainPane.myRecipesButton.setDisable(false);
+            mainPane.socialButton.setDisable(false);
             stage.close();
         }
     }
@@ -52,6 +53,8 @@ public class LogInWindow {
         register();
         if (mainPane.activeUser != null) {
             mainPane.loginButton.setText("Sign out");
+            mainPane.myRecipesButton.setDisable(false);
+            mainPane.socialButton.setDisable(false);
             stage.close();
         }
     }

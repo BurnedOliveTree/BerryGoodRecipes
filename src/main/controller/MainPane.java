@@ -27,6 +27,7 @@ public class MainPane implements OrdinaryButtonAction {
     public Button loginButton;
     public ImageView logo;
     public Button myRecipesButton;
+    public Button socialButton;
     public TilePane tilePain;
     public TextField search;
 
@@ -46,9 +47,11 @@ public class MainPane implements OrdinaryButtonAction {
         }
         if (activeUser != null) {
             loginButton.setText("Sign out");
+            socialButton.setDisable(false);
             myRecipesButton.setDisable(false);
         }
         else
+            socialButton.setDisable(true);
             myRecipesButton.setDisable(true);
     }
 
@@ -96,6 +99,15 @@ public class MainPane implements OrdinaryButtonAction {
         changeScene(myRecipesButton, loader);
     }
 
+    @FXML
+    public void onSocialButtonClick(MouseEvent mouseEvent) {
+        mouseEvent.consume();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/userAdminPage.fxml"));
+        UserAdminPane controller = new UserAdminPane(activeUser);
+        loader.setController(controller);
+        changeScene(socialButton, loader);
+    }
+
     public void onRecipeClick(Button button, int RecipeID) {
         try {
             FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
@@ -121,6 +133,7 @@ public class MainPane implements OrdinaryButtonAction {
                 Main.activeUser = null;
                 loginButton.setText("Sign in");
                 myRecipesButton.setDisable(true);
+                socialButton.setDisable(true);
                 return;
             }
             try {

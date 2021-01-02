@@ -77,31 +77,24 @@
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" />
          </columnConstraints>
          <rowConstraints>
-            <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="80.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="80.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="80.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="80.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="80.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="80.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Button fx:id="loginButton" mnemonicParsing="false" onMouseClicked="#onSignInButtonClick" prefHeight="32.0" prefWidth="64.0" text="Sign in" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+            <Button fx:id="loginButton" mnemonicParsing="false" onMouseClicked="#onSignInButtonClick" prefHeight="64.0" prefWidth="64.0" text="Sign in" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
             </Button>
-            <Button fx:id="myRecipesButton" mnemonicParsing="false" onMouseClicked="#onMyRecipesAction" prefHeight="32.0" prefWidth="64.0" text="My recipes" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-            <Button mnemonicParsing="false" prefHeight="32.0" prefWidth="64.0" text="followed" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
-            <Button mnemonicParsing="false" prefHeight="32.0" prefWidth="64.0" text="shopping list" GridPane.halignment="CENTER" GridPane.rowIndex="6" />
-            <Button mnemonicParsing="false" prefHeight="32.0" prefWidth="64.0" text="groups" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
-            <Button mnemonicParsing="false" prefHeight="32.0" prefWidth="64.0" text="unit system" GridPane.halignment="CENTER" GridPane.rowIndex="9" />
-            <MenuButton mnemonicParsing="false" text="Theme" GridPane.halignment="CENTER" GridPane.rowIndex="8">
+            <Button fx:id="myRecipesButton" mnemonicParsing="false" onMouseClicked="#onMyRecipesAction" prefHeight="64.0" prefWidth="64.0" text="My recipes" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+            <Button fx:id="socialButton" mnemonicParsing="false" onMouseClicked="#onSocialButtonClick" prefHeight="64.0" prefWidth="64.0" text="Social" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <Button mnemonicParsing="false" prefHeight="64.0" prefWidth="64.0" text="shopping list" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+            <Button mnemonicParsing="false" prefHeight="64.0" prefWidth="64.0" text="unit system" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+            <MenuButton mnemonicParsing="false" prefHeight="64.0" prefWidth="64.0" text="Theme" GridPane.halignment="CENTER" GridPane.rowIndex="4">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#onThemeDarkSelection" text="Dark" />
                 <MenuItem mnemonicParsing="false" onAction="#onThemeLightSelection" text="Light" />

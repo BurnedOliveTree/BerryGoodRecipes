@@ -176,7 +176,7 @@ public class DatabaseConnection {
             if (user.getNewFavorites().size() != 0) {
                 for (Recipe recipe : user.getNewFavorites()) {
                     statement.executeUpdate("INSERT INTO FAVORITE SELECT null, '" + user.getUsername() + "', "+ recipe.getId() + " FROM DUAL\n" +
-                            "WHERE NOT EXISTS (SELECT NULL FROM FAVORITE WHERE RECIPE_ID=" +  recipe.getId() + "AND USERNAME='" + user.getUsername() + "')");
+                            "WHERE NOT EXISTS (SELECT NULL FROM FAVORITE WHERE RECIPE_ID=" +  recipe.getId() + " AND USERNAME='" + user.getUsername() + "')");
                 }
             }
             if (user.getDeletedFavorites().size() != 0) {
@@ -190,6 +190,29 @@ public class DatabaseConnection {
         }
     }
 
+    public static void getGroups(TilePane tilePane, User user) throws SQLException {
+        setConnection();
+        Statement statement = connection.createStatement();
+        String query = "select g.NAME as group_name from \"GROUP\" g join BELONG b on g.GROUP_ID = b.GROUP_ID where lower(b.USERNAME) = '"+(user.getUsername()).toLowerCase()+"'";
+        ResultSet resultSet = statement.executeQuery(query);
+        List<Button> panelist = new ArrayList<>();
+        while (resultSet.next()) {
+            String tempString = resultSet.getString("group_name");
+            Button tempButton = new Button(tempString);
+            tempButton.setWrapText(true);
+            tempButton.setTextAlignment(TextAlignment.CENTER);
+            tempButton.setPrefSize(192, 64);
+//            String tempString = resultSet.getString("RECIPE_ID");
+//            tempButton.setOnMouseClicked(e -> mainPane.onRecipeClick(tempButton, Integer.parseInt(tempString)));
+            panelist.add(tempButton);
+        }
+        tilePane.getChildren().clear();
+        tilePane.getChildren().addAll(panelist);
+        resultSet.close();
+        statement.close();
+        closeConnection();
+    }
+
     public static void fillResults(MainPane mainPane, TilePane tilePain) throws SQLException {
         fillResults(mainPane, tilePain, null);
     }
@@ -197,7 +220,7 @@ public class DatabaseConnection {
     public static void fillResults(MainPane mainPane, TilePane tilePain, String whereStatement) throws SQLException {
         setConnection();
         Statement statement = connection.createStatement();
-        String query = "select distinct rcp.RECIPE_ID, rcp.NAME from RECIPE rcp join INGREDIENT_LIST ing on rcp.RECIPE_ID = ing.RECIPE_ID";
+        String query = "select distinct rcp.RECIPE_ID, rcp.NAME, rcp.PREPARATION_TIME, rcp.COST from RECIPE rcp join INGREDIENT_LIST ing on rcp.RECIPE_ID = ing.RECIPE_ID";
         if (whereStatement != null)
             query = query + " WHERE " + whereStatement;
         ResultSet resultSet = statement.executeQuery(query);
@@ -215,12 +238,18 @@ public class DatabaseConnection {
             tempButton.setWrapText(true);
             tempButton.setTextAlignment(TextAlignment.CENTER);
             tempButton.setPrefSize(192, 64);
-            String tempString = resultSet.getString("RECIPE_ID");
-            tempButton.setOnMouseClicked(e -> mainPane.onRecipeClick(tempButton, Integer.parseInt(tempString)));
+            int tempInt = resultSet.getInt("RECIPE_ID");
+            tempButton.setOnMouseClicked(e -> mainPane.onRecipeClick(tempButton, tempInt));
             tempPane.add(tempButton, 0, 0, 3, 2);
             tempPane.add(new Label("Rating"), 0, 2, 1, 1);
-            tempPane.add(new Label("Time"), 1, 2, 1, 1);
-            tempPane.add(new Label("Cost"), 2, 2, 1, 1);
+            String tempString = resultSet.getString("PREPARATION_TIME");
+            if (tempString == null)
+                tempString = "N/A";
+            tempPane.add(new Label(tempString), 1, 2, 1, 1);
+            tempString = resultSet.getString("COST");
+            if (tempString == null)
+                tempString = "N/A";
+            tempPane.add(new Label(tempString), 2, 2, 1, 1);
             panelist.add(tempPane);
         }
         tilePain.getChildren().clear();

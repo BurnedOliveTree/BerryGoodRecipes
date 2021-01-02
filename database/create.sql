@@ -1,3 +1,7 @@
+SELECT SID, SERIAL#, STATUS, SERVER
+FROM V$SESSION
+WHERE USERNAME = 'BD1_Z02';
+
 drop table UNIT_SYSTEM cascade constraints;
 drop table UNIT cascade constraints;
 drop table "USER" cascade constraints;
