@@ -43,11 +43,11 @@ public class MainPane extends OrdinaryButtonAction {
     void initialize() throws SQLException {
         DatabaseConnection.fillResults(this, tilePain);
         if (DatabaseConnection.theme.equals("lightTheme") || DatabaseConnection.theme.equals("winter")) {
-            logo.setImage(new Image("berryLogo.png"));
-            recipePic.setImage(new Image("berryRecipe.png"));
-            socialPic.setImage(new Image("berryGroup.png"));
-            basketPic.setImage(new Image("berryBasket.png"));
-            palettePic.setImage(new Image("berryPalette.png"));
+            logo.setImage(new Image("icons/berryLogo.png"));
+            recipePic.setImage(new Image("icons/berryRecipe.png"));
+            socialPic.setImage(new Image("icons/berryGroup.png"));
+            basketPic.setImage(new Image("icons/berryBasket.png"));
+            palettePic.setImage(new Image("icons/berryPalette.png"));
         }
         setButtonActivity();
     }
@@ -137,9 +137,10 @@ public class MainPane extends OrdinaryButtonAction {
     public void onBasketButtonClick(MouseEvent mouseEvent) {
         mouseEvent.consume();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/shoppingListPage.fxml"));
-//        ShoppingListPane controller = new ShoppingListPane(activeUser);
-//        loader.setController(controller);
-        changeScene(socialButton, loader);
+        MainPane returnPane = new MainPane(activeUser);
+        ShoppingListPane controller = new ShoppingListPane(activeUser, returnPane);
+        loader.setController(controller);
+        changeScene(basketButton, loader);
     }
 
     public void onRecipeClick(Button button, int RecipeID){
@@ -202,18 +203,18 @@ public class MainPane extends OrdinaryButtonAction {
         logo.getScene().getStylesheets().remove(0);
         logo.getScene().getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
         if (DatabaseConnection.theme.equals("lightTheme") || DatabaseConnection.theme.equals("winter")) {
-            logo.setImage(new Image("berryLogo.png"));
-            recipePic.setImage(new Image("berryRecipe.png"));
-            socialPic.setImage(new Image("berryGroup.png"));
-            basketPic.setImage(new Image("berryBasket.png"));
-            palettePic.setImage(new Image("berryPalette.png"));
+            logo.setImage(new Image("icons/berryLogo.png"));
+            recipePic.setImage(new Image("icons/berryRecipe.png"));
+            socialPic.setImage(new Image("icons/berryGroup.png"));
+            basketPic.setImage(new Image("icons/berryBasket.png"));
+            palettePic.setImage(new Image("icons/berryPalette.png"));
         }
         else {
-            logo.setImage(new Image("raspLogo.png"));
-            recipePic.setImage(new Image("raspRecipe.png"));
-            socialPic.setImage(new Image("raspGroup.png"));
-            basketPic.setImage(new Image("raspBasket.png"));
-            palettePic.setImage(new Image("raspPalette.png"));
+            logo.setImage(new Image("icons/raspLogo.png"));
+            recipePic.setImage(new Image("icons/raspRecipe.png"));
+            socialPic.setImage(new Image("icons/raspGroup.png"));
+            basketPic.setImage(new Image("icons/raspBasket.png"));
+            palettePic.setImage(new Image("icons/raspPalette.png"));
         }
     }
 }

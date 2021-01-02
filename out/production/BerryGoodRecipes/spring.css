@@ -26,3 +26,7 @@
 Text {
     -fx-fill: -fx-light-text-color;
 }
+
+#shoppingList .list-cell {
+    -fx-alignment: center;
+}

@@ -34,6 +34,7 @@ public class DatabaseConnection {
     public static String databaseServiceName;
     public static String databaseHost;
 
+    //@TODO save shoppinglist, read shoppinglist
     public DatabaseConnection() throws IOException {
         loadFile();
     }
