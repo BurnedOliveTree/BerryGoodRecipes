@@ -1,12 +1,14 @@
 package main.controller;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
+import javafx.scene.text.*;
 
 import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
@@ -55,8 +57,14 @@ public class RecipePane  implements OrdinaryButtonAction{
                 System.err.printf("Error: %s%n", e.getMessage());
             }
         }
-        descText.getChildren().add(new Text(this.recipe.getPrepareMethod()));
+        Text text = new Text(this.recipe.getPrepareMethod());
+        text.setFont(Font.font("System", FontPosture.REGULAR, 13));
+        System.out.println(recipe.getPrepareMethod());
+        descText.getChildren().add(text);
+
         titleLabel.setText(this.recipe.getName());
+        titleLabel.setWrapText(true);
+        titleLabel.setTextAlignment(TextAlignment.CENTER);
 
         if (this.recipe.getCost() == 0) {
             costLabel.setText("Cost: Unknown");

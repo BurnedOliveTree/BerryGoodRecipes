@@ -239,7 +239,7 @@ public class DatabaseConnection {
 
     private static Recipe getRecipe(int recipeId) throws SQLException {
         Statement statement = connection.createStatement();
-        ResultSet result = statement.executeQuery(String.format("SELECT * FROM RECIPE WHERE RECIPE_ID = %s", recipeId));
+        ResultSet result = statement.executeQuery(String.format("SELECT * FROM RECIPE JOIN PUBLICITY USING(RECIPE_ID) WHERE RECIPE_ID = %s", recipeId));
         result.next();
         String ownerName = result.getString("OWNER_NAME");
         String recipeName = result.getString("NAME");
@@ -248,9 +248,6 @@ public class DatabaseConnection {
         String dateAdded = result.getString("DATE_ADDED");
         int prepareTime = result.getInt("PREPARATION_TIME");
         int portions = result.getInt("PORTIONS");
-
-        result = statement.executeQuery(String.format("SELECT GROUP_ID FROM PUBLICITY WHERE RECIPE_ID = %s", recipeId));
-        result.next();
         int accessibility = result.getInt("GROUP_ID");
 
         result = statement.executeQuery(String.format("SELECT AMOUNT, INGREDIENT_UNIT, INGREDIENT_NAME FROM INGREDIENT_LIST WHERE RECIPE_ID = %s", recipeId));
