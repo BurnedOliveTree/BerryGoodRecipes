@@ -133,8 +133,7 @@ public class MainPane extends OrdinaryButtonAction {
     public void onMyRecipesAction(MouseEvent mouseEvent) {
         mouseEvent.consume();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/RecipeAdminPage.fxml"));
-        RecipeAdminPane controller = new RecipeAdminPane(activeUser);
-        loader.setController(controller);
+        loader.setController(new RecipeAdminPane(activeUser));
         changeScene(myRecipesButton, loader);
     }
 
@@ -142,8 +141,7 @@ public class MainPane extends OrdinaryButtonAction {
     public void onSocialButtonClick(MouseEvent mouseEvent) {
         mouseEvent.consume();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/userAdminPage.fxml"));
-        UserAdminPane controller = new UserAdminPane(activeUser);
-        loader.setController(controller);
+        loader.setController(new UserAdminPane(activeUser));
         changeScene(socialButton, loader);
     }
 
@@ -160,12 +158,8 @@ public class MainPane extends OrdinaryButtonAction {
         try {
             FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
             loader.setController(new RecipePane(DatabaseConnection.getSelectedRecipe(RecipeID), activeUser));
-            Scene mainPageScene = new Scene(loader.load());
-            Stage stage = new Stage();
-            mainPageScene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
-            stage.setScene(mainPageScene);
-            stage.showAndWait();
-        } catch (SQLException | IOException e) {
+            changeScene(button, loader, true);
+        } catch (SQLException e) {
             System.err.printf("Error: %s%n", e.getMessage());
         }
     }
