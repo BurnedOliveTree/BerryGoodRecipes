@@ -77,28 +77,59 @@ public class MainPane implements OrdinaryButtonAction {
         String query = search.getText();
         System.out.println(query);
         if (query.contains(":")) {
-            int withPosStart = query.indexOf("with:");
-//            System.out.println(withPosStart);
-            query = query.replaceFirst("with:", "");
-            System.out.println("query: "+query);
-            String with = query.substring(withPosStart);
-            System.out.println("with: "+with);
-            int withPosEnd = with.indexOf(" ");
-//            System.out.println(withPosEnd);
-            if (withPosEnd == -1) {
-                query = query.replaceFirst("[ ]?"+query.substring(withPosStart), "");
+            String args = "";
+            if (query.contains("with:")) {
+                int withPosStart = query.indexOf("with:");
+                query = query.replaceFirst("with:", "");
+                String with = query.substring(withPosStart);
+                int withPosEnd = with.indexOf(" ");
+                if (withPosEnd == -1) {
+                    query = query.replaceFirst("[ ]?" + query.substring(withPosStart), "");
+                } else {
+                    with = with.substring(0, withPosEnd);
+                    query = query.replaceFirst("[ ]?" + query.substring(withPosStart, withPosStart + withPosEnd + 1), "");
+                }
+                String[] tempList = with.split(",");
+                args = args + " and (lower(ing.ingredient_name) like lower('%" + tempList[tempList.length - 1] + "%')";
+                for (int i = tempList.length - 2; i >= 0; i--)
+                    args = args + "or lower(ing.ingredient_name) like lower('%" + tempList[i] + "%')";
+                args = args + ")";
             }
-            else {
-                with = with.substring(0, withPosEnd);
-                query = query.replaceFirst("[ ]?"+query.substring(withPosStart, withPosStart + withPosEnd + 1), "");
+            if (query.contains("user:")) {
+                int userPosStart = query.indexOf("user:");
+                query = query.replaceFirst("user:", "");
+                String user = query.substring(userPosStart);
+                int userPosEnd = user.indexOf(" ");
+                if (userPosEnd == -1) {
+                    query = query.replaceFirst("[ ]?" + query.substring(userPosStart), "");
+                } else {
+                    user = user.substring(0, userPosEnd);
+                    query = query.replaceFirst("[ ]?" + query.substring(userPosStart, userPosStart + userPosEnd + 1), "");
+                }
+                String[] tempList = user.split(",");
+                args = args + " and (lower(rcp.owner_name) like lower('%" + tempList[tempList.length - 1] + "%')";
+                for (int i = tempList.length - 2; i >= 0; i--)
+                    args = args + "or (lower(rcp.owner_name) like lower('%" + tempList[i] + "%')";
+                args = args + ")";
             }
-            System.out.println("with: "+with);
-            System.out.println("query: "+query);
-            if (!query.equals(""))
-                query = "lower(rcp.name) like lower('%" + query + "%') and lower(ing.ingredient_name) like lower('%" + with + "%')";
-            else
-                query = "lower(ing.ingredient_name) like lower('%" + with + "%')";
-            System.out.println("query: "+query);
+            if (query.contains("maxcost:")) {
+                int costPosStart = query.indexOf("maxcost:");
+                query = query.replaceFirst("maxcost:", "");
+                String cost = query.substring(costPosStart);
+                int costPosEnd = cost.indexOf(" ");
+                if (costPosEnd == -1) {
+                    query = query.replaceFirst("[ ]?" + query.substring(costPosStart), "");
+                } else {
+                    cost = cost.substring(0, costPosEnd);
+                    query = query.replaceFirst("[ ]?" + query.substring(costPosStart, costPosStart + costPosEnd + 1), "");
+                }
+                String[] tempList = cost.split(",");
+                args = args + " and (rcp.cost < " + tempList[tempList.length - 1];
+                for (int i = tempList.length - 2; i >= 0; i--)
+                    args = args + "or rcp.cost < " + tempList[i];
+                args = args + ")";
+            }
+            query = "lower(rcp.name) like lower('%" + query + "%')" + args;
         }
         else
             query = "lower(rcp.name) like lower('%" + query + "%')";
