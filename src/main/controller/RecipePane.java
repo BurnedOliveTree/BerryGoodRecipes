@@ -124,12 +124,12 @@ public class RecipePane  extends OrdinaryButtonAction{
             box.setHgrow(pane, Priority.ALWAYS);
             this.activeUser = activeUser;
             view.setOnMouseClicked(mouseEvent -> {
-                if (!activeUser.checkIfIngredientInShoppingList(selectedIngredient)) {
+                if (!activeUser.checkIfIngredientInShoppingList(selectedIngredient.getId())) {
                     view.setImage(new Image("minus.png"));
                     activeUser.addToShoppingList(selectedIngredient);
                 } else {
                     view.setImage(new Image("plus.png"));
-                    activeUser.removeFromShoppingList(selectedIngredient);
+                    activeUser.removeFromShoppingList(selectedIngredient.getId());
                 }
             });
         }
