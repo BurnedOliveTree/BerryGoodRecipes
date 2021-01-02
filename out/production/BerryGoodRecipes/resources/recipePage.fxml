@@ -22,7 +22,7 @@
                     <graphic>
                         <ImageView fx:id="ScalePic" fitHeight="30.0" fitWidth="30.0">
                             <image>
-                                <Image url="@raspScale.png" />
+                                <Image url="@icons/raspScale.png" />
                             </image>
                         </ImageView>
                     </graphic>
@@ -31,7 +31,7 @@
                     <graphic>
                         <ImageView fx:id="ShoppingPic" fitHeight="30.0" fitWidth="30.0">
                             <image>
-                                <Image url="@raspBasket.png" />
+                                <Image url="@icons/raspBasket.png" />
                             </image>
                         </ImageView>
                     </graphic>
@@ -40,7 +40,7 @@
                     <graphic>
                         <ImageView fx:id="LikePic" fitHeight="30.0" fitWidth="30.0">
                             <image>
-                                <Image url="@favoriteUnclicked.png" />
+                                <Image url="@icons/favoriteUnclicked.png" />
                             </image>
                         </ImageView>
                     </graphic>
@@ -49,7 +49,7 @@
                     <graphic>
                         <ImageView fx:id="TimePic" fitHeight="30.0" fitWidth="30.0">
                             <image>
-                                <Image url="@raspStoper.png" />
+                                <Image url="@icons/raspStoper.png" />
                             </image>
                         </ImageView>
                     </graphic>

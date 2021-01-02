@@ -30,8 +30,7 @@ public class Main extends Application {
         loader.setController(controller);
         Scene scene = new Scene(loader.load());
         scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
-        Image image = new Image("/resources/raspLogo.png");
-        primaryStage.getIcons().add(image);
+        primaryStage.getIcons().add(new Image("raspLogo.png"));
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.setOnCloseRequest(e -> {
@@ -51,7 +50,6 @@ public class Main extends Application {
             Platform.exit();
             System.exit(0);
         });
-
     }
 
     public static void main(String[] args) {

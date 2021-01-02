@@ -47,13 +47,11 @@ public class MainPane extends OrdinaryButtonAction {
             DatabaseConnection.fillResults(this, tilePain);
         } catch (SQLException e) { e.printStackTrace(); }
         if (DatabaseConnection.theme.equals("lightTheme") || DatabaseConnection.theme.equals("winter")) {
-            try {
-                logo.setImage(new Image(new FileInputStream("src/resources/berryLogo.png")));
-                recipePic.setImage(new Image(new FileInputStream("src/resources/berryRecipe.png")));
-                socialPic.setImage(new Image(new FileInputStream("src/resources/berryGroup.png")));
-                basketPic.setImage(new Image(new FileInputStream("src/resources/berryBasket.png")));
-                palettePic.setImage(new Image(new FileInputStream("src/resources/berryPalette.png")));
-            } catch (FileNotFoundException e) { System.err.printf("Error: %s%n", e.getMessage()); }
+            logo.setImage(new Image("berryLogo.png"));
+            recipePic.setImage(new Image("berryRecipe.png"));
+            socialPic.setImage(new Image("berryGroup.png"));
+            basketPic.setImage(new Image("berryBasket.png"));
+            palettePic.setImage(new Image("berryPalette.png"));
         }
         setButtonActivity();
     }
@@ -221,23 +219,19 @@ public class MainPane extends OrdinaryButtonAction {
     public void resetTheme() {
         logo.getScene().getStylesheets().remove(0);
         logo.getScene().getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
-        try {
-            if (DatabaseConnection.theme.equals("lightTheme") || DatabaseConnection.theme.equals("winter")) {
-                logo.setImage(new Image(new FileInputStream("src/resources/berryLogo.png")));
-                recipePic.setImage(new Image(new FileInputStream("src/resources/berryRecipe.png")));
-                socialPic.setImage(new Image(new FileInputStream("src/resources/berryGroup.png")));
-                basketPic.setImage(new Image(new FileInputStream("src/resources/berryBasket.png")));
-                palettePic.setImage(new Image(new FileInputStream("src/resources/berryPalette.png")));
-            }
-            else {
-                logo.setImage(new Image(new FileInputStream("src/resources/raspLogo.png")));
-                recipePic.setImage(new Image(new FileInputStream("src/resources/raspRecipe.png")));
-                socialPic.setImage(new Image(new FileInputStream("src/resources/raspGroup.png")));
-                basketPic.setImage(new Image(new FileInputStream("src/resources/raspBasket.png")));
-                palettePic.setImage(new Image(new FileInputStream("src/resources/raspPalette.png")));
-            }
-        } catch (FileNotFoundException e) {
-            System.err.printf("Error: %s%n", e.getMessage());
+        if (DatabaseConnection.theme.equals("lightTheme") || DatabaseConnection.theme.equals("winter")) {
+            logo.setImage(new Image("berryLogo.png"));
+            recipePic.setImage(new Image("berryRecipe.png"));
+            socialPic.setImage(new Image("berryGroup.png"));
+            basketPic.setImage(new Image("berryBasket.png"));
+            palettePic.setImage(new Image("berryPalette.png"));
+        }
+        else {
+            logo.setImage(new Image("raspLogo.png"));
+            recipePic.setImage(new Image("raspRecipe.png"));
+            socialPic.setImage(new Image("raspGroup.png"));
+            basketPic.setImage(new Image("raspBasket.png"));
+            palettePic.setImage(new Image("raspPalette.png"));
         }
     }
 }
