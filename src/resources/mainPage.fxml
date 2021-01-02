@@ -60,7 +60,7 @@
          <children>
             <ImageView fx:id="logo" fitHeight="80.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                <image>
-                  <Image url="@raspLogo.png" />
+                  <Image url="@icons/raspLogo.png" />
                </image>
             </ImageView>
             <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="berry-text" text="BerryGood Recipes" wrappingWidth="406.21630859375" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
@@ -94,7 +94,7 @@
                <graphic>
                   <ImageView fx:id="recipePic" fitHeight="46.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@raspRecipe.png" />
+                        <Image url="@icons/raspRecipe.png" />
                      </image>
                   </ImageView>
                </graphic></Button>
@@ -102,7 +102,7 @@
                <graphic>
                   <ImageView fx:id="socialPic" fitHeight="46.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@raspGroup.png" />
+                        <Image url="@icons/raspGroup.png" />
                      </image>
                   </ImageView>
                </graphic></Button>
@@ -110,7 +110,7 @@
                <graphic>
                   <ImageView fx:id="basketPic" fitHeight="46.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@raspBasket.png" />
+                        <Image url="@icons/raspBasket.png" />
                      </image>
                   </ImageView>
                </graphic></Button>
@@ -125,7 +125,7 @@
                <graphic>
                   <ImageView fx:id="palettePic" fitHeight="46.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@raspPalette.png" />
+                        <Image url="@icons/raspPalette.png" />
                      </image>
                   </ImageView>
                </graphic>

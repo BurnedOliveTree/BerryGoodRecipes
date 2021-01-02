@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -15,11 +14,6 @@ import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
 import main.userModel.User;
-
-import javax.swing.*;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-
 
 public class RecipePane  extends OrdinaryButtonAction{
     private final Recipe recipe;
@@ -50,15 +44,11 @@ public class RecipePane  extends OrdinaryButtonAction{
     }
 
     @FXML
-    void initialize() throws FileNotFoundException {
+    void initialize() {
         if (DatabaseConnection.theme.equals("lightTheme") || DatabaseConnection.theme.equals("winter")) {
-            try {
-                ScalePic.setImage(new Image(new FileInputStream("src/resources/berryScale.png")));
-                ShoppingPic.setImage(new Image(new FileInputStream("src/resources/berryBasket.png")));
-                TimePic.setImage(new Image(new FileInputStream("src/resources/berryStoper.png")));
-            } catch (FileNotFoundException e) {
-                System.err.printf("Error: %s%n", e.getMessage());
-            }
+            ScalePic.setImage(new Image("berryScale.png"));
+            ShoppingPic.setImage(new Image("berryBasket.png"));
+            TimePic.setImage(new Image("berryStoper.png"));
         }
         Text text = new Text(this.recipe.getPrepareMethod());
         text.setFont(Font.font("System", FontPosture.REGULAR, 13));
@@ -96,7 +86,7 @@ public class RecipePane  extends OrdinaryButtonAction{
             likeButton.setDisable(true);
             shoppingListButton.setDisable(true);
         } else if (activeUser.checkIfRecipeFavorite(this.recipe)){
-            LikePic.setImage(new Image(new FileInputStream("src/resources/favoriteClicked.png")));
+            LikePic.setImage(new Image("favoriteClicked.png"));
         }
         //@TODO rozmiar listview
 
@@ -124,8 +114,7 @@ public class RecipePane  extends OrdinaryButtonAction{
 
         public ButtonCell(User activeUser) {
             super();
-            Image image = new Image("./resources/plus.png");
-            view = new ImageView(image);
+            ImageView view = new ImageView(new Image("plus.png"));
             view.setFitHeight(20);
             view.setFitWidth(20);
 ////            box.getChildren().addAll(label, pane, view);
@@ -135,12 +124,10 @@ public class RecipePane  extends OrdinaryButtonAction{
             this.activeUser = activeUser;
             view.setOnMouseClicked(mouseEvent -> {
                 if (!activeUser.checkIfIngredientInShoppingList(selectedIngredient.getId())) {
-                    Image changedImage = new Image("./resources/minus.png");
-                    view.setImage(changedImage);
+                    view.setImage(new Image("minus.png"));
                     activeUser.addToShoppingList(selectedIngredient);
                 } else {
-                    Image changedImage = new Image("./resources/plus.png");
-                    view.setImage(changedImage);
+                    view.setImage(new Image("plus.png"));
                     activeUser.removeFromShoppingList(selectedIngredient.getId());
                 }
             });
@@ -201,17 +188,13 @@ public class RecipePane  extends OrdinaryButtonAction{
     }
     @FXML
     public void onLikeButtonAction() {
-        try {
-            if (activeUser.checkIfRecipeFavorite(recipe)) {
-                LikePic.setImage(new Image(new FileInputStream("src/resources/favoriteUnclicked.png")));
-                activeUser.removeFavorite(recipe);
-            }
-            else{
-                LikePic.setImage(new Image(new FileInputStream("src/resources/favoriteClicked.png")));
-                activeUser.addFavorite(recipe);
-            }
-        } catch ( FileNotFoundException e) {
-            System.err.printf("Error: %s%n", e.getMessage());
+        if (activeUser.checkIfRecipeFavorite(recipe)) {
+            LikePic.setImage(new Image("favoriteUnclicked.png"));
+            activeUser.removeFavorite(recipe);
+        }
+        else{
+            LikePic.setImage(new Image("favoriteClicked.png"));
+            activeUser.addFavorite(recipe);
         }
     }
 
