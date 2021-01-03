@@ -28,7 +28,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="loginButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#getDataLogin" prefHeight="27.0" prefWidth="80.0" text="Log in" GridPane.columnSpan="3" GridPane.rowIndex="3">
+            <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#getDataLogin" prefHeight="27.0" prefWidth="80.0" text="Log in" GridPane.columnSpan="3" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>

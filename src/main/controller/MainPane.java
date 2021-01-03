@@ -16,8 +16,6 @@ import main.DatabaseConnection;
 import main.Main;
 import main.userModel.User;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -42,16 +40,14 @@ public class MainPane extends OrdinaryButtonAction {
     }
 
     @FXML
-    void initialize() {
-        try {
-            DatabaseConnection.fillResults(this, tilePain);
-        } catch (SQLException e) { e.printStackTrace(); }
+    void initialize() throws SQLException {
+        DatabaseConnection.fillResults(this, tilePain);
         if (DatabaseConnection.theme.equals("lightTheme") || DatabaseConnection.theme.equals("winter")) {
-            logo.setImage(new Image("berryLogo.png"));
-            recipePic.setImage(new Image("berryRecipe.png"));
-            socialPic.setImage(new Image("berryGroup.png"));
-            basketPic.setImage(new Image("berryBasket.png"));
-            palettePic.setImage(new Image("berryPalette.png"));
+            logo.setImage(new Image("icons/berryLogo.png"));
+            recipePic.setImage(new Image("icons/berryRecipe.png"));
+            socialPic.setImage(new Image("icons/berryGroup.png"));
+            basketPic.setImage(new Image("icons/berryBasket.png"));
+            palettePic.setImage(new Image("icons/berryPalette.png"));
         }
         setButtonActivity();
     }
@@ -86,7 +82,7 @@ public class MainPane extends OrdinaryButtonAction {
     }
 
     @FXML
-    public void search(ActionEvent ae) {
+    public void search(ActionEvent ae) throws SQLException {
         query = search.getText();
         System.out.println(query);
         String args = "";
@@ -122,25 +118,19 @@ public class MainPane extends OrdinaryButtonAction {
         }
         query = "lower(rcp.name) like lower('%" + query + "%')" + args;
         System.out.println(query);
-        try {
-            DatabaseConnection.fillResults(this, tilePain, query);
-        } catch (SQLException throwables) { throwables.printStackTrace(); }
+        DatabaseConnection.fillResults(this, tilePain, query);
     }
 
     @FXML
     public void onMyRecipesAction(MouseEvent mouseEvent) {
         mouseEvent.consume();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/RecipeAdminPage.fxml"));
-        loader.setController(new RecipeAdminPane(activeUser));
-        changeScene(myRecipesButton, loader);
+        changeScene(myRecipesButton, loadFXML(new RecipeAdminPane(activeUser), "/RecipeAdminPage.fxml"));
     }
 
     @FXML
     public void onSocialButtonClick(MouseEvent mouseEvent) {
         mouseEvent.consume();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/userAdminPage.fxml"));
-        loader.setController(new UserAdminPane(activeUser));
-        changeScene(socialButton, loader);
+        changeScene(myRecipesButton, loadFXML(new UserAdminPane(activeUser), "/userAdminPage.fxml"));
     }
 
     @FXML
@@ -153,43 +143,35 @@ public class MainPane extends OrdinaryButtonAction {
         changeScene(basketButton, loader);
     }
 
-    public void onRecipeClick(Button button, int RecipeID) {
+    public void onRecipeClick(Button button, int RecipeID){
         try {
             FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
             loader.setController(new RecipePane(DatabaseConnection.getSelectedRecipe(RecipeID), activeUser));
             changeScene(button, loader, true);
         } catch (SQLException e) {
-            System.err.printf("Error: %s%n", e.getMessage());
+            e.printStackTrace();
         }
     }
 
     @FXML
-    public void onSignInButtonClick(MouseEvent mouseEvent) {
+    public void onSignInButtonClick(MouseEvent mouseEvent) throws IOException {
         // create a new Window with sign in
-        try {
-            mouseEvent.consume();
-            if (activeUser != null) {
-                // log user out
-                activeUser = null;
-                Main.activeUser = null;
-                setButtonActivity();
-                return;
-            }
-            try {
-                System.out.println("Active user: "+activeUser.getUsername());
-            } catch (NullPointerException e) {
-                System.err.println("No active user");
-            }
+        mouseEvent.consume();
+        if (activeUser != null) {
+            // log user out
+            activeUser = null;
+            Main.activeUser = null;
+            setButtonActivity();
+        }
+        else {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/logInWindow.fxml"));
             loader.setController(new LogInWindow(this));
             Scene scene = new Scene(loader.load());
-            scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/resources/" + DatabaseConnection.theme + ".css").toExternalForm());
             Stage stage = new Stage();
             stage.setTitle("Sign In");
             stage.setScene(scene);
             stage.show();
-        } catch (IOException e) {
-            System.err.printf("Error: %s%n", e.getMessage());
         }
     }
 
@@ -221,18 +203,18 @@ public class MainPane extends OrdinaryButtonAction {
         logo.getScene().getStylesheets().remove(0);
         logo.getScene().getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
         if (DatabaseConnection.theme.equals("lightTheme") || DatabaseConnection.theme.equals("winter")) {
-            logo.setImage(new Image("berryLogo.png"));
-            recipePic.setImage(new Image("berryRecipe.png"));
-            socialPic.setImage(new Image("berryGroup.png"));
-            basketPic.setImage(new Image("berryBasket.png"));
-            palettePic.setImage(new Image("berryPalette.png"));
+            logo.setImage(new Image("icons/berryLogo.png"));
+            recipePic.setImage(new Image("icons/berryRecipe.png"));
+            socialPic.setImage(new Image("icons/berryGroup.png"));
+            basketPic.setImage(new Image("icons/berryBasket.png"));
+            palettePic.setImage(new Image("icons/berryPalette.png"));
         }
         else {
-            logo.setImage(new Image("raspLogo.png"));
-            recipePic.setImage(new Image("raspRecipe.png"));
-            socialPic.setImage(new Image("raspGroup.png"));
-            basketPic.setImage(new Image("raspBasket.png"));
-            palettePic.setImage(new Image("raspPalette.png"));
+            logo.setImage(new Image("icons/raspLogo.png"));
+            recipePic.setImage(new Image("icons/raspRecipe.png"));
+            socialPic.setImage(new Image("icons/raspGroup.png"));
+            basketPic.setImage(new Image("icons/raspBasket.png"));
+            palettePic.setImage(new Image("icons/raspPalette.png"));
         }
     }
 }

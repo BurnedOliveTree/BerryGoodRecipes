@@ -25,15 +25,13 @@ public class UserAdminPane extends OrdinaryButtonAction {
     }
 
     @FXML
-    void initialize() {
-        try {
-            DatabaseConnection.getGroups(tilePane, activeUser);
-            DatabaseConnection.getFollowed(followedList, activeUser);
-        } catch (SQLException e) { e.printStackTrace(); }
+    void initialize() throws SQLException {
+        DatabaseConnection.getGroups(tilePane, activeUser);
+        DatabaseConnection.getFollowed(followedList, activeUser);
     }
 
     @FXML
-    void onUserPressed(MouseEvent mouseEvent) {
+    void onUserPressed(MouseEvent mouseEvent) throws SQLException {
         if (mouseEvent.isPrimaryButtonDown() && mouseEvent.getClickCount() == 2) {
             String username = followedList.getSelectionModel().getSelectedItem();
 
