@@ -2,27 +2,24 @@ package main.controller;
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.transform.Translate;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.stage.Stage;
 import javafx.util.Duration;
-import main.recipeModel.Recipe;
 import main.userModel.User;
 
-import java.awt.event.ActionEvent;
-import java.util.LinkedList;
+import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class TimerPane extends OrdinaryButtonAction {
     private User activeUser;
     DownTimer timer;
+    Media media;
+    public MediaPlayer mediaPlayer;
     @FXML
     public Label secondsTimer;
     @FXML
@@ -52,6 +49,19 @@ public class TimerPane extends OrdinaryButtonAction {
         setSpinnerProperty(hoursBox);
         setSpinnerProperty(minutesBox);
         setSpinnerProperty(secondsBox);
+        setMedia();
+        Platform.runLater(() -> {
+        Stage stage = (Stage) hoursBox.getScene().getWindow();
+        stage.setOnCloseRequest(event -> {
+            mediaPlayer.pause();
+            timer.stopTimer();
+        });});
+    }
+
+    private void setMedia(){
+        media = new Media(new File("src/resources/dingdong.mp3").toURI().toString());
+        mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setVolume(0.5);
     }
 
     @FXML
@@ -63,6 +73,7 @@ public class TimerPane extends OrdinaryButtonAction {
     @FXML
     public void onCancelButton() {
         timer.stopTimer();
+        mediaPlayer.pause();
         scrollDown();
     }
 
@@ -112,6 +123,7 @@ public class TimerPane extends OrdinaryButtonAction {
 
         public void stopTimer() {
             timer.cancel();
+            mediaPlayer.pause();
         }
 
 
@@ -144,6 +156,8 @@ public class TimerPane extends OrdinaryButtonAction {
                         hoursTimer.setText(formatTime(time / 3600));
                         minutesTimer.setText(formatTime((time % 3600) / 60));
                         secondsTimer.setText(formatTime(time % 60));
+                        if (time==0)
+                            mediaPlayer.play();
                     });
                 }
             }
