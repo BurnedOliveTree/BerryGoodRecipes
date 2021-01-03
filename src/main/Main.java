@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 import main.controller.MainPane;
 import main.userModel.User;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
