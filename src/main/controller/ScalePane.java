@@ -40,7 +40,10 @@ public class ScalePane {
     public Label x2;
     public Label cm1;
     public Label cm2;
-
+    public TextArea Height1;
+    public TextArea Height2;
+    public Label moldLabel;
+    public Button moldButton;
 
     @FXML
     private void initialize() {
