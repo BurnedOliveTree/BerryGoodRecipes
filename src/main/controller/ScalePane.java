@@ -9,19 +9,23 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import main.DatabaseConnection;
+import main.converterModel.Converter;
 import main.recipeModel.Recipe;
 import main.userModel.User;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 public class ScalePane {
     private final Recipe recipe;
     private final User activeUser;
+    private final Converter converter;
     ObservableList<String> shapeList = FXCollections.observableArrayList("Round", "Rectangular");
 
     public ScalePane(Recipe recipe, User activeUser) {
         this.recipe = recipe;
         this.activeUser = activeUser;
+        this.converter = new Converter();
     }
 
     ;
@@ -58,6 +62,9 @@ public class ScalePane {
         inRecipeBox.setOnAction(e -> {
             sizeBoxAction(inRecipeBox);
         });
+        moldButton.setOnAction(e->{
+            okMoldAction();
+        });
 
     }
 
@@ -76,6 +83,8 @@ public class ScalePane {
                 cm1.setText("");
                 inRecipeArea1.setVisible(false);
                 inRecipeArea2.setVisible(false);
+                inRecipeArea1.setText("");
+                inRecipeArea2.setText("");
                 inRecipeSize.setText("Diameter:");
                 inRecipeArea1.setVisible(true);
                 x1.setText("cm");
@@ -95,6 +104,8 @@ public class ScalePane {
                 cm2.setText("");
                 IHaveArea1.setVisible(false);
                 IHaveArea2.setVisible(false);
+                IHaveArea1.setText("");
+                IHaveArea2.setText("");
                 IHaveSize.setText("Diameter:");
                 IHaveArea1.setVisible(true);
                 x2.setText("cm");
@@ -102,7 +113,38 @@ public class ScalePane {
         }
     }
 
+    private void okMoldAction(){
+        String a1 = IHaveArea1.getText();
+        String b1 = IHaveArea2.getText();
+        String h1 = Height1.getText();
+        String a2 = inRecipeArea1.getText();
+        String b2 = inRecipeArea2.getText();
+        String h2 = Height2.getText();
+        double IHaveVolume;
+        double inRecipeVolume;
+        if (a1.equals("") || h1.equals("") || a2.equals("")|| h2.equals("")){
+            moldLabel.setText("Too little informations");
+            return;
+        }
+        if (b1.equals("")){
+            IHaveVolume = converter.getRoundMoldVolume(Double.parseDouble(a1), Double.parseDouble(h1));
+        }
+        else {
+            IHaveVolume = converter.getRectangularMoldVolume(Double.parseDouble(a1), Double.parseDouble(b1), Double.parseDouble(h1));
+        }
+        if (b2.equals("")){
+            inRecipeVolume= converter.getRoundMoldVolume(Double.parseDouble(a2), Double.parseDouble(h2));
+        }
+        else {
+            inRecipeVolume = converter.getRectangularMoldVolume(Double.parseDouble(a2), Double.parseDouble(b2), Double.parseDouble(h2));
+        }
+        double result = inRecipeVolume/IHaveVolume;
+        moldLabel.setWrapText(true);
+        DecimalFormat df = new DecimalFormat("###.###");
 
+        moldLabel.setText("You need to use " + df.format(result) + "x ingredients in recipe");
+
+    }
 
     private void  onAction(Button button, String namePath) {
         try {

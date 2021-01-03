@@ -62,7 +62,7 @@
       <Label layoutX="71.0" layoutY="494.0" text="Height:" />
       <Label layoutX="367.0" layoutY="494.0" text="Height:" />
       <Button fx:id="moldButton" layoutX="586.0" layoutY="490.0" mnemonicParsing="false" text="ok" />
-      <Label fx:id="moldLabel" layoutX="633.0" layoutY="494.0" prefHeight="17.0" prefWidth="159.0" />
+      <Label fx:id="moldLabel" layoutX="633.0" layoutY="494.0" prefHeight="83.0" prefWidth="159.0" />
       <Label layoutX="196.0" layoutY="494.0" text="cm" />
       <Label layoutX="511.0" layoutY="494.0" text="cm" />
    </children>
