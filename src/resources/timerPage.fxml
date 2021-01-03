@@ -102,9 +102,9 @@
                               <Label text="Hours" GridPane.halignment="CENTER" />
                               <Label text="Minutes" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                               <Label text="Seconds" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                              <ComboBox fx:id="minutesBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                              <ComboBox fx:id="secondsBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                              <ComboBox fx:id="hoursBox" prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+                              <Spinner fx:id="hoursBox" prefHeight="25.0" prefWidth="80.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
+                              <Spinner fx:id="minutesBox" prefHeight="25.0" prefWidth="80.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                              <Spinner fx:id="secondsBox" prefHeight="25.0" prefWidth="80.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                            </children>
                         </GridPane>
                         <Button fx:id="startButton" mnemonicParsing="false" onAction="#startTimer" prefHeight="25.0" prefWidth="137.0" text="Start" GridPane.halignment="CENTER" GridPane.rowIndex="1" />

@@ -4,10 +4,11 @@ import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.transform.Translate;
 import javafx.util.Duration;
@@ -19,7 +20,7 @@ import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class TimerPane {
+public class TimerPane extends OrdinaryButtonAction {
     private User activeUser;
     DownTimer timer;
     @FXML
@@ -31,11 +32,11 @@ public class TimerPane {
     @FXML
     private Button cancelButton;
     @FXML
-    private ComboBox<Integer> minutesBox;
+    private Spinner<Integer> minutesBox;
     @FXML
-    private ComboBox<Integer> secondsBox;
+    private Spinner<Integer> secondsBox;
     @FXML
-    private ComboBox<Integer> hoursBox;
+    private Spinner<Integer> hoursBox;
     @FXML
     private Button startButton;
     @FXML
@@ -48,22 +49,9 @@ public class TimerPane {
     }
 
     public void initialize() {
-            ObservableList<Integer> hoursList = FXCollections.observableArrayList();
-            ObservableList<Integer> minAndSecList = FXCollections.observableArrayList();
-            for (int i=0; i <= 60; i++) {
-                if (i <= 24) {
-                    hoursList.add(i);
-                }
-                minAndSecList.add(i);
-            }
-
-            hoursBox.setItems(hoursList);
-            minutesBox.setItems(minAndSecList);
-            secondsBox.setItems(minAndSecList);
-
-            hoursBox.setValue(0);
-            minutesBox.setValue(0);
-            secondsBox.setValue(0);
+        setSpinnerProperty(hoursBox);
+        setSpinnerProperty(minutesBox);
+        setSpinnerProperty(secondsBox);
     }
 
     @FXML

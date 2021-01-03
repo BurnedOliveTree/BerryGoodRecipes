@@ -3,10 +3,9 @@ package main.controller;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Control;
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -17,7 +16,7 @@ import java.io.IOException;
 public class OrdinaryButtonAction {
     public void onExitButtonAction() {};
 
-    public FXMLLoader loadFXML(Object c, String path) {
+    public FXMLLoader loadFXML(OrdinaryButtonAction c, String path) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
         loader.setController(c);
         return loader;
@@ -44,6 +43,21 @@ public class OrdinaryButtonAction {
         } catch (IOException e) {
             System.err.printf("Error: %s%n", e.getMessage());
         }
+    }
+    
+    public void setSpinnerProperty(Spinner<Integer> spinner) {
+        spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10000));
+        spinner.getEditor().textProperty().set("0");
+        spinner.setEditable(true);
+        spinner.getEditor().addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER) {
+                try {
+                    Integer.parseInt(spinner.getEditor().textProperty().get());
+                } catch (NumberFormatException e) {
+                    spinner.getEditor().textProperty().set("0");
+                }
+            }
+        });
     }
 
     public void setContentMenu(Control control, MenuItem...  menuItems) {
