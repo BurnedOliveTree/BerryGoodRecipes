@@ -60,6 +60,7 @@ public class DatabaseConnection {
         OracleDataSource ods = new OracleDataSource();
         ods.setURL(connectionURL);
         connection = ods.getConnection();
+        System.out.println("Connection with database opened.");
         connection.setAutoCommit(false);
     }
 
@@ -102,7 +103,6 @@ public class DatabaseConnection {
     }
 
     private static List<Recipe> getUserFavorites(String username) throws SQLException {
-        setConnection();
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery(String.format("SELECT RECIPE_ID FROM FAVORITE WHERE UPPER(USERNAME) = '%s'", username.toUpperCase()));
         LinkedList<Recipe> favorites = new LinkedList<>();
@@ -113,12 +113,10 @@ public class DatabaseConnection {
         }
         result.close();
         statement.close();
-        closeConnection();
         return favorites;
     }
 
     public static List<Recipe> getUserRecipes(String username) throws SQLException {
-        setConnection();
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery(String.format("SELECT RECIPE_ID, NAME, DATE_ADDED FROM RECIPE WHERE UPPER(OWNER_NAME) = '%s'", username.toUpperCase()));
         List<Recipe> UserRecipes = new ArrayList<>();
@@ -136,7 +134,6 @@ public class DatabaseConnection {
         }
         result.close();
         statement.close();
-        closeConnection();
         return UserRecipes;
     }
 

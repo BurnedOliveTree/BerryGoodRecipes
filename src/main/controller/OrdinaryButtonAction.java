@@ -14,7 +14,6 @@ import main.DatabaseConnection;
 import java.io.IOException;
 
 public class OrdinaryButtonAction {
-    public void onExitButtonAction() {};
 
     public FXMLLoader loadFXML(OrdinaryButtonAction c, String path) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(path));

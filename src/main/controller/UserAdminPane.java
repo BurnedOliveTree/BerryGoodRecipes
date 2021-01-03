@@ -46,8 +46,7 @@ public class UserAdminPane extends OrdinaryButtonAction {
     }
 
     @FXML
-    @Override
-    public void onExitButtonAction() {
+    private void onExitButtonAction() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/mainPage.fxml"));
         loader.setController(new MainPane(activeUser));
         changeScene(exitButton, loader);

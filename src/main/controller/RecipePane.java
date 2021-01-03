@@ -55,7 +55,6 @@ public class RecipePane  extends OrdinaryButtonAction{
         }
         Text text = new Text(this.recipe.getPrepareMethod());
         text.setFont(Font.font("System", FontPosture.REGULAR, 13));
-        System.out.println(recipe.getPrepareMethod());
         descText.getChildren().add(text);
 
         titleLabel.setText(this.recipe.getName());
@@ -67,12 +66,6 @@ public class RecipePane  extends OrdinaryButtonAction{
         } else {
             costLabel.setText("Cost: " + this.recipe.getCost());
         }
-
-//        if (this.recipe.getPortionNumber() % 1 == 0)
-//            portionArea.setText(String.valueOf((int)this.recipe.getPortionNumber()));
-//        else
-//            portionArea.setText(String.valueOf(this.recipe.getPortionNumber()));
-
         setIngredListView();
         ingredientListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
@@ -107,11 +100,9 @@ public class RecipePane  extends OrdinaryButtonAction{
 
         public ButtonCell(User activeUser) {
             super();
-            ImageView view = new ImageView(new Image("icons/plus.png"));
+            view = new ImageView(new Image("icons/plus.png"));
             view.setFitHeight(20);
             view.setFitWidth(20);
-////            box.getChildren().addAll(label, pane, view);
-//            box.getChildren().addAll(view, pane, label);
             box.getChildren().addAll(view, label, pane);
             box.setHgrow(pane, Priority.ALWAYS);
             this.activeUser = activeUser;
@@ -172,18 +163,20 @@ public class RecipePane  extends OrdinaryButtonAction{
 
     void setPortionAreaProperty(){
         portionArea.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000));
-        portionArea.getEditor().textProperty().set("1");
+        portionArea.getEditor().textProperty().set(String.format((recipe.getPortionNumber() % 1 == 0)?"%1.0f":"%1.2f", recipe.getPortionNumber()));
         portionArea.setEditable(true);
         portionArea.getEditor().addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER) {
                 try {
                     double currNumPortions = Double.parseDouble(portionArea.getEditor().textProperty().get());
-                    if (currNumPortions > 0)
+                    if (currNumPortions > 0){
                         changeIngredListViewScale(currNumPortions);
+                        recipe.setPortionNumber(currNumPortions);
+                    }
                     else
-                        portionArea.getEditor().textProperty().set("1");
+                        portionArea.getEditor().textProperty().set(String.format((recipe.getPortionNumber() % 1 == 0)?"%1.0f":"%1.2f", recipe.getPortionNumber()));
                 } catch (NumberFormatException e) {
-                    portionArea.getEditor().textProperty().set("1");
+                    portionArea.getEditor().textProperty().set(String.format((recipe.getPortionNumber() % 1 == 0)?"%1.0f":"%1.2f", recipe.getPortionNumber()));
                 }
             }
         });
@@ -246,7 +239,7 @@ public class RecipePane  extends OrdinaryButtonAction{
     public void onShoppingListButtonAction(){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/shoppingListPage.fxml"));
         RecipePane returnPane = new RecipePane(recipe, activeUser);
-        TimerPane controller = new TimerPane(activeUser);
+        ShoppingListPane controller = new ShoppingListPane(activeUser, returnPane);
         loader.setController(controller);
         changeScene(shoppingListButton, loader);
     }
@@ -254,7 +247,7 @@ public class RecipePane  extends OrdinaryButtonAction{
     @FXML
     public void onTimeButtonAction(){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/timerPage.fxml"));
-        TimerPane controller = new TimerPane(activeUser);
+        TimerPane controller = new TimerPane();
         loader.setController(controller);
         changeScene(timeButton, loader, true);
     }

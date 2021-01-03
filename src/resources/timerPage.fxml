@@ -5,78 +5,10 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="200.0" maxWidth="450.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <StackPane layoutX="182.0" layoutY="25.0" prefHeight="200.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <AnchorPane fx:id="showPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: lightblue;">
-               <children>
-                  <GridPane prefHeight="200.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                    <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                      <RowConstraints maxHeight="191.0" minHeight="10.0" prefHeight="167.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="93.0" minHeight="9.0" prefHeight="33.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                     <children>
-                        <GridPane>
-                          <columnConstraints>
-                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints maxHeight="79.0" minHeight="10.0" prefHeight="47.0" vgrow="SOMETIMES" />
-                            <RowConstraints maxHeight="134.0" minHeight="10.0" prefHeight="120.0" vgrow="SOMETIMES" />
-                          </rowConstraints>
-                           <children>
-                              <Label text="Hours" GridPane.halignment="CENTER" />
-                              <Label text="Minutes" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
-                              <Label text="Seconds" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
-                              <AnchorPane GridPane.columnIndex="2" GridPane.rowIndex="1">
-                                 <GridPane.margin>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                 </GridPane.margin>
-                                 <children>
-                                    <Label fx:id="secondsTimer" alignment="CENTER" layoutX="12.0" layoutY="-3.0" prefHeight="141.0" prefWidth="107.0" text="00">
-                                       <font>
-                                          <Font size="96.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                              </AnchorPane>
-                              <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                 <children>
-                                    <Label fx:id="minutesTimer" alignment="CENTER" layoutX="12.0" layoutY="-3.0" prefHeight="141.0" prefWidth="107.0" text="00">
-                                       <font>
-                                          <Font size="96.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                                 <GridPane.margin>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                 </GridPane.margin>
-                              </AnchorPane>
-                              <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
-                                 <children>
-                                    <Label fx:id="hoursTimer" alignment="CENTER" layoutX="12.0" layoutY="2.0" prefHeight="141.0" prefWidth="107.0" text="00">
-                                       <font>
-                                          <Font size="96.0" />
-                                       </font>
-                                    </Label>
-                                 </children>
-                                 <GridPane.margin>
-                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                                 </GridPane.margin>
-                              </AnchorPane>
-                           </children>
-                        </GridPane>
-                        <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#onCancelButton" prefHeight="25.0" prefWidth="129.0" text="Cancel" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                     </children>
-                  </GridPane>
-               </children>
-            </AnchorPane>
             <AnchorPane fx:id="selectPane" style="-fx-background-color: lightblue;">
                <children>
                   <GridPane layoutX="174.0" layoutY="49.0" prefHeight="200.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -108,6 +40,94 @@
                            </children>
                         </GridPane>
                         <Button fx:id="startButton" mnemonicParsing="false" onAction="#startTimer" prefHeight="25.0" prefWidth="137.0" text="Start" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                     </children>
+                  </GridPane>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="showPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: lightblue;">
+               <children>
+                  <GridPane prefHeight="200.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="191.0" minHeight="10.0" prefHeight="167.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="93.0" minHeight="9.0" prefHeight="33.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <GridPane>
+                          <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="151.0" minWidth="10.0" prefWidth="122.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="85.0" minWidth="10.0" prefWidth="42.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="183.0" minWidth="10.0" prefWidth="122.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" maxWidth="89.0" minWidth="10.0" prefWidth="36.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="147.0" minWidth="10.0" prefWidth="129.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints maxHeight="79.0" minHeight="10.0" prefHeight="47.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="134.0" minHeight="10.0" prefHeight="120.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label text="Hours" GridPane.halignment="CENTER" />
+                              <Label text="Minutes" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
+                              <Label text="Seconds" GridPane.columnIndex="4" GridPane.halignment="CENTER" />
+                              <AnchorPane GridPane.columnIndex="4" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </GridPane.margin>
+                                 <children>
+                                    <Label fx:id="secondsTimer" alignment="CENTER" layoutY="-1.0" prefHeight="141.0" prefWidth="107.0" text="00">
+                                       <font>
+                                          <Font size="96.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                 <children>
+                                    <Label fx:id="minutesTimer" alignment="CENTER" layoutY="-1.0" prefHeight="141.0" prefWidth="107.0" text="00">
+                                       <font>
+                                          <Font size="96.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <GridPane.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </GridPane.margin>
+                              </AnchorPane>
+                              <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+                                 <children>
+                                    <Label fx:id="hoursTimer" alignment="CENTER" layoutY="1.0" prefHeight="141.0" prefWidth="107.0" text="00">
+                                       <font>
+                                          <Font size="96.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <GridPane.margin>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </GridPane.margin>
+                              </AnchorPane>
+                              <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <children>
+                                    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="14.0" layoutY="43.0" prefHeight="120.0" prefWidth="42.0" text=":" textAlignment="CENTER" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <font>
+                                          <Font size="96.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                 <children>
+                                    <Label alignment="CENTER" layoutX="10.0" layoutY="60.0" prefHeight="159.0" prefWidth="36.0" text=":" textAlignment="JUSTIFY" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <font>
+                                          <Font size="96.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </GridPane>
+                        <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#onCancelButton" prefHeight="25.0" prefWidth="129.0" text="Cancel" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                </children>

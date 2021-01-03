@@ -16,7 +16,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class TimerPane extends OrdinaryButtonAction {
-    private User activeUser;
     DownTimer timer;
     Media media;
     public MediaPlayer mediaPlayer;
@@ -41,20 +40,18 @@ public class TimerPane extends OrdinaryButtonAction {
     @FXML
     private  AnchorPane showPane;
 
-    public TimerPane(User activeUser) {
-        this.activeUser = activeUser;
-    }
-
     public void initialize() {
         setSpinnerProperty(hoursBox);
         setSpinnerProperty(minutesBox);
         setSpinnerProperty(secondsBox);
         setMedia();
+
         Platform.runLater(() -> {
         Stage stage = (Stage) hoursBox.getScene().getWindow();
         stage.setOnCloseRequest(event -> {
             mediaPlayer.pause();
-            timer.stopTimer();
+            if (timer != null)
+                timer.stopTimer();
         });});
     }
 
@@ -151,7 +148,7 @@ public class TimerPane extends OrdinaryButtonAction {
             public void run() {
                 if (time !=  0){
                     time -= 1;
-                    System.out.println(time);
+
                     Platform.runLater(() -> {
                         hoursTimer.setText(formatTime(time / 3600));
                         minutesTimer.setText(formatTime((time % 3600) / 60));

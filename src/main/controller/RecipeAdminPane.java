@@ -17,16 +17,18 @@ public class RecipeAdminPane extends OrdinaryButtonAction {
     private final User activeUser;
 
     @FXML
-    public TableView<Recipe> myRecipesTable;
-    public Button exitButton;
-    public TableView<Recipe> favTable;
+    private TableView<Recipe> myRecipesTable;
+    @FXML
+    private Button exitButton;
+    @FXML
+    private TableView<Recipe> favTable;
 
     public RecipeAdminPane( User activeUser) {
         this.activeUser = activeUser;
     }
 
     @FXML
-    void initialize() {
+    private void initialize() {
         setMyRecipesTable();
         setFavTable();
         favTable.setOnMousePressed(mouseEvent -> {
@@ -81,16 +83,15 @@ public class RecipeAdminPane extends OrdinaryButtonAction {
         favTable.getColumns().addAll(nameColumn, authorColumn, dateAddedColumn, costColumn, timeColumn);
     }
 
-    public void ShowRecipe(Recipe recipe) throws SQLException {
+    private void ShowRecipe(Recipe recipe) throws SQLException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
         loader.setController(new RecipePane(recipe, activeUser));
         changeScene(exitButton, loader, true);
         favTable.refresh();
     }
 
-    @Override
     @FXML
-    public void onExitButtonAction() {
+    private void onExitButtonAction() {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/mainPage.fxml"));
         MainPane controller = new MainPane(activeUser);
         loader.setController(controller);

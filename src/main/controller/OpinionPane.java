@@ -10,19 +10,12 @@ import javafx.scene.control.*;
 
 import javafx.stage.Stage;
 import main.DatabaseConnection;
-import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
-import main.recipeModel.Unit;
 import main.userModel.Opinion;
 import main.userModel.User;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 
 public class OpinionPane {
