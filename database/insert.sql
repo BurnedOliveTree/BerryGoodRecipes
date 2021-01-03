@@ -94,19 +94,20 @@ commit;
 
 -- shopping list inserts;
 
-insert into RECIPE values (null, 'BurnedOliveTree', 'Lasagne', 'Mięso podsmażyć na oleju. Odstawić, doprawić solą i pieprzem. Passatę pomidorową podgotować, można dodać trochę oregano pod koniec podgrzewania. Płaty ciasta zalać gorąca woda. Jak zmiękną to układać je na blaszce, którą trzeba wcześniej nasmarować olejem. Układamy ciasto, na to podsmażone mięso i zalewamy ciepłą passatą. Krok powtarzamy. Na ostatni płat posypać utarty żółty ser. Wszystko zalać passatą, a jak będzie mało pomidorów, to wodą z moczenia płatów. Musi być woda, bo inaczej płaty się wysuszą i będą twarde. Piec 30 minut na 180 stopniach na środkowej półce.', null, sysdate, null, 4);
-insert into RECIPE values(null, 'BurnedOliveTree', 'Ciasteczka twarogowe z dżemem', 'Rozmielić twaróg, dodać rozdrobnione masło, dodać mąki, wymieszać. Ciasto cienko rozwałkować i pociąć na kwadraty, na każdy nałożyć dżem (najlepiej nie rzadki). Rozbić i wymieszać jajko w osobnej misce. Posmarować ciasteczka jajkiem przed pieczeniem. Blachę(y) posmarować masłem i posypać mąką. Piec w 180-185 stopniach przez 10-15 minut.',  null, sysdate, null, 48);
-insert into RECIPE values(null, 'BurnedOliveTree', 'Ciasto olejne' , 'Cukier rozpuścić w gorącej wodzie, wystudzić. Dodać mąkę, proszek, żółtka i olej. Z białek ubić pianę i dodać. Można dodać kakao do części. Wlewając do blachy masę z kakaem trzeba wlać najpierw, resztę na górę. Piec 30-40 minut w 180-190 stopniach.',  null, sysdate, null, 1);
-insert into RECIPE values(null, 'BurnedOliveTree', 'Rohliczki' , 'Orzechy ołupać i zmielić. Pokrojone w kostkę masło zmieszać z resztą składników. Odstawić rozrobione ciasto na 30 minut do lodówki. Blachę posmarować masłem i posypać mąką. Rozwałkować ciasto na cylindry o średnicy około 1 cm i wysokości około 8 cm. Piec 7-11 minut w 190-200 stopniach. Odczekać chwilę, po czym do miski wsypać cukier waniliowy oraz cukier puder i obtoczyć w nich wszystkie rohliczki. Schować do pudełka i odłożyć do suchego miejsca na co najmniej 2 tygodnie.',  null, sysdate, null, 36);
-insert into RECIPE values(null, 'BurnedOliveTree', 'Masłowe ciasteczka sklejane z marmoladą', 'Pokrojone w kostkę masło zmieszać z resztą składników. Odstawić rozrobione ciasto na 30 minut do lodówki. Blachę posmarować masłem i posypać mąką. Ciasto rozwałkować i powycinać kształty (kółko na spód, oraz jakiś wzór na górę). Piec 7-10 minut w 190 stopniach. Po upieczeniu należy na spód położyć trochę dżemu i położyć na to wierzch ciasteczka. Schować do pudełka i odłożyć do suchego miejsca na co najmniej 2 tygodnie.',  null, sysdate, null, 18);
+insert into RECIPE values (null, 'BurnedOliveTree', 'Lasagne', 'Mięso podsmażyć na oleju. Odstawić, doprawić solą i pieprzem.' || chr(13) || 'Passatę pomidorową podgotować, można dodać trochę oregano pod koniec podgrzewania.' || chr(13) || 'Płaty ciasta zalać gorąca woda. Jak zmiękną to układać je na blaszce, którą trzeba wcześniej nasmarować olejem.' || chr(13) || 'Układamy ciasto, na to podsmażone mięso i zalewamy ciepłą passatą. Krok powtarzamy.' || chr(13) || 'Na ostatni płat posypać utarty żółty ser. Wszystko zalać passatą, a jak będzie mało pomidorów, to wodą z moczenia płatów. Musi być woda, bo inaczej płaty się wysuszą i będą twarde.' || chr(13) || 'Piec 30 minut na 180 stopniach na środkowej półce.', null, sysdate, 60, 4);
+insert into RECIPE values (null, 'BurnedOliveTree', 'Ciasteczka twarogowe z dżemem', 'Rozmielić twaróg, dodać rozdrobnione masło, dodać mąki, wymieszać.' || chr(13) || 'Ciasto cienko rozwałkować i pociąć na kwadraty, na każdy nałożyć dżem (najlepiej nie rzadki).' || chr(13) || 'Rozbić i wymieszać jajko w osobnej misce.' || chr(13) || 'Posmarować ciasteczka jajkiem przed pieczeniem.' || chr(13) || 'Blachę(y) posmarować masłem i posypać mąką.' || chr(13) || 'Piec w 180-185 stopniach przez 10-15 minut.', null, sysdate, 45, 48);
+insert into RECIPE values (null, 'BurnedOliveTree', 'Ciasto olejne' , 'Cukier rozpuścić w gorącej wodzie, wystudzić.' || chr(13) || 'Dodać mąkę, proszek, żółtka i olej.' || chr(13) || 'Z białek ubić pianę i dodać.' || chr(13) || 'Można dodać kakao do części. Wlewając do blachy masę z kakaem trzeba wlać najpierw, resztę na górę.' || chr(13) || 'Piec 30-40 minut w 180-190 stopniach.', null, sysdate, 70, 1);
+insert into RECIPE values (null, 'BurnedOliveTree', 'Rohliczki' , 'Orzechy ołupać i zmielić.' || chr(13) || 'Pokrojone w kostkę masło zmieszać z resztą składników.' || chr(13) || 'Odstawić rozrobione ciasto na 30 minut do lodówki.' || chr(13) || 'Blachę posmarować masłem i posypać mąką.' || chr(13) || 'Rozwałkować ciasto na cylindry o średnicy około 1 cm i wysokości około 8 cm.' || chr(13) || 'Piec 7-11 minut w 190-200 stopniach.' || chr(13) || 'Odczekać chwilę, po czym do miski wsypać cukier waniliowy oraz cukier puder i obtoczyć w nich wszystkie rohliczki.' || chr(13) || 'Schować do pudełka i odłożyć do suchego miejsca na co najmniej 2 tygodnie.', null, sysdate, 150, 36);
+insert into RECIPE values (null, 'BurnedOliveTree', 'Masłowe ciasteczka sklejane z marmoladą', 'Pokrojone w kostkę masło zmieszać z resztą składników.' || chr(13) || 'Odstawić rozrobione ciasto na 30 minut do lodówki.' || chr(13) || 'Blachę posmarować masłem i posypać mąką.' || chr(13) || 'Ciasto rozwałkować i powycinać kształty (kółko na spód, oraz jakiś wzór na górę).' || chr(13) || 'Piec 7-10 minut w 190 stopniach.' || chr(13) || 'Po upieczeniu należy na spód położyć trochę dżemu i położyć na to wierzch ciasteczka.' || chr(13) || 'Schować do pudełka i odłożyć do suchego miejsca na co najmniej 2 tygodnie.', null, sysdate, 180, 18);
+insert into RECIPE values (null, 'BurnedOliveTree', 'Naleśniki', 'Jajko opłukać i rozbić. Dodać szczyptę soli. Dodać łyżkę cukru. Dokładnie wymieszać. Sukcesywnie dodawać trochę maki i trochę mleka / wody.' || chr(13) || 'Odstawić na 15-20 minut.' || chr(13) ||'Usmażyć na rozgrzanej patelni.', null, sysdate, 60, 8);
 commit;
 
 insert into INGREDIENT_LIST values (null, 1, 500, 'gram', 'mięso mielone');
 insert into INGREDIENT_LIST values (null, 1, 700, 'gram', 'passata pomidorowa');;
-insert into INGREDIENT_LIST values (null, 1,75, 'gram', 'ser żółty');
+insert into INGREDIENT_LIST values (null, 1, 75, 'gram', 'ser żółty');
 insert into INGREDIENT_LIST values (null, 1, 15, 'sztuka', 'makaron lasagne');
 
-insert into INGREDIENT_LIST values (null, 2,  250, 'gram','twaróg');
+insert into INGREDIENT_LIST values (null, 2,  250, 'gram', 'twaróg');
 insert into INGREDIENT_LIST values (null, 2,  250, 'gram', 'mąka wrocławska');
 insert into INGREDIENT_LIST values (null, 2,  250, 'gram', 'masło');
 insert into INGREDIENT_LIST values (null, 2,  1, 'sztuka', 'marmolada');
@@ -128,6 +129,12 @@ insert into INGREDIENT_LIST values (null, 5,  140, 'gram', 'masło');
 insert into INGREDIENT_LIST values (null, 5,  70, 'gram', 'cukier puder');
 insert into INGREDIENT_LIST values (null, 5,  2, 'sztuka', 'żółtko');
 insert into INGREDIENT_LIST values (null, 5,  1, 'sztuka', 'cukier waniliowy');
+
+insert into INGREDIENT_LIST values (null, 6,  200, 'gram', 'mąka wrocławska');
+insert into INGREDIENT_LIST values (null, 6,  250, 'mililitr', 'mleko');
+insert into INGREDIENT_LIST values (null, 6,  250, 'mililitr', 'woda');
+insert into INGREDIENT_LIST values (null, 6,  1, 'łyżka', 'cukier');
+insert into INGREDIENT_LIST values (null, 6,  1, 'sztuka', 'jajko');
 commit;
 
 insert into FAVORITE values (null, 'BurnedOliveTree', 1);
@@ -139,4 +146,5 @@ insert into PUBLICITY values(null, 0, 2);
 insert into PUBLICITY values(null, 0, 3);
 insert into PUBLICITY values(null, 1, 4);
 insert into PUBLICITY values(null, 1, 5);
+insert into PUBLICITY values(null, 0, 6);
 commit;

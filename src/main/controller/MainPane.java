@@ -108,11 +108,25 @@ public class MainPane extends OrdinaryButtonAction {
                     args = args + "or rcp.cost < " + tempList[i];
                 args = args + ")";
             }
-            if (query.contains("time:")) {
-                String[] tempList = split_search("time:");
+            if (query.contains("mincost:")) {
+                String[] tempList = split_search("mincost:");
+                args = args + " and (rcp.cost > " + tempList[tempList.length - 1];
+                for (int i = tempList.length - 2; i >= 0; i--)
+                    args = args + "or rcp.cost > " + tempList[i];
+                args = args + ")";
+            }
+            if (query.contains("maxtime:")) {
+                String[] tempList = split_search("maxtime:");
                 args = args + " and (rcp.preparation_time < " + tempList[tempList.length - 1];
                 for (int i = tempList.length - 2; i >= 0; i--)
                     args = args + "or rcp.preparation_time < " + tempList[i];
+                args = args + ")";
+            }
+            if (query.contains("mintime:")) {
+                String[] tempList = split_search("mintime:");
+                args = args + " and (rcp.preparation_time > " + tempList[tempList.length - 1];
+                for (int i = tempList.length - 2; i >= 0; i--)
+                    args = args + "or rcp.preparation_time > " + tempList[i];
                 args = args + ")";
             }
         }
