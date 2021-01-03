@@ -33,6 +33,7 @@ public class RecipePane  extends OrdinaryButtonAction{
     public Label dateAddedLabel;
     public Label timePrepLabel;
     public Spinner<Integer> portionArea;
+    public Pane ingredientPane;
     public ListView ingredientListView;
     public Button exitButton;
     public Button shoppingListButton;
@@ -66,7 +67,9 @@ public class RecipePane  extends OrdinaryButtonAction{
         } else {
             costLabel.setText("Cost: " + this.recipe.getCost());
         }
+        ingredientListView = new ListView();
         setIngredListView();
+        ingredientPane.getChildren().add(ingredientListView);
         ingredientListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         authorLabel.setText("Author: " + this.recipe.getAuthor());
@@ -146,6 +149,8 @@ public class RecipePane  extends OrdinaryButtonAction{
 
     private void setIngredListView() {
         ingredientListView.getItems().clear();
+        ingredientListView.setMaxHeight(this.recipe.getIngredientList().size() * 25);
+        ingredientPane.setMinSize(ingredientListView.getWidth(), ingredientListView.getHeight());
         if (activeUser != null) {
             ingredientListView.getItems().addAll(this.recipe.getIngredientList());
             ingredientListView.setCellFactory(ingredientListView -> new ButtonCell(activeUser));
