@@ -65,12 +65,9 @@ public class OrdinaryButtonAction {
         for (MenuItem menuItem: menuItems) {
             menu.getItems().add(menuItem);
         }
-        control.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-                    menu.show(control, mouseEvent.getScreenX(), mouseEvent.getScreenY());
-                }
+        control.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+            if (mouseEvent.getButton() == MouseButton.SECONDARY) {
+                menu.show(control, mouseEvent.getScreenX(), mouseEvent.getScreenY());
             }
         });
     }

@@ -1,10 +1,13 @@
 package main.controller;
 
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -29,7 +32,7 @@ public class RecipePane  extends OrdinaryButtonAction{
     public Label authorLabel;
     public Label dateAddedLabel;
     public Label timePrepLabel;
-    public TextArea portionArea;
+    public Spinner<Integer> portionArea;
     public ListView ingredientListView;
     public Button exitButton;
     public Button shoppingListButton;
@@ -65,10 +68,10 @@ public class RecipePane  extends OrdinaryButtonAction{
             costLabel.setText("Cost: " + this.recipe.getCost());
         }
 
-        if (this.recipe.getPortionNumber() % 1 == 0)
-            portionArea.setText(String.valueOf((int)this.recipe.getPortionNumber()));
-        else
-            portionArea.setText(String.valueOf(this.recipe.getPortionNumber()));
+//        if (this.recipe.getPortionNumber() % 1 == 0)
+//            portionArea.setText(String.valueOf((int)this.recipe.getPortionNumber()));
+//        else
+//            portionArea.setText(String.valueOf(this.recipe.getPortionNumber()));
 
         setIngredListView();
         ingredientListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -90,17 +93,7 @@ public class RecipePane  extends OrdinaryButtonAction{
         }
         //@TODO rozmiar listview
 
-        portionArea.textProperty().addListener((observableValue, s, t1) -> {
-            try {
-                double currNumPortions = Double.parseDouble(t1);
-                if (currNumPortions > 0)
-                    changeIngredListViewScale(currNumPortions);
-                else
-                    portionArea.clear();
-            } catch (IllegalArgumentException e) {
-                portionArea.clear();
-            }
-        });
+        setPortionAreaProperty();
 
     }
 
@@ -170,11 +163,43 @@ public class RecipePane  extends OrdinaryButtonAction{
                 if (ingredient.getQuantity() % 1 == 0)
                     ingredientListView.getItems().add(String.format("%d %s %s", (int)Math.round(ingredient.getQuantity()), ingredient.getUnit().getName(), ingredient.getName()));
                 else
-                    ingredientListView.getItems().add(String.format("%f %s %s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
+                    ingredientListView.getItems().add(String.format("%1.2f %s %s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
             }
 
         }
 
+    }
+
+    void setPortionAreaProperty(){
+        portionArea.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000));
+        portionArea.getEditor().textProperty().set("1");
+        portionArea.setEditable(true);
+        portionArea.getEditor().addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER) {
+                try {
+                    double currNumPortions = Double.parseDouble(portionArea.getEditor().textProperty().get());
+                    if (currNumPortions > 0)
+                        changeIngredListViewScale(currNumPortions);
+                    else
+                        portionArea.getEditor().textProperty().set("1");
+                } catch (NumberFormatException e) {
+                    portionArea.getEditor().textProperty().set("1");
+                }
+            }
+        });
+
+        portionArea.valueProperty().addListener(this::handleSpin);
+    }
+
+    void handleSpin(ObservableValue<?> observableValue, Number oldValue, Number currNumPortions) {
+        try {
+            if (currNumPortions.intValue() > 0)
+                changeIngredListViewScale((double)currNumPortions.intValue());
+            else
+                portionArea.getEditor().textProperty().set("1");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     private void changeIngredListViewScale(Double numPortions) {
