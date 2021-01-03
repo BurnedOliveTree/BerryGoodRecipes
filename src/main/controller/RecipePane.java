@@ -225,14 +225,17 @@ public class RecipePane  extends OrdinaryButtonAction{
     public void onShoppingListButtonAction(){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/shoppingListPage.fxml"));
         RecipePane returnPane = new RecipePane(recipe, activeUser);
-        ShoppingListPane controller = new ShoppingListPane(activeUser, returnPane);
+        TimerPane controller = new TimerPane(activeUser);
         loader.setController(controller);
         changeScene(shoppingListButton, loader);
     }
 
     @FXML
     public void onTimeButtonAction(){
-
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/timerPage.fxml"));
+        TimerPane controller = new TimerPane(activeUser);
+        loader.setController(controller);
+        changeScene(timeButton, loader, true);
     }
 
 }

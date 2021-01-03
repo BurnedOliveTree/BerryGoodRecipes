@@ -40,7 +40,10 @@
                </content></Tab>
           <Tab text="Add Recipe">
                <content>
-                  <BorderPane prefHeight="200.0" prefWidth="200.0" />
+                  <BorderPane prefHeight="200.0" prefWidth="200.0">
+                     <center>
+                        <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER" />
+                     </center></BorderPane>
                </content>
           </Tab>
         </tabs>
