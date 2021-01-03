@@ -1,7 +1,3 @@
-SELECT SID, SERIAL#, STATUS, SERVER
-FROM V$SESSION
-WHERE USERNAME = 'BD1_Z02';
-
 drop table UNIT_SYSTEM cascade constraints;
 drop table UNIT cascade constraints;
 drop table "USER" cascade constraints;
@@ -86,7 +82,7 @@ create table RECIPE
   PREPARATION_METHOD varchar2(4000 BYTE) not null,
   COST number(4, 2),
   DATE_ADDED date default sysdate not null,
-  PREPARATION_TIME date,
+  PREPARATION_TIME number(4, 0),
   PORTIONS number(4) default 0 not null CHECK (PORTIONS >= 0)
 );
 
