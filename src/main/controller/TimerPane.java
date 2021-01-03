@@ -69,7 +69,8 @@ public class TimerPane extends OrdinaryButtonAction {
 
     @FXML
     public void onCancelButton() {
-        timer.stopTimer();
+        if (timer != null)
+            timer.stopTimer();
         mediaPlayer.pause();
         scrollDown();
     }
