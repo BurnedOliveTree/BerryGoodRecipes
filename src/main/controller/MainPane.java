@@ -31,7 +31,7 @@ public class MainPane extends OrdinaryButtonAction {
     public ImageView recipePic;
     public ImageView socialPic;
     public ImageView basketPic;
-    public ImageView palettePic;
+    public ImageView settingsPic;
     public TilePane tilePain;
     public TextField search;
 
@@ -42,12 +42,12 @@ public class MainPane extends OrdinaryButtonAction {
     @FXML
     void initialize() throws SQLException {
         DatabaseConnection.fillResults(this, tilePain);
-        if (DatabaseConnection.theme.equals("lightTheme") || DatabaseConnection.theme.equals("winter")) {
+        if (DatabaseConnection.theme.equals("light") || DatabaseConnection.theme.equals("winter")) {
             logo.setImage(new Image("icons/berryLogo.png"));
             recipePic.setImage(new Image("icons/berryRecipe.png"));
             socialPic.setImage(new Image("icons/berryGroup.png"));
             basketPic.setImage(new Image("icons/berryBasket.png"));
-            palettePic.setImage(new Image("icons/berryPalette.png"));
+            settingsPic.setImage(new Image("icons/berryUser.png"));
         }
         setButtonActivity();
     }
@@ -191,13 +191,13 @@ public class MainPane extends OrdinaryButtonAction {
 
     @FXML
     public void onThemeLightSelection() {
-        DatabaseConnection.theme = "lightTheme";
+        DatabaseConnection.theme = "light";
         resetTheme();
     }
 
     @FXML
     public void onThemeDarkSelection() {
-        DatabaseConnection.theme = "darkTheme";
+        DatabaseConnection.theme = "dark";
         resetTheme();
     }
 
@@ -216,19 +216,19 @@ public class MainPane extends OrdinaryButtonAction {
     public void resetTheme() {
         logo.getScene().getStylesheets().remove(0);
         logo.getScene().getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
-        if (DatabaseConnection.theme.equals("lightTheme") || DatabaseConnection.theme.equals("winter")) {
+        if (DatabaseConnection.theme.equals("light") || DatabaseConnection.theme.equals("winter")) {
             logo.setImage(new Image("icons/berryLogo.png"));
             recipePic.setImage(new Image("icons/berryRecipe.png"));
             socialPic.setImage(new Image("icons/berryGroup.png"));
             basketPic.setImage(new Image("icons/berryBasket.png"));
-            palettePic.setImage(new Image("icons/berryPalette.png"));
+            settingsPic.setImage(new Image("icons/berryUser.png"));
         }
         else {
             logo.setImage(new Image("icons/raspLogo.png"));
             recipePic.setImage(new Image("icons/raspRecipe.png"));
             socialPic.setImage(new Image("icons/raspGroup.png"));
             basketPic.setImage(new Image("icons/raspBasket.png"));
-            palettePic.setImage(new Image("icons/raspPalette.png"));
+            settingsPic.setImage(new Image("icons/raspUser.png"));
         }
     }
 }

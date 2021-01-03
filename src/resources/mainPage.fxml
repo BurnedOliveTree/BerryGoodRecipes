@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollBar?>
@@ -37,8 +38,6 @@
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin>
-               <children>
-               </children>
             </TilePane>
             <ScrollBar maxWidth="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefWidth="16.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>
@@ -90,7 +89,50 @@
                   <Insets />
                </GridPane.margin>
             </Button>
-            <Button fx:id="myRecipesButton" mnemonicParsing="false" onMouseClicked="#onMyRecipesAction" prefHeight="64.0" prefWidth="64.0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+            <MenuButton alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" popupSide="RIGHT" prefHeight="64.0" prefWidth="64.0" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+               <items>
+                  <Menu mnemonicParsing="false" text="Change password">
+                    <items>
+                      <MenuItem mnemonicParsing="false">
+                           <graphic>
+                              <TextField promptText="Old Password" />
+                           </graphic>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false">
+                           <graphic>
+                              <TextField promptText="New Password" />
+                           </graphic>
+                        </MenuItem>
+                        <MenuItem mnemonicParsing="false">
+                           <graphic>
+                              <Button mnemonicParsing="false" text="Submit" />
+                           </graphic>
+                        </MenuItem>
+                    </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Change prefered unit system">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Action 1" />
+                    </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="Change theme">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#onThemeDarkSelection" text="Dark" />
+                      <MenuItem mnemonicParsing="false" onAction="#onThemeLightSelection" text="Light" />
+                        <MenuItem mnemonicParsing="false" onAction="#onThemeSpringSelection" text="Spring" />
+                        <MenuItem mnemonicParsing="false" onAction="#onThemeWinterSelection" text="Winter" />
+                    </items>
+                  </Menu>
+               </items>
+               <graphic>
+                  <ImageView fx:id="settingsPic" fitHeight="46.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icons/raspUser.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </MenuButton>
+            <Button fx:id="myRecipesButton" mnemonicParsing="false" onMouseClicked="#onMyRecipesAction" prefHeight="64.0" prefWidth="64.0" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                <graphic>
                   <ImageView fx:id="recipePic" fitHeight="46.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -98,7 +140,7 @@
                      </image>
                   </ImageView>
                </graphic></Button>
-            <Button fx:id="socialButton" mnemonicParsing="false" onMouseClicked="#onSocialButtonClick" prefHeight="64.0" prefWidth="64.0" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+            <Button fx:id="socialButton" mnemonicParsing="false" onMouseClicked="#onSocialButtonClick" prefHeight="64.0" prefWidth="64.0" GridPane.halignment="CENTER" GridPane.rowIndex="3">
                <graphic>
                   <ImageView fx:id="socialPic" fitHeight="46.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -106,7 +148,7 @@
                      </image>
                   </ImageView>
                </graphic></Button>
-            <Button fx:id="basketButton" mnemonicParsing="false" onMouseClicked="#onBasketButtonClick" prefHeight="64.0" prefWidth="64.0" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+            <Button fx:id="basketButton" mnemonicParsing="false" onMouseClicked="#onBasketButtonClick" prefHeight="64.0" prefWidth="64.0" GridPane.halignment="CENTER" GridPane.rowIndex="4">
                <graphic>
                   <ImageView fx:id="basketPic" fitHeight="46.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -114,22 +156,6 @@
                      </image>
                   </ImageView>
                </graphic></Button>
-            <Button mnemonicParsing="false" prefHeight="64.0" prefWidth="64.0" text="unit system" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
-            <MenuButton mnemonicParsing="false" prefHeight="64.0" prefWidth="64.0" GridPane.halignment="CENTER" GridPane.rowIndex="4">
-              <items>
-                <MenuItem mnemonicParsing="false" onAction="#onThemeDarkSelection" text="Dark" />
-                <MenuItem mnemonicParsing="false" onAction="#onThemeLightSelection" text="Light" />
-                  <MenuItem mnemonicParsing="false" onAction="#onThemeSpringSelection" text="Spring" />
-                  <MenuItem mnemonicParsing="false" onAction="#onThemeWinterSelection" text="Winter" />
-              </items>
-               <graphic>
-                  <ImageView fx:id="palettePic" fitHeight="46.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@icons/raspPalette.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </MenuButton>
          </children>
       </GridPane>
    </left>
