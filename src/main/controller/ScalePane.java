@@ -126,24 +126,26 @@ public class ScalePane {
             moldLabel.setText("Too little informations");
             return;
         }
-        if (b1.equals("")){
-            IHaveVolume = converter.getRoundMoldVolume(Double.parseDouble(a1), Double.parseDouble(h1));
-        }
-        else {
-            IHaveVolume = converter.getRectangularMoldVolume(Double.parseDouble(a1), Double.parseDouble(b1), Double.parseDouble(h1));
-        }
-        if (b2.equals("")){
-            inRecipeVolume= converter.getRoundMoldVolume(Double.parseDouble(a2), Double.parseDouble(h2));
-        }
-        else {
-            inRecipeVolume = converter.getRectangularMoldVolume(Double.parseDouble(a2), Double.parseDouble(b2), Double.parseDouble(h2));
-        }
-        double result = inRecipeVolume/IHaveVolume;
-        moldLabel.setWrapText(true);
-        DecimalFormat df = new DecimalFormat("###.###");
+        try {
+            if (b1.equals("")) {
+                IHaveVolume = converter.getRoundMoldVolume(Double.parseDouble(a1), Double.parseDouble(h1));
+            } else {
+                IHaveVolume = converter.getRectangularMoldVolume(Double.parseDouble(a1), Double.parseDouble(b1), Double.parseDouble(h1));
+            }
+            if (b2.equals("")) {
+                inRecipeVolume = converter.getRoundMoldVolume(Double.parseDouble(a2), Double.parseDouble(h2));
+            } else {
+                inRecipeVolume = converter.getRectangularMoldVolume(Double.parseDouble(a2), Double.parseDouble(b2), Double.parseDouble(h2));
+            }
+            double result = inRecipeVolume / IHaveVolume;
+            moldLabel.setWrapText(true);
+            DecimalFormat df = new DecimalFormat("###.###");
 
-        moldLabel.setText("You need to use " + df.format(result) + "x ingredients in recipe");
-
+            moldLabel.setText("You need to use " + df.format(result) + "x ingredients in recipe");
+        }
+        catch(NumberFormatException e){
+            moldLabel.setText("Wrong values were given");
+        }
     }
 
     private void  onAction(Button button, String namePath) {
