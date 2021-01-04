@@ -28,5 +28,6 @@
       <Button fx:id="reportButton" layoutX="701.0" layoutY="173.0" mnemonicParsing="false" text="Report" />
       <Button fx:id="editButton" layoutX="701.0" layoutY="210.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="52.0" text="Edit" />
       <Button fx:id="deleteButton" layoutX="701.0" layoutY="247.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="52.0" text="Delete" />
+      <Label fx:id="reportLabel" layoutX="757.0" layoutY="177.0" prefHeight="17.0" prefWidth="39.0" />
    </children>
 </Pane>

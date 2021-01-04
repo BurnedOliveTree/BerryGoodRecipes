@@ -353,6 +353,26 @@ public class DatabaseConnection {
         index += min_id ;
         resultSet = statement.executeQuery("select username from OPINION where opinion_id = " +index);
         resultSet.next();
-        return resultSet.getString("USERNAME");
+        String result = resultSet.getString("USERNAME");
+        resultSet.close();
+        statement.close();
+        closeConnection();
+        return result;
+
+    }
+
+    public static void reportOpinion(ListView opinionList, String username, Label label) throws SQLException {
+        int index = opinionList.getSelectionModel().getSelectedIndex();
+        setConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("select min(opinion_id) from OPINION");
+        resultSet.next();
+        int min_id = resultSet.getInt("min(opinion_id)");
+        index += min_id ;
+        statement.execute("insert into REPORTED values (null,'" +username+ "', '" +index+ "')");
+        label.setText("Done!");
+        resultSet.close();
+        statement.close();
+        closeConnection();
     }
 }
