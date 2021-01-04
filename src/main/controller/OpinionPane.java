@@ -75,14 +75,22 @@ public class OpinionPane {
         });
     }
 
-    private void reportButtonOnAction(){
 
+    private String getOpinionAuthor(){
+        String opinion = (String) opinionView.getSelectionModel().getSelectedItem();
+        String username = "";
+        int i = 0;
+        while (opinion.charAt(i) != ' '){
+            username += opinion.charAt(i);
+            i++;
+        }
+        return username;
     }
 
     private void opinionViewOnAction() throws SQLException {
         reportLabel.setText("");
         if (activeUser != null){
-            if (DatabaseConnection.getOpinionAuthor(opinionView).equals(activeUser.getUsername())){
+            if (getOpinionAuthor().equals(activeUser.getUsername())){
                 deleteButton.setDisable(false);
                 editButton.setDisable(false);
                 reportButton.setDisable(true);
@@ -102,6 +110,7 @@ public class OpinionPane {
 
     private void okButtonAction() throws SQLException {
         String comment = commentTextField.getText();
+        if (comment.equals(null)){comment = " ";};
         int score = Integer.parseInt(scoreBox.getValue().toString());
         opinion = new Opinion(comment, score, activeUser, recipe);
         DatabaseConnection.createOpinion(opinion, opinionLabel, opinionView);

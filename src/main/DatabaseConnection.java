@@ -335,31 +335,17 @@ public class DatabaseConnection {
         while (resultSet.next()){
             String username = resultSet.getString("USERNAME");
             String score = String.valueOf(resultSet.getInt("SCORE"));
-            String comment = username + "    Score: " +score +"\n" +resultSet.getString("COMMENT") +"\n";
-            opinionsView.getItems().add(comment);
+
+            //if (comment.equals(null)){comment = " ";}
+            String item = username + "    Score: " +score +"\n" +resultSet.getString("COMMENT") +"\n";
+            opinionsView.getItems().add(item);
         }
         resultSet.close();
         statement.close();
         closeConnection();
     }
 
-    public static String getOpinionAuthor(ListView opinionList) throws SQLException {
-        int index = opinionList.getSelectionModel().getSelectedIndex();
-        setConnection();
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("select min(opinion_id) from OPINION");
-        resultSet.next();
-        int min_id = resultSet.getInt("min(opinion_id)");
-        index += min_id ;
-        resultSet = statement.executeQuery("select username from OPINION where opinion_id = " +index);
-        resultSet.next();
-        String result = resultSet.getString("USERNAME");
-        resultSet.close();
-        statement.close();
-        closeConnection();
-        return result;
 
-    }
 
     public static void reportOpinion(ListView opinionList, String username, Label label) throws SQLException {
         int index = opinionList.getSelectionModel().getSelectedIndex();
@@ -369,10 +355,20 @@ public class DatabaseConnection {
         resultSet.next();
         int min_id = resultSet.getInt("min(opinion_id)");
         index += min_id ;
-        statement.execute("insert into REPORTED values (null,'" +username+ "', '" +index+ "')");
-        label.setText("Done!");
+        ResultSet newResult = statement.executeQuery("select * from REPORTED where REPORTING_USER = '"+username+ "' and OPINION_ID = " + index );
+        if (newResult.next()) {
+            label.setText("You have already reported!");
+            label.setWrapText(true);
+        }
+        else {
+            statement.execute("insert into REPORTED values (null,'" + username + "', '" + index + "')");
+            label.setText("Done!");
+        }
+        newResult.close();
         resultSet.close();
         statement.close();
         closeConnection();
     }
+
+
 }
