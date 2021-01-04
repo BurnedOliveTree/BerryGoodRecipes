@@ -346,25 +346,22 @@ public class DatabaseConnection {
     }
 
 
+    public static void reportOpinion(ListView opinionList, String username, Label label,String opinionAuthor, int recipeId) throws SQLException {
 
-    public static void reportOpinion(ListView opinionList, String username, Label label) throws SQLException {
-        int index = opinionList.getSelectionModel().getSelectedIndex();
         setConnection();
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("select min(opinion_id) from OPINION");
+        ResultSet resultSet = statement.executeQuery("select OPINION_ID from OPINION where USERNAME = '" +opinionAuthor+ "' and recipe_id = " +recipeId);
         resultSet.next();
-        int min_id = resultSet.getInt("min(opinion_id)");
-        index += min_id ;
-        ResultSet newResult = statement.executeQuery("select * from REPORTED where REPORTING_USER = '"+username+ "' and OPINION_ID = " + index );
-        if (newResult.next()) {
+        int opinionId = resultSet.getInt("OPINION_ID");
+        resultSet = statement.executeQuery("select * from REPORTED where REPORTING_USER = '"+username+ "' and OPINION_ID = " + opinionId );
+        if (resultSet.next()) {
             label.setText("You have already reported!");
             label.setWrapText(true);
         }
         else {
-            statement.execute("insert into REPORTED values (null,'" + username + "', '" + index + "')");
+            statement.execute("insert into REPORTED values (null,'" + username + "', '" + opinionId + "')");
             label.setText("Done!");
         }
-        newResult.close();
         resultSet.close();
         statement.close();
         closeConnection();

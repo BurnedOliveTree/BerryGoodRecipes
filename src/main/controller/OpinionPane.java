@@ -68,7 +68,7 @@ public class OpinionPane {
         DatabaseConnection.fillOpinions(recipe, opinionView);
         reportButton.setOnAction(e->{
             try {
-                DatabaseConnection.reportOpinion(opinionView, activeUser.getUsername(), reportLabel);
+                DatabaseConnection.reportOpinion(opinionView, activeUser.getUsername(), reportLabel, getOpinionAuthor(), recipe.getId());
             } catch (SQLException throwables) {
                 throwables.printStackTrace();
             }
