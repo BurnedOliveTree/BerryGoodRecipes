@@ -30,6 +30,9 @@ public class OpinionPane {
     public TextField commentTextField;
     public Label opinionLabel;
     public ListView opinionView;
+    public Button editButton;
+    public Button deleteButton;
+    public Button reportButton;
     @FXML
     public ChoiceBox scoreBox;
 
@@ -43,6 +46,9 @@ public class OpinionPane {
         scoreBox.setItems(scoreList);
         exitButton.setOnAction( e->{ exitAction("/resources/recipePage.fxml"); });
         okButton.setDisable(true);
+        reportButton.setDisable(true);
+        editButton.setDisable(true);
+        deleteButton.setDisable(true);
         scoreBox.setOnAction(e->okButtonActivity());
         okButton.setOnAction(e-> {
             try {
@@ -51,7 +57,28 @@ public class OpinionPane {
                 throwables.printStackTrace();
             }
         });
+        opinionView.setOnMousePressed(e-> {
+            try {
+                opinionViewOnAction();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        });
         DatabaseConnection.fillOpinions(recipe, opinionView);
+    }
+
+    private void opinionViewOnAction() throws SQLException {
+        if (activeUser != null){
+            if (DatabaseConnection.getOpinionAuthor(opinionView).equals(activeUser.getUsername())){
+                deleteButton.setDisable(false);
+                editButton.setDisable(false);
+                reportButton.setDisable(true);
+            }
+            else {
+                deleteButton.setDisable(true);
+                editButton.setDisable(true);
+                reportButton.setDisable(false); }
+        }
     }
 
     private void okButtonActivity(){

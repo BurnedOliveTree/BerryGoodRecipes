@@ -342,4 +342,17 @@ public class DatabaseConnection {
         statement.close();
         closeConnection();
     }
+
+    public static String getOpinionAuthor(ListView opinionList) throws SQLException {
+        int index = opinionList.getSelectionModel().getSelectedIndex();
+        setConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("select min(opinion_id) from OPINION");
+        resultSet.next();
+        int min_id = resultSet.getInt("min(opinion_id)");
+        index += min_id ;
+        resultSet = statement.executeQuery("select username from OPINION where opinion_id = " +index);
+        resultSet.next();
+        return resultSet.getString("USERNAME");
+    }
 }
