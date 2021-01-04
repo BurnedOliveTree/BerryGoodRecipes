@@ -309,7 +309,7 @@ public class DatabaseConnection {
     }
 
 
-    public static void createOpinion(Opinion opinion, Label opinionLabel, Accordion opinionsAccordion)throws SQLException {
+    public static void createOpinion(Opinion opinion, Label opinionLabel, ListView opinionsView)throws SQLException {
         setConnection();
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("select * from OPINION where USERNAME = '"+opinion.getUsername()+ "' and RECIPE_ID = " + opinion.getRecipe().getId() );
@@ -321,22 +321,22 @@ public class DatabaseConnection {
             opinionLabel.setText("Opinion saved!");
             String username = opinion.getUsername();
             String score = String.valueOf(opinion.getScore());
-            TitledPane pane = new TitledPane("User: " + username + "    Score: " +score , new Label(opinion.getOpinionText()));
-            opinionsAccordion.getPanes().add(pane);
+            String comment = username + "    Score: " +score + "\n" + opinion.getOpinionText() + "\n";
+            opinionsView.getItems().add(comment);
             statement.close();
             closeConnection();
         }
     }
 
-    public static void fillOpinions(Recipe recipe, Accordion opinionsAccordion) throws SQLException {
+    public static void fillOpinions(Recipe recipe, ListView opinionsView) throws SQLException {
         setConnection();
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("select * from OPINION where RECIPE_ID = " +recipe.getId());
         while (resultSet.next()){
             String username = resultSet.getString("USERNAME");
             String score = String.valueOf(resultSet.getInt("SCORE"));
-            TitledPane pane = new TitledPane("User: " + username + "    Score: " +score , new Label(resultSet.getString("COMMENT")));
-            opinionsAccordion.getPanes().add(pane);
+            String comment = username + "    Score: " +score +"\n" +resultSet.getString("COMMENT") +"\n";
+            opinionsView.getItems().add(comment);
         }
         resultSet.close();
         statement.close();

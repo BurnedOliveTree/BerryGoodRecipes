@@ -29,7 +29,7 @@ public class OpinionPane {
     public Label scoreLabel;
     public TextField commentTextField;
     public Label opinionLabel;
-    public Accordion opinionsAccordion;
+    public ListView opinionView;
     @FXML
     public ChoiceBox scoreBox;
 
@@ -51,7 +51,7 @@ public class OpinionPane {
                 throwables.printStackTrace();
             }
         });
-        DatabaseConnection.fillOpinions(recipe, opinionsAccordion);
+        DatabaseConnection.fillOpinions(recipe, opinionView);
     }
 
     private void okButtonActivity(){
@@ -64,7 +64,7 @@ public class OpinionPane {
         String comment = commentTextField.getText();
         int score = Integer.parseInt(scoreBox.getValue().toString());
         opinion = new Opinion(comment, score, activeUser, recipe);
-        DatabaseConnection.createOpinion(opinion, opinionLabel, opinionsAccordion);
+        DatabaseConnection.createOpinion(opinion, opinionLabel, opinionView);
     }
 
     private void  exitAction(String namePath) {
