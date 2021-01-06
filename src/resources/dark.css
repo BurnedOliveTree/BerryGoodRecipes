@@ -29,3 +29,6 @@ Text {
 #shoppingList .list-cell {
     -fx-alignment: center;
 }
+#non-transparent {
+    -fx-background-color: -fx-base;
+}
