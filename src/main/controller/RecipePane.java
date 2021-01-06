@@ -41,6 +41,8 @@ public class RecipePane  extends OrdinaryButtonAction{
     public Button timeButton;
     public Button commentButton;
     public Button scaleButton;
+    public Pane propertyPane;
+    public Pane portionPane;
 
     public RecipePane(Recipe recipe, User activeUser) {
         this.recipe = recipe;
@@ -58,6 +60,12 @@ public class RecipePane  extends OrdinaryButtonAction{
         text.setFont(Font.font("System", FontPosture.REGULAR, 13));
         descText.getChildren().add(text);
 
+        ingredientListView = new ListView();
+        setIngredListView();
+        ingredientPane.getChildren().add(ingredientListView);
+        ingredientListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        ingredientListView.setMaxWidth(commentButton.getPrefWidth());
+
         titleLabel.setText(this.recipe.getName());
         titleLabel.setWrapText(true);
         titleLabel.setTextAlignment(TextAlignment.CENTER);
@@ -67,10 +75,8 @@ public class RecipePane  extends OrdinaryButtonAction{
         } else {
             costLabel.setText("Cost: " + this.recipe.getCost());
         }
-        ingredientListView = new ListView();
-        setIngredListView();
-        ingredientPane.getChildren().add(ingredientListView);
-        ingredientListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+//        portionPane.setMinWidth(50);
 
         authorLabel.setText("Author: " + this.recipe.getAuthor());
         dateAddedLabel.setText("Date added: " + this.recipe.getDateAdded());
@@ -149,12 +155,16 @@ public class RecipePane  extends OrdinaryButtonAction{
 
     private void setIngredListView() {
         ingredientListView.getItems().clear();
-        ingredientListView.setMaxHeight(this.recipe.getIngredientList().size() * 25);
-        ingredientPane.setMinSize(ingredientListView.getWidth(), ingredientListView.getHeight());
         if (activeUser != null) {
             ingredientListView.getItems().addAll(this.recipe.getIngredientList());
             ingredientListView.setCellFactory(ingredientListView -> new ButtonCell(activeUser));
+            ingredientListView.setMaxHeight(this.recipe.getIngredientList().size() * 27);
+//            ingredientPane.setMaxHeight(ingredientListView.getHeight());
         } else {
+            ingredientListView.setMaxHeight(this.recipe.getIngredientList().size() * 24);
+            ingredientPane.setMinHeight(ingredientListView.getHeight());
+//            ingredientPane.setMaxWidth(propertyPane.getWidth());
+
             for (Ingredient ingredient: this.recipe.getIngredientList()) {
                 if (ingredient.getQuantity() % 1 == 0)
                     ingredientListView.getItems().add(String.format("%d %s %s", (int)Math.round(ingredient.getQuantity()), ingredient.getUnit().getName(), ingredient.getName()));

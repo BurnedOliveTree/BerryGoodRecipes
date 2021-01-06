@@ -60,7 +60,7 @@
     <left>
         <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="TOP_RIGHT">
             <bottom>
-                <Button fx:id="commentButton" mnemonicParsing="false" onAction="#onCommentButtonAction" prefHeight="31.0" prefWidth="235.0" text="Comment" BorderPane.alignment="CENTER" />
+                <Button fx:id="commentButton" mnemonicParsing="false" onAction="#onCommentButtonAction" prefHeight="31.0" prefWidth="200.0" text="Comment" BorderPane.alignment="CENTER" />
             </bottom>
             <top>
                 <AnchorPane prefHeight="83.0" prefWidth="200.0" BorderPane.alignment="CENTER">
@@ -76,20 +76,12 @@
                 <Insets bottom="10.0" left="20.0" />
             </BorderPane.margin>
          <center>
-            <VBox BorderPane.alignment="CENTER">
+            <VBox fx:id="propertyPane" alignment="TOP_RIGHT" BorderPane.alignment="CENTER_RIGHT">
                <children>
-                        <HBox>
+                        <HBox fx:id="portionPane" alignment="CENTER_RIGHT">
                             <children>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="27.0" prefWidth="111.0">
-                                    <children>
-                                        <Label alignment="CENTER" layoutX="54.0" layoutY="6.0" minHeight="-Infinity" minWidth="-Infinity" prefWidth="118.0" text="Portions:" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="0.0" />
-                                    </children>
-                                </AnchorPane>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="28.0" prefWidth="88.0">
-                           <children>
-                              <Spinner fx:id="portionArea" layoutX="-21.0" layoutY="1.0" prefHeight="27.0" prefWidth="87.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                           </children>
-                                </AnchorPane>
+                                  <Label alignment="CENTER" contentDisplay="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefWidth="118.0" text="Portions:" HBox.hgrow="ALWAYS" />
+                        <Spinner fx:id="portionArea" prefHeight="27.0" prefWidth="87.0" HBox.hgrow="NEVER" />
                             </children>
                         </HBox>
                   <Pane fx:id="ingredientPane" />
