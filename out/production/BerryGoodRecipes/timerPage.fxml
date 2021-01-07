@@ -10,17 +10,17 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<StackPane prefHeight="200.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane maxHeight="200.0" prefHeight="200.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane fx:id="showPane" prefHeight="200.0">
+      <AnchorPane id="non-transparent" fx:id="showPane" maxHeight="-Infinity" prefHeight="200.0">
          <children>
-            <GridPane id="non-transparent" prefHeight="200.0" prefWidth="450.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <GridPane id="non-transparent" fx:id="showGridPane" prefHeight="200.0" prefWidth="450.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <columnConstraints>
-                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="176.0" minWidth="10.0" prefWidth="176.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="36.0" minWidth="36.0" prefWidth="36.0" />
-                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="176.0" minWidth="10.0" prefWidth="176.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="36.0" minWidth="36.0" prefWidth="36.0" />
-                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="176.0" minWidth="10.0" prefWidth="176.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="176.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="36.0" prefWidth="36.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="176.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="36.0" prefWidth="36.0" />
+                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="176.0" />
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
@@ -36,7 +36,7 @@
                         <Font size="96.0" />
                      </font>
                   </Label>
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="120.0" prefWidth="42.0" text=":" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <Label alignment="CENTER" contentDisplay="CENTER" text=":" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <font>
                         <Font size="96.0" />
                      </font>
@@ -46,7 +46,7 @@
                         <Font size="96.0" />
                      </font>
                   </Label>
-                  <Label alignment="CENTER" prefHeight="159.0" prefWidth="36.0" text=":" textAlignment="JUSTIFY" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                  <Label alignment="CENTER" text=":" textAlignment="JUSTIFY" GridPane.columnIndex="3" GridPane.rowIndex="1">
                      <font>
                         <Font size="96.0" />
                      </font>
@@ -61,9 +61,9 @@
             </GridPane>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="selectPane" prefHeight="200.0">
+      <AnchorPane id="non-transparent" fx:id="selectPane" maxHeight="-Infinity" prefHeight="200.0">
          <children>
-            <GridPane id="non-transparent" prefHeight="200.0" prefWidth="450.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+            <GridPane id="non-transparent" fx:id="selectGridPane" prefHeight="200.0" prefWidth="450.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
