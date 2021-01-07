@@ -1,5 +1,6 @@
 package main.controller;
 
+import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,6 +12,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.*;
 
 import main.DatabaseConnection;
@@ -41,7 +43,7 @@ public class RecipePane  extends OrdinaryButtonAction{
     public Button timeButton;
     public Button commentButton;
     public Button scaleButton;
-    public Pane propertyPane;
+    public VBox propertyBox;
     public Pane portionPane;
 
     public RecipePane(Recipe recipe, User activeUser) {
@@ -64,8 +66,8 @@ public class RecipePane  extends OrdinaryButtonAction{
         setIngredListView();
         ingredientPane.getChildren().add(ingredientListView);
         ingredientListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        ingredientListView.setMaxWidth(commentButton.getPrefWidth());
-
+////        ingredientListView.setMaxWidth(commentButton.getPrefWidth());
+//        commentButton.setPrefWidth(propertyBox.getWidth());
         titleLabel.setText(this.recipe.getName());
         titleLabel.setWrapText(true);
         titleLabel.setTextAlignment(TextAlignment.CENTER);
@@ -96,6 +98,9 @@ public class RecipePane  extends OrdinaryButtonAction{
         //@TODO rozmiar listview
 
         setPortionAreaProperty();
+        Platform.runLater(() -> {
+            commentButton.setPrefWidth(propertyBox.getWidth());
+        });
 
     }
 
