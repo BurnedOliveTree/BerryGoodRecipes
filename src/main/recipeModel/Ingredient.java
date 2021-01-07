@@ -5,7 +5,7 @@ public class Ingredient {
     Unit unit;
     String name;
     int id;
-
+    // class which is necessary for the correct implementation of the converter and the recipe
     public Ingredient(int id, Double quantity, Unit unit, String name) {
         this.id = id;
         this.quantity = quantity;

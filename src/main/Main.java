@@ -5,7 +5,6 @@ import javafx.scene.image.Image;
 import main.controller.MainPane;
 import main.userModel.User;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -34,6 +33,7 @@ public class Main extends Application {
         primaryStage.getIcons().add(new Image("icons/raspLogo.png"));
         primaryStage.setScene(scene);
         primaryStage.show();
+        // zapisanie listy zakupów i ulubionych do bazy danych
         primaryStage.setOnCloseRequest(e -> {
             try {
                 DatabaseConnection.saveUser(activeUser);

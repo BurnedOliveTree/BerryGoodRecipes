@@ -1,11 +1,8 @@
 package main.controller;
 
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -14,17 +11,18 @@ import main.DatabaseConnection;
 import java.io.IOException;
 
 public class OrdinaryButtonAction {
-
+    // class with methods used by children class
     public FXMLLoader loadFXML(OrdinaryButtonAction c, String path) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
         loader.setController(c);
         return loader;
     }
-
+    // used in RecipePane, ShoppingListPane, MainPane
     public void changeScene(Button button, FXMLLoader loader) {
         changeScene(button, loader, false);
     }
 
+    // used in RecipePane, MainPane
     public void changeScene(Button button, FXMLLoader loader, boolean showAndWait) {
         try {
             Scene scene = new Scene(loader.load());
@@ -43,22 +41,7 @@ public class OrdinaryButtonAction {
             System.err.printf("Error: %s%n", e.getMessage());
         }
     }
-    
-    public void setSpinnerProperty(Spinner<Integer> spinner) {
-        spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10000));
-        spinner.getEditor().textProperty().set("0");
-        spinner.setEditable(true);
-        spinner.getEditor().addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
-            if (keyEvent.getCode() == KeyCode.ENTER) {
-                try {
-                    Integer.parseInt(spinner.getEditor().textProperty().get());
-                } catch (NumberFormatException e) {
-                    spinner.getEditor().textProperty().set("0");
-                }
-            }
-        });
-    }
-
+    // used in RecipeAdminPane...
     public void setContentMenu(Control control, MenuItem...  menuItems) {
         ContextMenu menu = new ContextMenu();
         for (MenuItem menuItem: menuItems) {

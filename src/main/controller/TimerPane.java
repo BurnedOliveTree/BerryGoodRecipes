@@ -4,12 +4,13 @@ import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import main.userModel.User;
 
 import java.io.File;
 import java.util.Timer;
@@ -18,13 +19,13 @@ import java.util.TimerTask;
 public class TimerPane extends OrdinaryButtonAction {
     DownTimer timer;
     Media media;
-    public MediaPlayer mediaPlayer;
+    private MediaPlayer mediaPlayer;
     @FXML
-    public Label secondsTimer;
+    private Label secondsTimer;
     @FXML
-    public Label minutesTimer;
+    private Label minutesTimer;
     @FXML
-    public Label hoursTimer;
+    private Label hoursTimer;
     @FXML
     private Button cancelButton;
     @FXML
@@ -55,6 +56,22 @@ public class TimerPane extends OrdinaryButtonAction {
         });});
     }
 
+    public void setSpinnerProperty(Spinner<Integer> spinner) {
+        spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10000));
+        spinner.getEditor().textProperty().set("0");
+        spinner.setEditable(true);
+        spinner.getEditor().addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER) {
+                try {
+                    Integer.parseInt(spinner.getEditor().textProperty().get());
+                } catch (NumberFormatException e) {
+                    spinner.getEditor().textProperty().set("0");
+                }
+            }
+        });
+    }
+
+    // method for setting the media to handle the alarm
     private void setMedia(){
         media = new Media(new File("src/resources/dingdong.mp3").toURI().toString());
         mediaPlayer = new MediaPlayer(media);
@@ -108,6 +125,7 @@ public class TimerPane extends OrdinaryButtonAction {
         pt.play();
     }
 
+    // inner class forming a countdown timer
     public class DownTimer {
         DownTimerTask task;
         Timer timer;
@@ -124,13 +142,13 @@ public class TimerPane extends OrdinaryButtonAction {
             mediaPlayer.pause();
         }
 
-
+        // change hours and minutes to seconds
         private int toSec(int hours, int minutes, int seconds) {
             minutes += hours * 60;
             seconds += minutes * 60;
             return seconds;
         }
-
+        // change timer counting by overriding the run method
         public class DownTimerTask extends TimerTask {
             private long time;
 
@@ -138,6 +156,7 @@ public class TimerPane extends OrdinaryButtonAction {
                 this.time = seconds;
             }
 
+            // add 0 in the beginning to show properly timer
             private String formatTime(long time) {
                 String strTime = String.valueOf(time);
                 if (time < 10)

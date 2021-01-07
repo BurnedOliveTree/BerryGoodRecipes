@@ -98,6 +98,7 @@ public class RecipeAdminPane extends OrdinaryButtonAction {
         changeScene(exitButton, loader);
     }
 
+    // return Item for MenuContext which delete selected item in Favorite List
     public MenuItem createDeleteFavItem() {
         MenuItem delete = new MenuItem("Delete");
         delete.setOnAction(actionEvent -> {
@@ -110,6 +111,7 @@ public class RecipeAdminPane extends OrdinaryButtonAction {
         return delete;
     }
 
+    // return Item for MenuContext which delete selected item in MyRecipeItem with warning
     public MenuItem createDeleteMyRecipeItem() {
         MenuItem delete = new MenuItem("Delete");
         delete.setOnAction(actionEvent -> {

@@ -24,27 +24,45 @@ public class RecipePane  extends OrdinaryButtonAction{
     private final Recipe recipe;
     private final User activeUser;
     @FXML
-    public TextFlow descText;
-    public ImageView ScalePic;
-    public ImageView ShoppingPic;
-    public ImageView LikePic;
-    public ImageView TimePic;
-    public Label titleLabel;
-    public Label costLabel;
-    public Label authorLabel;
-    public Label dateAddedLabel;
-    public Label timePrepLabel;
-    public Spinner<Integer> portionArea;
-    public Pane ingredientPane;
-    public ListView ingredientListView;
-    public Button exitButton;
-    public Button shoppingListButton;
-    public Button likeButton;
-    public Button timeButton;
-    public Button commentButton;
-    public Button scaleButton;
-    public VBox propertyBox;
-    public Pane portionPane;
+    private TextFlow descText;
+    @FXML
+    private ImageView ScalePic;
+    @FXML
+    private ImageView ShoppingPic;
+    @FXML
+    private ImageView LikePic;
+    @FXML
+    private ImageView TimePic;
+    @FXML
+    private Label titleLabel;
+    @FXML
+    private Label costLabel;
+    @FXML
+    private Label authorLabel;
+    @FXML
+    private Label dateAddedLabel;
+    @FXML
+    private Label timePrepLabel;
+    @FXML
+    private Spinner<Integer> portionArea;
+    @FXML
+    private Pane ingredientPane;
+    @FXML
+    private ListView ingredientListView;
+    @FXML
+    private Button exitButton;
+    @FXML
+    private Button shoppingListButton;
+    @FXML
+    private Button likeButton;
+    @FXML
+    private Button timeButton;
+    @FXML
+    private Button commentButton;
+    @FXML
+    private Button scaleButton;
+    @FXML
+    private VBox propertyBox;
 
     public RecipePane(Recipe recipe, User activeUser) {
         this.recipe = recipe;
@@ -58,19 +76,20 @@ public class RecipePane  extends OrdinaryButtonAction{
             ShoppingPic.setImage(new Image("icons/berryBasket.png"));
             TimePic.setImage(new Image("icons/berryStoper.png"));
         }
+
         Text text = new Text(this.recipe.getPrepareMethod());
         text.setFont(Font.font("System", FontPosture.REGULAR, 13));
         descText.getChildren().add(text);
-
         ingredientListView = new ListView();
         setIngredListView();
         ingredientPane.getChildren().add(ingredientListView);
         ingredientListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-////        ingredientListView.setMaxWidth(commentButton.getPrefWidth());
-//        commentButton.setPrefWidth(propertyBox.getWidth());
         titleLabel.setText(this.recipe.getName());
         titleLabel.setWrapText(true);
         titleLabel.setTextAlignment(TextAlignment.CENTER);
+        authorLabel.setText("Author: " + this.recipe.getAuthor());
+        dateAddedLabel.setText("Date added: " + this.recipe.getDateAdded());
+        setPortionAreaProperty();
 
         if (this.recipe.getCost() == 0) {
             costLabel.setText("Cost: Unknown");
@@ -78,10 +97,6 @@ public class RecipePane  extends OrdinaryButtonAction{
             costLabel.setText("Cost: " + this.recipe.getCost());
         }
 
-//        portionPane.setMinWidth(50);
-
-        authorLabel.setText("Author: " + this.recipe.getAuthor());
-        dateAddedLabel.setText("Date added: " + this.recipe.getDateAdded());
         if (this.recipe.getPrepareTime() == 0) {
             timePrepLabel.setText("Preparation time: Unknown");
         } else {
@@ -92,18 +107,20 @@ public class RecipePane  extends OrdinaryButtonAction{
         if (activeUser == null) {
             likeButton.setDisable(true);
             shoppingListButton.setDisable(true);
-        } else if (activeUser.checkIfRecipeFavorite(this.recipe)){
-            LikePic.setImage(new Image("icons/favoriteClicked.png"));
+            ingredientListView.setMaxHeight(this.recipe.getIngredientList().size() * 24);
+        } else {
+            ingredientListView.setMaxHeight(this.recipe.getIngredientList().size() * 27);
+            if (activeUser.checkIfRecipeFavorite(this.recipe)) {
+                LikePic.setImage(new Image("icons/favoriteClicked.png"));
+            }
         }
-        //@TODO rozmiar listview
 
-        setPortionAreaProperty();
         Platform.runLater(() -> {
             commentButton.setPrefWidth(propertyBox.getWidth());
         });
 
     }
-
+    // inner class which extends ListCell with additional button - for adding ingredient to shopping list - option for logged users
     static class ButtonCell extends ListCell<Ingredient> {
         HBox box = new HBox();
         Pane pane = new Pane();
@@ -118,7 +135,7 @@ public class RecipePane  extends OrdinaryButtonAction{
             view.setFitHeight(20);
             view.setFitWidth(20);
             box.getChildren().addAll(view, label, pane);
-            box.setHgrow(pane, Priority.ALWAYS);
+            HBox.setHgrow(pane, Priority.ALWAYS);
             this.activeUser = activeUser;
             view.setOnMouseClicked(mouseEvent -> {
                 if (!activeUser.checkIfIngredientInShoppingList(selectedIngredient.getId())) {
@@ -139,11 +156,7 @@ public class RecipePane  extends OrdinaryButtonAction{
                 setGraphic(null);
             } else {
                 selectedIngredient = ingredient;
-                if (ingredient.getQuantity() % 1 == 0)
-                    label.setText(String.format(" %d %s %s", (int)Math.round(ingredient.getQuantity()), ingredient.getUnit().getName(), ingredient.getName()));
-                else
-                    label.setText(String.format(" %f %s %s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
-
+                label.setText(String.format((ingredient.getQuantity() % 1 == 0)?" %1.0f %s %s":" %1.2f %s %s",  ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
                 if (!activeUser.checkIfIngredientInShoppingList(selectedIngredient.getId())) {
                     Image image = new Image("icons/plus.png");
                     view.setImage(image);
@@ -158,25 +171,16 @@ public class RecipePane  extends OrdinaryButtonAction{
         }
     }
 
+    // format properly listView - with button or without
     private void setIngredListView() {
         ingredientListView.getItems().clear();
         if (activeUser != null) {
             ingredientListView.getItems().addAll(this.recipe.getIngredientList());
             ingredientListView.setCellFactory(ingredientListView -> new ButtonCell(activeUser));
-            ingredientListView.setMaxHeight(this.recipe.getIngredientList().size() * 27);
-//            ingredientPane.setMaxHeight(ingredientListView.getHeight());
         } else {
-            ingredientListView.setMaxHeight(this.recipe.getIngredientList().size() * 24);
-            ingredientPane.setMinHeight(ingredientListView.getHeight());
-//            ingredientPane.setMaxWidth(propertyPane.getWidth());
-
             for (Ingredient ingredient: this.recipe.getIngredientList()) {
-                if (ingredient.getQuantity() % 1 == 0)
-                    ingredientListView.getItems().add(String.format("%d %s %s", (int)Math.round(ingredient.getQuantity()), ingredient.getUnit().getName(), ingredient.getName()));
-                else
-                    ingredientListView.getItems().add(String.format("%1.2f %s %s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
+                ingredientListView.getItems().add(String.format((ingredient.getQuantity() % 1 == 0)?"%1.0f %s %s":"%1.2f %s %s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
             }
-
         }
 
     }
@@ -185,6 +189,7 @@ public class RecipePane  extends OrdinaryButtonAction{
         portionArea.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000));
         portionArea.getEditor().textProperty().set(String.format((recipe.getPortionNumber() % 1 == 0)?"%1.0f":"%1.2f", recipe.getPortionNumber()));
         portionArea.setEditable(true);
+        // change portions using input value from keyboard
         portionArea.getEditor().addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
             if (keyEvent.getCode() == KeyCode.ENTER) {
                 try {
@@ -204,7 +209,8 @@ public class RecipePane  extends OrdinaryButtonAction{
         portionArea.valueProperty().addListener(this::handleSpin);
     }
 
-    void handleSpin(ObservableValue<?> observableValue, Number oldValue, Number currNumPortions) {
+    // for Listener in portionArea, change portions using button
+    private void handleSpin(ObservableValue<?> observableValue, Number oldValue, Number currNumPortions) {
         try {
             if (currNumPortions.intValue() > 0)
                 changeIngredListViewScale((double)currNumPortions.intValue());
@@ -225,7 +231,7 @@ public class RecipePane  extends OrdinaryButtonAction{
         }
     }
     @FXML
-    public void onLikeButtonAction() {
+    private void onLikeButtonAction() {
         if (activeUser.checkIfRecipeFavorite(recipe)) {
             LikePic.setImage(new Image("icons/favoriteUnclicked.png"));
             activeUser.removeFavorite(recipe);
@@ -237,26 +243,26 @@ public class RecipePane  extends OrdinaryButtonAction{
     }
 
     @FXML
-    public void onCommentButtonAction(){
+    private void onCommentButtonAction(){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/opinionPage.fxml"));
         OpinionPane controller = new OpinionPane(this.recipe, activeUser);
         loader.setController(controller);
         changeScene(commentButton, loader);
     }
     @FXML
-    public void onScaleButtonAction(){
+    private void onScaleButtonAction(){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/scalePage.fxml"));
         ScalePane controller = new ScalePane(this.recipe, activeUser);
         loader.setController(controller);
         changeScene(scaleButton, loader);
     }
-    @FXML
-    public void onExitButtonAction(){
+    @FXML //@TODO always on another window?
+    private void onExitButtonAction(){
         exitButton.getScene().getWindow().hide();
     }
 
     @FXML
-    public void onShoppingListButtonAction(){
+    private void onShoppingListButtonAction(){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/shoppingListPage.fxml"));
         RecipePane returnPane = new RecipePane(recipe, activeUser);
         ShoppingListPane controller = new ShoppingListPane(activeUser, returnPane);
@@ -265,7 +271,7 @@ public class RecipePane  extends OrdinaryButtonAction{
     }
 
     @FXML
-    public void onTimeButtonAction(){
+    private void onTimeButtonAction(){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/timerPage.fxml"));
         TimerPane controller = new TimerPane();
         loader.setController(controller);

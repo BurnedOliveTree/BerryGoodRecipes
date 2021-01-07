@@ -33,29 +33,6 @@ public class Recipe {
         this.id = id;
     }
 
-    public Recipe(int id,String name,String author,String dateAdded,int cost,int time){
-        this.id = id;
-        this.name = name;
-        this.author = author;
-        this.dateAdded = dateAdded;
-        this.cost = cost;
-        this.prepareTime = time;
-    }
-
-    public Recipe(int id, String name, String groupName, String dateAdded)
-    {
-        this.id = id;
-        this.name = name;
-        this.groupName = groupName;
-        this.dateAdded = dateAdded;
-    }
-
-//    public void addOpinion(String opinionText, int rate, User user)
-//    {
-//        Opinion opinion = new Opinion(opinionText, rate);
-//        opinions.add(Opinion);
-//    }
-
     public void setCost(int cost) {
         this.cost = cost;
     }
@@ -70,7 +47,6 @@ public class Recipe {
 
     private Ingredient findInIngredientList(String ingredientName)
     {
-
         for (Ingredient ingredient : this.ingredientList) {
             if (ingredientName.equals(ingredient.getName()))
                 return ingredient;
@@ -93,6 +69,7 @@ public class Recipe {
         // @TODO calculate method from unit
     }
 
+    // scale ingredient taking into account the changed number of portions
     public void scaleIngredientList(double scale) {
         for (Ingredient ingredient : this.ingredientList) {
             if (scale > 0) {
@@ -103,7 +80,7 @@ public class Recipe {
         }
     }
 
-    @Override
+    @Override   // overload of the base method comparing objects by ID
     public boolean equals(Object r){
         if (r == this) {
             return true;
@@ -117,6 +94,7 @@ public class Recipe {
 
 
     public void saveToFile(String filename) {
+        // @TODO update and add to GUI
         try {
             FileWriter file = new FileWriter(filename);
             file.write(this.name + "\nIngredients:\n");
@@ -140,10 +118,6 @@ public class Recipe {
         saveToFile(this.name);
     }
 
-    public void setAvgRate(){
-        // @TODO with Opinion class
-    }
-
     public String getAuthor() {
         return author;
     }
@@ -156,7 +130,7 @@ public class Recipe {
         return name;
     }
 
-    public int isAccessibility() {
+    public int getAccessibility() {
         return accessibility;
     }
 
@@ -191,4 +165,9 @@ public class Recipe {
     public Integer getId() {return id;}
 
     public void setGroupName(String groupName) {this.groupName = groupName; }
+
+    public void setAvgRate(){
+        // @TODO with Opinion class
+    }
+
 }

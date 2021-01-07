@@ -7,13 +7,17 @@ import javafx.scene.control.ListView;
 import main.recipeModel.Ingredient;
 import main.userModel.User;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class ShoppingListPane extends OrdinaryButtonAction {
     private final User activeUser;
     private final Object returnPane;
 
     @FXML
-    public Button exitButton;
-    public ListView<String> shoppingList;
+    private Button exitButton;
+    @FXML
+    private ListView<String> shoppingList;
 
     public ShoppingListPane(User activeUser, Object returnPane) {
         this.activeUser = activeUser;
@@ -30,10 +34,10 @@ public class ShoppingListPane extends OrdinaryButtonAction {
         }
     }
 
-    @FXML
+    @FXML   // return to proper window
     public void onExitButtonAction(){
         FXMLLoader loader;
-        if (returnPane.getClass().getName() == "MainPane")
+        if (Pattern.compile("MainPane").matcher(returnPane.getClass().getName()).find())
             loader = new FXMLLoader(getClass().getResource("/resources/mainPage.fxml"));
         else
             loader = new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
