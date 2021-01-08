@@ -262,17 +262,19 @@ public class DatabaseConnection {
             String tempString = resultSet.getString("RATING");
             if (tempString == null)
                 tempString = "N/A";
-            tempPane.add(new ImageView(new Image("icons/raspStar.png")), 0, 2, 1, 1);
+            else
+                tempString = tempString + "/10";
+            tempPane.add(new ImageView(new Image("icons/star.png")), 0, 2, 1, 1);
             tempPane.add(new Label(tempString), 1, 2, 1, 1);
             tempString = resultSet.getString("PREPARATION_TIME");
             if (tempString == null)
                 tempString = "N/A";
-            tempPane.add(new ImageView(new Image("icons/raspTime.png")), 2, 2, 1, 1);
+            tempPane.add(new ImageView(new Image("icons/time.png")), 2, 2, 1, 1);
             tempPane.add(new Label(tempString), 3, 2, 1, 1);
             tempString = resultSet.getString("COST");
             if (tempString == null)
                 tempString = "N/A";
-            tempPane.add(new ImageView(new Image("icons/raspCoin.png")), 4, 2, 1, 1);
+            tempPane.add(new ImageView(new Image("icons/coin.png")), 4, 2, 1, 1);
             tempPane.add(new Label(tempString), 5, 2, 1, 1);
             panelist.add(tempPane);
         }
