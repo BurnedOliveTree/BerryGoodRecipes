@@ -190,18 +190,35 @@ public class DatabaseConnection {
         }
     }
 
+    private static List<String> getGroupParticipants(String GroupID) throws SQLException {
+        Statement statement = connection.createStatement();
+        String query = "select b.USERNAME as username from \"GROUP\" g join BELONG b on g.GROUP_ID = "+GroupID;
+        ResultSet resultSet = statement.executeQuery(query);
+        List<String> users = new ArrayList<>();
+        while (resultSet.next()) {
+            users.add(resultSet.getString("username"));
+        }
+        resultSet.close();
+        statement.close();
+        return users;
+    }
+
     public static void getGroups(TilePane tilePane, User user) throws SQLException {
         setConnection();
         Statement statement = connection.createStatement();
-        String query = "select g.NAME as group_name from \"GROUP\" g join BELONG b on g.GROUP_ID = b.GROUP_ID where lower(b.USERNAME) = '"+(user.getUsername()).toLowerCase()+"'";
+        String query = "select g.GROUP_ID as ID, g.NAME as group_name, b.USERNAME as username from \"GROUP\" g join BELONG b on g.GROUP_ID = b.GROUP_ID where lower(b.USERNAME) = '"+(user.getUsername()).toLowerCase()+"'";
         ResultSet resultSet = statement.executeQuery(query);
-        List<Button> panelist = new ArrayList<>();
+        List<MenuButton> panelist = new ArrayList<>();
         while (resultSet.next()) {
             String tempString = resultSet.getString("group_name");
-            Button tempButton = new Button(tempString);
+            MenuButton tempButton = new MenuButton(tempString);
             tempButton.setWrapText(true);
             tempButton.setTextAlignment(TextAlignment.CENTER);
             tempButton.setPrefSize(192, 64);
+            tempButton.getItems().add(new MenuItem("Delete group"));
+            tempButton.getItems().add(new SeparatorMenuItem());
+            List<String> tempStringList = getGroupParticipants(resultSet.getString("ID"));
+            for (String s : tempStringList) tempButton.getItems().add(new MenuItem("Kick "+s));
 //            String tempString = resultSet.getString("RECIPE_ID");
 //            tempButton.setOnMouseClicked(e -> mainPane.onRecipeClick(tempButton, Integer.parseInt(tempString)));
             panelist.add(tempButton);
