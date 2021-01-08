@@ -1,6 +1,8 @@
 package main;
 
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.text.TextAlignment;
 import main.controller.MainPane;
 import main.userModel.Opinion;
@@ -242,10 +244,12 @@ public class DatabaseConnection {
         while (resultSet.next()) {
             GridPane tempPane = new GridPane();
             for (int i = 0; i < 3; i++) {
-                ColumnConstraints columnConstraints = new ColumnConstraints(64);
+                tempPane.getRowConstraints().add(new RowConstraints(32));
+            }
+            for (int i = 0; i < 6; i++) {
+                ColumnConstraints columnConstraints = new ColumnConstraints(32);
                 columnConstraints.setHalignment(HPos.CENTER);
                 tempPane.getColumnConstraints().add(columnConstraints);
-                tempPane.getRowConstraints().add(new RowConstraints(32));
             }
             tempPane.setPrefSize(192, 96);
             Button tempButton = new Button(resultSet.getString("NAME"));
@@ -254,19 +258,22 @@ public class DatabaseConnection {
             tempButton.setPrefSize(192, 64);
             int tempInt = resultSet.getInt("RECIPE_ID");
             tempButton.setOnMouseClicked(e -> mainPane.onRecipeClick(tempButton, tempInt));
-            tempPane.add(tempButton, 0, 0, 3, 2);
+            tempPane.add(tempButton, 0, 0, 6, 2);
             String tempString = resultSet.getString("RATING");
             if (tempString == null)
                 tempString = "N/A";
-            tempPane.add(new Label(tempString), 0, 2, 1, 1);
+            tempPane.add(new ImageView(new Image("icons/raspStar.png")), 0, 2, 1, 1);
+            tempPane.add(new Label(tempString), 1, 2, 1, 1);
             tempString = resultSet.getString("PREPARATION_TIME");
             if (tempString == null)
                 tempString = "N/A";
-            tempPane.add(new Label(tempString), 1, 2, 1, 1);
+            tempPane.add(new ImageView(new Image("icons/raspTime.png")), 2, 2, 1, 1);
+            tempPane.add(new Label(tempString), 3, 2, 1, 1);
             tempString = resultSet.getString("COST");
             if (tempString == null)
                 tempString = "N/A";
-            tempPane.add(new Label(tempString), 2, 2, 1, 1);
+            tempPane.add(new ImageView(new Image("icons/raspCoin.png")), 4, 2, 1, 1);
+            tempPane.add(new Label(tempString), 5, 2, 1, 1);
             panelist.add(tempPane);
         }
         tilePain.getChildren().clear();

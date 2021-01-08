@@ -47,7 +47,7 @@ public class MainPane extends OrdinaryButtonAction {
             recipePic.setImage(new Image("icons/berryRecipe.png"));
             socialPic.setImage(new Image("icons/berryGroup.png"));
             basketPic.setImage(new Image("icons/berryBasket.png"));
-            settingsPic.setImage(new Image("icons/berryUser.png"));
+            settingsPic.setImage(new Image("icons/berryCog.png"));
         }
         setButtonActivity();
     }
@@ -227,14 +227,14 @@ public class MainPane extends OrdinaryButtonAction {
             recipePic.setImage(new Image("icons/berryRecipe.png"));
             socialPic.setImage(new Image("icons/berryGroup.png"));
             basketPic.setImage(new Image("icons/berryBasket.png"));
-            settingsPic.setImage(new Image("icons/berryUser.png"));
+            settingsPic.setImage(new Image("icons/berryCog.png"));
         }
         else {
             logo.setImage(new Image("icons/raspLogo.png"));
             recipePic.setImage(new Image("icons/raspRecipe.png"));
             socialPic.setImage(new Image("icons/raspGroup.png"));
             basketPic.setImage(new Image("icons/raspBasket.png"));
-            settingsPic.setImage(new Image("icons/raspUser.png"));
+            settingsPic.setImage(new Image("icons/raspCog.png"));
         }
     }
 }
