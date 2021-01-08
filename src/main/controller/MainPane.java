@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -25,6 +26,7 @@ public class MainPane extends OrdinaryButtonAction {
     @FXML
     public ImageView logo;
     public Button loginButton;
+    public MenuButton settingsButton;
     public Button myRecipesButton;
     public Button socialButton;
     public Button basketButton;
@@ -55,12 +57,16 @@ public class MainPane extends OrdinaryButtonAction {
     public void setButtonActivity() {
         if (activeUser != null) {
             loginButton.setText("Sign out");
+            settingsButton.getItems().get(0).setDisable(false);
+            settingsButton.getItems().get(1).setDisable(false);
             socialButton.setDisable(false);
             myRecipesButton.setDisable(false);
             basketButton.setDisable(false);
         }
         else {
             loginButton.setText("Sign in");
+            settingsButton.getItems().get(0).setDisable(true);
+            settingsButton.getItems().get(1).setDisable(true);
             socialButton.setDisable(true);
             myRecipesButton.setDisable(true);
             basketButton.setDisable(true);
