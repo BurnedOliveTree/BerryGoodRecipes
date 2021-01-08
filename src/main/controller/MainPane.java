@@ -81,6 +81,22 @@ public class MainPane extends OrdinaryButtonAction {
         return result.split(",");
     }
 
+    private String multiple_search(String[] args, String query, boolean isNumber) {
+        String result = "";
+        if (isNumber) {
+            result = result + " and (" + query+" " + args[args.length - 1];
+            for (int i = args.length - 2; i >= 0; i--)
+                result = result + "or " + query + " " + args[i];
+        }
+        else {
+            result = result + " and (lower(" + query + ") like lower('%" + args[args.length - 1] + "%')";
+            for (int i = args.length - 2; i >= 0; i--)
+                result = result + "or lower(" + query + ") like lower('%" + args[i] + "%')";
+        }
+        result = result + ")";
+        return result;
+    }
+
     @FXML
     public void search(ActionEvent ae) throws SQLException {
         query = search.getText();
@@ -89,45 +105,35 @@ public class MainPane extends OrdinaryButtonAction {
         if (query.contains(":")) {
             if (query.contains("with:")) {
                 String[] tempList = split_search("with:");
-                args = args + " and (lower(ing.ingredient_name) like lower('%" + tempList[tempList.length - 1] + "%')";
-                for (int i = tempList.length - 2; i >= 0; i--)
-                    args = args + "or lower(ing.ingredient_name) like lower('%" + tempList[i] + "%')";
-                args = args + ")";
+                args = args + multiple_search(tempList, "ing.ingredient_name", false);
             }
             if (query.contains("user:")) {
                 String[] tempList = split_search("user:");
-                args = args + " and (lower(rcp.owner_name) like lower('%" + tempList[tempList.length - 1] + "%')";
-                for (int i = tempList.length - 2; i >= 0; i--)
-                    args = args + "or (lower(rcp.owner_name) like lower('%" + tempList[i] + "%')";
-                args = args + ")";
+                args = args + multiple_search(tempList, "rcp.owner_name", false);
             }
             if (query.contains("maxcost:")) {
                 String[] tempList = split_search("maxcost:");
-                args = args + " and (rcp.cost < " + tempList[tempList.length - 1];
-                for (int i = tempList.length - 2; i >= 0; i--)
-                    args = args + "or rcp.cost < " + tempList[i];
-                args = args + ")";
+                args = args + multiple_search(tempList, "rcp.cost <", true);
             }
             if (query.contains("mincost:")) {
                 String[] tempList = split_search("mincost:");
-                args = args + " and (rcp.cost > " + tempList[tempList.length - 1];
-                for (int i = tempList.length - 2; i >= 0; i--)
-                    args = args + "or rcp.cost > " + tempList[i];
-                args = args + ")";
+                args = args + multiple_search(tempList, "rcp.cost >", true);
             }
             if (query.contains("maxtime:")) {
                 String[] tempList = split_search("maxtime:");
-                args = args + " and (rcp.preparation_time < " + tempList[tempList.length - 1];
-                for (int i = tempList.length - 2; i >= 0; i--)
-                    args = args + "or rcp.preparation_time < " + tempList[i];
-                args = args + ")";
+                args = args + multiple_search(tempList, "rcp.preparation_time <", true);
             }
             if (query.contains("mintime:")) {
                 String[] tempList = split_search("mintime:");
-                args = args + " and (rcp.preparation_time > " + tempList[tempList.length - 1];
-                for (int i = tempList.length - 2; i >= 0; i--)
-                    args = args + "or rcp.preparation_time > " + tempList[i];
-                args = args + ")";
+                args = args + multiple_search(tempList, "rcp.preparation_time >", true);
+            }
+            if (query.contains("maxrating:")) {
+                String[] tempList = split_search("maxrating:");
+                args = args + multiple_search(tempList, "CALC_RATING(rcp.RECIPE_ID) <", true);
+            }
+            if (query.contains("minrating:")) {
+                String[] tempList = split_search("minrating:");
+                args = args + multiple_search(tempList, "CALC_RATING(rcp.RECIPE_ID) >", true);
             }
         }
         query = "lower(rcp.name) like lower('%" + query + "%')" + args;

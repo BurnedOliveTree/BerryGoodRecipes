@@ -234,7 +234,7 @@ public class DatabaseConnection {
     public static void fillResults(MainPane mainPane, TilePane tilePain, String whereStatement) throws SQLException {
         setConnection();
         Statement statement = connection.createStatement();
-        String query = "select distinct rcp.RECIPE_ID, rcp.NAME, rcp.PREPARATION_TIME, rcp.COST from RECIPE rcp join INGREDIENT_LIST ing on rcp.RECIPE_ID = ing.RECIPE_ID";
+        String query = "select distinct rcp.RECIPE_ID, rcp.NAME, rcp.PREPARATION_TIME, rcp.COST, CALC_RATING(rcp.RECIPE_ID) as RATING from RECIPE rcp join INGREDIENT_LIST ing on rcp.RECIPE_ID = ing.RECIPE_ID";
         if (whereStatement != null)
             query = query + " WHERE " + whereStatement;
         ResultSet resultSet = statement.executeQuery(query);
@@ -255,8 +255,11 @@ public class DatabaseConnection {
             int tempInt = resultSet.getInt("RECIPE_ID");
             tempButton.setOnMouseClicked(e -> mainPane.onRecipeClick(tempButton, tempInt));
             tempPane.add(tempButton, 0, 0, 3, 2);
-            tempPane.add(new Label("Rating"), 0, 2, 1, 1);
-            String tempString = resultSet.getString("PREPARATION_TIME");
+            String tempString = resultSet.getString("RATING");
+            if (tempString == null)
+                tempString = "N/A";
+            tempPane.add(new Label(tempString), 0, 2, 1, 1);
+            tempString = resultSet.getString("PREPARATION_TIME");
             if (tempString == null)
                 tempString = "N/A";
             tempPane.add(new Label(tempString), 1, 2, 1, 1);
