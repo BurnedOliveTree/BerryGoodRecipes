@@ -3,10 +3,9 @@ package main.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Side;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -22,6 +21,7 @@ import java.sql.SQLException;
 
 public class MainPane extends OrdinaryButtonAction {
     private String query;
+    private String orderBy = "rcp.name";
     public User activeUser;
     @FXML
     public ImageView logo;
@@ -36,6 +36,7 @@ public class MainPane extends OrdinaryButtonAction {
     public ImageView settingsPic;
     public TilePane tilePain;
     public TextField search;
+    public ContextMenu searchContext;
 
     public MainPane(User activeUser) {
         this.activeUser = activeUser;
@@ -52,6 +53,15 @@ public class MainPane extends OrdinaryButtonAction {
             settingsPic.setImage(new Image("icons/berryCog.png"));
         }
         setButtonActivity();
+
+        search.focusedProperty().addListener((ov, oldV, newV) -> {
+            if (newV) {
+                searchContext.show(search, Side.BOTTOM, 0, 0);
+            }
+            else {
+                searchContext.hide();
+            }
+        });
     }
 
     public void setButtonActivity() {
@@ -142,7 +152,7 @@ public class MainPane extends OrdinaryButtonAction {
                 args = args + multiple_search(tempList, "CALC_RATING(rcp.RECIPE_ID) >", true);
             }
         }
-        query = "lower(rcp.name) like lower('%" + query + "%')" + args;
+        query = "lower(rcp.name) like lower('%" + query + "%')" + args + " order by " + orderBy;
         System.out.println(query);
         DatabaseConnection.fillResults(this, tilePain, query);
     }
@@ -202,6 +212,19 @@ public class MainPane extends OrdinaryButtonAction {
     }
 
     @FXML
+    public void onHelpButtonClick(MouseEvent mouseEvent) {
+        mouseEvent.consume();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Help");
+        alert.setHeaderText("How to use search");
+        alert.setGraphic(null);
+        alert.setContentText("Typing normal text in the search field will search for any title that contains these" +
+                "words.\nYou can also use a function to filter the search result.\nSyntax for such is:\n[function1]:" +
+                "[arg1],[arg2],[arg3] [function2]:[arg1]\nfor example: \"ciasto with:masło,mleko maxcost:100\"");
+        alert.showAndWait();
+    }
+
+    @FXML
     public void onThemeLightSelection() {
         DatabaseConnection.theme = "light";
         resetTheme();
@@ -223,6 +246,30 @@ public class MainPane extends OrdinaryButtonAction {
     public void onThemeSpringSelection() {
         DatabaseConnection.theme = "spring";
         resetTheme();
+    }
+
+    @FXML
+    public void onNameOrderSelection() {
+        orderBy = "rcp.name";
+        System.out.println(orderBy);
+    }
+
+    @FXML
+    public void onCostOrderSelection() {
+        orderBy = "rcp.cost";
+        System.out.println(orderBy);
+    }
+
+    @FXML
+    public void onTimeOrderSelection() {
+        orderBy = "rcp.preparation_time";
+        System.out.println(orderBy);
+    }
+
+    @FXML
+    public void onRatingOrderSelection() {
+        orderBy = "rating desc";
+        System.out.println(orderBy);
     }
 
     public void resetTheme() {
