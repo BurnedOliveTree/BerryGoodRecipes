@@ -15,10 +15,9 @@ import java.sql.SQLException;
 
 public class UserAdminPane extends OrdinaryButtonAction {
     private final User activeUser;
-    @FXML
-    public Button exitButton;
-    public TilePane tilePane;
-    public ListView<String> followedList;
+    @FXML private Button exitButton;
+    @FXML private TilePane tilePane;
+    @FXML private ListView<String> followedList;
 
     public UserAdminPane(User activeUser) {
         this.activeUser = activeUser;

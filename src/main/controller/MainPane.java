@@ -23,20 +23,19 @@ public class MainPane extends OrdinaryButtonAction {
     private String query;
     private String orderBy = "rcp.name";
     public User activeUser;
-    @FXML
-    public ImageView logo;
-    public Button loginButton;
-    public MenuButton settingsButton;
-    public Button myRecipesButton;
-    public Button socialButton;
-    public Button basketButton;
-    public ImageView recipePic;
-    public ImageView socialPic;
-    public ImageView basketPic;
-    public ImageView settingsPic;
-    public TilePane tilePain;
-    public TextField search;
-    public ContextMenu searchContext;
+    @FXML private ImageView logo;
+    @FXML private Button loginButton;
+    @FXML private MenuButton settingsButton;
+    @FXML private Button myRecipesButton;
+    @FXML private Button socialButton;
+    @FXML private Button basketButton;
+    @FXML private ImageView recipePic;
+    @FXML private ImageView socialPic;
+    @FXML private ImageView basketPic;
+    @FXML private ImageView settingsPic;
+    @FXML private TilePane tilePain;
+    @FXML public TextField search;
+    @FXML private ContextMenu searchContext;
 
     public MainPane(User activeUser) {
         this.activeUser = activeUser;

@@ -1,15 +1,15 @@
-truncate table PUBLICITY;
-truncate table FAVORITE;
-truncate table INGREDIENT_LIST;
-truncate table RECIPE;
-truncate table SHOPPING_LIST;
-truncate table INGREDIENT;
-truncate table BELONG;
-truncate table "GROUP";
-truncate table FOLLOWED;
-truncate table "USER";
-truncate table UNIT;
-truncate table UNIT_SYSTEM;
+-- truncate table PUBLICITY;
+-- truncate table FAVORITE;
+-- truncate table INGREDIENT_LIST;
+-- truncate table RECIPE;
+-- truncate table SHOPPING_LIST;
+-- truncate table INGREDIENT;
+-- truncate table BELONG;
+-- truncate table "GROUP";
+-- truncate table FOLLOWED;
+-- truncate table "USER";
+-- truncate table UNIT;
+-- truncate table UNIT_SYSTEM;
 
 insert into UNIT_SYSTEM values('metric');
 insert into UNIT_SYSTEM values('kitchen');
@@ -29,11 +29,12 @@ insert into UNIT values('gallon', 'US', 3.79);
 insert into UNIT values('quart', 'US', 0.95);
 insert into UNIT values('pint', 'US', 0.47);
 insert into UNIT values('handful', 'kitchen', 0.04);
-insert into UNIT values('piece', 'N/A', null);
+insert into UNIT values('piece', 'N/A', 0);
 insert into UNIT values('pinch', 'kitchen', 0.00031);
+commit;
 
-
-
+insert into "GROUP" values (0, 'public', null);
+insert into "GROUP" values (null, 'admin', null);
 commit;
 
 insert into "USER" values ('BerryRootUser', 'BerryHardPassword', null);
@@ -53,10 +54,7 @@ insert into "USER" values ('Marianka', '12345', null);
 commit;
 
 insert into FOLLOWED values (null, 'BurnedOliveTree', 'Rokarolka');
-commit;
-
-insert into "GROUP" values (0, 'public', null);
-insert into "GROUP" values (null, 'admin', null);
+insert into FOLLOWED values (null, 'BurnedOliveTree', 'Marianka');
 commit;
 
 insert into BELONG values (null, 1, 'BurnedOliveTree');
@@ -119,7 +117,7 @@ insert into INGREDIENT_LIST values (null, 1, 15, 'piece', 'makaron lasagne');
 insert into INGREDIENT_LIST values (null, 2,  250, 'gram', 'twaróg');
 insert into INGREDIENT_LIST values (null, 2,  250, 'gram', 'mąka wrocławska');
 insert into INGREDIENT_LIST values (null, 2,  250, 'gram', 'masło');
-insert into INGREDIENT_LIST values (null, 2,  1, 'spiece', 'marmolada');
+insert into INGREDIENT_LIST values (null, 2,  1, 'piece', 'marmolada');
 
 insert into INGREDIENT_LIST values (null, 3,  256, 'gram', 'cukier puder');
 insert into INGREDIENT_LIST values (null, 3,  256, 'gram', 'mąka');
