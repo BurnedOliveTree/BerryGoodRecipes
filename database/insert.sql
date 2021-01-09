@@ -11,20 +11,29 @@ truncate table "USER";
 truncate table UNIT;
 truncate table UNIT_SYSTEM;
 
-insert into UNIT_SYSTEM values('metryczny');
-insert into UNIT_SYSTEM values('imperialny');
-insert into UNIT_SYSTEM values('kuchenny');
+insert into UNIT_SYSTEM values('metric');
+insert into UNIT_SYSTEM values('kitchen');
 insert into UNIT_SYSTEM values('N/A');
+insert into UNIT_SYSTEM values('US');
 commit;
 
-insert into UNIT values('gram', 'metryczny', 1,1,1,1,1);
-insert into UNIT values('kilogram', 'metryczny', 1,1,1,1,1);
-insert into UNIT values('mililitr', 'metryczny', 1,1,1,1,1);
-insert into UNIT values('litr', 'metryczny', 1,1,1,1,1);
-insert into UNIT values('sztuka', 'N/A', 1,1,1,1,1);
-insert into UNIT values('łyżeczka', 'kuchenny', 1,1,1,1,1);
-insert into UNIT values('łyżka', 'kuchenny', 1,1,1,1,1);
-insert into UNIT values('szklanka', 'kuchenny', 1,1,1,1,1);
+insert into UNIT values('gram', 'metric', 0.001);
+insert into UNIT values('kilogram', 'metric', 1);
+insert into UNIT values('mililiter', 'metric', 0.001);
+insert into UNIT values('liter', 'metric', 1);
+insert into UNIT values('teaspoon', 'kitchen',0.005);
+insert into UNIT values('tablespoon', 'kitchen',0.015);
+insert into UNIT values('glass', 'kitchen', 0.25);
+insert into UNIT values('drop', 'kitchen', 0.00005);
+insert into UNIT values('gallon', 'US', 3.79);
+insert into UNIT values('quart', 'US', 0.95);
+insert into UNIT values('pint', 'US', 0.47);
+insert into UNIT values('handful', 'kitchen', 0.04);
+insert into UNIT values('piece', 'N/A', null);
+insert into UNIT values('pinch', 'kitchen', 0.00031);
+
+
+
 commit;
 
 insert into "USER" values ('BerryRootUser', 'BerryHardPassword', null);
@@ -62,12 +71,12 @@ insert into INGREDIENT values ('makaron spaghetti', null, 'gram');
 insert into INGREDIENT values ('ser żółty', null, 'gram');
 insert into INGREDIENT values ('twaróg', 0.95525, 'gram');
 insert into INGREDIENT values ('masło', 0.911, 'gram');
-insert into INGREDIENT values ('mleko', 1.03, 'litr');
+insert into INGREDIENT values ('mleko', 1.03, 'liter');
 
-insert into INGREDIENT values ('woda', 0.997, 'litr');
-insert into INGREDIENT values ('olej', 0.9188, 'litr');
-insert into INGREDIENT values ('jajko', null, 'sztuka');
-insert into INGREDIENT values ('żółtko', null, 'sztuka');
+insert into INGREDIENT values ('woda', 0.997, 'liter');
+insert into INGREDIENT values ('olej', 0.9188, 'liter');
+insert into INGREDIENT values ('jajko', null, 'piece');
+insert into INGREDIENT values ('żółtko', null, 'piece');
 
 insert into INGREDIENT values ('mąka', 0.593, 'kilogram');
 insert into INGREDIENT values ('mąka wrocławska', 0.593, 'kilogram');
@@ -81,13 +90,13 @@ insert into INGREDIENT values ('cukier waniliowy', 1.056, 'gram');
 
 insert into INGREDIENT values ('mięso mielone', null, 'kilogram');
 
-insert into INGREDIENT values ('jabłko', null, 'sztuka');
-insert into INGREDIENT values ('gruszka', null, 'sztuka');
-insert into INGREDIENT values ('brzoskwinia', null, 'sztuka');
-insert into INGREDIENT values ('pomarańcza', null, 'sztuka');
-insert into INGREDIENT values ('śliwka', null, 'sztuka');
-insert into INGREDIENT values ('pomidor', null, 'sztuka');
-insert into INGREDIENT values ('passata pomidorowa', null, 'mililitr');
+insert into INGREDIENT values ('jabłko', null, 'piece');
+insert into INGREDIENT values ('gruszka', null, 'piece');
+insert into INGREDIENT values ('brzoskwinia', null, 'piece');
+insert into INGREDIENT values ('pomarańcza', null, 'piece');
+insert into INGREDIENT values ('śliwka', null, 'piece');
+insert into INGREDIENT values ('pomidor', null, 'piece');
+insert into INGREDIENT values ('passata pomidorowa', null, 'mililiter');
 insert into INGREDIENT values ('orzechy włoskie', null, 'gram');
 insert into INGREDIENT values ('marmolada', null, 'gram');
 commit;
@@ -105,19 +114,19 @@ commit;
 insert into INGREDIENT_LIST values (null, 1, 500, 'gram', 'mięso mielone');
 insert into INGREDIENT_LIST values (null, 1, 700, 'gram', 'passata pomidorowa');;
 insert into INGREDIENT_LIST values (null, 1, 75, 'gram', 'ser żółty');
-insert into INGREDIENT_LIST values (null, 1, 15, 'sztuka', 'makaron lasagne');
+insert into INGREDIENT_LIST values (null, 1, 15, 'piece', 'makaron lasagne');
 
 insert into INGREDIENT_LIST values (null, 2,  250, 'gram', 'twaróg');
 insert into INGREDIENT_LIST values (null, 2,  250, 'gram', 'mąka wrocławska');
 insert into INGREDIENT_LIST values (null, 2,  250, 'gram', 'masło');
-insert into INGREDIENT_LIST values (null, 2,  1, 'sztuka', 'marmolada');
+insert into INGREDIENT_LIST values (null, 2,  1, 'spiece', 'marmolada');
 
 insert into INGREDIENT_LIST values (null, 3,  256, 'gram', 'cukier puder');
 insert into INGREDIENT_LIST values (null, 3,  256, 'gram', 'mąka');
-insert into INGREDIENT_LIST values (null, 3,  10, 'łyżka', 'woda');
-insert into INGREDIENT_LIST values (null, 3,  10, 'łyżka', 'olej');
-insert into INGREDIENT_LIST values (null, 3,  4, 'sztuka', 'jajko');
-insert into INGREDIENT_LIST values (null, 3,  2, 'łyżka', 'proszek do pieczenia');
+insert into INGREDIENT_LIST values (null, 3,  10, 'tablespoon', 'woda');
+insert into INGREDIENT_LIST values (null, 3,  10, 'tablespoon', 'olej');
+insert into INGREDIENT_LIST values (null, 3,  4, 'piece', 'jajko');
+insert into INGREDIENT_LIST values (null, 3,  2, 'tablespoon', 'proszek do pieczenia');
 
 insert into INGREDIENT_LIST values (null, 4,  200, 'gram', 'mąka tortowa');
 insert into INGREDIENT_LIST values (null, 4,  140, 'gram', 'masło');
@@ -127,14 +136,14 @@ insert into INGREDIENT_LIST values (null, 4,  70,'gram', 'orzechy włoskie');
 insert into INGREDIENT_LIST values (null, 5,  210, 'gram', 'mąka poznańska');
 insert into INGREDIENT_LIST values (null, 5,  140, 'gram', 'masło');
 insert into INGREDIENT_LIST values (null, 5,  70, 'gram', 'cukier puder');
-insert into INGREDIENT_LIST values (null, 5,  2, 'sztuka', 'żółtko');
-insert into INGREDIENT_LIST values (null, 5,  1, 'sztuka', 'cukier waniliowy');
+insert into INGREDIENT_LIST values (null, 5,  2, 'piece', 'żółtko');
+insert into INGREDIENT_LIST values (null, 5,  1, 'piece', 'cukier waniliowy');
 
 insert into INGREDIENT_LIST values (null, 6,  200, 'gram', 'mąka wrocławska');
-insert into INGREDIENT_LIST values (null, 6,  250, 'mililitr', 'mleko');
-insert into INGREDIENT_LIST values (null, 6,  250, 'mililitr', 'woda');
-insert into INGREDIENT_LIST values (null, 6,  1, 'łyżka', 'cukier');
-insert into INGREDIENT_LIST values (null, 6,  1, 'sztuka', 'jajko');
+insert into INGREDIENT_LIST values (null, 6,  250, 'mililiter', 'mleko');
+insert into INGREDIENT_LIST values (null, 6,  250, 'mililiter', 'woda');
+insert into INGREDIENT_LIST values (null, 6,  1, 'tablespoon', 'cukier');
+insert into INGREDIENT_LIST values (null, 6,  1, 'piece', 'jajko');
 commit;
 
 insert into FAVORITE values (null, 'BurnedOliveTree', 1);
