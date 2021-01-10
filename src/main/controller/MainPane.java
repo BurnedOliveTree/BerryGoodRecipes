@@ -112,7 +112,7 @@ public class MainPane extends BasicPaneActions {
         else {
             result = result + " and (lower(" + query + ") like lower('%" + args[args.length - 1] + "%')";
             for (int i = args.length - 2; i >= 0; i--)
-                result = result + "or lower(" + query + ") like lower('%" + args[i] + "%')";
+                result = result + " or lower(" + query + ") like lower('%" + args[i] + "%')";
         }
         result = result + ")";
         return result;

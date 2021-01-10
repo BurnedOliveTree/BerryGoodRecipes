@@ -247,9 +247,20 @@ public class DatabaseConnection {
     public static void fillResults(MainPane mainPane, TilePane tilePain, String whereStatement) throws SQLException, IOException {
         setConnection();
         Statement statement = connection.createStatement();
-        String query = "select distinct rcp.RECIPE_ID, rcp.NAME, rcp.PREPARATION_TIME, rcp.COST, CALC_RATING(rcp.RECIPE_ID) as RATING from RECIPE rcp join INGREDIENT_LIST ing on rcp.RECIPE_ID = ing.RECIPE_ID";
-        if (whereStatement != null)
-            query = query + " WHERE " + whereStatement;
+        String insideQuery = "";
+        if (mainPane.activeUser != null)
+            insideQuery = "select distinct pub.RECIPE_ID from PUBLICITY pub join BELONG blg on blg.GROUP_ID = pub.GROUP_ID where lower(blg.USERNAME) = \'"+mainPane.activeUser.getUsername().toLowerCase()+"\'";
+        else
+            insideQuery = "select distinct RECIPE_ID from PUBLICITY where GROUP_ID = 0";
+        System.out.println(insideQuery);
+        String query = "select distinct rcp.RECIPE_ID, rcp.NAME, rcp.PREPARATION_TIME, rcp.COST, CALC_RATING(rcp.RECIPE_ID) as RATING from RECIPE rcp join INGREDIENT_LIST ing on rcp.RECIPE_ID = ing.RECIPE_ID where rcp.RECIPE_ID in ("+insideQuery+")";
+        if (whereStatement != null) {
+            if (mainPane.activeUser == null)
+                query = query + " WHERE " + whereStatement;
+            else
+                query = query + " AND " + whereStatement;
+        }
+        System.out.println(query);
         ResultSet resultSet = statement.executeQuery(query);
         List<GridPane> panelist = new ArrayList<>();
         while (resultSet.next()) {
@@ -411,6 +422,5 @@ public class DatabaseConnection {
         statement.close();
         closeConnection();
     }
-
 
 }
