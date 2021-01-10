@@ -16,7 +16,7 @@ import javafx.scene.image.ImageView;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class UserAdminPane extends OrdinaryButtonAction {
+public class UserAdminPane extends BasicPaneActions {
     private final User activeUser;
     @FXML private Button exitButton;
     @FXML private ImageView exitPic;

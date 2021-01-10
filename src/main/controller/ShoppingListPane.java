@@ -11,10 +11,9 @@ import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
 import main.userModel.User;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ShoppingListPane extends OrdinaryButtonAction {
+public class ShoppingListPane extends BasicPaneActions {
     private final User activeUser;
     private final Object returnPane;
 

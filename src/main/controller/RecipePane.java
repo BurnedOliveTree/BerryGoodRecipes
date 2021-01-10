@@ -22,7 +22,7 @@ import main.userModel.User;
 
 import java.io.IOException;
 
-public class RecipePane  extends OrdinaryButtonAction{
+public class RecipePane  extends BasicPaneActions {
     private final Recipe recipe;
     private final User activeUser;
     @FXML private TextFlow descText;

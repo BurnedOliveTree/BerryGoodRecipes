@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class LogInWindow extends OrdinaryButtonAction {
+public class LogInWindow extends BasicPaneActions {
     private final MainPane mainPane;
     @FXML
     public TextField usernameField;

@@ -17,7 +17,7 @@ import main.userModel.User;
 import java.sql.SQLException;
 import java.util.Optional;
 
-public class RecipeAdminPane extends OrdinaryButtonAction {
+public class RecipeAdminPane extends BasicPaneActions {
     private final User activeUser;
 
     @FXML private ScrollBar scrollIngredient;

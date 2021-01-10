@@ -15,7 +15,7 @@ import main.userModel.User;
 
 import java.text.DecimalFormat;
 
-public class ScalePane extends OrdinaryButtonAction {
+public class ScalePane extends BasicPaneActions {
     private final Recipe recipe;
     private final User activeUser;
     private final Converter converter;

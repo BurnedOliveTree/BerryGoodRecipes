@@ -16,7 +16,7 @@ import main.userModel.User;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class OpinionPane extends OrdinaryButtonAction {
+public class OpinionPane extends BasicPaneActions {
     private Opinion opinion;
     private final User activeUser;
     private final Recipe recipe;

@@ -18,7 +18,7 @@ import main.userModel.User;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class MainPane extends OrdinaryButtonAction {
+public class MainPane extends BasicPaneActions {
     private String query;
     private String orderBy = "rcp.name";
     public User activeUser;
@@ -160,7 +160,7 @@ public class MainPane extends OrdinaryButtonAction {
     @FXML
     public void onMyRecipesAction(MouseEvent mouseEvent) {
         mouseEvent.consume();
-        changeScene(myRecipesButton, loadFXML(new RecipeAdminPane(activeUser), "/RecipeAdminPage.fxml"));
+        changeScene(myRecipesButton, loadFXML(new RecipeAdminPane(activeUser), "/recipeAdminPage.fxml"));
     }
 
     @FXML

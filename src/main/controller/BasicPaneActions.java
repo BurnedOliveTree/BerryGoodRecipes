@@ -14,7 +14,7 @@ import main.DatabaseConnection;
 import java.io.IOException;
 
 // class with methods used by children class
-public class OrdinaryButtonAction {
+public class BasicPaneActions {
 
     // used in MainPane, OpinionPane, RecipeAdminPane, RecipePane, ScalePane, ShoppingListPane, UserAdminPane
     public FXMLLoader loadFXML(Object c, String path) {
@@ -23,22 +23,22 @@ public class OrdinaryButtonAction {
         return loader;
     }
 
-    // used in MainPane, OpinionPane, RecipeAdminPane, RecipePane, ScalePane, ShoppingListPane, UserAdminPane
+    // used in MainPane, RecipeAdminPane, RecipePane
     public void changeScene(FXMLLoader loader) {
         changeScene(null, loader, "BerryGood Recipes");
     }
 
-    // used
+    // used in MainPane, OpinionPane, RecipeAdminPane, RecipePane, ScalePane, ShoppingListPane, UserAdminPane
     public void changeScene(Node node, FXMLLoader loader) {
         changeScene(node, loader, "BerryGood Recipes");
     }
 
-    // used
+    // used in MainPane
     public void changeScene(FXMLLoader loader, String title) {
         changeScene(null, loader, title);
     }
 
-    // used
+    // used by above methods
     public void changeScene(Node node, FXMLLoader loader, String title) {
         try {
             Scene scene = new Scene(loader.load());
