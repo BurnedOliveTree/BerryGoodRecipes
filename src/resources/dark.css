@@ -32,3 +32,7 @@ Text {
 #non-transparent {
     -fx-background-color: -fx-base;
 }
+.scroll-pane > {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}

@@ -7,6 +7,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import main.recipeModel.Recipe;
 import main.userModel.User;
 
@@ -17,11 +20,27 @@ public class RecipeAdminPane extends OrdinaryButtonAction {
     private final User activeUser;
 
     @FXML
+    private ScrollBar scrollIngredient;
+    @FXML
     private TableView<Recipe> myRecipesTable;
     @FXML
     private Button exitButton;
     @FXML
     private TableView<Recipe> favTable;
+    @FXML
+    private GridPane ingredientPane;
+    @FXML
+    private TextField titleLabel;
+    @FXML
+    private TextField portionLabel;
+    @FXML
+    private TextField costLabel;
+    @FXML
+    private TextField hrsLabel;
+    @FXML
+    private TextField minsLabel;
+    @FXML
+    private TextArea descriptionArea ;
 
     public RecipeAdminPane( User activeUser) {
         this.activeUser = activeUser;
@@ -53,7 +72,29 @@ public class RecipeAdminPane extends OrdinaryButtonAction {
         });
         setContentMenu(favTable, createDeleteFavItem());
         setContentMenu(myRecipesTable, createDeleteMyRecipeItem());
+        ingredientPane.getRowConstraints().clear();
+        for (int i = 0; i < 3; i++) {
+            addIngredient();
+        }
+
     }
+
+    @FXML
+    private void addIngredient() {
+        TextField quantity = new TextField("Qty");
+        SplitMenuButton unit = new SplitMenuButton();
+        unit.setPrefWidth(ingredientPane.getColumnConstraints().get(1).getPrefWidth());
+        TextField name = new TextField("Name");
+        quantity.setStyle("-fx-text-box-border: transparent");
+        name.setStyle("-fx-text-box-border: transparent");
+        ingredientPane.addRow(ingredientPane.getRowCount()+1, quantity, unit, name);
+    }
+
+    @FXML
+    private void saveRecipe() {
+
+    }
+
 
     private void setMyRecipesTable() {
         ObservableList<Recipe> RecipeList = FXCollections.observableArrayList(activeUser.getUserRecipes());
