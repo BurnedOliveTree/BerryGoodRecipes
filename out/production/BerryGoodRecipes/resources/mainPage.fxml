@@ -18,7 +18,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.MainPane">
    <center>
       <GridPane>
          <columnConstraints>
@@ -183,7 +183,7 @@
                      </image>
                   </ImageView>
                </graphic></Button>
-            <Button fx:id="helpButton" mnemonicParsing="false" onMouseClicked="#onHelpButtonClick" prefHeight="64.0" prefWidth="64.0" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+            <Button mnemonicParsing="false" onMouseClicked="#onHelpButtonClick" prefHeight="64.0" prefWidth="64.0" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
          </children>
       </GridPane>
    </left>

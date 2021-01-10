@@ -12,9 +12,9 @@ import java.io.IOException;
 
 public class OrdinaryButtonAction {
     // class with methods used by children class
-    public FXMLLoader loadFXML(OrdinaryButtonAction c, String path) {
+    public FXMLLoader loadFXML(Object c, String path) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
-        loader.setController(c);
+        loader.setControllerFactory(param -> c);
         return loader;
     }
     // used in RecipePane, ShoppingListPane, MainPane

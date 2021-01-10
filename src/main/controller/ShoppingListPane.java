@@ -36,12 +36,12 @@ public class ShoppingListPane extends OrdinaryButtonAction {
 
     @FXML   // return to proper window
     public void onExitButtonAction(){
-        FXMLLoader loader;
+        String path;
         if (Pattern.compile("MainPane").matcher(returnPane.getClass().getName()).find())
-            loader = new FXMLLoader(getClass().getResource("/resources/mainPage.fxml"));
+            path = "/resources/mainPage.fxml";
         else
-            loader = new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
-        loader.setController(returnPane);
+            path = "/resources/recipePage.fxml";
+        FXMLLoader loader = loadFXML(returnPane, path);
         changeScene(exitButton, loader);
     }
 }

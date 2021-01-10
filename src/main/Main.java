@@ -27,7 +27,7 @@ public class Main extends Application {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(this.getClass().getResource("/resources/mainPage.fxml"));
         MainPane controller = new MainPane(activeUser);
-        loader.setController(controller);
+        loader.setControllerFactory(param -> controller);
         Scene scene = new Scene(loader.load());
         scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
         primaryStage.getIcons().add(new Image("icons/raspLogo.png"));

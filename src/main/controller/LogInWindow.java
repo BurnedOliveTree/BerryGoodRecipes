@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 
 import java.sql.SQLException;
 
-public class LogInWindow {
+public class LogInWindow extends OrdinaryButtonAction {
     private final MainPane mainPane;
     @FXML
     public TextField usernameField;

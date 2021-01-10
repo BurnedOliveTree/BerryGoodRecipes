@@ -4,21 +4,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 
-import javafx.stage.Stage;
 import main.DatabaseConnection;
 import main.recipeModel.Recipe;
 import main.userModel.Opinion;
 import main.userModel.User;
 
-import java.io.IOException;
 import java.sql.SQLException;
 
-
-public class OpinionPane {
+public class OpinionPane extends OrdinaryButtonAction {
     private Opinion opinion;
     private final User activeUser;
     private final Recipe recipe;
@@ -45,7 +40,7 @@ public class OpinionPane {
     @FXML
     private void initialize() throws SQLException {
         scoreBox.setItems(scoreList);
-        exitButton.setOnAction( e->{ exitAction("/resources/recipePage.fxml"); });
+        exitButton.setOnAction( e->{ exitAction(); });
         okButton.setDisable(true);
         reportButton.setDisable(true);
         editButton.setDisable(true);
@@ -116,19 +111,9 @@ public class OpinionPane {
         DatabaseConnection.createOpinion(opinion, opinionLabel, opinionView);
     }
 
-    private void  exitAction(String namePath) {
-        try {
-            FXMLLoader loader =  new FXMLLoader(getClass().getResource(namePath));
-            RecipePane controller = new RecipePane(this.recipe, activeUser);
-            loader.setController(controller);
-            Parent recipePage = loader.load();
-            Scene recipePageScene = new Scene(recipePage);
-            Stage stage = (Stage) exitButton.getScene().getWindow();
-            recipePageScene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
-            stage.setScene(recipePageScene);
-            stage.show();
-        } catch (IOException e) {
-            System.err.println(String.format("Error: %s", e.getMessage()));}
+    private void exitAction() {
+        FXMLLoader loader = loadFXML(new RecipePane(this.recipe, activeUser), "/resources/recipePage.fxml");
+        changeScene(exitButton, loader);
     }
 
 
