@@ -211,16 +211,24 @@ public class DatabaseConnection {
             tempButton.setTextAlignment(TextAlignment.CENTER);
             tempButton.setAlignment(Pos.CENTER);
             tempButton.setPrefSize(192, 64);
-            tempButton.getItems().add(new MenuItem("Show shopping list"));
-            tempButton.getItems().add(new MenuItem("Show recipes"));
+            MenuItem menuItem = new MenuItem("Show shopping list");
+            menuItem.setOnAction(e -> System.out.println("TODO jump to shopping list"));
+            tempButton.getItems().add(menuItem);
+            menuItem = new MenuItem("Show recipes");
+            menuItem.setOnAction(e -> System.out.println("TODO jump to recipes of the group"));
+            tempButton.getItems().add(menuItem);
             tempButton.getItems().add(new SeparatorMenuItem());
             Menu kickMenu = new Menu("Kick user");
             List<String> tempStringList = getGroupParticipants(resultSet.getString("ID"));
-            for (String s : tempStringList) kickMenu.getItems().add(new MenuItem(s));
+            for (String s : tempStringList) {
+                menuItem = new MenuItem(s);
+                menuItem.setOnAction(e -> System.out.println("TODO actually kick user"));
+                kickMenu.getItems().add(menuItem);
+            }
             tempButton.getItems().add(kickMenu);
-            tempButton.getItems().add(new MenuItem("Delete group"));
-//            String tempString = resultSet.getString("RECIPE_ID");
-//            tempButton.setOnMouseClicked(e -> mainPane.onRecipeClick(Integer.parseInt(tempString)));
+            menuItem = new MenuItem("Delete group");
+            menuItem.setOnAction(e -> System.out.println("TODO actually delete group"));
+            tempButton.getItems().add(menuItem);
             panelist.add(tempButton);
         }
         tilePane.getChildren().clear();
