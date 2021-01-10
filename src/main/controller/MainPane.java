@@ -3,10 +3,9 @@ package main.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Side;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -22,20 +21,21 @@ import java.sql.SQLException;
 
 public class MainPane extends OrdinaryButtonAction {
     private String query;
+    private String orderBy = "rcp.name";
     public User activeUser;
-    @FXML
-    public ImageView logo;
-    public Button loginButton;
-    public MenuButton settingsButton;
-    public Button myRecipesButton;
-    public Button socialButton;
-    public Button basketButton;
-    public ImageView recipePic;
-    public ImageView socialPic;
-    public ImageView basketPic;
-    public ImageView settingsPic;
-    public TilePane tilePain;
-    public TextField search;
+    @FXML private ImageView logo;
+    @FXML private Button loginButton;
+    @FXML private MenuButton settingsButton;
+    @FXML private Button myRecipesButton;
+    @FXML private Button socialButton;
+    @FXML private Button basketButton;
+    @FXML private ImageView recipePic;
+    @FXML private ImageView socialPic;
+    @FXML private ImageView basketPic;
+    @FXML private ImageView settingsPic;
+    @FXML private TilePane tilePain;
+    @FXML public TextField search;
+    @FXML private ContextMenu searchContext;
 
     public MainPane(User activeUser) {
         this.activeUser = activeUser;
@@ -52,6 +52,15 @@ public class MainPane extends OrdinaryButtonAction {
             settingsPic.setImage(new Image("icons/berryCog.png"));
         }
         setButtonActivity();
+
+        search.focusedProperty().addListener((ov, oldV, newV) -> {
+            if (newV) {
+                searchContext.show(search, Side.BOTTOM, 0, 0);
+            }
+            else {
+                searchContext.hide();
+            }
+        });
     }
 
     public void setButtonActivity() {
@@ -142,7 +151,7 @@ public class MainPane extends OrdinaryButtonAction {
                 args = args + multiple_search(tempList, "CALC_RATING(rcp.RECIPE_ID) >", true);
             }
         }
-        query = "lower(rcp.name) like lower('%" + query + "%')" + args;
+        query = "lower(rcp.name) like lower('%" + query + "%')" + args + " order by " + orderBy;
         System.out.println(query);
         DatabaseConnection.fillResults(this, tilePain, query);
     }
@@ -162,21 +171,13 @@ public class MainPane extends OrdinaryButtonAction {
     @FXML
     public void onBasketButtonClick(MouseEvent mouseEvent) {
         mouseEvent.consume();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/shoppingListPage.fxml"));
-        MainPane returnPane = new MainPane(activeUser);
-        ShoppingListPane controller = new ShoppingListPane(activeUser, returnPane);
-        loader.setController(controller);
+        FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, new MainPane(activeUser)), "/shoppingListPage.fxml");
         changeScene(basketButton, loader);
     }
 
-    public void onRecipeClick(Button button, int RecipeID){
-        try {
-            FXMLLoader loader =  new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
-            loader.setController(new RecipePane(DatabaseConnection.getSelectedRecipe(RecipeID), activeUser));
-            changeScene(button, loader, true);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public void onRecipeClick(Button button, int RecipeID) {
+        FXMLLoader loader = loadFXML(new RecipePane(DatabaseConnection.getSelectedRecipe(RecipeID), activeUser), "/resources/recipePage.fxml");
+        changeScene(button, loader, true);
     }
 
     @FXML
@@ -190,8 +191,7 @@ public class MainPane extends OrdinaryButtonAction {
             setButtonActivity();
         }
         else {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/logInWindow.fxml"));
-            loader.setController(new LogInWindow(this));
+            FXMLLoader loader = loadFXML(new LogInWindow(this), "/resources/logInWindow.fxml");
             Scene scene = new Scene(loader.load());
             scene.getStylesheets().add(getClass().getResource("/resources/" + DatabaseConnection.theme + ".css").toExternalForm());
             Stage stage = new Stage();
@@ -199,6 +199,19 @@ public class MainPane extends OrdinaryButtonAction {
             stage.setScene(scene);
             stage.show();
         }
+    }
+
+    @FXML
+    public void onHelpButtonClick(MouseEvent mouseEvent) {
+        mouseEvent.consume();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Help");
+        alert.setHeaderText("How to use search");
+        alert.setGraphic(null);
+        alert.setContentText("Typing normal text in the search field will search for any title that contains these" +
+                "words.\nYou can also use a function to filter the search result.\nSyntax for such is:\n[function1]:" +
+                "[arg1],[arg2],[arg3] [function2]:[arg1]\nfor example: \"ciasto with:masło,mleko maxcost:100\"");
+        alert.showAndWait();
     }
 
     @FXML
@@ -223,6 +236,30 @@ public class MainPane extends OrdinaryButtonAction {
     public void onThemeSpringSelection() {
         DatabaseConnection.theme = "spring";
         resetTheme();
+    }
+
+    @FXML
+    public void onNameOrderSelection() {
+        orderBy = "rcp.name";
+        System.out.println(orderBy);
+    }
+
+    @FXML
+    public void onCostOrderSelection() {
+        orderBy = "rcp.cost";
+        System.out.println(orderBy);
+    }
+
+    @FXML
+    public void onTimeOrderSelection() {
+        orderBy = "rcp.preparation_time";
+        System.out.println(orderBy);
+    }
+
+    @FXML
+    public void onRatingOrderSelection() {
+        orderBy = "rating desc";
+        System.out.println(orderBy);
     }
 
     public void resetTheme() {

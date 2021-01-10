@@ -125,17 +125,14 @@ public class RecipeAdminPane extends OrdinaryButtonAction {
     }
 
     private void ShowRecipe(Recipe recipe) throws SQLException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/recipePage.fxml"));
-        loader.setController(new RecipePane(recipe, activeUser));
+        FXMLLoader loader = loadFXML(new RecipePane(recipe, activeUser), "/resources/recipePage.fxml");
         changeScene(exitButton, loader, true);
         favTable.refresh();
     }
 
     @FXML
     private void onExitButtonAction() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/mainPage.fxml"));
-        MainPane controller = new MainPane(activeUser);
-        loader.setController(controller);
+        FXMLLoader loader = loadFXML(new MainPane(activeUser), "/resources/mainPage.fxml");
         changeScene(exitButton, loader);
     }
 

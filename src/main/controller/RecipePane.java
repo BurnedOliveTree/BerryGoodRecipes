@@ -247,17 +247,13 @@ public class RecipePane  extends OrdinaryButtonAction{
     }
 
     @FXML
-    private void onCommentButtonAction(){
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/opinionPage.fxml"));
-        OpinionPane controller = new OpinionPane(this.recipe, activeUser);
-        loader.setController(controller);
+    private void onCommentButtonAction() {
+        FXMLLoader loader = loadFXML(new OpinionPane(this.recipe, activeUser), "/resources/opinionPage.fxml");
         changeScene(commentButton, loader);
     }
     @FXML
-    private void onScaleButtonAction(){
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/scalePage.fxml"));
-        ScalePane controller = new ScalePane(this.recipe, activeUser);
-        loader.setController(controller);
+    private void onScaleButtonAction() {
+        FXMLLoader loader = loadFXML(new ScalePane(this.recipe, activeUser), "/resources/scalePage.fxml");
         changeScene(scaleButton, loader);
     }
     @FXML //@TODO always on another window?
@@ -267,18 +263,14 @@ public class RecipePane  extends OrdinaryButtonAction{
 
     @FXML
     private void onShoppingListButtonAction(){
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/shoppingListPage.fxml"));
-        RecipePane returnPane = new RecipePane(recipe, activeUser);
-        ShoppingListPane controller = new ShoppingListPane(activeUser, returnPane);
-        loader.setController(controller);
+        FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, new RecipePane(recipe, activeUser)), "/resources/shoppingListPage.fxml");
         changeScene(shoppingListButton, loader);
     }
 
     @FXML
     private void onTimeButtonAction() throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/timerPage.fxml"));
-        TimerPane controller = new TimerPane();
-        loader.setController(controller);
+        FXMLLoader loader = loadFXML(new TimerPane(), "/resources/timerPage.fxml");
+        // TODO replace with ChangeScene
         Scene scene = new Scene(loader.load());
         Stage stage = new Stage();
         stage.setMaxHeight(200);

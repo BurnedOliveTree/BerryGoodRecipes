@@ -4,19 +4,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
-import main.DatabaseConnection;
+
 import main.converterModel.Converter;
 import main.recipeModel.Recipe;
 import main.userModel.User;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
 
-public class ScalePane {
+public class ScalePane extends OrdinaryButtonAction {
     private final Recipe recipe;
     private final User activeUser;
     private final Converter converter;
@@ -27,8 +23,6 @@ public class ScalePane {
         this.activeUser = activeUser;
         this.converter = new Converter();
     }
-
-    ;
 
     @FXML
     public Button exitButton;
@@ -51,20 +45,12 @@ public class ScalePane {
 
     @FXML
     private void initialize() {
-        exitButton.setOnAction(e -> {
-            onAction(exitButton, "/resources/recipePage.fxml");
-        });
+        exitButton.setOnAction(e -> onAction());
         IHaveBox.setItems(shapeList);
         inRecipeBox.setItems(shapeList);
-        IHaveBox.setOnAction(e -> {
-            sizeBoxAction(IHaveBox);
-        });
-        inRecipeBox.setOnAction(e -> {
-            sizeBoxAction(inRecipeBox);
-        });
-        moldButton.setOnAction(e->{
-            okMoldAction();
-        });
+        IHaveBox.setOnAction(e -> sizeBoxAction(IHaveBox));
+        inRecipeBox.setOnAction(e -> sizeBoxAction(inRecipeBox));
+        moldButton.setOnAction(e -> okMoldAction());
 
     }
 
@@ -148,17 +134,7 @@ public class ScalePane {
         }
     }
 
-    private void  onAction(Button button, String namePath) {
-        try {
-            FXMLLoader loader =  new FXMLLoader(getClass().getResource(namePath));
-            RecipePane controller = new RecipePane(this.recipe, activeUser);
-            loader.setController(controller);
-            Parent recipePage = loader.load();
-            Scene recipePageScene = new Scene(recipePage);
-            Stage stage = (Stage) exitButton.getScene().getWindow();
-            recipePageScene.getStylesheets().add(getClass().getResource("/resources/"+ DatabaseConnection.theme+".css").toExternalForm());
-            stage.setScene(recipePageScene);
-            stage.show();
-        } catch (IOException e) {
-            System.err.println(String.format("Error: %s", e.getMessage()));}
+    private void onAction() {
+        FXMLLoader loader = loadFXML(new RecipePane(this.recipe, activeUser), "/resources/recipePage.fxml");
+        changeScene(exitButton, loader);
     }}

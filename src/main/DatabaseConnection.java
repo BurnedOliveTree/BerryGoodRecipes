@@ -302,11 +302,16 @@ public class DatabaseConnection {
         closeConnection();
     }
 
-    public static Recipe getSelectedRecipe(int recipeId) throws SQLException {
-        setConnection();
-        Recipe recipe = getRecipe(recipeId);
-        closeConnection();
-        return recipe;
+    public static Recipe getSelectedRecipe(int recipeId) {
+        try {
+            setConnection();
+            Recipe recipe = getRecipe(recipeId);
+            closeConnection();
+            return recipe;
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return null;
     }
 
     private static Recipe getRecipe(int recipeId) throws SQLException {

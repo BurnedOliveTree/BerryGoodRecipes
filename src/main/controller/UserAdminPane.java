@@ -15,10 +15,9 @@ import java.sql.SQLException;
 
 public class UserAdminPane extends OrdinaryButtonAction {
     private final User activeUser;
-    @FXML
-    public Button exitButton;
-    public TilePane tilePane;
-    public ListView<String> followedList;
+    @FXML private Button exitButton;
+    @FXML private TilePane tilePane;
+    @FXML private ListView<String> followedList;
 
     public UserAdminPane(User activeUser) {
         this.activeUser = activeUser;
@@ -37,7 +36,7 @@ public class UserAdminPane extends OrdinaryButtonAction {
 
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/mainPage.fxml"));
             MainPane controller = new MainPane(activeUser);
-            loader.setController(controller);
+            loader.setControllerFactory(param -> controller);
             changeScene(exitButton, loader);
 
             controller.search.setText("user:"+username);
@@ -47,8 +46,7 @@ public class UserAdminPane extends OrdinaryButtonAction {
 
     @FXML
     private void onExitButtonAction() {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/mainPage.fxml"));
-        loader.setController(new MainPane(activeUser));
+        FXMLLoader loader = loadFXML(new MainPane(activeUser), "/resources/mainPage.fxml");
         changeScene(exitButton, loader);
     }
 }

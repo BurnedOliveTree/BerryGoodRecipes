@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="200.0" prefHeight="200.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane maxHeight="200.0" prefHeight="200.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.TimerPane">
    <children>
       <AnchorPane id="non-transparent" fx:id="showPane" maxHeight="-Infinity" prefHeight="200.0">
          <children>
