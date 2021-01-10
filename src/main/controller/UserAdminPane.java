@@ -29,7 +29,7 @@ public class UserAdminPane extends BasicPaneActions {
 
     @FXML
     void initialize() throws SQLException, IOException {
-        if (DatabaseConnection.theme.equals("light") || DatabaseConnection.theme.equals("winter")) {
+        if (DatabaseConnection.isThemeLight()) {
             exitPic.setImage(new Image("icons/berryExit.png"));
         }
         DatabaseConnection.getGroups(tilePane, activeUser);

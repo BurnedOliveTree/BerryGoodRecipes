@@ -1,5 +1,6 @@
 package main.controller;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -33,6 +34,7 @@ public class MainPane extends BasicPaneActions {
     @FXML private ImageView basketPic;
     @FXML private ImageView settingsPic;
     @FXML private ImageView helpPic;
+    @FXML private ImageView searchPic;
     @FXML private TilePane tilePain;
     @FXML public TextField search;
     @FXML private ContextMenu searchContext;
@@ -44,16 +46,17 @@ public class MainPane extends BasicPaneActions {
     @FXML
     void initialize() throws SQLException, IOException {
         DatabaseConnection.fillResults(this, tilePain);
-        if (DatabaseConnection.theme.equals("light") || DatabaseConnection.theme.equals("winter")) {
+        if (DatabaseConnection.isThemeLight()) {
             logo.setImage(new Image("icons/berryLogo.png"));
             recipePic.setImage(new Image("icons/berryRecipe.png"));
             socialPic.setImage(new Image("icons/berryGroup.png"));
             basketPic.setImage(new Image("icons/berryBasket.png"));
             settingsPic.setImage(new Image("icons/berryCog.png"));
             helpPic.setImage(new Image("icons/berryHelp.png"));
+            searchPic.setImage(new Image("icons/berrySearch.png"));
         }
         setButtonActivity();
-
+        Platform.runLater(() -> loginButton.requestFocus());
         search.focusedProperty().addListener((ov, oldV, newV) -> {
             if (newV) {
                 searchContext.show(search, Side.BOTTOM, 0, 0);
@@ -182,7 +185,7 @@ public class MainPane extends BasicPaneActions {
     }
 
     @FXML
-    public void onSignInButtonClick(MouseEvent mouseEvent) throws IOException {
+    public void onSignInButtonClick(MouseEvent mouseEvent) {
         // create a new Window with sign in
         mouseEvent.consume();
         if (activeUser != null) {
@@ -208,6 +211,12 @@ public class MainPane extends BasicPaneActions {
                 "words.\nYou can also use a function to filter the search result.\nSyntax for such is:\n[function1]:" +
                 "[arg1],[arg2],[arg3] [function2]:[arg1]\nfor example: \"ciasto with:masło,mleko maxcost:100\"");
         alert.showAndWait();
+    }
+
+    @FXML
+    private void onSearchButtonClick(MouseEvent mouseEvent) throws IOException, SQLException {
+        mouseEvent.consume();
+        search(new ActionEvent());
     }
 
     @FXML
@@ -309,6 +318,7 @@ public class MainPane extends BasicPaneActions {
             basketPic.setImage(new Image("icons/berryBasket.png"));
             settingsPic.setImage(new Image("icons/berryCog.png"));
             helpPic.setImage(new Image("icons/berryHelp.png"));
+            searchPic.setImage(new Image("icons/berrySearch.png"));
         }
         else {
             logo.setImage(new Image("icons/raspLogo.png"));
@@ -317,6 +327,7 @@ public class MainPane extends BasicPaneActions {
             basketPic.setImage(new Image("icons/raspBasket.png"));
             settingsPic.setImage(new Image("icons/raspCog.png"));
             helpPic.setImage(new Image("icons/raspHelp.png"));
+            searchPic.setImage(new Image("icons/raspSearch.png"));
         }
         ((Stage) logo.getScene().getWindow()).getIcons().add(logo.getImage());
     }

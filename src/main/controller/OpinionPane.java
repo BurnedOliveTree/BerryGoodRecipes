@@ -43,7 +43,7 @@ public class OpinionPane extends BasicPaneActions {
 
     @FXML
     private void initialize() throws SQLException, IOException {
-        if (DatabaseConnection.theme.equals("light") || DatabaseConnection.theme.equals("winter")) {
+        if (DatabaseConnection.isThemeLight()) {
             exitPic.setImage(new Image("icons/berryExit.png"));
         }
         scoreBox.setItems(scoreList);

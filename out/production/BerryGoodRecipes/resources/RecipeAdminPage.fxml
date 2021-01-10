@@ -65,19 +65,19 @@
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="341.0" minWidth="10.0" prefWidth="181.0" />
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints maxHeight="172.0" minHeight="10.0" prefHeight="12.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="172.0" minHeight="0.0" prefHeight="32.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="423.0" minHeight="0.0" prefHeight="27.0" vgrow="SOMETIMES" />
-                      <RowConstraints maxHeight="412.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="385.0" minHeight="0.0" prefHeight="27.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="383.0" minHeight="0.0" prefHeight="11.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="359.0" minHeight="6.0" prefHeight="13.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="412.0" minHeight="10.0" prefHeight="133.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="304.0" minHeight="5.0" prefHeight="35.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="304.0" minHeight="7.0" prefHeight="9.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="333.0" minHeight="5.0" prefHeight="8.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="360.0" minHeight="10.0" prefHeight="170.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="304.0" minHeight="4.0" prefHeight="39.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="5.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="32.0" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="32.0" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="32.0" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="32.0" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="8.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="15.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="64.0" prefHeight="133.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="4.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="15.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="54.0" prefHeight="170.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <TextField fx:id="titleField" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="1" />
@@ -94,7 +94,7 @@
                         </TextField>
                         <Label alignment="TOP_LEFT" contentDisplay="BOTTOM" text="  Ingredient list" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="6" GridPane.valignment="BOTTOM">
                            <GridPane.margin>
-                              <Insets top="10.0" />
+                              <Insets />
                            </GridPane.margin>
                            <font>
                               <Font name="System Italic" size="12.0" />
@@ -107,7 +107,7 @@
                               <Font name="System Italic" size="12.0" />
                            </font>
                         </Label>
-                        <TextArea fx:id="descriptionArea" prefHeight="162.0" prefWidth="471.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="11">
+                        <TextArea fx:id="descriptionArea" prefWidth="471.0" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="11">
                            <GridPane.margin>
                               <Insets top="5.0" />
                            </GridPane.margin>
@@ -126,6 +126,9 @@
                                 </rowConstraints>
                               </GridPane>
                            </content>
+                           <GridPane.margin>
+                              <Insets top="5.0" />
+                           </GridPane.margin>
                         </ScrollPane>
                         <Button mnemonicParsing="false" onAction="#saveRecipe" prefHeight="25.0" prefWidth="999.0" text="Save" GridPane.columnIndex="4" GridPane.rowIndex="12" />
                      </children>

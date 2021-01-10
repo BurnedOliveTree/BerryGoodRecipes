@@ -6,7 +6,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ScrollBar?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -22,18 +22,20 @@
    <center>
       <GridPane>
          <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="36.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="36.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="40.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="40.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="36.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="36.0" />
          </columnConstraints>
          <rowConstraints>
-            <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="32.0" valignment="TOP" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="0.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <TextField fx:id="search" onAction="#search" prefHeight="27.0" prefWidth="336.0" promptText="Search">
+            <TextField fx:id="search" onAction="#search" prefHeight="32.0" prefWidth="128.0" promptText="Search">
                <GridPane.margin>
-                  <Insets left="10.0" right="10.0" />
+                  <Insets />
                </GridPane.margin>
                <contextMenu>
                   <ContextMenu fx:id="searchContext">
@@ -50,17 +52,15 @@
                   </ContextMenu>
                </contextMenu>
             </TextField>
-            <TilePane fx:id="tilePain" hgap="16.0" vgap="16.0" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.valignment="TOP">
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" GridPane.columnSpan="2147483647" GridPane.rowIndex="1" GridPane.valignment="TOP">
                <GridPane.margin>
-                  <Insets left="10.0" />
+                  <Insets top="8.0" />
                </GridPane.margin>
-            </TilePane>
-            <ScrollBar maxWidth="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefWidth="16.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
-               <GridPane.margin>
-                  <Insets bottom="10.0" left="10.0" right="10.0" />
-               </GridPane.margin>
-            </ScrollBar>
-            <MenuButton alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefWidth="60.0" text="Order" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER">
+               <content>
+                  <TilePane fx:id="tilePain" hgap="8.0" vgap="16.0" />
+               </content>
+            </ScrollPane>
+            <MenuButton alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="32.0" prefWidth="64.0" text="Order" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.halignment="CENTER">
               <items>
                 <MenuItem mnemonicParsing="false" onAction="#onNameOrderSelection" text="Name" />
                   <MenuItem mnemonicParsing="false" onAction="#onCostOrderSelection" text="Cost" />
@@ -71,6 +71,23 @@
                   <Insets right="5.0" />
                </GridPane.margin>
             </MenuButton>
+            <Button id="small" mnemonicParsing="false" onMouseClicked="#onHelpButtonClick" prefHeight="32.0" prefWidth="32.0" GridPane.columnIndex="2">
+               <graphic>
+                  <ImageView fx:id="helpPic" fitHeight="22.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icons/raspHelp.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+            <Button id="small" mnemonicParsing="false" onMouseClicked="#onSearchButtonClick" prefHeight="32.0" prefWidth="32.0" GridPane.columnIndex="1">
+               <graphic>
+                  <ImageView fx:id="searchPic" fitHeight="22.0" fitWidth="18.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icons/raspSearch.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
          </children>
       </GridPane>
    </center>
@@ -103,7 +120,6 @@
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" />
          </columnConstraints>
          <rowConstraints>
-            <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="80.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="80.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="80.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="80.0" vgrow="SOMETIMES" />
@@ -180,14 +196,6 @@
                   <ImageView fx:id="basketPic" fitHeight="46.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@icons/raspBasket.png" />
-                     </image>
-                  </ImageView>
-               </graphic></Button>
-            <Button mnemonicParsing="false" onMouseClicked="#onHelpButtonClick" prefHeight="64.0" prefWidth="64.0" GridPane.halignment="CENTER" GridPane.rowIndex="5">
-               <graphic>
-                  <ImageView fx:id="helpPic" fitHeight="46.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@icons/raspHelp.png" />
                      </image>
                   </ImageView>
                </graphic></Button>

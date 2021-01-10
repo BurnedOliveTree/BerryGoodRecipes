@@ -28,7 +28,7 @@ public class ShoppingListPane extends BasicPaneActions {
 
     @FXML
     void initialize() {
-        if (DatabaseConnection.theme.equals("light") || DatabaseConnection.theme.equals("winter")) {
+        if (DatabaseConnection.isThemeLight()) {
             exitPic.setImage(new Image("icons/berryExit.png"));
         }
         for (Ingredient ingredient : activeUser.showShoppingList().values()) {
