@@ -6,23 +6,27 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+
 import main.DatabaseConnection;
 
 import java.io.IOException;
 
+// class with methods used by children class
 public class OrdinaryButtonAction {
-    // class with methods used by children class
+
+    // used in MainPane, OpinionPane, RecipeAdminPane, RecipePane, ScalePane, ShoppingListPane, UserAdminPane
     public FXMLLoader loadFXML(Object c, String path) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
         loader.setControllerFactory(param -> c);
         return loader;
     }
-    // used in RecipePane, ShoppingListPane, MainPane
+
+    // used in MainPane, OpinionPane, RecipeAdminPane, RecipePane, ScalePane, ShoppingListPane, UserAdminPane
     public void changeScene(Button button, FXMLLoader loader) {
         changeScene(button, loader, false);
     }
 
-    // used in RecipePane, MainPane
+    // used in MainPane, RecipeAdminPane, RecipePane
     public void changeScene(Button button, FXMLLoader loader, boolean showAndWait) {
         try {
             Scene scene = new Scene(loader.load());
@@ -41,6 +45,7 @@ public class OrdinaryButtonAction {
             System.err.printf("Error: %s%n", e.getMessage());
         }
     }
+
     // used in RecipeAdminPane...
     public void setContentMenu(Control control, MenuItem...  menuItems) {
         ContextMenu menu = new ContextMenu();
