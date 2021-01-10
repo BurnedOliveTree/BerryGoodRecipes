@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -16,7 +15,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.*;
 
-import javafx.stage.Stage;
 import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
@@ -27,46 +25,27 @@ import java.io.IOException;
 public class RecipePane  extends OrdinaryButtonAction{
     private final Recipe recipe;
     private final User activeUser;
-    @FXML
-    private TextFlow descText;
-    @FXML
-    private ImageView ScalePic;
-    @FXML
-    private ImageView ShoppingPic;
-    @FXML
-    private ImageView LikePic;
-    @FXML
-    private ImageView TimePic;
-    @FXML
-    private Label titleLabel;
-    @FXML
-    private Label costLabel;
-    @FXML
-    private Label authorLabel;
-    @FXML
-    private Label dateAddedLabel;
-    @FXML
-    private Label timePrepLabel;
-    @FXML
-    private Spinner<Integer> portionArea;
-    @FXML
-    private Pane ingredientPane;
-    @FXML
-    private ListView ingredientListView;
-    @FXML
-    private Button exitButton;
-    @FXML
-    private Button shoppingListButton;
-    @FXML
-    private Button likeButton;
-    @FXML
-    private Button timeButton;
-    @FXML
-    private Button commentButton;
-    @FXML
-    private Button scaleButton;
-    @FXML
-    private VBox propertyBox;
+    @FXML private TextFlow descText;
+    @FXML private ImageView ExitPic;
+    @FXML private ImageView ScalePic;
+    @FXML private ImageView ShoppingPic;
+    @FXML private ImageView LikePic;
+    @FXML private ImageView TimePic;
+    @FXML private Label titleLabel;
+    @FXML private Label costLabel;
+    @FXML private Label authorLabel;
+    @FXML private Label dateAddedLabel;
+    @FXML private Label timePrepLabel;
+    @FXML private Spinner<Integer> portionArea;
+    @FXML private Pane ingredientPane;
+    @FXML private ListView ingredientListView;
+    @FXML private Button exitButton;
+    @FXML private Button shoppingListButton;
+    @FXML private Button likeButton;
+    @FXML private Button timeButton;
+    @FXML private Button commentButton;
+    @FXML private Button scaleButton;
+    @FXML private VBox propertyBox;
 
     public RecipePane(Recipe recipe, User activeUser) {
         this.recipe = recipe;
@@ -79,6 +58,7 @@ public class RecipePane  extends OrdinaryButtonAction{
             ScalePic.setImage(new Image("icons/berryScale.png"));
             ShoppingPic.setImage(new Image("icons/berryBasket.png"));
             TimePic.setImage(new Image("icons/berryStoper.png"));
+            ExitPic.setImage(new Image("icons/berryExit.png"));
         }
 
         Text text = new Text(this.recipe.getPrepareMethod());

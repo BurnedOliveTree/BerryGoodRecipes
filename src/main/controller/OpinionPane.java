@@ -5,6 +5,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import main.DatabaseConnection;
 import main.recipeModel.Recipe;
@@ -22,6 +24,7 @@ public class OpinionPane extends OrdinaryButtonAction {
     @FXML
     public Button okButton;
     public Button exitButton;
+    @FXML private ImageView exitPic;
     public Label scoreLabel;
     public TextField commentTextField;
     public Label opinionLabel;
@@ -40,8 +43,11 @@ public class OpinionPane extends OrdinaryButtonAction {
 
     @FXML
     private void initialize() throws SQLException, IOException {
+        if (DatabaseConnection.theme.equals("light") || DatabaseConnection.theme.equals("winter")) {
+            exitPic.setImage(new Image("icons/berryExit.png"));
+        }
         scoreBox.setItems(scoreList);
-        exitButton.setOnAction( e->{ exitAction(); });
+        exitButton.setOnAction( e-> exitAction());
         okButton.setDisable(true);
         reportButton.setDisable(true);
         editButton.setDisable(true);

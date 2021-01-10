@@ -4,10 +4,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import javafx.scene.layout.GridPane;
+import main.DatabaseConnection;
 import main.recipeModel.Recipe;
 import main.userModel.User;
 
@@ -17,28 +20,18 @@ import java.util.Optional;
 public class RecipeAdminPane extends OrdinaryButtonAction {
     private final User activeUser;
 
-    @FXML
-    private ScrollBar scrollIngredient;
-    @FXML
-    private TableView<Recipe> myRecipesTable;
-    @FXML
-    private Button exitButton;
-    @FXML
-    private TableView<Recipe> favTable;
-    @FXML
-    private GridPane ingredientPane;
-    @FXML
-    private TextField titleField;
-    @FXML
-    private TextField portionField;
-    @FXML
-    private TextField costField;
-    @FXML
-    private TextField hrsField;
-    @FXML
-    private TextField minsField;
-    @FXML
-    private TextArea descriptionArea ;
+    @FXML private ScrollBar scrollIngredient;
+    @FXML private TableView<Recipe> myRecipesTable;
+    @FXML private Button exitButton;
+    @FXML private ImageView exitPic;
+    @FXML private TableView<Recipe> favTable;
+    @FXML private GridPane ingredientPane;
+    @FXML private TextField titleField;
+    @FXML private TextField portionField;
+    @FXML private TextField costField;
+    @FXML private TextField hrsField;
+    @FXML private TextField minsField;
+    @FXML private TextArea descriptionArea;
 
     public RecipeAdminPane( User activeUser) {
         this.activeUser = activeUser;
@@ -46,6 +39,9 @@ public class RecipeAdminPane extends OrdinaryButtonAction {
 
     @FXML
     private void initialize() {
+        if (DatabaseConnection.theme.equals("light") || DatabaseConnection.theme.equals("winter")) {
+            exitPic.setImage(new Image("icons/berryExit.png"));
+        }
         setMyRecipesTable();
         setFavTable();
         favTable.setOnMousePressed(mouseEvent -> {

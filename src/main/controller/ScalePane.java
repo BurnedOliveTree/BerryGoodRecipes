@@ -5,7 +5,10 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
+import main.DatabaseConnection;
 import main.converterModel.Converter;
 import main.recipeModel.Recipe;
 import main.userModel.User;
@@ -26,6 +29,7 @@ public class ScalePane extends OrdinaryButtonAction {
 
     @FXML
     public Button exitButton;
+    @FXML private ImageView exitPic;
     public ChoiceBox IHaveBox;
     public ChoiceBox inRecipeBox;
     public Label inRecipeSize;
@@ -45,6 +49,9 @@ public class ScalePane extends OrdinaryButtonAction {
 
     @FXML
     private void initialize() {
+        if (DatabaseConnection.theme.equals("light") || DatabaseConnection.theme.equals("winter")) {
+            exitPic.setImage(new Image("icons/berryExit.png"));
+        }
         exitButton.setOnAction(e -> onAction());
         IHaveBox.setItems(shapeList);
         inRecipeBox.setItems(shapeList);

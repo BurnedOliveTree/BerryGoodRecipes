@@ -10,6 +10,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.TilePane;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -17,6 +19,7 @@ import java.sql.SQLException;
 public class UserAdminPane extends OrdinaryButtonAction {
     private final User activeUser;
     @FXML private Button exitButton;
+    @FXML private ImageView exitPic;
     @FXML private TilePane tilePane;
     @FXML private ListView<String> followedList;
 
@@ -26,6 +29,9 @@ public class UserAdminPane extends OrdinaryButtonAction {
 
     @FXML
     void initialize() throws SQLException, IOException {
+        if (DatabaseConnection.theme.equals("light") || DatabaseConnection.theme.equals("winter")) {
+            exitPic.setImage(new Image("icons/berryExit.png"));
+        }
         DatabaseConnection.getGroups(tilePane, activeUser);
         DatabaseConnection.getFollowed(followedList, activeUser);
     }

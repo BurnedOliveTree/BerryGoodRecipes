@@ -4,6 +4,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.TilePane?>
@@ -12,7 +14,14 @@
    <top>
       <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <items>
-          <Button fx:id="exitButton" mnemonicParsing="false" onAction="#onExitButtonAction" prefHeight="32.0" prefWidth="32.0" text="X" />
+          <Button fx:id="exitButton" mnemonicParsing="false" onAction="#onExitButtonAction" prefHeight="32.0" prefWidth="32.0">
+               <graphic>
+                  <ImageView fx:id="exitPic" fitHeight="30.0" fitWidth="30.0">
+                     <image>
+                        <Image url="@icons/raspExit.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
         </items>
       </ToolBar>
    </top>

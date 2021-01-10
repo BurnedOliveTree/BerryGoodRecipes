@@ -5,10 +5,12 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.OpinionPane">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.OpinionPane">
    <children>
       <Button fx:id="okButton" layoutX="350.0" layoutY="541.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" text="OK" />
       <Label layoutX="173.0" layoutY="376.0" prefHeight="25.0" prefWidth="39.0" text="Score:">
@@ -17,7 +19,14 @@
          </font></Label>
       <TextField fx:id="commentTextField" alignment="TOP_LEFT" layoutX="173.0" layoutY="416.0" prefHeight="106.0" prefWidth="428.0" promptText="Comment" />
       <ChoiceBox fx:id="scoreBox" layoutX="220.0" layoutY="376.0" prefHeight="25.0" prefWidth="46.0" />
-      <Button fx:id="exitButton" layoutX="742.0" layoutY="26.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="22.0" text="x" />
+      <Button fx:id="exitButton" layoutX="736.0" layoutY="14.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="22.0">
+         <graphic>
+            <ImageView fx:id="exitPic" fitHeight="30.0" fitWidth="30.0">
+               <image>
+                  <Image url="@icons/raspExit.png" />
+               </image>
+            </ImageView>
+         </graphic></Button>
       <Label fx:id="opinionLabel" layoutX="450.0" layoutY="545.0" prefHeight="17.0" prefWidth="303.0" />
       <Label layoutX="93.0" layoutY="65.0" prefHeight="33.0" prefWidth="104.0" text="Opinions:">
          <font>
