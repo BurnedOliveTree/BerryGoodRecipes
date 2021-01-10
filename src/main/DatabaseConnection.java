@@ -1,6 +1,7 @@
 package main;
 
 import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.ColumnConstraints;
@@ -186,7 +187,7 @@ public class DatabaseConnection {
 
     private static List<String> getGroupParticipants(String GroupID) throws SQLException {
         Statement statement = connection.createStatement();
-        String query = "select b.USERNAME as username from \"GROUP\" g join BELONG b on g.GROUP_ID = "+GroupID;
+        String query = "select USERNAME from BELONG where GROUP_ID = "+GroupID;
         ResultSet resultSet = statement.executeQuery(query);
         List<String> users = new ArrayList<>();
         while (resultSet.next()) {
@@ -200,7 +201,7 @@ public class DatabaseConnection {
     public static void getGroups(TilePane tilePane, User user) throws SQLException, IOException {
         setConnection();
         Statement statement = connection.createStatement();
-        String query = "select g.GROUP_ID as ID, g.NAME as group_name, b.USERNAME as username from \"GROUP\" g join BELONG b on g.GROUP_ID = b.GROUP_ID where lower(b.USERNAME) = '"+(user.getUsername()).toLowerCase()+"'";
+        String query = "select g.GROUP_ID as ID, g.NAME as group_name from \"GROUP\" g join BELONG b on g.GROUP_ID = b.GROUP_ID where b.GROUP_ID != 0 and lower(b.USERNAME) = '"+user.getUsername().toLowerCase()+"'";
         ResultSet resultSet = statement.executeQuery(query);
         List<MenuButton> panelist = new ArrayList<>();
         while (resultSet.next()) {
@@ -208,11 +209,16 @@ public class DatabaseConnection {
             MenuButton tempButton = new MenuButton(tempString);
             tempButton.setWrapText(true);
             tempButton.setTextAlignment(TextAlignment.CENTER);
+            tempButton.setAlignment(Pos.CENTER);
             tempButton.setPrefSize(192, 64);
-            tempButton.getItems().add(new MenuItem("Delete group"));
+            tempButton.getItems().add(new MenuItem("Show shopping list"));
+            tempButton.getItems().add(new MenuItem("Show recipes"));
             tempButton.getItems().add(new SeparatorMenuItem());
+            Menu kickMenu = new Menu("Kick user");
             List<String> tempStringList = getGroupParticipants(resultSet.getString("ID"));
-            for (String s : tempStringList) tempButton.getItems().add(new MenuItem("Kick "+s));
+            for (String s : tempStringList) kickMenu.getItems().add(new MenuItem(s));
+            tempButton.getItems().add(kickMenu);
+            tempButton.getItems().add(new MenuItem("Delete group"));
 //            String tempString = resultSet.getString("RECIPE_ID");
 //            tempButton.setOnMouseClicked(e -> mainPane.onRecipeClick(Integer.parseInt(tempString)));
             panelist.add(tempButton);
@@ -247,12 +253,11 @@ public class DatabaseConnection {
     public static void fillResults(MainPane mainPane, TilePane tilePain, String whereStatement) throws SQLException, IOException {
         setConnection();
         Statement statement = connection.createStatement();
-        String insideQuery = "";
+        String insideQuery;
         if (mainPane.activeUser != null)
             insideQuery = "select distinct pub.RECIPE_ID from PUBLICITY pub join BELONG blg on blg.GROUP_ID = pub.GROUP_ID where lower(blg.USERNAME) = \'"+mainPane.activeUser.getUsername().toLowerCase()+"\'";
         else
             insideQuery = "select distinct RECIPE_ID from PUBLICITY where GROUP_ID = 0";
-        System.out.println(insideQuery);
         String query = "select distinct rcp.RECIPE_ID, rcp.NAME, rcp.PREPARATION_TIME, rcp.COST, CALC_RATING(rcp.RECIPE_ID) as RATING from RECIPE rcp join INGREDIENT_LIST ing on rcp.RECIPE_ID = ing.RECIPE_ID where rcp.RECIPE_ID in ("+insideQuery+")";
         if (whereStatement != null) {
             if (mainPane.activeUser == null)
@@ -260,7 +265,6 @@ public class DatabaseConnection {
             else
                 query = query + " AND " + whereStatement;
         }
-        System.out.println(query);
         ResultSet resultSet = statement.executeQuery(query);
         List<GridPane> panelist = new ArrayList<>();
         while (resultSet.next()) {
@@ -351,7 +355,6 @@ public class DatabaseConnection {
         setConnection();
         Statement statement = connection.createStatement();
         String query = "select NAME from UNIT_SYSTEM where not NAME like 'N%A'";
-        System.out.println(query);
         ResultSet resultSet = statement.executeQuery(query);
         List<MenuItem> itemList = new ArrayList<>();
         while (resultSet.next()) {
