@@ -11,6 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 public class LogInWindow extends OrdinaryButtonAction {
@@ -36,25 +37,25 @@ public class LogInWindow extends OrdinaryButtonAction {
     }
 
     @FXML
-    private void onPasswordEnter(ActionEvent ae) throws SQLException {
+    private void onPasswordEnter(ActionEvent ae) throws SQLException, IOException {
         login(usernameField.getText(), passwordField.getText());
     }
 
     @FXML
-    private void getDataLogin(MouseEvent event) throws SQLException {
+    private void getDataLogin(MouseEvent event) throws SQLException, IOException {
         event.consume();
         System.out.println("Hello "+usernameField.getText()+", your password is "+passwordField.getText());
         login(usernameField.getText(), passwordField.getText());
     }
 
     @FXML
-    private void getDataRegister(MouseEvent event) throws SQLException {
+    private void getDataRegister(MouseEvent event) throws SQLException, IOException {
         event.consume();
         mainPane.activeUser = DatabaseConnection.register(usernameField.getText(), passwordField.getText(), errMess);
         checkLoginStatus();
     }
 
-    public void login(String username, String password) throws SQLException {
+    public void login(String username, String password) throws SQLException, IOException {
         mainPane.activeUser = DatabaseConnection.login(username, password, errMess);
         checkLoginStatus();
     }
