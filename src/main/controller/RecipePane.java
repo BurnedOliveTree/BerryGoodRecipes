@@ -91,9 +91,9 @@ public class RecipePane  extends OrdinaryButtonAction{
         if (activeUser == null) {
             likeButton.setDisable(true);
             shoppingListButton.setDisable(true);
-            ingredientListView.setMaxHeight(this.recipe.getIngredientList().size() * 24);
+            ingredientListView.setMaxHeight(this.recipe.getIngredientList().size() * 26);
         } else {
-            ingredientListView.setMaxHeight(this.recipe.getIngredientList().size() * 27);
+            ingredientListView.setMaxHeight(this.recipe.getIngredientList().size() * 29);
             if (activeUser.checkIfRecipeFavorite(this.recipe)) {
                 LikePic.setImage(new Image("icons/favoriteClicked.png"));
             }
@@ -250,7 +250,7 @@ public class RecipePane  extends OrdinaryButtonAction{
     @FXML
     private void onTimeButtonAction() throws IOException {
         FXMLLoader loader = loadFXML(new TimerPane(), "/resources/timerPage.fxml");
-        changeScene(timeButton, loader, true);
+        changeScene(loader);
     }
 
 }

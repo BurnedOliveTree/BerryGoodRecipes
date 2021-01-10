@@ -1,15 +1,22 @@
 package main;
 
+import javafx.geometry.HPos;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.TilePane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.TextAlignment;
+
 import main.controller.MainPane;
 import main.userModel.Opinion;
 import main.userModel.User;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
 import main.recipeModel.Unit;
+
 import oracle.jdbc.pool.OracleDataSource;
 
 import java.io.FileInputStream;
@@ -21,27 +28,22 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.*;
 
-import javafx.geometry.HPos;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.TilePane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.RowConstraints;
 
 public class DatabaseConnection {
     static Connection connection;
     public static String theme;
 
-    //@TODO save shoppinglist, read shoppinglist, addrecipe, deleterecipe
+    // TODO save shoppinglist, read shoppinglist, addrecipe, deleterecipe
     public DatabaseConnection() throws IOException {
-        loadFile();
-    }
-
-    private void loadFile() throws IOException {
         Properties prop = new Properties();
         String fileName = "src/resources/app.config";
         InputStream is = new FileInputStream(fileName);
         prop.load(is);
         theme = prop.getProperty("app.theme");
+    }
+
+    public static boolean isThemeLight() {
+        return DatabaseConnection.theme.equals("light") || DatabaseConnection.theme.equals("winter");
     }
 
     private static void setConnection() throws SQLException, IOException {
@@ -212,7 +214,7 @@ public class DatabaseConnection {
             List<String> tempStringList = getGroupParticipants(resultSet.getString("ID"));
             for (String s : tempStringList) tempButton.getItems().add(new MenuItem("Kick "+s));
 //            String tempString = resultSet.getString("RECIPE_ID");
-//            tempButton.setOnMouseClicked(e -> mainPane.onRecipeClick(tempButton, Integer.parseInt(tempString)));
+//            tempButton.setOnMouseClicked(e -> mainPane.onRecipeClick(Integer.parseInt(tempString)));
             panelist.add(tempButton);
         }
         tilePane.getChildren().clear();
@@ -266,7 +268,7 @@ public class DatabaseConnection {
             tempButton.setTextAlignment(TextAlignment.CENTER);
             tempButton.setPrefSize(192, 64);
             int tempInt = resultSet.getInt("RECIPE_ID");
-            tempButton.setOnMouseClicked(e -> mainPane.onRecipeClick(tempButton, tempInt));
+            tempButton.setOnMouseClicked(e -> mainPane.onRecipeClick(tempInt));
             tempPane.add(tempButton, 0, 0, 6, 2);
             String tempString = resultSet.getString("RATING");
             if (tempString == null)

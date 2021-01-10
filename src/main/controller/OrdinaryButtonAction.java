@@ -1,8 +1,10 @@
 package main.controller;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -22,22 +24,38 @@ public class OrdinaryButtonAction {
     }
 
     // used in MainPane, OpinionPane, RecipeAdminPane, RecipePane, ScalePane, ShoppingListPane, UserAdminPane
-    public void changeScene(Button button, FXMLLoader loader) {
-        changeScene(button, loader, false);
+    public void changeScene(FXMLLoader loader) {
+        changeScene(null, loader, "BerryGood Recipes");
     }
 
-    // used in MainPane, RecipeAdminPane, RecipePane
-    public void changeScene(Button button, FXMLLoader loader, boolean showAndWait) {
+    // used
+    public void changeScene(Node node, FXMLLoader loader) {
+        changeScene(node, loader, "BerryGood Recipes");
+    }
+
+    // used
+    public void changeScene(FXMLLoader loader, String title) {
+        changeScene(null, loader, title);
+    }
+
+    // used
+    public void changeScene(Node node, FXMLLoader loader, String title) {
         try {
             Scene scene = new Scene(loader.load());
             Stage stage;
-            if (showAndWait)
+            if (node == null)
                 stage = new Stage();
             else
-                stage = (Stage) button.getScene().getWindow();
+                stage = (Stage) node.getScene().getWindow();
             scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
+            if (DatabaseConnection.isThemeLight())
+                stage.getIcons().add(new Image("icons/berryLogo.png"));
+            else
+                stage.getIcons().add(new Image("icons/raspLogo.png"));
+            if (title != null)
+                stage.setTitle(title);
             stage.setScene(scene);
-            if (showAndWait)
+            if (node == null)
                 stage.showAndWait();
             else
                 stage.show();

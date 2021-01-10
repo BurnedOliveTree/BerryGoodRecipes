@@ -30,23 +30,22 @@ public class Main extends Application {
         loader.setControllerFactory(param -> controller);
         Scene scene = new Scene(loader.load());
         scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
-        primaryStage.getIcons().add(new Image("icons/raspLogo.png"));
+        if (DatabaseConnection.isThemeLight())
+            primaryStage.getIcons().add(new Image("icons/berryLogo.png"));
+        else
+            primaryStage.getIcons().add(new Image("icons/raspLogo.png"));
         primaryStage.setScene(scene);
         primaryStage.show();
         // zapisanie listy zakupów i ulubionych do bazy danych
         primaryStage.setOnCloseRequest(e -> {
             try {
                 DatabaseConnection.saveUser(activeUser);
-            } catch (SQLException | IOException err) {
-                err.printStackTrace();
-            }
-            try {
                 Properties prop = new Properties();
                 prop.load(new FileInputStream("src/resources/app.config"));
                 prop.setProperty("app.theme", DatabaseConnection.theme);
                 prop.store(new FileOutputStream("src/resources/app.config"), null);
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
+            } catch (SQLException | IOException err) {
+                err.printStackTrace();
             }
             Platform.exit();
             System.exit(0);

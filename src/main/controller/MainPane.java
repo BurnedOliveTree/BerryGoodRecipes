@@ -4,7 +4,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -68,16 +67,16 @@ public class MainPane extends OrdinaryButtonAction {
     public void setButtonActivity() {
         if (activeUser != null) {
             loginButton.setText("Sign out");
-            settingsButton.getItems().get(0).setDisable(false);
-            settingsButton.getItems().get(1).setDisable(false);
+            settingsButton.getItems().get(0).setVisible(true);
+            settingsButton.getItems().get(1).setVisible(true);
             socialButton.setDisable(false);
             myRecipesButton.setDisable(false);
             basketButton.setDisable(false);
         }
         else {
             loginButton.setText("Sign in");
-            settingsButton.getItems().get(0).setDisable(true);
-            settingsButton.getItems().get(1).setDisable(true);
+            settingsButton.getItems().get(0).setVisible(false);
+            settingsButton.getItems().get(1).setVisible(false);
             socialButton.setDisable(true);
             myRecipesButton.setDisable(true);
             basketButton.setDisable(true);
@@ -177,9 +176,9 @@ public class MainPane extends OrdinaryButtonAction {
         changeScene(basketButton, loader);
     }
 
-    public void onRecipeClick(Button button, int RecipeID) {
+    public void onRecipeClick(int RecipeID) {
         FXMLLoader loader = loadFXML(new RecipePane(DatabaseConnection.getSelectedRecipe(RecipeID), activeUser), "/resources/recipePage.fxml");
-        changeScene(button, loader, true);
+        changeScene(loader);
     }
 
     @FXML
@@ -194,12 +193,7 @@ public class MainPane extends OrdinaryButtonAction {
         }
         else {
             FXMLLoader loader = loadFXML(new LogInWindow(this), "/resources/logInWindow.fxml");
-            Scene scene = new Scene(loader.load());
-            scene.getStylesheets().add(getClass().getResource("/resources/" + DatabaseConnection.theme + ".css").toExternalForm());
-            Stage stage = new Stage();
-            stage.setTitle("Sign In");
-            stage.setScene(scene);
-            stage.show();
+            changeScene(loader, "Sign in");
         }
     }
 
@@ -306,8 +300,9 @@ public class MainPane extends OrdinaryButtonAction {
 
     public void resetTheme() {
         logo.getScene().getStylesheets().remove(0);
+        ((Stage) logo.getScene().getWindow()).getIcons().remove(0);
         logo.getScene().getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
-        if (DatabaseConnection.theme.equals("light") || DatabaseConnection.theme.equals("winter")) {
+        if (DatabaseConnection.isThemeLight()) {
             logo.setImage(new Image("icons/berryLogo.png"));
             recipePic.setImage(new Image("icons/berryRecipe.png"));
             socialPic.setImage(new Image("icons/berryGroup.png"));
@@ -323,5 +318,6 @@ public class MainPane extends OrdinaryButtonAction {
             settingsPic.setImage(new Image("icons/raspCog.png"));
             helpPic.setImage(new Image("icons/raspHelp.png"));
         }
+        ((Stage) logo.getScene().getWindow()).getIcons().add(logo.getImage());
     }
 }

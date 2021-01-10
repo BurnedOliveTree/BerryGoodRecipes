@@ -126,7 +126,7 @@ public class RecipeAdminPane extends OrdinaryButtonAction {
 
     private void ShowRecipe(Recipe recipe) throws SQLException {
         FXMLLoader loader = loadFXML(new RecipePane(recipe, activeUser), "/resources/recipePage.fxml");
-        changeScene(exitButton, loader, true);
+        changeScene(loader);
         favTable.refresh();
     }
 
