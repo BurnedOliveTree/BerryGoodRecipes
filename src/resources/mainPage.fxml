@@ -38,14 +38,14 @@
                <contextMenu>
                   <ContextMenu fx:id="searchContext">
                     <items>
-                       <MenuItem mnemonicParsing="false" text="with: [ingredient]" />
-                       <MenuItem mnemonicParsing="false" text="user: [username]" />
-                       <MenuItem mnemonicParsing="false" text="maxcost: [number]" />
-                       <MenuItem mnemonicParsing="false" text="mincost: [number]" />
-                       <MenuItem mnemonicParsing="false" text="maxtime: [number]" />
-                       <MenuItem mnemonicParsing="false" text="mintime: [number]" />
-                       <MenuItem mnemonicParsing="false" text="maxrating: [number]" />
-                       <MenuItem mnemonicParsing="false" text="minrating: [number]" />
+                       <MenuItem mnemonicParsing="false" onAction="#onSearchWith" text="with: [ingredient]" />
+                       <MenuItem mnemonicParsing="false" onAction="#onSearchUser" text="user: [username]" />
+                       <MenuItem mnemonicParsing="false" onAction="#onSearchMaxcost" text="maxcost: [number]" />
+                       <MenuItem mnemonicParsing="false" onAction="#onSearchMincost" text="mincost: [number]" />
+                       <MenuItem mnemonicParsing="false" onAction="#onSearchMaxtime" text="maxtime: [number]" />
+                       <MenuItem mnemonicParsing="false" onAction="#onSearchMintime" text="mintime: [number]" />
+                       <MenuItem mnemonicParsing="false" onAction="#onSearchMaxrating" text="maxrating: [number]" />
+                       <MenuItem mnemonicParsing="false" onAction="#onSearchMinrating" text="minrating: [number]" />
                     </items>
                   </ContextMenu>
                </contextMenu>
