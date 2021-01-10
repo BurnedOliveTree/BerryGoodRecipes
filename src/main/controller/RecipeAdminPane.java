@@ -7,8 +7,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import main.recipeModel.Recipe;
 import main.userModel.User;
@@ -30,15 +28,15 @@ public class RecipeAdminPane extends OrdinaryButtonAction {
     @FXML
     private GridPane ingredientPane;
     @FXML
-    private TextField titleLabel;
+    private TextField titleField;
     @FXML
-    private TextField portionLabel;
+    private TextField portionField;
     @FXML
-    private TextField costLabel;
+    private TextField costField;
     @FXML
-    private TextField hrsLabel;
+    private TextField hrsField;
     @FXML
-    private TextField minsLabel;
+    private TextField minsField;
     @FXML
     private TextArea descriptionArea ;
 
@@ -72,6 +70,10 @@ public class RecipeAdminPane extends OrdinaryButtonAction {
         });
         setContentMenu(favTable, createDeleteFavItem());
         setContentMenu(myRecipesTable, createDeleteMyRecipeItem());
+
+        titleField.setPromptText("Recipe Title");
+        hrsField.setPromptText("Hrs");
+        minsField.setPromptText("Mins");
         ingredientPane.getRowConstraints().clear();
         for (int i = 0; i < 3; i++) {
             addIngredient();
@@ -81,10 +83,12 @@ public class RecipeAdminPane extends OrdinaryButtonAction {
 
     @FXML
     private void addIngredient() {
-        TextField quantity = new TextField("Qty");
+        TextField quantity = new TextField();
         SplitMenuButton unit = new SplitMenuButton();
         unit.setPrefWidth(ingredientPane.getColumnConstraints().get(1).getPrefWidth());
-        TextField name = new TextField("Name");
+        TextField name = new TextField();
+        quantity.setPromptText("Qty");
+        name.setPromptText("Name");
         quantity.setStyle("-fx-text-box-border: transparent");
         name.setStyle("-fx-text-box-border: transparent");
         ingredientPane.addRow(ingredientPane.getRowCount()+1, quantity, unit, name);
