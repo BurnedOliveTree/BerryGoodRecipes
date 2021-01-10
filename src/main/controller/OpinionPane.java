@@ -11,6 +11,7 @@ import main.recipeModel.Recipe;
 import main.userModel.Opinion;
 import main.userModel.User;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 public class OpinionPane extends OrdinaryButtonAction {
@@ -38,7 +39,7 @@ public class OpinionPane extends OrdinaryButtonAction {
     };
 
     @FXML
-    private void initialize() throws SQLException {
+    private void initialize() throws SQLException, IOException {
         scoreBox.setItems(scoreList);
         exitButton.setOnAction( e->{ exitAction(); });
         okButton.setDisable(true);
@@ -49,7 +50,7 @@ public class OpinionPane extends OrdinaryButtonAction {
         okButton.setOnAction(e-> {
             try {
                 okButtonAction();
-            } catch (SQLException throwables) {
+            } catch (SQLException | IOException throwables) {
                 throwables.printStackTrace();
             }
         });
@@ -64,7 +65,7 @@ public class OpinionPane extends OrdinaryButtonAction {
         reportButton.setOnAction(e->{
             try {
                 DatabaseConnection.reportOpinion(opinionView, activeUser.getUsername(), reportLabel, getOpinionAuthor(), recipe.getId());
-            } catch (SQLException throwables) {
+            } catch (SQLException | IOException throwables) {
                 throwables.printStackTrace();
             }
         });
@@ -103,7 +104,7 @@ public class OpinionPane extends OrdinaryButtonAction {
         }
     }
 
-    private void okButtonAction() throws SQLException {
+    private void okButtonAction() throws SQLException, IOException {
         String comment = commentTextField.getText();
         if (comment.equals(null)){comment = " ";};
         int score = Integer.parseInt(scoreBox.getValue().toString());

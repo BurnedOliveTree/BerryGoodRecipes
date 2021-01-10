@@ -42,7 +42,7 @@ public class MainPane extends OrdinaryButtonAction {
     }
 
     @FXML
-    void initialize() throws SQLException {
+    void initialize() throws SQLException, IOException {
         DatabaseConnection.fillResults(this, tilePain);
         if (DatabaseConnection.theme.equals("light") || DatabaseConnection.theme.equals("winter")) {
             logo.setImage(new Image("icons/berryLogo.png"));
@@ -113,7 +113,7 @@ public class MainPane extends OrdinaryButtonAction {
     }
 
     @FXML
-    public void search(ActionEvent ae) throws SQLException {
+    public void search(ActionEvent ae) throws SQLException, IOException {
         query = search.getText();
         System.out.println(query);
         String args = "";

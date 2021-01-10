@@ -37,7 +37,7 @@ public class Main extends Application {
         primaryStage.setOnCloseRequest(e -> {
             try {
                 DatabaseConnection.saveUser(activeUser);
-            } catch (SQLException err) {
+            } catch (SQLException | IOException err) {
                 err.printStackTrace();
             }
             try {

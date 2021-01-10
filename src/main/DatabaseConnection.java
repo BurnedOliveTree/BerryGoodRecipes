@@ -30,11 +30,6 @@ import javafx.scene.layout.RowConstraints;
 public class DatabaseConnection {
     static Connection connection;
     public static String theme;
-    public static String databaseLogin;
-    public static String databasePassword;
-    public static String databasePort;
-    public static String databaseServiceName;
-    public static String databaseHost;
 
     //@TODO save shoppinglist, read shoppinglist, addrecipe, deleterecipe
     public DatabaseConnection() throws IOException {
@@ -47,18 +42,16 @@ public class DatabaseConnection {
         InputStream is = new FileInputStream(fileName);
         prop.load(is);
         theme = prop.getProperty("app.theme");
-        databaseLogin = prop.getProperty("app.login");
-        databasePassword = prop.getProperty("app.password");
-        databasePort = prop.getProperty("app.port");
-        databaseServiceName = prop.getProperty("app.service.name");
-        databaseHost = prop.getProperty("app.host");
     }
 
-    public static void setConnection() throws SQLException {
-
+    private static void setConnection() throws SQLException, IOException {
+        Properties prop = new Properties();
+        String fileName = "src/resources/app.config";
+        InputStream is = new FileInputStream(fileName);
+        prop.load(is);
         String connectionURL = String.format(
                 "jdbc:oracle:thin:%s/%s@//%s:%s/%s",
-                databaseLogin, databasePassword, databaseHost, databasePort, databaseServiceName);
+                prop.getProperty("app.login"), prop.getProperty("app.password"), prop.getProperty("app.host"), prop.getProperty("app.port"), prop.getProperty("app.service.name"));
         OracleDataSource ods = new OracleDataSource();
         ods.setURL(connectionURL);
         connection = ods.getConnection();
@@ -66,14 +59,13 @@ public class DatabaseConnection {
         connection.setAutoCommit(false);
     }
 
-    public static void closeConnection() throws SQLException {
+    private static void closeConnection() throws SQLException {
         connection.close();
         System.out.println("Connection with database closed.");
     }
 
-    public static User login(String username, String password, Label errMess) throws SQLException {
+    public static User login(String username, String password, Label errMess) throws SQLException, IOException {
         setConnection();
-
         User activeUser = null;
         Statement statement = connection.createStatement();
 
@@ -118,7 +110,7 @@ public class DatabaseConnection {
         return favorites;
     }
 
-    public static List<Recipe> getUserRecipes(String username) throws SQLException {
+    private static List<Recipe> getUserRecipes(String username) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery(String.format("SELECT RECIPE_ID, NAME, DATE_ADDED FROM RECIPE WHERE UPPER(OWNER_NAME) = '%s'", username.toUpperCase()));
         List<Recipe> UserRecipes = new ArrayList<>();
@@ -139,7 +131,7 @@ public class DatabaseConnection {
         return UserRecipes;
     }
 
-    public static User register(String username, String password, Label errMess) throws SQLException {
+    public static User register(String username, String password, Label errMess) throws SQLException, IOException {
         setConnection();
 
         User activeUser = null;
@@ -169,7 +161,7 @@ public class DatabaseConnection {
         return activeUser;
     }
 
-    public static void saveUser(User user) throws SQLException {
+    public static void saveUser(User user) throws SQLException, IOException {
         if (user != null) {
             setConnection();
             Statement statement = connection.createStatement();
@@ -203,7 +195,7 @@ public class DatabaseConnection {
         return users;
     }
 
-    public static void getGroups(TilePane tilePane, User user) throws SQLException {
+    public static void getGroups(TilePane tilePane, User user) throws SQLException, IOException {
         setConnection();
         Statement statement = connection.createStatement();
         String query = "select g.GROUP_ID as ID, g.NAME as group_name, b.USERNAME as username from \"GROUP\" g join BELONG b on g.GROUP_ID = b.GROUP_ID where lower(b.USERNAME) = '"+(user.getUsername()).toLowerCase()+"'";
@@ -230,7 +222,7 @@ public class DatabaseConnection {
         closeConnection();
     }
 
-    public static void getFollowed(ListView<String> listView, User user) throws SQLException {
+    public static void getFollowed(ListView<String> listView, User user) throws SQLException, IOException {
         setConnection();
         Statement statement = connection.createStatement();
         String query = "select FOLLOWING_USERNAME, FOLLOWED_USERNAME from FOLLOWED where lower(FOLLOWING_USERNAME) = '"+(user.getUsername()).toLowerCase()+"'";
@@ -246,11 +238,11 @@ public class DatabaseConnection {
         closeConnection();
     }
 
-    public static void fillResults(MainPane mainPane, TilePane tilePain) throws SQLException {
+    public static void fillResults(MainPane mainPane, TilePane tilePain) throws SQLException, IOException {
         fillResults(mainPane, tilePain, null);
     }
 
-    public static void fillResults(MainPane mainPane, TilePane tilePain, String whereStatement) throws SQLException {
+    public static void fillResults(MainPane mainPane, TilePane tilePain, String whereStatement) throws SQLException, IOException {
         setConnection();
         Statement statement = connection.createStatement();
         String query = "select distinct rcp.RECIPE_ID, rcp.NAME, rcp.PREPARATION_TIME, rcp.COST, CALC_RATING(rcp.RECIPE_ID) as RATING from RECIPE rcp join INGREDIENT_LIST ing on rcp.RECIPE_ID = ing.RECIPE_ID";
@@ -308,7 +300,7 @@ public class DatabaseConnection {
             Recipe recipe = getRecipe(recipeId);
             closeConnection();
             return recipe;
-        } catch (SQLException throwables) {
+        } catch (SQLException | IOException throwables) {
             throwables.printStackTrace();
         }
         return null;
@@ -343,7 +335,7 @@ public class DatabaseConnection {
     }
 
 
-    public static void createOpinion(Opinion opinion, Label opinionLabel, ListView opinionsView)throws SQLException {
+    public static void createOpinion(Opinion opinion, Label opinionLabel, ListView opinionsView) throws SQLException, IOException {
         setConnection();
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("select * from OPINION where USERNAME = '"+opinion.getUsername()+ "' and RECIPE_ID = " + opinion.getRecipe().getId() );
@@ -362,7 +354,7 @@ public class DatabaseConnection {
         }
     }
 
-    public static void fillOpinions(Recipe recipe, ListView opinionsView) throws SQLException {
+    public static void fillOpinions(Recipe recipe, ListView opinionsView) throws SQLException, IOException {
         setConnection();
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("select * from OPINION where RECIPE_ID = " +recipe.getId());
@@ -380,7 +372,7 @@ public class DatabaseConnection {
     }
 
 
-    public static void reportOpinion(ListView opinionList, String username, Label label,String opinionAuthor, int recipeId) throws SQLException {
+    public static void reportOpinion(ListView opinionList, String username, Label label,String opinionAuthor, int recipeId) throws SQLException, IOException {
 
         setConnection();
         Statement statement = connection.createStatement();

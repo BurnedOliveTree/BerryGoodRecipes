@@ -11,6 +11,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.TilePane;
 import javafx.scene.input.MouseEvent;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 public class UserAdminPane extends OrdinaryButtonAction {
@@ -24,13 +25,13 @@ public class UserAdminPane extends OrdinaryButtonAction {
     }
 
     @FXML
-    void initialize() throws SQLException {
+    void initialize() throws SQLException, IOException {
         DatabaseConnection.getGroups(tilePane, activeUser);
         DatabaseConnection.getFollowed(followedList, activeUser);
     }
 
     @FXML
-    void onUserPressed(MouseEvent mouseEvent) throws SQLException {
+    void onUserPressed(MouseEvent mouseEvent) throws SQLException, IOException {
         if (mouseEvent.isPrimaryButtonDown() && mouseEvent.getClickCount() == 2) {
             String username = followedList.getSelectionModel().getSelectedItem();
 
