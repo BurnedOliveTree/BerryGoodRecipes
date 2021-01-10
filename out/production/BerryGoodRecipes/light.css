@@ -13,6 +13,10 @@
 .scroll-bar > .thumb {
     -fx-background-color: -fx-light-text-color;
 }
+.scroll-pane > {
+    -fx-background: transparent;
+    -fx-background-color: transparent;
+}
 .menu-button > .arrow-button {
     -fx-padding: 0;
 }
@@ -31,8 +35,4 @@ Text {
 }
 #non-transparent {
     -fx-background-color: -fx-base;
-}
-.scroll-pane > {
-    -fx-background: transparent;
-    -fx-background-color: transparent;
 }

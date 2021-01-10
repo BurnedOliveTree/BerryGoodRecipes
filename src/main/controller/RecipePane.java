@@ -54,7 +54,7 @@ public class RecipePane  extends BasicPaneActions {
 
     @FXML
     void initialize() {
-        if (DatabaseConnection.theme.equals("light") || DatabaseConnection.theme.equals("winter")) {
+        if (DatabaseConnection.isThemeLight()) {
             ScalePic.setImage(new Image("icons/berryScale.png"));
             ShoppingPic.setImage(new Image("icons/berryBasket.png"));
             TimePic.setImage(new Image("icons/berryStoper.png"));

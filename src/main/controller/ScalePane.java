@@ -49,7 +49,7 @@ public class ScalePane extends BasicPaneActions {
 
     @FXML
     private void initialize() {
-        if (DatabaseConnection.theme.equals("light") || DatabaseConnection.theme.equals("winter")) {
+        if (DatabaseConnection.isThemeLight()) {
             exitPic.setImage(new Image("icons/berryExit.png"));
         }
         exitButton.setOnAction(e -> onAction());

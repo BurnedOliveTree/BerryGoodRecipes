@@ -65,7 +65,7 @@ public class BasicPaneActions {
     }
 
     // used in RecipeAdminPane...
-    public void setContentMenu(Control control, MenuItem...  menuItems) {
+    public void setContextMenu(Control control, MenuItem...  menuItems) {
         ContextMenu menu = new ContextMenu();
         for (MenuItem menuItem: menuItems) {
             menu.getItems().add(menuItem);
