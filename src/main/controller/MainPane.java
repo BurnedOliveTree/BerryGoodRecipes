@@ -262,6 +262,46 @@ public class MainPane extends OrdinaryButtonAction {
         System.out.println(orderBy);
     }
 
+    @FXML
+    public void onSearchWith() {
+        search.setText(search.getText() + " with:");
+    }
+
+    @FXML
+    public void onSearchUser() {
+        search.setText(search.getText() + " user:");
+    }
+
+    @FXML
+    public void onSearchMaxcost() {
+        search.setText(search.getText() + " maxcost:");
+    }
+
+    @FXML
+    public void onSearchMincost() {
+        search.setText(search.getText() + " mincost:");
+    }
+
+    @FXML
+    public void onSearchMaxtime() {
+        search.setText(search.getText() + " maxtime:");
+    }
+
+    @FXML
+    public void onSearchMintime() {
+        search.setText(search.getText() + " mintime:");
+    }
+
+    @FXML
+    public void onSearchMaxrating() {
+        search.setText(search.getText() + " maxrating:");
+    }
+
+    @FXML
+    public void onSearchMinrating() {
+        search.setText(search.getText() + " minrating:");
+    }
+
     public void resetTheme() {
         logo.getScene().getStylesheets().remove(0);
         logo.getScene().getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
