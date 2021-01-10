@@ -98,6 +98,36 @@ public class DatabaseConnection {
         return activeUser;
     }
 
+    public static User register(String username, String password, Label errMess) throws SQLException, IOException {
+        setConnection();
+
+        User activeUser = null;
+        Statement statement = connection.createStatement();
+
+        // check if such a username exists in the database
+        ResultSet resultSet = statement.executeQuery("select * from \"USER\" where USERNAME = '"+username+"'");
+        if (resultSet.next()) {
+            errMess.setText("Username already exists!");
+        }
+        else {
+            if (!statement.execute("insert into \"USER\" values('"+username+"', '"+password+"', null)")) {
+                List<Recipe> userRecipes = getUserRecipes(username);
+                List<Recipe> favorites = getUserFavorites(username);
+                activeUser = new User(username, userRecipes, favorites);
+                errMess.setText("Successfully created an account!");
+            }
+            else {
+                errMess.setText("Creating the account failed!");
+            }
+        }
+
+        resultSet.close();
+        statement.close();
+        closeConnection();
+
+        return activeUser;
+    }
+
     private static List<Recipe> getUserFavorites(String username) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery(String.format("SELECT RECIPE_ID FROM FAVORITE WHERE UPPER(USERNAME) = '%s'", username.toUpperCase()));
@@ -131,36 +161,6 @@ public class DatabaseConnection {
         result.close();
         statement.close();
         return UserRecipes;
-    }
-
-    public static User register(String username, String password, Label errMess) throws SQLException, IOException {
-        setConnection();
-
-        User activeUser = null;
-        Statement statement = connection.createStatement();
-
-        // check if such a username exists in the database
-        ResultSet resultSet = statement.executeQuery("select * from \"USER\" where USERNAME = '"+username+"'");
-        if (resultSet.next()) {
-            errMess.setText("Username already exists!");
-        }
-        else {
-            if (!statement.execute("insert into \"USER\" values('"+username+"', '"+password+"', null)")) {
-                List<Recipe> userRecipes = getUserRecipes(username);
-                List<Recipe> favorites = getUserFavorites(username);
-                activeUser = new User(username, userRecipes, favorites);
-                errMess.setText("Successfully created an account!");
-            }
-            else {
-                errMess.setText("Creating the account failed!");
-            }
-        }
-
-        resultSet.close();
-        statement.close();
-        closeConnection();
-
-        return activeUser;
     }
 
     public static void saveUser(User user) throws SQLException, IOException {
@@ -336,6 +336,24 @@ public class DatabaseConnection {
         return new Recipe(recipeId, recipeName, ownerName, preparationMethod, accessibility, dateAdded, prepareTime, cost, portions, ingredientList);
     }
 
+    public static void getUnitSystems(Menu unitSystemMenu, User activeUser) throws SQLException, IOException {
+        setConnection();
+        Statement statement = connection.createStatement();
+        String query = "select NAME from UNIT_SYSTEM where not NAME like 'N%A'";
+        System.out.println(query);
+        ResultSet resultSet = statement.executeQuery(query);
+        List<MenuItem> itemList = new ArrayList<>();
+        while (resultSet.next()) {
+            MenuItem tempItem = new MenuItem(resultSet.getString("name"));
+            tempItem.setOnAction(e -> activeUser.setDefaultUnitSystem(tempItem.getText()));
+            itemList.add(tempItem);
+        }
+        unitSystemMenu.getItems().clear();
+        unitSystemMenu.getItems().addAll(itemList);
+        resultSet.close();
+        statement.close();
+        closeConnection();
+    }
 
     public static void createOpinion(Opinion opinion, Label opinionLabel, ListView opinionsView) throws SQLException, IOException {
         setConnection();
@@ -372,7 +390,6 @@ public class DatabaseConnection {
         statement.close();
         closeConnection();
     }
-
 
     public static void reportOpinion(ListView opinionList, String username, Label label,String opinionAuthor, int recipeId) throws SQLException, IOException {
 

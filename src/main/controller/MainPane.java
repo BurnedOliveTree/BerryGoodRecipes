@@ -38,6 +38,7 @@ public class MainPane extends BasicPaneActions {
     @FXML private TilePane tilePain;
     @FXML public TextField search;
     @FXML private ContextMenu searchContext;
+    @FXML private Menu unitSystemMenu;
 
     public MainPane(User activeUser) {
         this.activeUser = activeUser;
@@ -46,6 +47,7 @@ public class MainPane extends BasicPaneActions {
     @FXML
     void initialize() throws SQLException, IOException {
         DatabaseConnection.fillResults(this, tilePain);
+        DatabaseConnection.getUnitSystems(unitSystemMenu, activeUser);
         if (DatabaseConnection.isThemeLight()) {
             logo.setImage(new Image("icons/berryLogo.png"));
             recipePic.setImage(new Image("icons/berryRecipe.png"));
