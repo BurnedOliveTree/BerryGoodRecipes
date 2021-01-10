@@ -33,6 +33,7 @@ public class MainPane extends OrdinaryButtonAction {
     @FXML private ImageView socialPic;
     @FXML private ImageView basketPic;
     @FXML private ImageView settingsPic;
+    @FXML private ImageView helpPic;
     @FXML private TilePane tilePain;
     @FXML public TextField search;
     @FXML private ContextMenu searchContext;
@@ -50,6 +51,7 @@ public class MainPane extends OrdinaryButtonAction {
             socialPic.setImage(new Image("icons/berryGroup.png"));
             basketPic.setImage(new Image("icons/berryBasket.png"));
             settingsPic.setImage(new Image("icons/berryCog.png"));
+            helpPic.setImage(new Image("icons/berryHelp.png"));
         }
         setButtonActivity();
 
@@ -311,6 +313,7 @@ public class MainPane extends OrdinaryButtonAction {
             socialPic.setImage(new Image("icons/berryGroup.png"));
             basketPic.setImage(new Image("icons/berryBasket.png"));
             settingsPic.setImage(new Image("icons/berryCog.png"));
+            helpPic.setImage(new Image("icons/berryHelp.png"));
         }
         else {
             logo.setImage(new Image("icons/raspLogo.png"));
@@ -318,6 +321,7 @@ public class MainPane extends OrdinaryButtonAction {
             socialPic.setImage(new Image("icons/raspGroup.png"));
             basketPic.setImage(new Image("icons/raspBasket.png"));
             settingsPic.setImage(new Image("icons/raspCog.png"));
+            helpPic.setImage(new Image("icons/raspHelp.png"));
         }
     }
 }
