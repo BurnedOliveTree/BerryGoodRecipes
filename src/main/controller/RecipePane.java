@@ -270,13 +270,7 @@ public class RecipePane  extends OrdinaryButtonAction{
     @FXML
     private void onTimeButtonAction() throws IOException {
         FXMLLoader loader = loadFXML(new TimerPane(), "/resources/timerPage.fxml");
-        // TODO replace with ChangeScene
-        Scene scene = new Scene(loader.load());
-        Stage stage = new Stage();
-        stage.setMaxHeight(200);
-        scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
-        stage.setScene(scene);
-        stage.showAndWait();
+        changeScene(timeButton, loader, true);
     }
 
 }
