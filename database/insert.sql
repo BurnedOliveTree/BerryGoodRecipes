@@ -51,6 +51,7 @@ insert into "USER" values ('Ali', '290285', null);
 insert into "USER" values ('BurnedOliveTree', 'Karo1104', null);
 insert into "USER" values ('Rokarolka', '12345', null);
 insert into "USER" values ('Marianka', '12345', null);
+insert into "USER" values ('Madzik', '12345', null);
 commit;
 
 insert into FOLLOWED values (null, 'BurnedOliveTree', 'Rokarolka');
@@ -85,6 +86,7 @@ insert into INGREDIENT values ('cukier', 1.59, 'gram');
 insert into INGREDIENT values ('cukier puder', 0.801, 'gram');
 insert into INGREDIENT values ('proszek do pieczenia', 2.2, 'gram');
 insert into INGREDIENT values ('cukier waniliowy', 1.056, 'gram');
+insert into INGREDIENT values ('gorzka czekolada', null, 'piece');
 
 insert into INGREDIENT values ('mięso mielone', null, 'kilogram');
 
@@ -97,6 +99,7 @@ insert into INGREDIENT values ('pomidor', null, 'piece');
 insert into INGREDIENT values ('passata pomidorowa', null, 'mililiter');
 insert into INGREDIENT values ('orzechy włoskie', null, 'gram');
 insert into INGREDIENT values ('marmolada', null, 'gram');
+
 commit;
 
 -- shopping list inserts;
@@ -107,6 +110,7 @@ insert into RECIPE values (null, 'BurnedOliveTree', 'Ciasto olejne' , 'Cukier ro
 insert into RECIPE values (null, 'BurnedOliveTree', 'Rohliczki' , 'Orzechy ołupać i zmielić.' || chr(13) || 'Pokrojone w kostkę masło zmieszać z resztą składników.' || chr(13) || 'Odstawić rozrobione ciasto na 30 minut do lodówki.' || chr(13) || 'Blachę posmarować masłem i posypać mąką.' || chr(13) || 'Rozwałkować ciasto na cylindry o średnicy około 1 cm i wysokości około 8 cm.' || chr(13) || 'Piec 7-11 minut w 190-200 stopniach.' || chr(13) || 'Odczekać chwilę, po czym do miski wsypać cukier waniliowy oraz cukier puder i obtoczyć w nich wszystkie rohliczki.' || chr(13) || 'Schować do pudełka i odłożyć do suchego miejsca na co najmniej 2 tygodnie.', null, sysdate, 150, 36);
 insert into RECIPE values (null, 'BurnedOliveTree', 'Masłowe ciasteczka sklejane z marmoladą', 'Pokrojone w kostkę masło zmieszać z resztą składników.' || chr(13) || 'Odstawić rozrobione ciasto na 30 minut do lodówki.' || chr(13) || 'Blachę posmarować masłem i posypać mąką.' || chr(13) || 'Ciasto rozwałkować i powycinać kształty (kółko na spód, oraz jakiś wzór na górę).' || chr(13) || 'Piec 7-10 minut w 190 stopniach.' || chr(13) || 'Po upieczeniu należy na spód położyć trochę dżemu i położyć na to wierzch ciasteczka.' || chr(13) || 'Schować do pudełka i odłożyć do suchego miejsca na co najmniej 2 tygodnie.', null, sysdate, 180, 18);
 insert into RECIPE values (null, 'BurnedOliveTree', 'Naleśniki', 'Jajko opłukać i rozbić. Dodać szczyptę soli. Dodać łyżkę cukru. Dokładnie wymieszać. Sukcesywnie dodawać trochę maki i trochę mleka / wody.' || chr(13) || 'Odstawić na 15-20 minut.' || chr(13) ||'Usmażyć na rozgrzanej patelni.', null, sysdate, 60, 8);
+insert into RECIPE values (null, 'Madzik', 'Ciasto czekoladowe', 'Cukier z mlekiem roztopić' || chr(13) || 'Żółtka utrzeć z cukrem, dodać mąkę i sok z pomarańczy' || chr(13) || 'Dodać czekolade i ubite białka' || chr(13) || 'Piec 20 min w 200°C', 20, sysdate, 30, 1);
 commit;
 
 insert into INGREDIENT_LIST values (null, 1, 500, 'gram', 'mięso mielone');
@@ -142,6 +146,13 @@ insert into INGREDIENT_LIST values (null, 6,  250, 'mililiter', 'mleko');
 insert into INGREDIENT_LIST values (null, 6,  250, 'mililiter', 'woda');
 insert into INGREDIENT_LIST values (null, 6,  1, 'tablespoon', 'cukier');
 insert into INGREDIENT_LIST values (null, 6,  1, 'piece', 'jajko');
+
+insert into INGREDIENT_LIST values (null, 7,  6, 'piece', 'jajko');
+insert into INGREDIENT_LIST values (null, 7,  1, 'glass', 'cukier');
+insert into INGREDIENT_LIST values (null, 7,  1, 'glass', 'mąka');
+insert into INGREDIENT_LIST values (null, 7,  2, 'piece', 'gorzka czekolada');
+insert into INGREDIENT_LIST values (null, 7,  0.5, 'piece', 'masło');
+insert into INGREDIENT_LIST values (null, 7,  1, 'piece', 'pomarańcza');
 commit;
 
 insert into FAVORITE values (null, 'BurnedOliveTree', 1);
@@ -154,4 +165,5 @@ insert into PUBLICITY values(null, 0, 3);
 insert into PUBLICITY values(null, 1, 4);
 insert into PUBLICITY values(null, 1, 5);
 insert into PUBLICITY values(null, 0, 6);
+insert into PUBLICITY values(null, 0, 7);
 commit;
