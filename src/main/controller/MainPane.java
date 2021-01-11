@@ -18,7 +18,6 @@ import main.userModel.User;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainPane extends BasicPaneActions {
@@ -182,7 +181,7 @@ public class MainPane extends BasicPaneActions {
     }
 
     @FXML
-    public void onBasketButtonClick(MouseEvent mouseEvent) {
+    public void onBasketButtonClick(MouseEvent mouseEvent) throws IOException, SQLException {
         mouseEvent.consume();
         FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, new MainPane(activeUser)), "/shoppingListPage.fxml");
         changeScene(basketButton, loader);
