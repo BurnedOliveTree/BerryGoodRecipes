@@ -29,13 +29,11 @@ public class UserAdminPane extends BasicPaneActions {
         this.activeUser = activeUser;
     }
 
-    @FXML
-    void initialize() throws SQLException, IOException {
+    @FXML void initialize() throws SQLException, IOException {
         if (DatabaseConnection.isThemeLight()) {
             exitPic.setImage(new Image("icons/berryExit.png"));
         }
-        DatabaseConnection.getGroups(this, tilePane, activeUser);
-        refreshFollowedList();
+        refreshWindow();
         MenuItem menuItem = new MenuItem("Unfollow");
         menuItem.setOnAction(actionEvent -> {
             String username = followedList.getSelectionModel().getSelectedItem();
@@ -47,8 +45,16 @@ public class UserAdminPane extends BasicPaneActions {
         setContextMenu(followedList, menuItem);
     }
 
-    @FXML
-    void onUserPressed(MouseEvent mouseEvent) throws SQLException, IOException {
+    @FXML private void onRefreshButtonClick() throws IOException, SQLException {
+        refreshWindow();
+    }
+
+    private void refreshWindow() throws IOException, SQLException {
+        DatabaseConnection.getGroups(this, tilePane, activeUser);
+        refreshFollowedList();
+    }
+
+    @FXML void onUserPressed(MouseEvent mouseEvent) throws SQLException, IOException {
         if (mouseEvent.isPrimaryButtonDown() && mouseEvent.getClickCount() == 2) {
             String username = followedList.getSelectionModel().getSelectedItem();
 
@@ -81,8 +87,7 @@ public class UserAdminPane extends BasicPaneActions {
         followedList.getItems().addAll(activeUser.getFollowed());
     }
 
-    @FXML
-    private void onExitButtonAction() {
+    @FXML private void onExitButtonAction() {
         FXMLLoader loader = loadFXML(new MainPane(activeUser), "/resources/mainPage.fxml");
         changeScene(exitButton, loader);
     }

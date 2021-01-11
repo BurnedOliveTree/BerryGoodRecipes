@@ -36,6 +36,7 @@
                   </ImageView>
                </graphic>
             </Button>
+            <Button mnemonicParsing="false" onAction="#onRefreshButtonClick" prefHeight="32.0" prefWidth="32.0" text="refresh" />
         </items>
       </ToolBar>
       <ListView fx:id="followedList" onMousePressed="#onUserPressed" GridPane.columnIndex="1" GridPane.rowIndex="2">
