@@ -1,5 +1,7 @@
 package main;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
@@ -425,5 +427,23 @@ public class DatabaseConnection {
         statement.close();
         closeConnection();
     }
+
+    public static ObservableList<String> get_units() throws IOException, SQLException {
+        ObservableList<String> unitsList = FXCollections.observableArrayList();
+        setConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("select NAME from UNIT where name != 'piece'" );
+        while (resultSet.next()){
+            unitsList.add(resultSet.getString("NAME"));
+        }
+        return unitsList;
+    }
+public static Double convertUnit(Double quantity, String first_unit, String second_unit) throws IOException, SQLException {
+    setConnection();
+    Statement statement = connection.createStatement();
+    ResultSet resultSet = statement.executeQuery("select round(convert_unit('" +first_unit+ "', '" +second_unit+ "', " +quantity+ "),2) as result from dual");
+    resultSet.next();
+    return resultSet.getDouble("result");
+}
 
 }
