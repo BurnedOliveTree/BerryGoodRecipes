@@ -4,21 +4,28 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.HPos;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.TilePane;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import main.DatabaseConnection;
 import main.Main;
+import main.recipeModel.Recipe;
 import main.userModel.User;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,7 +59,7 @@ public class MainPane extends BasicPaneActions {
 
     @FXML
     void initialize() throws SQLException, IOException {
-        DatabaseConnection.fillResults(this, tilePain);
+        setRecipeTiles(DatabaseConnection.search(this.activeUser));
         DatabaseConnection.getUnitSystems(unitSystemMenu, activeUser);
         if (DatabaseConnection.isThemeLight()) {
             logo.setImage(new Image("icons/berryLogo.png"));
@@ -171,8 +178,52 @@ public class MainPane extends BasicPaneActions {
             }
         }
         query = "lower(rcp.name) like lower('%" + query + "%')" + args + " order by " + orderBy;
-        System.out.println(query);
-        DatabaseConnection.fillResults(this, tilePain, query, groupID);
+        setRecipeTiles(DatabaseConnection.search(this.activeUser, query, groupID));
+    }
+
+    private void setRecipeTiles(List<Recipe> recipeList) {
+        tilePain.getChildren().clear();
+        if (recipeList == null)
+            return;
+        List<GridPane> panelist = new ArrayList<>();
+        for (Recipe recipe: recipeList) {
+            GridPane tempPane = new GridPane();
+            for (int i = 0; i < 3; i++) {
+                tempPane.getRowConstraints().add(new RowConstraints(32));
+            }
+            for (int i = 0; i < 6; i++) {
+                ColumnConstraints columnConstraints = new ColumnConstraints(32);
+                columnConstraints.setHalignment(HPos.CENTER);
+                tempPane.getColumnConstraints().add(columnConstraints);
+            }
+            tempPane.setPrefSize(192, 96);
+            Button tempButton = new Button(recipe.getName());
+            tempButton.setWrapText(true);
+            tempButton.setTextAlignment(TextAlignment.CENTER);
+            tempButton.setPrefSize(192, 64);
+            int tempInt = recipe.getId();
+            tempButton.setOnMouseClicked(e -> onRecipeClick(tempInt));
+            tempPane.add(tempButton, 0, 0, 6, 2);
+            String tempString = recipe.getAvgRate();
+            if (tempString == null)
+                tempString = "N/A";
+            else
+                tempString = tempString + "/10";
+            tempPane.add(new ImageView(new Image("icons/star.png")), 0, 2, 1, 1);
+            tempPane.add(new Label(tempString), 1, 2, 1, 1);
+            tempString = Integer.toString(recipe.getPrepareTime());
+            if (tempString.equals("0"))
+                tempString = "N/A";
+            tempPane.add(new ImageView(new Image("icons/time.png")), 2, 2, 1, 1);
+            tempPane.add(new Label(tempString), 3, 2, 1, 1);
+            tempString = Integer.toString((int) recipe.getCost());
+            if (tempString.equals("0"))
+                tempString = "N/A";
+            tempPane.add(new ImageView(new Image("icons/coin.png")), 4, 2, 1, 1);
+            tempPane.add(new Label(tempString), 5, 2, 1, 1);
+            panelist.add(tempPane);
+        }
+        tilePain.getChildren().addAll(panelist);
     }
 
     @FXML

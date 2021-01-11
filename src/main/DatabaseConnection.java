@@ -409,19 +409,18 @@ public class DatabaseConnection {
         closeConnection();
     }
 
-    public static void fillResults(MainPane mainPane, TilePane tilePain) throws SQLException, IOException {
-        fillResults(mainPane, tilePain, null, null);
+    public static List<Recipe> search(User activeUser) throws SQLException, IOException {
+        return search(activeUser, null, null);
     }
 
-    public static void fillResults(MainPane mainPane, TilePane tilePain, String whereStatement, List<Integer> groupID) throws SQLException, IOException {
-        tilePain.getChildren().clear();
-        if (mainPane.activeUser == null && groupID != null)
-            return;  // TODO show a message that not logged in user cannot search by groups
+    public static List<Recipe> search(User activeUser, String whereStatement, List<Integer> groupID) throws SQLException, IOException {
+        if (activeUser == null && groupID != null)
+            return null;
         setConnection();
         Statement statement = connection.createStatement();
         String insideQuery;
-        if (mainPane.activeUser != null) {
-            insideQuery = "select distinct pub.RECIPE_ID from PUBLICITY pub join BELONG blg on blg.GROUP_ID = pub.GROUP_ID where lower(blg.USERNAME) = \'" + mainPane.activeUser.getUsername().toLowerCase() + "\'";
+        if (activeUser != null) {
+            insideQuery = "select distinct pub.RECIPE_ID from PUBLICITY pub join BELONG blg on blg.GROUP_ID = pub.GROUP_ID where lower(blg.USERNAME) = \'" + activeUser.getUsername().toLowerCase() + "\'";
             if (groupID != null) {
                 insideQuery = insideQuery + " and pub.GROUP_ID in (" + groupID.get(0);
                 for (int i : groupID)
@@ -431,54 +430,24 @@ public class DatabaseConnection {
         }
         else
             insideQuery = "select distinct RECIPE_ID from PUBLICITY where GROUP_ID = 0";
-        String query = "select distinct rcp.RECIPE_ID, rcp.NAME, rcp.PREPARATION_TIME, rcp.COST, CALC_RATING(rcp.RECIPE_ID) as RATING from RECIPE rcp join INGREDIENT_LIST ing on rcp.RECIPE_ID = ing.RECIPE_ID where rcp.RECIPE_ID in ("+insideQuery+")";
+        String query = "select distinct rcp.RECIPE_ID, rcp.NAME, rcp.OWNER_NAME, rcp.PREPARATION_TIME, rcp.COST, CALC_RATING(rcp.RECIPE_ID) as RATING from RECIPE rcp join INGREDIENT_LIST ing on rcp.RECIPE_ID = ing.RECIPE_ID where rcp.RECIPE_ID in ("+insideQuery+")";
         if (whereStatement != null) {
             query = query + " AND " + whereStatement;
         }
         System.out.println(query);
         ResultSet resultSet = statement.executeQuery(query);
-        List<GridPane> panelist = new ArrayList<>();
+        List<Recipe> resultList = new ArrayList<>();
         while (resultSet.next()) {
-            GridPane tempPane = new GridPane();
-            for (int i = 0; i < 3; i++) {
-                tempPane.getRowConstraints().add(new RowConstraints(32));
-            }
-            for (int i = 0; i < 6; i++) {
-                ColumnConstraints columnConstraints = new ColumnConstraints(32);
-                columnConstraints.setHalignment(HPos.CENTER);
-                tempPane.getColumnConstraints().add(columnConstraints);
-            }
-            tempPane.setPrefSize(192, 96);
-            Button tempButton = new Button(resultSet.getString("NAME"));
-            tempButton.setWrapText(true);
-            tempButton.setTextAlignment(TextAlignment.CENTER);
-            tempButton.setPrefSize(192, 64);
-            int tempInt = resultSet.getInt("RECIPE_ID");
-            tempButton.setOnMouseClicked(e -> mainPane.onRecipeClick(tempInt));
-            tempPane.add(tempButton, 0, 0, 6, 2);
-            String tempString = resultSet.getString("RATING");
-            if (tempString == null)
-                tempString = "N/A";
-            else
-                tempString = tempString + "/10";
-            tempPane.add(new ImageView(new Image("icons/star.png")), 0, 2, 1, 1);
-            tempPane.add(new Label(tempString), 1, 2, 1, 1);
-            tempString = resultSet.getString("PREPARATION_TIME");
-            if (tempString == null)
-                tempString = "N/A";
-            tempPane.add(new ImageView(new Image("icons/time.png")), 2, 2, 1, 1);
-            tempPane.add(new Label(tempString), 3, 2, 1, 1);
-            tempString = resultSet.getString("COST");
-            if (tempString == null)
-                tempString = "N/A";
-            tempPane.add(new ImageView(new Image("icons/coin.png")), 4, 2, 1, 1);
-            tempPane.add(new Label(tempString), 5, 2, 1, 1);
-            panelist.add(tempPane);
+            Recipe tempRecipe = new Recipe(resultSet.getInt("RECIPE_ID"), resultSet.getString("NAME"), resultSet.getString("OWNER_NAME"));
+            tempRecipe.setAvgRate(resultSet.getString("RATING"));
+            tempRecipe.setCost(resultSet.getInt("COST"));
+            tempRecipe.setPrepareTime(resultSet.getInt("PREPARATION_TIME"));
+            resultList.add(tempRecipe);
         }
-        tilePain.getChildren().addAll(panelist);
         resultSet.close();
         statement.close();
         closeConnection();
+        return resultList;
     }
 
     public static Recipe getSelectedRecipe(int recipeId) {
