@@ -55,8 +55,11 @@ begin
 --  TODO delete_group if no one belongs there
 end;
 
-create or replace procedure delete_group(g_id varchar2)
+create or replace procedure delete_group(g_id number)
 as
 begin
-    -- TODO
+    delete from BELONG where GROUP_ID = g_id;
+    delete from SHOPPING_LIST where GROUP_ID = g_id;
+    delete from PUBLICITY where GROUP_ID = g_id;
+    delete from "GROUP" where GROUP_ID = g_id;
 end;

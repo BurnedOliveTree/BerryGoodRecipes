@@ -262,7 +262,6 @@ public class MainPane extends BasicPaneActions {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
-            System.out.println("delete this");
             DatabaseConnection.deleteUser(activeUser.getUsername());
             activeUser = null;
             Main.activeUser = null;

@@ -48,7 +48,7 @@ public class UserAdminPane extends BasicPaneActions {
         refreshWindow();
     }
 
-    private void refreshWindow() throws IOException, SQLException {
+    public void refreshWindow() throws IOException, SQLException {
         DatabaseConnection.getGroups(this, tilePane, activeUser);
         refreshFollowedList();
     }

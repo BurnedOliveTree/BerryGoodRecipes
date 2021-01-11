@@ -24,7 +24,6 @@ import main.recipeModel.Unit;
 
 import oracle.jdbc.pool.OracleDataSource;
 
-import javax.print.DocFlavor;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,7 +39,7 @@ public class DatabaseConnection {
     public static String theme;
 
     // TODO save shoppingList, read shoppingList, addRecipe, deleteRecipe
-    // TODO deleteGroup, inviteUser, kickUser, deleteAccount
+    // TODO inviteUser, kickUser
     public DatabaseConnection() throws IOException {
         Properties prop = new Properties();
         String fileName = "src/resources/app.config";
@@ -315,7 +314,23 @@ public class DatabaseConnection {
             }
             tempButton.getItems().add(kickMenu);
             menuItem = new MenuItem("Delete group");
-            menuItem.setOnAction(e -> System.out.println("TODO actually delete group"));
+            int groupID = resultSet.getInt("ID");
+            menuItem.setOnAction(e -> {
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Delete group");
+                alert.setHeaderText(null);
+                alert.setGraphic(null);
+                alert.setContentText("Are you sure?\nYou will not be able to recover your group");
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.get() == ButtonType.OK) {
+                    try {
+                        deleteGroup(groupID);
+                        adminPane.refreshWindow();
+                    } catch (IOException | SQLException err) {
+                        err.printStackTrace();
+                    }
+                }
+            });
             tempButton.getItems().add(menuItem);
             panelist.add(tempButton);
         }
@@ -347,6 +362,15 @@ public class DatabaseConnection {
         setConnection();
         Statement statement = connection.createStatement();
         statement.execute("begin add_group(\'"+username+"\', \'"+name+"\'); end;");
+        connection.commit();
+        statement.close();
+        closeConnection();
+    }
+
+    public static void deleteGroup(int groupID) throws IOException, SQLException {
+        setConnection();
+        Statement statement = connection.createStatement();
+        statement.execute("begin delete_group("+groupID+"); end;");
         connection.commit();
         statement.close();
         closeConnection();
