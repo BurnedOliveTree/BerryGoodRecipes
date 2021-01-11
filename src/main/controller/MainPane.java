@@ -18,7 +18,6 @@ import main.userModel.User;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainPane extends BasicPaneActions {
@@ -39,6 +38,9 @@ public class MainPane extends BasicPaneActions {
     @FXML private ImageView searchPic;
     @FXML public TilePane tilePain;
     @FXML public TextField search;
+    @FXML private PasswordField oldPasswordField;
+    @FXML private PasswordField newPasswordField;
+    @FXML private Label passwordError;
     @FXML private ContextMenu searchContext;
     @FXML private Menu unitSystemMenu;
 
@@ -227,6 +229,11 @@ public class MainPane extends BasicPaneActions {
     private void onSearchButtonClick(MouseEvent mouseEvent) throws IOException, SQLException {
         mouseEvent.consume();
         search(new ActionEvent());
+    }
+
+    @FXML
+    private void onPasswordChangeClick(ActionEvent actionEvent) throws IOException, SQLException {
+        passwordError.setText(DatabaseConnection.setPassword(activeUser.getUsername(), newPasswordField.getText(), oldPasswordField.getText()));
     }
 
     @FXML

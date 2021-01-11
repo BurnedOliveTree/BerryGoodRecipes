@@ -15,6 +15,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.VBox?>
 
 
 <GridPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.UserAdminPane">
@@ -40,16 +41,17 @@
                </graphic>
             </Button>
             <Button mnemonicParsing="false" onAction="#onRefreshButtonClick" prefHeight="32.0" prefWidth="32.0" text="refresh" />
-            <MenuButton alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" text="add group">
+            <MenuButton alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" text="add group">
               <items>
                   <MenuItem mnemonicParsing="false">
                      <graphic>
-                        <TextField fx:id="newGroupName" alignment="CENTER" promptText="Name" />
-                     </graphic>
-                  </MenuItem>
-                <MenuItem mnemonicParsing="false">
-                     <graphic>
-                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onAddGroupButtonClick" text="Add group" textAlignment="CENTER" />
+                        <VBox alignment="CENTER">
+                           <children>
+                              <TextField fx:id="newGroupName" alignment="CENTER" promptText="Name" />
+                              <Label />
+                              <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onAddGroupButtonClick" text="Add group" textAlignment="CENTER" />
+                           </children>
+                        </VBox>
                      </graphic>
                   </MenuItem>
               </items>

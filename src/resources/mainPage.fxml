@@ -3,9 +3,11 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
@@ -15,6 +17,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
@@ -136,19 +139,16 @@
                <items>
                   <Menu mnemonicParsing="false" text="Change password">
                     <items>
-                      <MenuItem mnemonicParsing="false">
-                           <graphic>
-                              <TextField promptText="Old Password" />
-                           </graphic>
-                        </MenuItem>
                         <MenuItem mnemonicParsing="false">
                            <graphic>
-                              <TextField promptText="New Password" />
-                           </graphic>
-                        </MenuItem>
-                        <MenuItem mnemonicParsing="false">
-                           <graphic>
-                              <Button mnemonicParsing="false" text="Submit" />
+                              <VBox alignment="CENTER" spacing="8.0">
+                                 <children>
+                                    <PasswordField fx:id="oldPasswordField" promptText="old password" />
+                                    <PasswordField fx:id="newPasswordField" promptText="new password" />
+                                    <Label fx:id="passwordError" />
+                                    <Button mnemonicParsing="false" onAction="#onPasswordChangeClick" text="Submit" />
+                                 </children>
+                              </VBox>
                            </graphic>
                         </MenuItem>
                     </items>
@@ -162,6 +162,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#onThemeWinterSelection" text="Winter" />
                     </items>
                   </Menu>
+                  <MenuItem mnemonicParsing="false" text="Delete account" />
                </items>
                <graphic>
                   <ImageView fx:id="settingsPic" fitHeight="46.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">

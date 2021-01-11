@@ -38,7 +38,7 @@ public class DatabaseConnection {
     public static String theme;
 
     // TODO save shoppingList, read shoppingList, addRecipe, deleteRecipe
-    // TODO deleteGroup, inviteUser, kickUser
+    // TODO deleteGroup, inviteUser, kickUser, deleteAccount
     public DatabaseConnection() throws IOException {
         Properties prop = new Properties();
         String fileName = "src/resources/app.config";
@@ -130,6 +130,28 @@ public class DatabaseConnection {
         closeConnection();
 
         return activeUser;
+    }
+
+    public static String setPassword(String username, String newPassword, String oldPassword) throws SQLException, IOException {
+        String status;
+        setConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("select * from \"USER\" where USERNAME = '"+username+"'");
+        if (resultSet.next()) {
+            String gotPassword = resultSet.getString("PASSWORD");
+            if (gotPassword.equals(oldPassword)) {
+                statement.executeUpdate("update \"USER\" set PASSWORD = \'"+newPassword+"\' where USERNAME = \'"+username+"\'");
+                status = "Successfully changed password!";
+            }
+            else
+                status = "Incorrect password!";
+        }
+        else
+            status = "Username does not exist!";
+        resultSet.close();
+        statement.close();
+        closeConnection();
+        return status;
     }
 
     private static List<Recipe> getUserFavorites(String username) throws SQLException {
