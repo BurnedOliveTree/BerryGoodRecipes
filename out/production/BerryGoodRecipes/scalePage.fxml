@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane fx:id="IHaveText2" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.ScalePane">
+<Pane fx:id="IHaveText2" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.ScalePane">
    <children>
       <Button fx:id="exitButton" layoutX="738.0" layoutY="14.0" mnemonicParsing="false">
          <graphic>
@@ -19,38 +19,22 @@
                </image>
             </ImageView>
          </graphic></Button>
-      <Label layoutX="68.0" layoutY="375.0" prefHeight="31.0" prefWidth="129.0" text="Cake mold scale">
+      <Label layoutX="100.0" layoutY="330.0" prefHeight="38.0" prefWidth="136.0" text="Cake mold scale">
          <font>
-            <Font size="16.0" />
+            <Font size="18.0" />
          </font>
       </Label>
-      <Label layoutX="69.0" layoutY="451.0" prefHeight="17.0" prefWidth="55.0" text="Shape:" />
-      <Label layoutX="69.0" layoutY="416.0" text="In recipe:" />
-      <Label layoutX="369.0" layoutY="416.0" text="I have:" />
-      <Label layoutX="369.0" layoutY="451.0" text="Shape:" />
-      <Label layoutX="69.0" layoutY="47.0" prefHeight="25.0" prefWidth="56.0" text="Product">
+      <Label layoutX="106.0" layoutY="424.0" prefHeight="17.0" prefWidth="55.0" text="Shape:" />
+      <Label layoutX="106.0" layoutY="389.0" text="In recipe:" />
+      <Label layoutX="406.0" layoutY="389.0" text="I have:" />
+      <Label layoutX="406.0" layoutY="424.0" text="Shape:" />
+      <Label layoutX="93.0" layoutY="42.0" prefHeight="31.0" prefWidth="136.0" text="Unit converter">
          <font>
-            <Font size="16.0" />
+            <Font size="18.0" />
          </font>
       </Label>
-      <ChoiceBox layoutX="144.0" layoutY="47.0" prefWidth="150.0" />
-      <Label fx:id="ml" layoutX="107.0" layoutY="186.0" text="ML" />
-      <Label layoutX="105.0" layoutY="240.0" prefHeight="17.0" prefWidth="56.0" text="GLASSES" />
-      <Label layoutX="254.0" layoutY="186.0" text="TABLESPOONS" />
-      <Label layoutX="254.0" layoutY="240.0" text="TEASPOONS" />
-      <Label layoutX="71.0" layoutY="118.0" text="Volume:">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <Label layoutX="494.0" layoutY="120.0" text="Weight:">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <Label layoutX="545.0" layoutY="213.0" text="GRAM" />
-      <ChoiceBox fx:id="inRecipeBox" layoutX="115.0" layoutY="447.0" prefWidth="150.0" />
-      <ChoiceBox fx:id="IHaveBox" layoutX="419.0" layoutY="447.0" prefWidth="150.0" />
+      <ChoiceBox fx:id="inRecipeBox" layoutX="152.0" layoutY="420.0" prefWidth="150.0" />
+      <ChoiceBox fx:id="IHaveBox" layoutX="456.0" layoutY="420.0" prefWidth="150.0" />
       <Label fx:id="inRecipeSize" layoutX="71.0" layoutY="539.0" prefHeight="25.0" prefWidth="67.0" />
       <Label fx:id="IHaveSize" layoutX="367.0" layoutY="547.0" prefHeight="17.0" prefWidth="67.0" />
       <TextArea fx:id="inRecipeArea1" layoutX="144.0" layoutY="537.0" prefHeight="17.0" prefWidth="16.0" visible="false" />
@@ -60,19 +44,20 @@
       <Label layoutX="509.0" layoutY="548.0" prefHeight="17.0" prefWidth="16.0" fx:id="x2" />
       <Label fx:id="cm1" layoutX="276.0" layoutY="548.0" prefHeight="17.0" prefWidth="22.0" />
       <Label fx:id="cm2" layoutX="590.0" layoutY="549.0" prefHeight="17.0" prefWidth="22.0" />
-      <TextArea fx:id="ml" layoutX="57.0" layoutY="176.0" prefHeight="31.0" prefWidth="22.0" />
-      <TextArea fx:id="glass" layoutX="57.0" layoutY="230.0" prefHeight="0.0" prefWidth="7.0" />
-      <TextArea fx:id="tbls" layoutX="201.0" layoutY="176.0" prefHeight="21.0" prefWidth="2.0" />
-      <TextArea fx:id="teas" layoutX="201.0" layoutY="230.0" prefHeight="0.0" prefWidth="5.0" />
-      <TextArea fx:id="gram" layoutX="494.0" layoutY="203.0" prefHeight="25.0" prefWidth="35.0" />
       <TextArea fx:id="IHaveArea2" layoutX="537.0" layoutY="538.0" prefHeight="6.0" prefWidth="0.0" visible="false" />
-      <TextArea fx:id="Height1" layoutX="144.0" layoutY="483.0" prefHeight="0.0" prefWidth="22.0" />
-      <TextArea fx:id="Height2" layoutX="456.0" layoutY="483.0" prefHeight="25.0" prefWidth="9.0" />
-      <Label layoutX="71.0" layoutY="494.0" text="Height:" />
-      <Label layoutX="367.0" layoutY="494.0" text="Height:" />
-      <Button fx:id="moldButton" layoutX="586.0" layoutY="490.0" mnemonicParsing="false" text="ok" />
+      <TextArea fx:id="Height1" layoutX="181.0" layoutY="456.0" prefHeight="0.0" prefWidth="22.0" />
+      <TextArea fx:id="Height2" layoutX="493.0" layoutY="456.0" prefHeight="25.0" prefWidth="9.0" />
+      <Label layoutX="108.0" layoutY="467.0" text="Height:" />
+      <Label layoutX="404.0" layoutY="467.0" text="Height:" />
+      <Button fx:id="moldButton" layoutX="623.0" layoutY="463.0" mnemonicParsing="false" text="ok" />
       <Label fx:id="moldLabel" layoutX="633.0" layoutY="494.0" prefHeight="83.0" prefWidth="159.0" />
-      <Label layoutX="196.0" layoutY="494.0" text="cm" />
-      <Label layoutX="511.0" layoutY="494.0" text="cm" />
+      <Label layoutX="233.0" layoutY="467.0" text="cm" />
+      <Label layoutX="548.0" layoutY="467.0" text="cm" />
+      <TextArea fx:id="unitArea1" layoutX="93.0" layoutY="145.0" prefHeight="38.0" prefWidth="79.0" />
+      <TextArea fx:id="unitArea2" layoutX="384.0" layoutY="145.0" prefHeight="25.0" prefWidth="79.0" />
+      <ChoiceBox fx:id="unitChoiceBox1" layoutX="187.0" layoutY="152.0" prefHeight="25.0" prefWidth="112.0" />
+      <ChoiceBox fx:id="unitChoiceBox2" layoutX="481.0" layoutY="152.0" prefHeight="25.0" prefWidth="112.0" />
+      <Button fx:id="okUnit" layoutX="623.0" layoutY="152.0" mnemonicParsing="false" text="ok" />
+      <Label fx:id="unitLabel" layoutX="669.0" layoutY="156.0" prefHeight="17.0" prefWidth="123.0" />
    </children>
 </Pane>

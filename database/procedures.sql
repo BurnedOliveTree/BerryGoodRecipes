@@ -14,3 +14,23 @@ create or replace trigger tg_add_to_public
 begin
     insert into BELONG values (null, 0, :new.USERNAME);
 end;
+/
+create or replace function convert_unit(first_unit varchar, second_unit varchar, quantity number)
+    return number
+as 
+    new_quantity number(9,5);
+    first_ratio number(9,5);
+    second_ratio number(9,5);
+begin
+    select liter_per_unit_ratio into first_ratio from unit where name = first_unit;
+    select liter_per_unit_ratio into second_ratio from unit where name = second_unit;
+    if second_ratio = 0 then
+        return (first_ratio*quantity) / (0.000001);
+    else
+    return (first_ratio*quantity)/second_ratio;
+    end if;
+end;
+/
+select round(convert_unit('glass', 'gallon', 4),2) as result from dual;
+select name from unit;
+
