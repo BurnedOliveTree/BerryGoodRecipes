@@ -34,3 +34,11 @@ end;
 select round(convert_unit('glass', 'gallon', 4),2) as result from dual;
 select name from unit;
 
+create or replace procedure add_group(u_id varchar2, g_name varchar2)
+as
+    new_id number(4);
+begin
+    insert into "GROUP" values (null, g_name, null)
+    returning GROUP_ID into new_id;
+    insert into BELONG values (null, new_id, u_id);
+end;

@@ -38,7 +38,7 @@ public class DatabaseConnection {
     public static String theme;
 
     // TODO save shoppingList, read shoppingList, addRecipe, deleteRecipe
-    // TODO createGroup, deleteGroup, inviteUser, kickUser
+    // TODO deleteGroup, inviteUser, kickUser
     public DatabaseConnection() throws IOException {
         Properties prop = new Properties();
         String fileName = "src/resources/app.config";
@@ -295,6 +295,15 @@ public class DatabaseConnection {
         statement.close();
         closeConnection();
         return groupID;
+    }
+
+    public static void addGroup(String name, String username) throws IOException, SQLException {
+        setConnection();
+        Statement statement = connection.createStatement();
+        statement.execute("begin add_group(\'"+username+"\', \'"+name+"\'); end;");
+        connection.commit();
+        statement.close();
+        closeConnection();
     }
 
     public static void fillResults(MainPane mainPane, TilePane tilePain) throws SQLException, IOException {

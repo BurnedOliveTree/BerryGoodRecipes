@@ -1,6 +1,6 @@
 package main.controller;
 
-import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
 import main.DatabaseConnection;
 import main.recipeModel.Recipe;
 import main.userModel.User;
@@ -8,8 +8,6 @@ import main.userModel.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.event.ActionEvent;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
 import javafx.scene.layout.TilePane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.image.Image;
@@ -23,6 +21,7 @@ public class UserAdminPane extends BasicPaneActions {
     @FXML private Button exitButton;
     @FXML private ImageView exitPic;
     @FXML private TilePane tilePane;
+    @FXML private TextField newGroupName;
     @FXML private ListView<String> followedList;
 
     public UserAdminPane(User activeUser) {
@@ -52,6 +51,11 @@ public class UserAdminPane extends BasicPaneActions {
     private void refreshWindow() throws IOException, SQLException {
         DatabaseConnection.getGroups(this, tilePane, activeUser);
         refreshFollowedList();
+    }
+
+    @FXML private void onAddGroupButtonClick() throws IOException, SQLException {
+        DatabaseConnection.addGroup(newGroupName.getText(), activeUser.getUsername());
+        refreshWindow();
     }
 
     @FXML void onUserPressed(MouseEvent mouseEvent) throws SQLException, IOException {

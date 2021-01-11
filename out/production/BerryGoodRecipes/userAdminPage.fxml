@@ -4,7 +4,10 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -37,6 +40,20 @@
                </graphic>
             </Button>
             <Button mnemonicParsing="false" onAction="#onRefreshButtonClick" prefHeight="32.0" prefWidth="32.0" text="refresh" />
+            <MenuButton alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" text="add group">
+              <items>
+                  <MenuItem mnemonicParsing="false">
+                     <graphic>
+                        <TextField fx:id="newGroupName" alignment="CENTER" promptText="Name" />
+                     </graphic>
+                  </MenuItem>
+                <MenuItem mnemonicParsing="false">
+                     <graphic>
+                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onAddGroupButtonClick" text="Add group" textAlignment="CENTER" />
+                     </graphic>
+                  </MenuItem>
+              </items>
+            </MenuButton>
         </items>
       </ToolBar>
       <ListView fx:id="followedList" onMousePressed="#onUserPressed" GridPane.columnIndex="1" GridPane.rowIndex="2">
