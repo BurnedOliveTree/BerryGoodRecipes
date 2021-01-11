@@ -162,7 +162,7 @@
                         <MenuItem mnemonicParsing="false" onAction="#onThemeWinterSelection" text="Winter" />
                     </items>
                   </Menu>
-                  <MenuItem mnemonicParsing="false" text="Delete account" />
+                  <MenuItem mnemonicParsing="false" onAction="#onDeleteAccountRequest" text="Delete account" />
                </items>
                <graphic>
                   <ImageView fx:id="settingsPic" fitHeight="46.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">

@@ -328,6 +328,15 @@ public class DatabaseConnection {
         closeConnection();
     }
 
+    public static void deleteUser(String username) throws IOException, SQLException {
+        setConnection();
+        Statement statement = connection.createStatement();
+        statement.execute("begin delete_account(\'"+username+"\'); end;");
+        connection.commit();
+        statement.close();
+        closeConnection();
+    }
+
     public static void fillResults(MainPane mainPane, TilePane tilePain) throws SQLException, IOException {
         fillResults(mainPane, tilePain, null, null);
     }

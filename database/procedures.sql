@@ -39,3 +39,24 @@ begin
     returning GROUP_ID into new_id;
     insert into BELONG values (null, new_id, u_id);
 end;
+
+create or replace procedure delete_account(u_id varchar2)
+as
+begin
+    delete from BELONG where USERNAME = u_id;
+    delete from SHOPPING_LIST where USERNAME = u_id and GROUP_ID is null;
+    update SHOPPING_LIST set USERNAME = null where USERNAME = u_id;
+    delete from FOLLOWED where FOLLOWING_USERNAME = u_id or FOLLOWED_USERNAME = u_id;
+    delete from REPORTED where REPORTING_USER = u_id;
+    delete from OPINION where USERNAME = u_id;
+    delete from FAVORITE where USERNAME = u_id;
+    delete from RECIPE where OWNER_NAME = u_id;
+    delete from "USER" where USERNAME = u_id;
+--  TODO delete_group if no one belongs there
+end;
+
+create or replace procedure delete_group(g_id varchar2)
+as
+begin
+    -- TODO
+end;

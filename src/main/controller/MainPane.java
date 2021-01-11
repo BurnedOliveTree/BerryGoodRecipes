@@ -19,6 +19,7 @@ import main.userModel.User;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 public class MainPane extends BasicPaneActions {
     private String query;
@@ -78,6 +79,7 @@ public class MainPane extends BasicPaneActions {
             loginButton.setText("Sign out");
             settingsButton.getItems().get(0).setVisible(true);
             settingsButton.getItems().get(1).setVisible(true);
+            settingsButton.getItems().get(3).setVisible(true);
             socialButton.setDisable(false);
             myRecipesButton.setDisable(false);
             basketButton.setDisable(false);
@@ -86,6 +88,7 @@ public class MainPane extends BasicPaneActions {
             loginButton.setText("Sign in");
             settingsButton.getItems().get(0).setVisible(false);
             settingsButton.getItems().get(1).setVisible(false);
+            settingsButton.getItems().get(3).setVisible(false);
             socialButton.setDisable(true);
             myRecipesButton.setDisable(true);
             basketButton.setDisable(true);
@@ -234,6 +237,24 @@ public class MainPane extends BasicPaneActions {
     @FXML
     private void onPasswordChangeClick(ActionEvent actionEvent) throws IOException, SQLException {
         passwordError.setText(DatabaseConnection.setPassword(activeUser.getUsername(), newPasswordField.getText(), oldPasswordField.getText()));
+    }
+
+    @FXML
+    private void onDeleteAccountRequest(ActionEvent actionEvent) throws IOException, SQLException {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Delete account");
+        alert.setHeaderText(null);
+        alert.setGraphic(null);
+        alert.setContentText("Are you sure?\nYou will not be able to recover your account");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            System.out.println("delete this");
+            DatabaseConnection.deleteUser(activeUser.getUsername());
+            activeUser = null;
+            Main.activeUser = null;
+            setButtonActivity();
+        }
     }
 
     @FXML
