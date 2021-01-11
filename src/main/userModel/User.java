@@ -81,10 +81,18 @@ public class User {
     public void addToShoppingList(Ingredient ingredient) {shoppingList.put(ingredient.getId(), ingredient);}
     public void removeFromShoppingList(int ingredientId) {shoppingList.remove(ingredientId);}
     public boolean checkIfIngredientInShoppingList(int ingredientId) {
-        if (shoppingList.containsKey(ingredientId)) {
-            return shoppingList.get(ingredientId).getShoppingListStatus() != Status.deleted;
-        } else
-            return false;
+        return shoppingList.containsKey(ingredientId);
+    }
+
+    public Status getIngredientStatus(int ingredientId) {
+        if (shoppingList.containsKey(ingredientId))
+            return shoppingList.get(ingredientId).getShoppingListStatus();
+        else
+            return null;
+    }
+
+    public Ingredient getIngredientFromShoppingList(int ingredientId) {
+        return shoppingList.getOrDefault(ingredientId, null);
     }
     public void setDefaultUnitSystem(String unitSystem) { defaultUnitSystem = unitSystem; System.out.println(unitSystem); }
     public Map<String, Ingredient> showShoppingList() {

@@ -250,7 +250,7 @@ public class MainPane extends BasicPaneActions {
     }
 
     @FXML
-    private void onBasketButtonClick(MouseEvent mouseEvent) {
+    private void onBasketButtonClick(MouseEvent mouseEvent) throws IOException, SQLException {
         mouseEvent.consume();
         FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, new MainPane(activeUser)), "/shoppingListPage.fxml");
         changeScene(basketButton, loader);

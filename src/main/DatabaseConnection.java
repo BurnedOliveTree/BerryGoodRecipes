@@ -97,14 +97,17 @@ public class DatabaseConnection {
 
     private static Map<Integer, Ingredient> getShoppingList(String username) throws SQLException {
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM SHOPPING_LIST WHERE USERNAME = '" + username + "'");
+        ResultSet resultSet = statement.executeQuery("SELECT * FROM SHOPPING_LIST WHERE USERNAME = '" + username + "' AND GROUP_ID IS NULL" );
         Map<Integer, Ingredient> shoppingList = new HashMap<>();
         while (resultSet.next()) {
             int ingredientId = resultSet.getInt("INGREDIENT_LIST_ID");
             Statement ingredientStatement = connection.createStatement();
             ResultSet ingredientResult = ingredientStatement.executeQuery("SELECT * FROM INGREDIENT_LIST WHERE INGREDIENT_LIST_ID =" + ingredientId);
             if (ingredientResult.next()); {
-                shoppingList.put(ingredientId, new Ingredient(ingredientId, resultSet.getDouble("AMOUNT"), new Unit(ingredientResult.getString("INGREDIENT_UNIT")), ingredientResult.getString("INGREDIENT_NAME")));
+                Ingredient ingredient = new Ingredient(ingredientId, resultSet.getDouble("AMOUNT"), new Unit(ingredientResult.getString("INGREDIENT_UNIT")), ingredientResult.getString("INGREDIENT_NAME"));
+                ingredient.setShoppingListStatus(Status.loaded);
+                shoppingList.put(ingredientId, ingredient);
+
             }
             ingredientResult.close();
             ingredientStatement.close();
@@ -256,6 +259,20 @@ public class DatabaseConnection {
         resultSet.close();
         statement.close();
         return users;
+    }
+
+    public static List<String> getGroupNames(User user) throws SQLException, IOException {
+        setConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("SELECT NAME FROM \"GROUP\" JOIN BELONG USING (GROUP_ID) WHERE USERNAME = '" + user.getUsername() + "' AND GROUP_ID != 0");
+        List<String> groups = new ArrayList<>();
+        while(resultSet.next()) {
+            groups.add(resultSet.getString("NAME"));
+        }
+        statement.close();
+        resultSet.close();
+        closeConnection();
+        return groups;
     }
 
     public static List<List<String>> getGroups(User user) throws SQLException, IOException {
@@ -503,18 +520,19 @@ public class DatabaseConnection {
 
     public static void updateShoppingList(User aciveUser) throws IOException, SQLException {
         setConnection();
-        updateShoppingList(aciveUser);
+        updateShoppingListView(aciveUser);
         closeConnection();
     }
 
     private static void updateShoppingListView(User activeUser) throws SQLException {
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(String.format("SELECT * FROM SHOPPING_LIST WHERE UPPER(USERNAME) = '%s'", activeUser.getUsername().toUpperCase()));
+        ResultSet resultSet = statement.executeQuery("SELECT * FROM SHOPPING_LIST WHERE UPPER(USERNAME) = '" + activeUser.getUsername().toUpperCase() + "' AND GROUP_ID=NULL");
         // check if the records are not being deleted
         while (resultSet.next()) {
             Ingredient ingredient = activeUser.getShoppingList().get(resultSet.getInt("INGREDIENT_LIST_ID"));
             if (ingredient != null && ingredient.getShoppingListStatus() == Status.deleted){
                 statement.execute("DELETE FROM SHOPPING_LIST WHERE UPPER(USERNAME) = '" + activeUser.getUsername().toUpperCase() + "' AND INGREDIENT_LIST_ID = " + ingredient.getId());
+                activeUser.getShoppingList().remove(resultSet.getInt("INGREDIENT_LIST_ID"));
             } else if (ingredient != null && ingredient.getShoppingListStatus() == Status.added && ingredient.getQuantity() == resultSet.getDouble("AMOUNT")) {
                 // if someone delete and add again recipe
                 ingredient.setShoppingListStatus(Status.loaded);
@@ -524,9 +542,58 @@ public class DatabaseConnection {
         for (Ingredient ingredient : activeUser.getShoppingList().values()) {
             if (ingredient.getShoppingListStatus() == Status.added) {
                 statement.execute("INSERT INTO SHOPPING_LIST values(null, " + ingredient.getQuantity() + ", '" + ingredient.getId()  + "', '"  + activeUser.getUsername() + "', NULL)");
+                ingredient.setShoppingListStatus(Status.loaded);
             }
+        }
+        connection.commit();
+        resultSet.close();
+        statement.close();
+    }
+
+    public static void shareList(User activeUser, String groupName) throws IOException, SQLException {
+        setConnection();
+        updateShoppingListView(activeUser);
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("SELECT GROUP_ID FROM \"GROUP\" JOIN BELONG USING (GROUP_ID) WHERE NAME = '" + groupName + "' AND USERNAME = '" + activeUser.getUsername() +"'");
+        if (resultSet.next()){
+            int groupId = resultSet.getInt("GROUP_ID");
+            Statement update = connection.createStatement();
+            int updateResult = update.executeUpdate("UPDATE SHOPPING_LIST SET GROUP_ID="+groupId+"WHERE USERNAME='"+activeUser.getUsername()+"'AND GROUP_ID=NULL");
+            connection.commit();
+            activeUser.getShoppingList().clear();
+            update.close();
         }
         resultSet.close();
         statement.close();
+        closeConnection();
+    }
+
+    public static Map<Ingredient, String> getGroupShoppingList(User activeUser, String groupName) throws IOException, SQLException {
+        setConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("SELECT GROUP_ID FROM \"GROUP\" JOIN BELONG USING (GROUP_ID) WHERE NAME = '" + groupName + "' AND USERNAME = '" + activeUser.getUsername() +"'");
+        if (resultSet.next()) {
+            int groupId = resultSet.getInt("GROUP_ID");
+            Statement listStatement = connection.createStatement();
+            ResultSet listResult = listStatement.executeQuery("SELECT * FROM SHOPPING_LIST WHERE GROUP_ID = " + groupId);
+            Map<Ingredient, String> shoppingList = new HashMap<Ingredient, String>();
+            while (listResult.next()){
+                int ingredientId = resultSet.getInt("INGREDIENT_LIST_ID");
+                Statement ingredientStatement = connection.createStatement();
+                ResultSet ingredientResult = ingredientStatement.executeQuery("SELECT * FROM INGREDIENT_LIST WHERE INGREDIENT_LIST_ID =" + ingredientId);
+                if (ingredientResult.next()); {
+                    shoppingList.put(new Ingredient(ingredientId, resultSet.getDouble("AMOUNT"), new Unit(ingredientResult.getString("INGREDIENT_UNIT")), ingredientResult.getString("INGREDIENT_NAME")), listResult.getString("USERNAME"));
+                }
+                ingredientResult.close();
+                ingredientStatement.close();
+            }
+            listResult.close();
+            listStatement.close();
+            return shoppingList;
+        }
+        statement.close();
+        resultSet.close();
+        closeConnection();
+        return null;
     }
 }

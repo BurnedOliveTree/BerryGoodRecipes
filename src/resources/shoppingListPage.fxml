@@ -16,7 +16,8 @@
                      </image>
                   </ImageView>
                </graphic></Button>
-            <Button mnemonicParsing="false" onAction="#onShareAction" text="Share" />
+            <MenuButton fx:id="shareMenu" mnemonicParsing="false" text="Share" />
+            <MenuButton fx:id="otherListsMenu" mnemonicParsing="false" text="My Shopping List" />
         </items>
       </ToolBar>
    </top>
