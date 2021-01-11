@@ -22,6 +22,7 @@ import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
 import main.userModel.User;
 
+import javax.swing.plaf.nimbus.State;
 import java.io.IOException;
 import java.sql.SQLException;
 
@@ -107,6 +108,71 @@ public class RecipePane  extends BasicPaneActions {
         });
 
     }
+//    // inner class which extends ListCell with additional button - for adding ingredient to shopping list - option for logged users
+//    static class ButtonCell {
+//        HBox box = new HBox();
+//        Pane pane = new Pane();
+//        Label label = new Label("(empty)");
+//        Ingredient selectedIngredient;
+//        User activeUser;
+//        private ImageView view;
+//
+//        public ButtonCell(User activeUser) {
+//            super();
+//            view = new ImageView(new Image("icons/plus.png"));
+//            view.setFitHeight(20);
+//            view.setFitWidth(20);
+//            box.getChildren().addAll(view, label, pane);
+//            HBox.setHgrow(pane, Priority.ALWAYS);
+//            this.activeUser = activeUser;
+//
+//            view.setOnMouseClicked(mouseEvent -> {
+//                if (activeUser.checkIfIngredientInShoppingList(selectedIngredient.getId())) {
+//                    view.setImage(new Image("icons/plus.png"));
+//                    selectedIngredient.setShoppingListStatus(Status.deleted);
+//                } else {
+//                    view.setImage(new Image("icons/minus.png"));
+//                    activeUser.addToShoppingList(selectedIngredient);
+//                    selectedIngredient.setShoppingListStatus(Status.added);
+//                }
+//            });
+//        }
+////
+////        @Override
+////        protected void updateItem(Ingredient ingredient, boolean empty) {
+////            super.updateItem(ingredient, empty);
+////            if (empty) {
+////                selectedIngredient = null;
+////                setGraphic(null);
+////            } else {
+////                selectedIngredient = ingredient;
+////                label.setText(String.format((ingredient.getQuantity() % 1 == 0)?" %1.0f %s %s":" %1.2f %s %s",  ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
+////                if (activeUser.checkIfIngredientInShoppingList(selectedIngredient.getId())) {
+////                    view.setImage(new Image("icons/minus.png"));
+////                }
+////                else{
+////                    view.setImage(new Image("icons/plus.png"));
+////                }
+////                setGraphic(box);
+////            }
+////        }
+//    }
+//
+//
+//    // format properly listView - with button or without
+//    private void setIngredListView() {
+//        ingredientListView.getItems().clear();
+//        if (activeUser != null) {
+//            ingredientListView.getItems().addAll(this.recipe.getIngredientList());
+//            ingredientListView.setCellFactory(ingredientListView -> new ButtonCell(activeUser));
+//        } else {
+//            for (Ingredient ingredient: this.recipe.getIngredientList()) {
+//                ingredientListView.getItems().add(String.format((ingredient.getQuantity() % 1 == 0)?"%1.0f %s %s":"%1.2f %s %s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
+//            }
+//        }
+//
+//    }
+
     // inner class which extends ListCell with additional button - for adding ingredient to shopping list - option for logged users
     static class ButtonCell extends ListCell<Ingredient> {
         HBox box = new HBox();
@@ -125,13 +191,20 @@ public class RecipePane  extends BasicPaneActions {
             HBox.setHgrow(pane, Priority.ALWAYS);
             this.activeUser = activeUser;
             view.setOnMouseClicked(mouseEvent -> {
-                if (!activeUser.checkIfIngredientInShoppingList(selectedIngredient.getId())) {
-                    view.setImage(new Image("icons/minus.png"));
-                    activeUser.addToShoppingList(selectedIngredient);
-                    selectedIngredient.setShoppingListStatus(Status.added);
+                if (activeUser.checkIfIngredientInShoppingList(selectedIngredient.getId())) {
+                    Ingredient ingredient = activeUser.getIngredientFromShoppingList(selectedIngredient.getId());
+                    Status status = ingredient.getShoppingListStatus();
+                    if (status == Status.deleted) {
+                        ingredient.setShoppingListStatus(Status.added);
+                        view.setImage(new Image("icons/minus.png"));
+                    } else if (status == Status.added || status == Status.loaded) {
+                        ingredient.setShoppingListStatus(Status.deleted);
+                        view.setImage(new Image("icons/plus.png"));
+                    }
                 } else {
-                    view.setImage(new Image("icons/plus.png"));
-                    selectedIngredient.setShoppingListStatus(Status.deleted);
+                    selectedIngredient.setShoppingListStatus(Status.added);
+                    activeUser.addToShoppingList(selectedIngredient);
+                    view.setImage(new Image("icons/minus.png"));
                 }
             });
         }
@@ -145,13 +218,12 @@ public class RecipePane  extends BasicPaneActions {
             } else {
                 selectedIngredient = ingredient;
                 label.setText(String.format((ingredient.getQuantity() % 1 == 0)?" %1.0f %s %s":" %1.2f %s %s",  ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
-                if (!activeUser.checkIfIngredientInShoppingList(selectedIngredient.getId())) {
-                    Image image = new Image("icons/plus.png");
-                    view.setImage(image);
+                Status status = activeUser.getIngredientStatus(selectedIngredient.getId());
+                if (status == Status.deleted || status == Status.none || status == null) {
+                    view.setImage(new Image("icons/plus.png"));
                 }
                 else{
-                    Image image = new Image("icons/minus.png");
-                    view.setImage(image);
+                    view.setImage(new Image("icons/minus.png"));
                 }
 
                 setGraphic(box);
@@ -173,7 +245,8 @@ public class RecipePane  extends BasicPaneActions {
 
     }
 
-    void setPortionAreaProperty(){
+
+    private void setPortionAreaProperty(){
         portionArea.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000));
         portionArea.getEditor().textProperty().set(String.format((recipe.getPortionNumber() % 1 == 0)?"%1.0f":"%1.2f", recipe.getPortionNumber()));
         portionArea.setEditable(true);
@@ -246,7 +319,7 @@ public class RecipePane  extends BasicPaneActions {
     }
 
     @FXML
-    private void onShoppingListButtonAction(){
+    private void onShoppingListButtonAction() throws IOException, SQLException {
         FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, new RecipePane(recipe, activeUser)), "/resources/shoppingListPage.fxml");
         changeScene(shoppingListButton, loader);
     }
