@@ -269,91 +269,23 @@ public class DatabaseConnection {
         return users;
     }
 
-    public static void getGroups(UserAdminPane adminPane, TilePane tilePane, User user) throws SQLException, IOException {
+    public static List<List<String>> getGroups(User user) throws SQLException, IOException {
         setConnection();
         Statement statement = connection.createStatement();
         String query = "select g.GROUP_ID as ID, g.NAME as group_name from \"GROUP\" g join BELONG b on g.GROUP_ID = b.GROUP_ID where b.GROUP_ID != 0 and lower(b.USERNAME) = '"+user.getUsername().toLowerCase()+"'";
         ResultSet resultSet = statement.executeQuery(query);
-        List<MenuButton> panelist = new ArrayList<>();
+        List<List<String>> stringList = new ArrayList<>();
         while (resultSet.next()) {
-            int groupID = resultSet.getInt("ID");
-            String groupName = resultSet.getString("group_name");
-            MenuButton tempButton = new MenuButton(groupName);
-            tempButton.setWrapText(true);
-            tempButton.setTextAlignment(TextAlignment.CENTER);
-            tempButton.setAlignment(Pos.CENTER);
-            tempButton.setPrefSize(192, 64);
-            MenuItem menuItem = new MenuItem("Show shopping list");
-            menuItem.setOnAction(e -> System.out.println("TODO jump to shopping list"));
-            tempButton.getItems().add(menuItem);
-            menuItem = new MenuItem("Show recipes");
-            menuItem.setOnAction(e -> adminPane.getGroupRecipes(groupName));
-            tempButton.getItems().add(menuItem);
-            Menu followMenu = new Menu("Follow user");
-            List<String> tempStringList = getGroupParticipants(resultSet.getString("ID"));
-            tempStringList.remove(user.getUsername());
-            for (String s : tempStringList) {
-                menuItem = new MenuItem(s);
-                if (user.getFollowed().contains(s))
-                    menuItem.setDisable(true);
-                MenuItem finalMenuItem = menuItem;
-                menuItem.setOnAction(e -> {
-                    user.followUser(s);
-                    adminPane.refreshFollowedList();
-                    finalMenuItem.setDisable(true);
-                });
-                followMenu.getItems().add(menuItem);
-            }
-            tempButton.getItems().add(followMenu);
-            tempButton.getItems().add(new SeparatorMenuItem());
-            Menu kickMenu = new Menu("Kick user");
-            tempStringList = getGroupParticipants(Integer.toString(groupID));
-            for (String s : tempStringList) {
-                menuItem = new MenuItem(s);
-                menuItem.setOnAction(e -> {
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert.setTitle("Kick "+s+" from "+groupName);
-                    alert.setHeaderText(null);
-                    alert.setGraphic(null);
-                    alert.setContentText("Are you sure?");
-                    Optional<ButtonType> result = alert.showAndWait();
-                    if (result.get() == ButtonType.OK) {
-                        try {
-                            kickUser(s, groupID);
-                            adminPane.refreshWindow();
-                        } catch (IOException | SQLException err) {
-                            err.printStackTrace();
-                        }
-                    }
-                });
-                kickMenu.getItems().add(menuItem);
-            }
-            tempButton.getItems().add(kickMenu);
-            menuItem = new MenuItem("Delete group");
-            menuItem.setOnAction(e -> {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Delete "+groupName);
-                alert.setHeaderText(null);
-                alert.setGraphic(null);
-                alert.setContentText("Are you sure?\nYou will not be able to recover your group");
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.OK) {
-                    try {
-                        deleteGroup(groupID);
-                        adminPane.refreshWindow();
-                    } catch (IOException | SQLException err) {
-                        err.printStackTrace();
-                    }
-                }
-            });
-            tempButton.getItems().add(menuItem);
-            panelist.add(tempButton);
+            List<String> tempList = new ArrayList<>();
+            tempList.add(resultSet.getString("ID"));
+            tempList.add(resultSet.getString("group_name"));
+            tempList.addAll(getGroupParticipants(resultSet.getString("ID")));
+            stringList.add(tempList);
         }
-        tilePane.getChildren().clear();
-        tilePane.getChildren().addAll(panelist);
         resultSet.close();
         statement.close();
         closeConnection();
+        return stringList;
     }
 
     public static List<Integer> getGroupByName(String[] groupName) throws IOException, SQLException {
