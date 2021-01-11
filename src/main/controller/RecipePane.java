@@ -21,6 +21,7 @@ import main.recipeModel.Recipe;
 import main.userModel.User;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class RecipePane  extends BasicPaneActions {
     private final Recipe recipe;
@@ -125,6 +126,13 @@ public class RecipePane  extends BasicPaneActions {
                 if (!activeUser.checkIfIngredientInShoppingList(selectedIngredient.getId())) {
                     view.setImage(new Image("icons/minus.png"));
                     activeUser.addToShoppingList(selectedIngredient);
+                    try {
+                        DatabaseConnection.addShoppingListIngredient(activeUser, selectedIngredient);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
                 } else {
                     view.setImage(new Image("icons/plus.png"));
                     activeUser.removeFromShoppingList(selectedIngredient.getId());

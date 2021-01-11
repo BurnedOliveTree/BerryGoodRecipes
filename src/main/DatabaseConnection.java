@@ -23,6 +23,7 @@ import main.recipeModel.Unit;
 
 import oracle.jdbc.pool.OracleDataSource;
 
+import javax.print.DocFlavor;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -471,12 +472,27 @@ public class DatabaseConnection {
         }
         return unitsList;
     }
-public static Double convertUnit(Double quantity, String first_unit, String second_unit) throws IOException, SQLException {
-    setConnection();
-    Statement statement = connection.createStatement();
-    ResultSet resultSet = statement.executeQuery("select round(convert_unit('" +first_unit+ "', '" +second_unit+ "', " +quantity+ "),2) as result from dual");
-    resultSet.next();
-    return resultSet.getDouble("result");
+    public static Double convertUnit(Double quantity, String first_unit, String second_unit) throws IOException, SQLException {
+        setConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("select round(convert_unit('" +first_unit+ "', '" +second_unit+ "', " +quantity+ "),2) as result from dual");
+        resultSet.next();
+        return resultSet.getDouble("result");
 }
+
+    public static void addShoppingListIngredient(User activeUser, Ingredient ingredient) throws IOException, SQLException {
+        setConnection();
+        Statement statement = connection.createStatement();
+        System.out.println("INSERT INTO SHOPPING_LIST values(null, " + ingredient.getQuantity() + ", '" + ingredient.getId()  + "', '"  + activeUser.getUsername() + "', NULL)");
+
+        ResultSet resultSet = statement.executeQuery(String.format("SELECT * FROM SHOPPING_LIST WHERE UPPER(USERNAME) = '%s' AND INGREDIENT_LIST_ID = %d", activeUser.getUsername().toUpperCase(), ingredient.getId()));
+        if (!resultSet.next()) {
+            statement.execute("INSERT INTO SHOPPING_LIST values(null, " + ingredient.getQuantity() + ", '" + ingredient.getId()  + "', '"  + activeUser.getUsername() + "', NULL)");
+        }
+        resultSet.close();
+        statement.close();
+        closeConnection();
+    }
+
 
 }
