@@ -176,19 +176,19 @@ public class MainPane extends BasicPaneActions {
     }
 
     @FXML
-    public void onMyRecipesAction(MouseEvent mouseEvent) {
+    private void onMyRecipesAction(MouseEvent mouseEvent) {
         mouseEvent.consume();
         changeScene(myRecipesButton, loadFXML(new RecipeAdminPane(activeUser), "/recipeAdminPage.fxml"));
     }
 
     @FXML
-    public void onSocialButtonClick(MouseEvent mouseEvent) {
+    private void onSocialButtonClick(MouseEvent mouseEvent) {
         mouseEvent.consume();
         changeScene(myRecipesButton, loadFXML(new UserAdminPane(activeUser), "/userAdminPage.fxml"));
     }
 
     @FXML
-    public void onBasketButtonClick(MouseEvent mouseEvent) {
+    private void onBasketButtonClick(MouseEvent mouseEvent) {
         mouseEvent.consume();
         FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, new MainPane(activeUser)), "/shoppingListPage.fxml");
         changeScene(basketButton, loader);
@@ -200,7 +200,7 @@ public class MainPane extends BasicPaneActions {
     }
 
     @FXML
-    public void onSignInButtonClick(MouseEvent mouseEvent) throws IOException, SQLException {
+    private void onSignInButtonClick(MouseEvent mouseEvent) throws IOException, SQLException {
         // create a new Window with sign in
         mouseEvent.consume();
         if (activeUser != null) {
@@ -229,7 +229,7 @@ public class MainPane extends BasicPaneActions {
     }
 
     @FXML
-    public void onHelpButtonClick(MouseEvent mouseEvent) {
+    private void onHelpButtonClick(MouseEvent mouseEvent) {
         mouseEvent.consume();
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Help");
@@ -270,99 +270,64 @@ public class MainPane extends BasicPaneActions {
     }
 
     @FXML
-    public void onThemeLightSelection() {
+    private void onThemeLightSelection() {
         DatabaseConnection.theme = "light";
         resetTheme();
     }
 
     @FXML
-    public void onThemeDarkSelection() {
+    private void onThemeDarkSelection() {
         DatabaseConnection.theme = "dark";
         resetTheme();
     }
 
     @FXML
-    public void onThemeWinterSelection() {
+    private void onThemeWinterSelection() {
         DatabaseConnection.theme = "winter";
         resetTheme();
     }
 
     @FXML
-    public void onThemeSpringSelection() {
+    private void onThemeSpringSelection() {
         DatabaseConnection.theme = "spring";
         resetTheme();
     }
 
     @FXML
-    public void onNameOrderSelection() {
+    private void onNameOrderSelection() {
         orderBy = "rcp.name";
         System.out.println(orderBy);
     }
 
     @FXML
-    public void onCostOrderSelection() {
+    private void onCostOrderSelection() {
         orderBy = "rcp.cost";
         System.out.println(orderBy);
     }
 
     @FXML
-    public void onTimeOrderSelection() {
+    private void onTimeOrderSelection() {
         orderBy = "rcp.preparation_time";
         System.out.println(orderBy);
     }
 
     @FXML
-    public void onRatingOrderSelection() {
+    private void onRatingOrderSelection() {
         orderBy = "rating desc";
         System.out.println(orderBy);
     }
 
-    @FXML
-    public void onSearchWith() {
-        search.setText(search.getText() + " with:");
-    }
+    @FXML private void onSearchWith() { search.setText(search.getText() + " with:"); }
+    @FXML private void onSearchUser() { search.setText(search.getText() + " user:"); }
+    @FXML private void onSearchMaxcost() { search.setText(search.getText() + " maxcost:"); }
+    @FXML private void onSearchMincost() { search.setText(search.getText() + " mincost:"); }
+    @FXML private void onSearchMaxtime() { search.setText(search.getText() + " maxtime:"); }
+    @FXML private void onSearchMintime() { search.setText(search.getText() + " mintime:"); }
+    @FXML private void onSearchMaxrating() { search.setText(search.getText() + " maxrating:"); }
+    @FXML private void onSearchMinrating() { search.setText(search.getText() + " minrating:"); }
+    @FXML private void onSearchGroup() { search.setText(search.getText() + " group:"); }
 
-    @FXML
-    public void onSearchUser() {
-        search.setText(search.getText() + " user:");
-    }
-
-    @FXML
-    public void onSearchMaxcost() {
-        search.setText(search.getText() + " maxcost:");
-    }
-
-    @FXML
-    public void onSearchMincost() {
-        search.setText(search.getText() + " mincost:");
-    }
-
-    @FXML
-    public void onSearchMaxtime() {
-        search.setText(search.getText() + " maxtime:");
-    }
-
-    @FXML
-    public void onSearchMintime() {
-        search.setText(search.getText() + " mintime:");
-    }
-
-    @FXML
-    public void onSearchMaxrating() {
-        search.setText(search.getText() + " maxrating:");
-    }
-
-    @FXML
-    public void onSearchMinrating() {
-        search.setText(search.getText() + " minrating:");
-    }
-
-    @FXML
-    public void onSearchGroup() {
-        search.setText(search.getText() + " group:");
-    }
-
-    public void resetTheme() {
+    private void resetTheme() {
         logo.getScene().getStylesheets().remove(0);
         ((Stage) logo.getScene().getWindow()).getIcons().remove(0);
         logo.getScene().getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
