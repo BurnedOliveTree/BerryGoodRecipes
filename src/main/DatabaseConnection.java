@@ -2,20 +2,9 @@ package main;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.HPos;
-import javafx.geometry.Pos;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.TilePane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.RowConstraints;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.text.TextAlignment;
 
-import main.controller.MainPane;
 import main.controller.Status;
-import main.controller.UserAdminPane;
 import main.userModel.Opinion;
 import main.userModel.User;
 import main.recipeModel.Ingredient;
