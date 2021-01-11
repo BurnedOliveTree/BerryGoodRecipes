@@ -91,9 +91,9 @@ public class RecipePane  extends BasicPaneActions {
         if (activeUser == null) {
             likeButton.setDisable(true);
             shoppingListButton.setDisable(true);
-            ingredientListView.setMaxHeight(this.recipe.getIngredientList().size() * 26);
+            ingredientListView.setPrefHeight(this.recipe.getIngredientList().size() * 26);
         } else {
-            ingredientListView.setMaxHeight(this.recipe.getIngredientList().size() * 29);
+            ingredientListView.setPrefHeight(this.recipe.getIngredientList().size() * 29);
             if (activeUser.checkIfRecipeFavorite(this.recipe)) {
                 LikePic.setImage(new Image("icons/favoriteClicked.png"));
             }
