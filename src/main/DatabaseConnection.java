@@ -14,6 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.text.TextAlignment;
 
 import main.controller.MainPane;
+import main.controller.Status;
 import main.controller.UserAdminPane;
 import main.userModel.Opinion;
 import main.userModel.User;
@@ -23,6 +24,7 @@ import main.recipeModel.Unit;
 
 import oracle.jdbc.pool.OracleDataSource;
 
+import javax.print.DocFlavor;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -86,7 +88,8 @@ public class DatabaseConnection {
                 List<Recipe> userRecipes = getUserRecipes(username);
                 List<Recipe> favorites = getUserFavorites(username);
                 List<String> followed = getUserFollowed(username);
-                activeUser = new User(username, userRecipes, favorites, followed);
+                Map<Integer, Ingredient> shoppingList = getShoppingList(username);
+                activeUser = new User(username, userRecipes, favorites, followed, shoppingList);
                 // TODO add all the other columns in the future
                 errMess.setText("Successfully logged in!");
             } else {
@@ -102,6 +105,25 @@ public class DatabaseConnection {
         closeConnection();
 
         return activeUser;
+    }
+
+    private static Map<Integer, Ingredient> getShoppingList(String username) throws SQLException {
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("SELECT * FROM SHOPPING_LIST WHERE USERNAME = '" + username + "'");
+        Map<Integer, Ingredient> shoppingList = new HashMap<>();
+        while (resultSet.next()) {
+            int ingredientId = resultSet.getInt("INGREDIENT_LIST_ID");
+            Statement ingredientStatement = connection.createStatement();
+            ResultSet ingredientResult = ingredientStatement.executeQuery("SELECT * FROM INGREDIENT_LIST WHERE INGREDIENT_LIST_ID =" + ingredientId);
+            if (ingredientResult.next()); {
+                shoppingList.put(ingredientId, new Ingredient(ingredientId, resultSet.getDouble("AMOUNT"), new Unit(ingredientResult.getString("INGREDIENT_UNIT")), ingredientResult.getString("INGREDIENT_NAME")));
+            }
+            ingredientResult.close();
+            ingredientStatement.close();
+        }
+        resultSet.close();
+        statement.close();
+        return shoppingList;
     }
 
     public static User register(String username, String password, Label errMess) throws SQLException, IOException {
@@ -228,6 +250,8 @@ public class DatabaseConnection {
                 }
             }
             statement.close();
+            connection.commit();
+            updateShoppingListView(user);
             connection.commit();
             closeConnection();
         }
@@ -534,12 +558,40 @@ public class DatabaseConnection {
         }
         return unitsList;
     }
-public static Double convertUnit(Double quantity, String first_unit, String second_unit) throws IOException, SQLException {
-    setConnection();
-    Statement statement = connection.createStatement();
-    ResultSet resultSet = statement.executeQuery("select round(convert_unit('" +first_unit+ "', '" +second_unit+ "', " +quantity+ "),2) as result from dual");
-    resultSet.next();
-    return resultSet.getDouble("result");
-}
+    public static Double convertUnit(Double quantity, String first_unit, String second_unit) throws IOException, SQLException {
+        setConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("select round(convert_unit('" +first_unit+ "', '" +second_unit+ "', " +quantity+ "),2) as result from dual");
+        resultSet.next();
+        return resultSet.getDouble("result");
+    }
 
+    public static void updateShoppingList(User aciveUser) throws IOException, SQLException {
+        setConnection();
+        updateShoppingList(aciveUser);
+        closeConnection();
+    }
+
+    private static void updateShoppingListView(User activeUser) throws SQLException {
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery(String.format("SELECT * FROM SHOPPING_LIST WHERE UPPER(USERNAME) = '%s'", activeUser.getUsername().toUpperCase()));
+        // check if the records are not being deleted
+        while (resultSet.next()) {
+            Ingredient ingredient = activeUser.getShoppingList().get(resultSet.getInt("INGREDIENT_LIST_ID"));
+            if (ingredient != null && ingredient.getShoppingListStatus() == Status.deleted){
+                statement.execute("DELETE FROM SHOPPING_LIST WHERE UPPER(USERNAME) = '" + activeUser.getUsername().toUpperCase() + "' AND INGREDIENT_LIST_ID = " + ingredient.getId());
+            } else if (ingredient != null && ingredient.getShoppingListStatus() == Status.added && ingredient.getQuantity() == resultSet.getDouble("AMOUNT")) {
+                // if someone delete and add again recipe
+                ingredient.setShoppingListStatus(Status.loaded);
+            }
+        }
+        // add records with Status.added
+        for (Ingredient ingredient : activeUser.getShoppingList().values()) {
+            if (ingredient.getShoppingListStatus() == Status.added) {
+                statement.execute("INSERT INTO SHOPPING_LIST values(null, " + ingredient.getQuantity() + ", '" + ingredient.getId()  + "', '"  + activeUser.getUsername() + "', NULL)");
+            }
+        }
+        resultSet.close();
+        statement.close();
+    }
 }

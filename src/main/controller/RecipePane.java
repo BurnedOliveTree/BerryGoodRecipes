@@ -21,6 +21,7 @@ import main.recipeModel.Recipe;
 import main.userModel.User;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class RecipePane  extends BasicPaneActions {
     private final Recipe recipe;
@@ -91,9 +92,9 @@ public class RecipePane  extends BasicPaneActions {
         if (activeUser == null) {
             likeButton.setDisable(true);
             shoppingListButton.setDisable(true);
-            ingredientListView.setMaxHeight(this.recipe.getIngredientList().size() * 26);
+            ingredientListView.setPrefHeight(this.recipe.getIngredientList().size() * 26);
         } else {
-            ingredientListView.setMaxHeight(this.recipe.getIngredientList().size() * 29);
+            ingredientListView.setPrefHeight(this.recipe.getIngredientList().size() * 29);
             if (activeUser.checkIfRecipeFavorite(this.recipe)) {
                 LikePic.setImage(new Image("icons/favoriteClicked.png"));
             }
@@ -125,9 +126,10 @@ public class RecipePane  extends BasicPaneActions {
                 if (!activeUser.checkIfIngredientInShoppingList(selectedIngredient.getId())) {
                     view.setImage(new Image("icons/minus.png"));
                     activeUser.addToShoppingList(selectedIngredient);
+                    selectedIngredient.setShoppingListStatus(Status.added);
                 } else {
                     view.setImage(new Image("icons/plus.png"));
-                    activeUser.removeFromShoppingList(selectedIngredient.getId());
+                    selectedIngredient.setShoppingListStatus(Status.deleted);
                 }
             });
         }

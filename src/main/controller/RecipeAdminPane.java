@@ -32,6 +32,7 @@ public class RecipeAdminPane extends BasicPaneActions {
     @FXML private TextField hrsField;
     @FXML private TextField minsField;
     @FXML private TextArea descriptionArea;
+    @FXML private ScrollPane scrollInfo;
 
     public RecipeAdminPane( User activeUser) {
         this.activeUser = activeUser;

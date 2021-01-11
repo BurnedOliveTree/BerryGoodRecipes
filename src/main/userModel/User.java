@@ -1,5 +1,6 @@
 package main.userModel;
 
+import main.controller.Status;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
 
@@ -22,16 +23,17 @@ public class User {
         this.userRecipes = new ArrayList<>();
         this.favorites = new LinkedList<>();
         this.followed = new LinkedList<>();
-        shoppingList = new HashMap<Integer, Ingredient>();
+        this.shoppingList = new HashMap<Integer, Ingredient>();
     }
 
-    public User(String argUsername, List<Recipe> userRecipes, List<Recipe> favorites, List<String> followed) {
+    public User(String argUsername, List<Recipe> userRecipes, List<Recipe> favorites, List<String> followed, Map<Integer, Ingredient> shoppingList) {
         username = argUsername;
         this.userRecipes = userRecipes;
         this.favorites = favorites;
         this.followed = followed;
-        shoppingList = new HashMap<Integer, Ingredient>();
+        this.shoppingList = shoppingList;
     }
+
 //    public void setNewPassword(String newPassword) {
 //        password = newPassword;
 //    }
@@ -78,24 +80,33 @@ public class User {
 
     public void addToShoppingList(Ingredient ingredient) {shoppingList.put(ingredient.getId(), ingredient);}
     public void removeFromShoppingList(int ingredientId) {shoppingList.remove(ingredientId);}
-    public boolean checkIfIngredientInShoppingList(int ingredientId) {return shoppingList.containsKey(ingredientId);}
+    public boolean checkIfIngredientInShoppingList(int ingredientId) {
+        if (shoppingList.containsKey(ingredientId)) {
+            return shoppingList.get(ingredientId).getShoppingListStatus() != Status.deleted;
+        } else
+            return false;
+    }
     public void setDefaultUnitSystem(String unitSystem) { defaultUnitSystem = unitSystem; System.out.println(unitSystem); }
     public Map<String, Ingredient> showShoppingList() {
         Map<String, Ingredient> showMap = new HashMap<>();
         for (Map.Entry<Integer, Ingredient> entry : shoppingList.entrySet()) {
             //@TODO zamiana składników na jednostke domyślną podczas dodawania
             Ingredient ingredient = entry.getValue();
-            Ingredient shopIngredient = showMap.get(ingredient.getName());
-            if (shopIngredient != null && shopIngredient.getUnit().getName().equals(ingredient.getUnit().getName()) ){
-                double quantity =  ingredient.getQuantity() + shopIngredient.getQuantity();
-                shopIngredient.setQuantity(quantity);
-            }
-            else {
-                showMap.put(ingredient.getName(), ingredient);
+            if (ingredient.getShoppingListStatus() != Status.deleted) {
+                Ingredient shopIngredient = showMap.get(ingredient.getName());
+                if (shopIngredient != null && shopIngredient.getUnit().getName().equals(ingredient.getUnit().getName()) ){
+                    double quantity =  ingredient.getQuantity() + shopIngredient.getQuantity();
+                    shopIngredient.setQuantity(quantity);
+                }
+                else {
+                    showMap.put(ingredient.getName(), ingredient);
+                }
             }
         }
         return showMap;
         }
+    public Map<Integer, Ingredient> getShoppingList() {return shoppingList;}
+
 //
 //    public void saveToFile()
 //    {

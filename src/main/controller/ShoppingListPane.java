@@ -49,4 +49,9 @@ public class ShoppingListPane extends BasicPaneActions {
         FXMLLoader loader = loadFXML(returnPane, path);
         changeScene(exitButton, loader);
     }
+
+    @FXML
+    public void onShareAction() {
+
+    }
 }
