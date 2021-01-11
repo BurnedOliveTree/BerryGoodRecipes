@@ -18,6 +18,8 @@ import main.userModel.User;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainPane extends BasicPaneActions {
     private String query;
@@ -35,7 +37,7 @@ public class MainPane extends BasicPaneActions {
     @FXML private ImageView settingsPic;
     @FXML private ImageView helpPic;
     @FXML private ImageView searchPic;
-    @FXML private TilePane tilePain;
+    @FXML public TilePane tilePain;
     @FXML public TextField search;
     @FXML private ContextMenu searchContext;
     @FXML private Menu unitSystemMenu;
@@ -123,6 +125,7 @@ public class MainPane extends BasicPaneActions {
         query = search.getText();
         System.out.println(query);
         String args = "";
+        List<Integer> groupID = null;
         if (query.contains(":")) {
             if (query.contains("with:")) {
                 String[] tempList = split_search("with:");
@@ -156,10 +159,14 @@ public class MainPane extends BasicPaneActions {
                 String[] tempList = split_search("minrating:");
                 args = args + multiple_search(tempList, "CALC_RATING(rcp.RECIPE_ID) >", true);
             }
+            if (query.contains("group:")) {
+                String[] tempList = split_search("group:");
+                groupID = DatabaseConnection.getGroupByName(tempList);
+            }
         }
         query = "lower(rcp.name) like lower('%" + query + "%')" + args + " order by " + orderBy;
         System.out.println(query);
-        DatabaseConnection.fillResults(this, tilePain, query);
+        DatabaseConnection.fillResults(this, tilePain, query, groupID);
     }
 
     @FXML

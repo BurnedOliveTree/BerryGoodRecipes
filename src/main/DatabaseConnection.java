@@ -1,5 +1,7 @@
 package main;
 
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
@@ -12,6 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.text.TextAlignment;
 
 import main.controller.MainPane;
+import main.controller.UserAdminPane;
 import main.userModel.Opinion;
 import main.userModel.User;
 import main.recipeModel.Ingredient;
@@ -198,15 +201,15 @@ public class DatabaseConnection {
         return users;
     }
 
-    public static void getGroups(TilePane tilePane, User user) throws SQLException, IOException {
+    public static void getGroups(UserAdminPane adminPane, TilePane tilePane, User user) throws SQLException, IOException {
         setConnection();
         Statement statement = connection.createStatement();
         String query = "select g.GROUP_ID as ID, g.NAME as group_name from \"GROUP\" g join BELONG b on g.GROUP_ID = b.GROUP_ID where b.GROUP_ID != 0 and lower(b.USERNAME) = '"+user.getUsername().toLowerCase()+"'";
         ResultSet resultSet = statement.executeQuery(query);
         List<MenuButton> panelist = new ArrayList<>();
         while (resultSet.next()) {
-            String tempString = resultSet.getString("group_name");
-            MenuButton tempButton = new MenuButton(tempString);
+            String groupName = resultSet.getString("group_name");
+            MenuButton tempButton = new MenuButton(groupName);
             tempButton.setWrapText(true);
             tempButton.setTextAlignment(TextAlignment.CENTER);
             tempButton.setAlignment(Pos.CENTER);
@@ -215,7 +218,7 @@ public class DatabaseConnection {
             menuItem.setOnAction(e -> System.out.println("TODO jump to shopping list"));
             tempButton.getItems().add(menuItem);
             menuItem = new MenuItem("Show recipes");
-            menuItem.setOnAction(e -> System.out.println("TODO jump to recipes of the group"));
+            menuItem.setOnAction(e -> adminPane.getGroupRecipes(groupName));
             tempButton.getItems().add(menuItem);
             tempButton.getItems().add(new SeparatorMenuItem());
             Menu kickMenu = new Menu("Kick user");
@@ -238,6 +241,23 @@ public class DatabaseConnection {
         closeConnection();
     }
 
+    public static List<Integer> getGroupByName(String[] groupName) throws IOException, SQLException {
+        setConnection();
+        Statement statement = connection.createStatement();
+        String query = "select GROUP_ID from \"GROUP\" where lower(NAME) in (\'" + groupName[0].toLowerCase() + "\'";
+        for (String s : groupName)
+            query = query + ", \'" + s.toLowerCase() + "\'";
+        query = query + ")";
+        ResultSet resultSet = statement.executeQuery(query);
+        List<Integer> groupID = new ArrayList<>();
+        if (resultSet.next())
+            groupID.add(resultSet.getInt("GROUP_ID"));
+        resultSet.close();
+        statement.close();
+        closeConnection();
+        return groupID;
+    }
+
     public static void getFollowed(ListView<String> listView, User user) throws SQLException, IOException {
         setConnection();
         Statement statement = connection.createStatement();
@@ -255,24 +275,32 @@ public class DatabaseConnection {
     }
 
     public static void fillResults(MainPane mainPane, TilePane tilePain) throws SQLException, IOException {
-        fillResults(mainPane, tilePain, null);
+        fillResults(mainPane, tilePain, null, null);
     }
 
-    public static void fillResults(MainPane mainPane, TilePane tilePain, String whereStatement) throws SQLException, IOException {
+    public static void fillResults(MainPane mainPane, TilePane tilePain, String whereStatement, List<Integer> groupID) throws SQLException, IOException {
+        tilePain.getChildren().clear();
+        if (mainPane.activeUser == null && groupID != null)
+            return;  // TODO show a message that not logged in user cannot search by groups
         setConnection();
         Statement statement = connection.createStatement();
         String insideQuery;
-        if (mainPane.activeUser != null)
-            insideQuery = "select distinct pub.RECIPE_ID from PUBLICITY pub join BELONG blg on blg.GROUP_ID = pub.GROUP_ID where lower(blg.USERNAME) = \'"+mainPane.activeUser.getUsername().toLowerCase()+"\'";
+        if (mainPane.activeUser != null) {
+            insideQuery = "select distinct pub.RECIPE_ID from PUBLICITY pub join BELONG blg on blg.GROUP_ID = pub.GROUP_ID where lower(blg.USERNAME) = \'" + mainPane.activeUser.getUsername().toLowerCase() + "\'";
+            if (groupID != null) {
+                insideQuery = insideQuery + " and pub.GROUP_ID in (" + groupID.get(0);
+                for (int i : groupID)
+                    insideQuery = insideQuery + ", " + i;
+                insideQuery = insideQuery + ")";
+            }
+        }
         else
             insideQuery = "select distinct RECIPE_ID from PUBLICITY where GROUP_ID = 0";
         String query = "select distinct rcp.RECIPE_ID, rcp.NAME, rcp.PREPARATION_TIME, rcp.COST, CALC_RATING(rcp.RECIPE_ID) as RATING from RECIPE rcp join INGREDIENT_LIST ing on rcp.RECIPE_ID = ing.RECIPE_ID where rcp.RECIPE_ID in ("+insideQuery+")";
         if (whereStatement != null) {
-            if (mainPane.activeUser == null)
-                query = query + " WHERE " + whereStatement;
-            else
-                query = query + " AND " + whereStatement;
+            query = query + " AND " + whereStatement;
         }
+        System.out.println(query);
         ResultSet resultSet = statement.executeQuery(query);
         List<GridPane> panelist = new ArrayList<>();
         while (resultSet.next()) {
@@ -312,7 +340,6 @@ public class DatabaseConnection {
             tempPane.add(new Label(tempString), 5, 2, 1, 1);
             panelist.add(tempPane);
         }
-        tilePain.getChildren().clear();
         tilePain.getChildren().addAll(panelist);
         resultSet.close();
         statement.close();

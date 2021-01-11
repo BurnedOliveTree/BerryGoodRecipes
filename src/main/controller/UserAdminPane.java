@@ -1,5 +1,6 @@
 package main.controller;
 
+import javafx.application.Platform;
 import main.DatabaseConnection;
 import main.userModel.User;
 
@@ -32,7 +33,7 @@ public class UserAdminPane extends BasicPaneActions {
         if (DatabaseConnection.isThemeLight()) {
             exitPic.setImage(new Image("icons/berryExit.png"));
         }
-        DatabaseConnection.getGroups(tilePane, activeUser);
+        DatabaseConnection.getGroups(this, tilePane, activeUser);
         DatabaseConnection.getFollowed(followedList, activeUser);
     }
 
@@ -48,6 +49,20 @@ public class UserAdminPane extends BasicPaneActions {
 
             controller.search.setText("user:"+username);
             controller.search(new ActionEvent());
+        }
+    }
+
+    public void getGroupRecipes(String groupName) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/mainPage.fxml"));
+            MainPane controller = new MainPane(activeUser);
+            loader.setControllerFactory(param -> controller);
+            changeScene(exitButton, loader);
+
+            controller.search.setText("group:"+groupName);
+            controller.search(new ActionEvent());
+        } catch (SQLException | IOException err) {
+            err.printStackTrace();
         }
     }
 
