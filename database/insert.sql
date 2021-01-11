@@ -35,8 +35,8 @@ commit;
 
 insert into "GROUP" values (0, 'public', null);
 insert into "GROUP" values (null, 'admin', null);
-insert into "GROUP" values (2, 'Kółeczko', null);
-insert into "GROUP" values (3, 'Kusicille', null);
+insert into "GROUP" values (null, 'Kółeczko', null);
+insert into "GROUP" values (null, 'Kusicille', null);
 commit;
 
 insert into "USER" values ('BerryRootUser', 'BerryHardPassword', null);

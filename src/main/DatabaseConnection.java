@@ -276,6 +276,7 @@ public class DatabaseConnection {
         ResultSet resultSet = statement.executeQuery(query);
         List<MenuButton> panelist = new ArrayList<>();
         while (resultSet.next()) {
+            int groupID = resultSet.getInt("ID");
             String groupName = resultSet.getString("group_name");
             MenuButton tempButton = new MenuButton(groupName);
             tempButton.setWrapText(true);
@@ -306,18 +307,32 @@ public class DatabaseConnection {
             tempButton.getItems().add(followMenu);
             tempButton.getItems().add(new SeparatorMenuItem());
             Menu kickMenu = new Menu("Kick user");
-            tempStringList = getGroupParticipants(resultSet.getString("ID"));
+            tempStringList = getGroupParticipants(Integer.toString(groupID));
             for (String s : tempStringList) {
                 menuItem = new MenuItem(s);
-                menuItem.setOnAction(e -> System.out.println("TODO actually kick user"));
+                menuItem.setOnAction(e -> {
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Kick "+s+" from "+groupName);
+                    alert.setHeaderText(null);
+                    alert.setGraphic(null);
+                    alert.setContentText("Are you sure?");
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if (result.get() == ButtonType.OK) {
+                        try {
+                            kickUser(s, groupID);
+                            adminPane.refreshWindow();
+                        } catch (IOException | SQLException err) {
+                            err.printStackTrace();
+                        }
+                    }
+                });
                 kickMenu.getItems().add(menuItem);
             }
             tempButton.getItems().add(kickMenu);
             menuItem = new MenuItem("Delete group");
-            int groupID = resultSet.getInt("ID");
             menuItem.setOnAction(e -> {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Delete group");
+                alert.setTitle("Delete "+groupName);
                 alert.setHeaderText(null);
                 alert.setGraphic(null);
                 alert.setContentText("Are you sure?\nYou will not be able to recover your group");
@@ -371,6 +386,15 @@ public class DatabaseConnection {
         setConnection();
         Statement statement = connection.createStatement();
         statement.execute("begin delete_group("+groupID+"); end;");
+        connection.commit();
+        statement.close();
+        closeConnection();
+    }
+
+    public static void kickUser(String username, int groupID) throws IOException, SQLException {
+        setConnection();
+        Statement statement = connection.createStatement();
+        statement.executeUpdate("delete from BELONG where GROUP_ID = "+groupID+" and USERNAME = \'"+username+"\'");
         connection.commit();
         statement.close();
         closeConnection();
