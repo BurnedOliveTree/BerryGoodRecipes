@@ -16,13 +16,13 @@
 
 <GridPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.UserAdminPane">
    <columnConstraints>
-      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="0.0" prefWidth="480.0" />
-      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="0.0" prefWidth="320.0" />
+      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="204.0" prefWidth="600.0" />
+      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="100.0" prefWidth="200.0" />
    </columnConstraints>
    <rowConstraints>
       <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="44.0" valignment="CENTER" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="0.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="0.0" prefHeight="526.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
       <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0" GridPane.columnSpan="2147483647">
@@ -43,9 +43,9 @@
             <Insets bottom="8.0" left="4.0" right="8.0" />
          </GridPane.margin>
       </ListView>
-      <ScrollPane hbarPolicy="NEVER" GridPane.rowIndex="2">
+      <ScrollPane fitToWidth="true" hbarPolicy="NEVER" GridPane.rowIndex="2">
          <content>
-            <TilePane fx:id="tilePane" hgap="8.0" prefHeight="518.0" prefWidth="448.0" vgap="8.0" />
+            <TilePane fx:id="tilePane" hgap="8.0" vgap="8.0" />
          </content>
          <GridPane.margin>
             <Insets bottom="8.0" left="8.0" right="4.0" />

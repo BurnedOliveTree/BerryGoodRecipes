@@ -37,7 +37,8 @@ public class DatabaseConnection {
     static Connection connection;
     public static String theme;
 
-    // TODO save shoppinglist, read shoppinglist, addrecipe, deleterecipe
+    // TODO save shoppingList, read shoppingList, addRecipe, deleteRecipe
+    // TODO createGroup, deleteGroup, inviteUser, kickUser
     public DatabaseConnection() throws IOException {
         Properties prop = new Properties();
         String fileName = "src/resources/app.config";
@@ -84,7 +85,8 @@ public class DatabaseConnection {
                 // everything is correct, create a user
                 List<Recipe> userRecipes = getUserRecipes(username);
                 List<Recipe> favorites = getUserFavorites(username);
-                activeUser = new User(username, userRecipes, favorites);
+                List<String> followed = getUserFollowed(username);
+                activeUser = new User(username, userRecipes, favorites, followed);
                 // TODO add all the other columns in the future
                 errMess.setText("Successfully logged in!");
             } else {
@@ -115,9 +117,7 @@ public class DatabaseConnection {
         }
         else {
             if (!statement.execute("insert into \"USER\" values('"+username+"', '"+password+"', null)")) {
-                List<Recipe> userRecipes = getUserRecipes(username);
-                List<Recipe> favorites = getUserFavorites(username);
-                activeUser = new User(username, userRecipes, favorites);
+                activeUser = new User(username);
                 errMess.setText("Successfully created an account!");
             }
             else {
@@ -167,12 +167,25 @@ public class DatabaseConnection {
         return UserRecipes;
     }
 
+    private static List<String> getUserFollowed(String username) throws SQLException {
+        Statement statement = connection.createStatement();
+        String query = "select FOLLOWING_USERNAME, FOLLOWED_USERNAME from FOLLOWED where lower(FOLLOWING_USERNAME) = '"+username.toLowerCase()+"'";
+        ResultSet resultSet = statement.executeQuery(query);
+        List<String> stringList = new LinkedList<>();
+        while (resultSet.next()) {
+            stringList.add(resultSet.getString("FOLLOWED_USERNAME"));
+        }
+        resultSet.close();
+        statement.close();
+        return stringList;
+    }
+
     public static void saveUser(User user) throws SQLException, IOException {
         if (user != null) {
             setConnection();
             Statement statement = connection.createStatement();
             if (user.getNewFavorites().size() != 0) {
-                for (Recipe recipe : user.getNewFavorites()) {
+                for (Recipe recipe: user.getNewFavorites()) {
                     statement.executeUpdate("INSERT INTO FAVORITE SELECT null, '" + user.getUsername() + "', "+ recipe.getId() + " FROM DUAL\n" +
                             "WHERE NOT EXISTS (SELECT NULL FROM FAVORITE WHERE RECIPE_ID=" +  recipe.getId() + " AND USERNAME='" + user.getUsername() + "')");
                 }
@@ -180,6 +193,16 @@ public class DatabaseConnection {
             if (user.getDeletedFavorites().size() != 0) {
                 for (Recipe recipe: user.getDeletedFavorites()) {
                     statement.executeUpdate(String.format("DELETE FROM FAVORITE WHERE RECIPE_ID = %d AND USERNAME = '%s'", recipe.getId(),  user.getUsername()));
+                }
+            }
+            if (user.getNewFollowed().size() != 0) {
+                for (String username: user.getNewFollowed()) {
+                    statement.executeUpdate(String.format("insert into FOLLOWED values (null, '%s', '%s')", user.getUsername(), username));
+                }
+            }
+            if (user.getDeletedFollowed().size() != 0) {
+                for (String username: user.getDeletedFollowed()) {
+                    statement.executeUpdate(String.format("delete from FOLLOWED where FOLLOWING_USERNAME = '%s' and FOLLOWED_USERNAME = '%s'", user.getUsername(), username));
                 }
             }
             statement.close();
@@ -220,9 +243,25 @@ public class DatabaseConnection {
             menuItem = new MenuItem("Show recipes");
             menuItem.setOnAction(e -> adminPane.getGroupRecipes(groupName));
             tempButton.getItems().add(menuItem);
+            Menu followMenu = new Menu("Follow user");
+            List<String> tempStringList = getGroupParticipants(resultSet.getString("ID"));
+            tempStringList.remove(user.getUsername());
+            for (String s : tempStringList) {
+                menuItem = new MenuItem(s);
+                if (user.getFollowed().contains(s))
+                    menuItem.setDisable(true);
+                MenuItem finalMenuItem = menuItem;
+                menuItem.setOnAction(e -> {
+                    user.followUser(s);
+                    adminPane.refreshFollowedList();
+                    finalMenuItem.setDisable(true);
+                });
+                followMenu.getItems().add(menuItem);
+            }
+            tempButton.getItems().add(followMenu);
             tempButton.getItems().add(new SeparatorMenuItem());
             Menu kickMenu = new Menu("Kick user");
-            List<String> tempStringList = getGroupParticipants(resultSet.getString("ID"));
+            tempStringList = getGroupParticipants(resultSet.getString("ID"));
             for (String s : tempStringList) {
                 menuItem = new MenuItem(s);
                 menuItem.setOnAction(e -> System.out.println("TODO actually kick user"));
@@ -256,22 +295,6 @@ public class DatabaseConnection {
         statement.close();
         closeConnection();
         return groupID;
-    }
-
-    public static void getFollowed(ListView<String> listView, User user) throws SQLException, IOException {
-        setConnection();
-        Statement statement = connection.createStatement();
-        String query = "select FOLLOWING_USERNAME, FOLLOWED_USERNAME from FOLLOWED where lower(FOLLOWING_USERNAME) = '"+(user.getUsername()).toLowerCase()+"'";
-        ResultSet resultSet = statement.executeQuery(query);
-        List<String> stringList = new ArrayList<>();
-        while (resultSet.next()) {
-            stringList.add(resultSet.getString("FOLLOWED_USERNAME"));
-        }
-        listView.getItems().clear();
-        listView.getItems().addAll(stringList);
-        resultSet.close();
-        statement.close();
-        closeConnection();
     }
 
     public static void fillResults(MainPane mainPane, TilePane tilePain) throws SQLException, IOException {
@@ -352,8 +375,8 @@ public class DatabaseConnection {
             Recipe recipe = getRecipe(recipeId);
             closeConnection();
             return recipe;
-        } catch (SQLException | IOException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException | IOException err) {
+            err.printStackTrace();
         }
         return null;
     }

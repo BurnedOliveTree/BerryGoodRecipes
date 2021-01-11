@@ -9,21 +9,28 @@ public class User {
     private final String username;
     private List<Recipe> userRecipes;
     private List<Recipe> favorites;
-    private List<User> followed;
-    private List<Recipe> newFavorites;
-    private List<Recipe> deletedFavorites;
+    private List<Recipe> newFavorites = new LinkedList<>();
+    private List<Recipe> deletedFavorites = new LinkedList<>();
+    private List<String> followed;
+    private List<String> newFollowed = new LinkedList<>();
+    private List<String> deletedFollowed = new LinkedList<>();
     private Map<Integer, Ingredient> shoppingList;
-    private String defaultUnitSystem;
+    private String defaultUnitSystem = null;
 
-    public User(String argUsername, List<Recipe> userRecipes, List<Recipe> favorites) {
+    public User(String username) {
+        this.username = username;
+        this.userRecipes = new ArrayList<>();
+        this.favorites = new LinkedList<>();
+        this.followed = new LinkedList<>();
+        shoppingList = new HashMap<Integer, Ingredient>();
+    }
+
+    public User(String argUsername, List<Recipe> userRecipes, List<Recipe> favorites, List<String> followed) {
         username = argUsername;
         this.userRecipes = userRecipes;
         this.favorites = favorites;
-        followed = new LinkedList<>();
+        this.followed = followed;
         shoppingList = new HashMap<Integer, Ingredient>();
-//        defaultUnitSystem = argUnitSystem;
-        newFavorites = new LinkedList<>();
-        deletedFavorites = new LinkedList<>();
     }
 //    public void setNewPassword(String newPassword) {
 //        password = newPassword;
@@ -36,7 +43,11 @@ public class User {
 //    }
     // @TODO przenieść powyższe funkcje do BD
 
-    public List<Recipe> getUserRecipes() {return userRecipes;}
+    public String getUsername() { return username; }
+
+    public List<Recipe> getUserRecipes() { return userRecipes; }
+
+    public List<Recipe> getFavorites() { return favorites; }
     public void addFavorite(Recipe newFavRecipe) {
         favorites.add(newFavRecipe);
         newFavorites.add(newFavRecipe);
@@ -47,18 +58,24 @@ public class User {
         deletedFavorites.add(oldFavRecipe);
         newFavorites.remove(oldFavRecipe);
     }
-
-    public void followUser(User newFollowedUser) {
-        followed.add(newFollowedUser);
-    }
-    public void unfollowUser(User oldFollowedUser) {
-        followed.remove(oldFollowedUser);
-    }
-    public List<Recipe> getNewFavorites() {return newFavorites;}
-    public List<Recipe> getDeletedFavorites() {return deletedFavorites;}
-    public String getUsername() {return username;}
+    public List<Recipe> getNewFavorites() { return newFavorites; }
+    public List<Recipe> getDeletedFavorites() { return deletedFavorites; }
     public boolean checkIfRecipeFavorite(Recipe recipe) { return favorites.stream().anyMatch(r -> r.getId().equals(recipe.getId())); }
-    public List<Recipe> getFavorites() {return favorites;}
+
+    public List<String> getFollowed() {return followed;}
+    public void followUser(String newFollowedUser) {
+        followed.add(newFollowedUser);
+        newFollowed.add(newFollowedUser);
+        deletedFollowed.remove(newFollowedUser);
+    }
+    public void unfollowUser(String oldFollowedUser) {
+        followed.remove(oldFollowedUser);
+        newFollowed.remove(oldFollowedUser);
+        deletedFollowed.add(oldFollowedUser);
+    }
+    public List<String> getNewFollowed() { return newFollowed; }
+    public List<String> getDeletedFollowed() { return deletedFollowed; }
+
     public void addToShoppingList(Ingredient ingredient) {shoppingList.put(ingredient.getId(), ingredient);}
     public void removeFromShoppingList(int ingredientId) {shoppingList.remove(ingredientId);}
     public boolean checkIfIngredientInShoppingList(int ingredientId) {return shoppingList.containsKey(ingredientId);}

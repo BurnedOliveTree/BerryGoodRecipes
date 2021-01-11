@@ -194,11 +194,12 @@ public class MainPane extends BasicPaneActions {
     }
 
     @FXML
-    public void onSignInButtonClick(MouseEvent mouseEvent) {
+    public void onSignInButtonClick(MouseEvent mouseEvent) throws IOException, SQLException {
         // create a new Window with sign in
         mouseEvent.consume();
         if (activeUser != null) {
             // log user out
+            DatabaseConnection.saveUser(activeUser);
             activeUser = null;
             Main.activeUser = null;
             setButtonActivity();

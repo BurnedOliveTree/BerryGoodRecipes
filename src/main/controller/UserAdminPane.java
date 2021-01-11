@@ -1,7 +1,8 @@
 package main.controller;
 
-import javafx.application.Platform;
+import javafx.scene.control.MenuItem;
 import main.DatabaseConnection;
+import main.recipeModel.Recipe;
 import main.userModel.User;
 
 import javafx.fxml.FXML;
@@ -34,7 +35,16 @@ public class UserAdminPane extends BasicPaneActions {
             exitPic.setImage(new Image("icons/berryExit.png"));
         }
         DatabaseConnection.getGroups(this, tilePane, activeUser);
-        DatabaseConnection.getFollowed(followedList, activeUser);
+        refreshFollowedList();
+        MenuItem menuItem = new MenuItem("Unfollow");
+        menuItem.setOnAction(actionEvent -> {
+            String username = followedList.getSelectionModel().getSelectedItem();
+            if (username != null) {
+                activeUser.unfollowUser(username);
+                refreshFollowedList();
+            }
+        });
+        setContextMenu(followedList, menuItem);
     }
 
     @FXML
@@ -64,6 +74,11 @@ public class UserAdminPane extends BasicPaneActions {
         } catch (SQLException | IOException err) {
             err.printStackTrace();
         }
+    }
+
+    public void refreshFollowedList() {
+        followedList.getItems().clear();
+        followedList.getItems().addAll(activeUser.getFollowed());
     }
 
     @FXML
