@@ -411,22 +411,19 @@ public class DatabaseConnection {
         return new Recipe(recipeId, recipeName, ownerName, preparationMethod, accessibility, dateAdded, prepareTime, cost, portions, ingredientList);
     }
 
-    public static void getUnitSystems(Menu unitSystemMenu, User activeUser) throws SQLException, IOException {
+    public static List<String> getUnitSystems() throws SQLException, IOException {
         setConnection();
         Statement statement = connection.createStatement();
         String query = "select NAME from UNIT_SYSTEM where not NAME like 'N%A'";
         ResultSet resultSet = statement.executeQuery(query);
-        List<MenuItem> itemList = new ArrayList<>();
+        List<String> stringList = new ArrayList<>();
         while (resultSet.next()) {
-            MenuItem tempItem = new MenuItem(resultSet.getString("name"));
-            tempItem.setOnAction(e -> activeUser.setDefaultUnitSystem(tempItem.getText()));
-            itemList.add(tempItem);
+            stringList.add(resultSet.getString("name"));
         }
-        unitSystemMenu.getItems().clear();
-        unitSystemMenu.getItems().addAll(itemList);
         resultSet.close();
         statement.close();
         closeConnection();
+        return stringList;
     }
 
     public static void createOpinion(Opinion opinion, Label opinionLabel, ListView opinionsView) throws SQLException, IOException {

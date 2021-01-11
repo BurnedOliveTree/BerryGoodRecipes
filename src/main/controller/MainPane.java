@@ -60,7 +60,7 @@ public class MainPane extends BasicPaneActions {
     @FXML
     void initialize() throws SQLException, IOException {
         setRecipeTiles(DatabaseConnection.search(this.activeUser));
-        DatabaseConnection.getUnitSystems(unitSystemMenu, activeUser);
+        setUnitSystemMenu(DatabaseConnection.getUnitSystems());
         if (DatabaseConnection.isThemeLight()) {
             logo.setImage(new Image("icons/berryLogo.png"));
             recipePic.setImage(new Image("icons/berryRecipe.png"));
@@ -224,6 +224,17 @@ public class MainPane extends BasicPaneActions {
             panelist.add(tempPane);
         }
         tilePain.getChildren().addAll(panelist);
+    }
+
+    private void setUnitSystemMenu(List<String> unitSystemNames) {
+        List<MenuItem> itemList = new ArrayList<>();
+        for (String s: unitSystemNames) {
+            MenuItem tempItem = new MenuItem(s);
+            tempItem.setOnAction(e -> activeUser.setDefaultUnitSystem(tempItem.getText()));
+            itemList.add(tempItem);
+        }
+        unitSystemMenu.getItems().clear();
+        unitSystemMenu.getItems().addAll(itemList);
     }
 
     @FXML
