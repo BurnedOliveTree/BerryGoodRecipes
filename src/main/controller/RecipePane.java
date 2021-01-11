@@ -126,16 +126,10 @@ public class RecipePane  extends BasicPaneActions {
                 if (!activeUser.checkIfIngredientInShoppingList(selectedIngredient.getId())) {
                     view.setImage(new Image("icons/minus.png"));
                     activeUser.addToShoppingList(selectedIngredient);
-                    try {
-                        DatabaseConnection.addShoppingListIngredient(activeUser, selectedIngredient);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (SQLException throwables) {
-                        throwables.printStackTrace();
-                    }
+                    selectedIngredient.setShoppingListStatus(Status.added);
                 } else {
                     view.setImage(new Image("icons/plus.png"));
-                    activeUser.removeFromShoppingList(selectedIngredient.getId());
+                    selectedIngredient.setShoppingListStatus(Status.deleted);
                 }
             });
         }

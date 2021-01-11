@@ -1,10 +1,13 @@
 package main.recipeModel;
 
+import main.controller.Status;
+
 public class Ingredient {
     Double quantity;
     Unit unit;
     String name;
     int id;
+    Status shoppingListStatus = Status.none;
     // class which is necessary for the correct implementation of the converter and the recipe
     public Ingredient(int id, Double quantity, Unit unit, String name) {
         this.id = id;
@@ -14,6 +17,10 @@ public class Ingredient {
     }
 
     public int getId() {return id;}
+
+    public void setShoppingListStatus(Status status) {shoppingListStatus = status;}
+
+    public Status getShoppingListStatus() {return shoppingListStatus;}
 
     public String getName() {
         return name;
