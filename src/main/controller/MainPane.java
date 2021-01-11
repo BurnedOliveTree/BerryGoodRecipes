@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Side;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -211,7 +212,19 @@ public class MainPane extends BasicPaneActions {
         }
         else {
             FXMLLoader loader = loadFXML(new LogInWindow(this), "/resources/logInWindow.fxml");
-            changeScene(loader, "Sign in");
+
+            Scene scene = new Scene(loader.load());
+            Stage stage = new Stage();
+            scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
+            if (DatabaseConnection.isThemeLight())
+                stage.getIcons().add(new Image("icons/berryLogo.png"));
+            else
+                stage.getIcons().add(new Image("icons/raspLogo.png"));
+            stage.setTitle("Sign in");
+            stage.setScene(scene);
+            stage.setMaxWidth(180);
+            stage.setMaxHeight(200);
+            stage.showAndWait();
         }
     }
 

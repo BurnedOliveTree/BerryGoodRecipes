@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -15,6 +16,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.*;
 
+import javafx.stage.Stage;
 import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
@@ -252,7 +254,18 @@ public class RecipePane  extends BasicPaneActions {
     @FXML
     private void onTimeButtonAction() throws IOException {
         FXMLLoader loader = loadFXML(new TimerPane(), "/resources/timerPage.fxml");
-        changeScene(loader);
+
+        Scene scene = new Scene(loader.load());
+        Stage stage = new Stage();
+        scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
+        if (DatabaseConnection.isThemeLight())
+            stage.getIcons().add(new Image("icons/berryLogo.png"));
+        else
+            stage.getIcons().add(new Image("icons/raspLogo.png"));
+        stage.setTitle("BerryGood Recipes");
+        stage.setScene(scene);
+        stage.setMaxHeight(200);
+        stage.showAndWait();
     }
 
 }
