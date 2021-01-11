@@ -39,7 +39,7 @@ public class DatabaseConnection {
     public static String theme;
 
     // TODO save shoppingList, read shoppingList, addRecipe, deleteRecipe
-    // TODO inviteUser, kickUser
+    // TODO inviteUser
     public DatabaseConnection() throws IOException {
         Properties prop = new Properties();
         String fileName = "src/resources/app.config";

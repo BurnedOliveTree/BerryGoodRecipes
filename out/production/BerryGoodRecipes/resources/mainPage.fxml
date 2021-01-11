@@ -47,10 +47,11 @@
                        <MenuItem mnemonicParsing="false" onAction="#onSearchUser" text="user: [username]" />
                        <MenuItem mnemonicParsing="false" onAction="#onSearchMaxcost" text="maxcost: [number]" />
                        <MenuItem mnemonicParsing="false" onAction="#onSearchMincost" text="mincost: [number]" />
-                       <MenuItem mnemonicParsing="false" onAction="#onSearchMaxtime" text="maxtime: [number]" />
-                       <MenuItem mnemonicParsing="false" onAction="#onSearchMintime" text="mintime: [number]" />
-                       <MenuItem mnemonicParsing="false" onAction="#onSearchMaxrating" text="maxrating: [number]" />
-                       <MenuItem mnemonicParsing="false" onAction="#onSearchMinrating" text="minrating: [number]" />
+                       <MenuItem mnemonicParsing="false" onAction="#onSearchMaxtime" text="maxtime: [number of minutes]" />
+                       <MenuItem mnemonicParsing="false" onAction="#onSearchMintime" text="mintime: [number of minutes]" />
+                       <MenuItem mnemonicParsing="false" onAction="#onSearchMaxrating" text="maxrating: [number from 1 to 10]" />
+                       <MenuItem mnemonicParsing="false" onAction="#onSearchMinrating" text="minrating: [number from 1 to 10]" />
+                       <MenuItem mnemonicParsing="false" onAction="#onSearchGroup" text="group: [group name]" />
                     </items>
                   </ContextMenu>
                </contextMenu>

@@ -357,6 +357,11 @@ public class MainPane extends BasicPaneActions {
         search.setText(search.getText() + " minrating:");
     }
 
+    @FXML
+    public void onSearchGroup() {
+        search.setText(search.getText() + " group:");
+    }
+
     public void resetTheme() {
         logo.getScene().getStylesheets().remove(0);
         ((Stage) logo.getScene().getWindow()).getIcons().remove(0);
