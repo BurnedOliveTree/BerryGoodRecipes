@@ -1,6 +1,9 @@
 package main;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.ColumnConstraints;
@@ -98,6 +101,36 @@ public class DatabaseConnection {
         return activeUser;
     }
 
+    public static User register(String username, String password, Label errMess) throws SQLException, IOException {
+        setConnection();
+
+        User activeUser = null;
+        Statement statement = connection.createStatement();
+
+        // check if such a username exists in the database
+        ResultSet resultSet = statement.executeQuery("select * from \"USER\" where USERNAME = '"+username+"'");
+        if (resultSet.next()) {
+            errMess.setText("Username already exists!");
+        }
+        else {
+            if (!statement.execute("insert into \"USER\" values('"+username+"', '"+password+"', null)")) {
+                List<Recipe> userRecipes = getUserRecipes(username);
+                List<Recipe> favorites = getUserFavorites(username);
+                activeUser = new User(username, userRecipes, favorites);
+                errMess.setText("Successfully created an account!");
+            }
+            else {
+                errMess.setText("Creating the account failed!");
+            }
+        }
+
+        resultSet.close();
+        statement.close();
+        closeConnection();
+
+        return activeUser;
+    }
+
     private static List<Recipe> getUserFavorites(String username) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery(String.format("SELECT RECIPE_ID FROM FAVORITE WHERE UPPER(USERNAME) = '%s'", username.toUpperCase()));
@@ -133,36 +166,6 @@ public class DatabaseConnection {
         return UserRecipes;
     }
 
-    public static User register(String username, String password, Label errMess) throws SQLException, IOException {
-        setConnection();
-
-        User activeUser = null;
-        Statement statement = connection.createStatement();
-
-        // check if such a username exists in the database
-        ResultSet resultSet = statement.executeQuery("select * from \"USER\" where USERNAME = '"+username+"'");
-        if (resultSet.next()) {
-            errMess.setText("Username already exists!");
-        }
-        else {
-            if (!statement.execute("insert into \"USER\" values('"+username+"', '"+password+"', null)")) {
-                List<Recipe> userRecipes = getUserRecipes(username);
-                List<Recipe> favorites = getUserFavorites(username);
-                activeUser = new User(username, userRecipes, favorites);
-                errMess.setText("Successfully created an account!");
-            }
-            else {
-                errMess.setText("Creating the account failed!");
-            }
-        }
-
-        resultSet.close();
-        statement.close();
-        closeConnection();
-
-        return activeUser;
-    }
-
     public static void saveUser(User user) throws SQLException, IOException {
         if (user != null) {
             setConnection();
@@ -186,7 +189,7 @@ public class DatabaseConnection {
 
     private static List<String> getGroupParticipants(String GroupID) throws SQLException {
         Statement statement = connection.createStatement();
-        String query = "select b.USERNAME as username from \"GROUP\" g join BELONG b on g.GROUP_ID = "+GroupID;
+        String query = "select USERNAME from BELONG where GROUP_ID = "+GroupID;
         ResultSet resultSet = statement.executeQuery(query);
         List<String> users = new ArrayList<>();
         while (resultSet.next()) {
@@ -200,7 +203,7 @@ public class DatabaseConnection {
     public static void getGroups(TilePane tilePane, User user) throws SQLException, IOException {
         setConnection();
         Statement statement = connection.createStatement();
-        String query = "select g.GROUP_ID as ID, g.NAME as group_name, b.USERNAME as username from \"GROUP\" g join BELONG b on g.GROUP_ID = b.GROUP_ID where lower(b.USERNAME) = '"+(user.getUsername()).toLowerCase()+"'";
+        String query = "select g.GROUP_ID as ID, g.NAME as group_name from \"GROUP\" g join BELONG b on g.GROUP_ID = b.GROUP_ID where b.GROUP_ID != 0 and lower(b.USERNAME) = '"+user.getUsername().toLowerCase()+"'";
         ResultSet resultSet = statement.executeQuery(query);
         List<MenuButton> panelist = new ArrayList<>();
         while (resultSet.next()) {
@@ -208,11 +211,16 @@ public class DatabaseConnection {
             MenuButton tempButton = new MenuButton(tempString);
             tempButton.setWrapText(true);
             tempButton.setTextAlignment(TextAlignment.CENTER);
+            tempButton.setAlignment(Pos.CENTER);
             tempButton.setPrefSize(192, 64);
-            tempButton.getItems().add(new MenuItem("Delete group"));
+            tempButton.getItems().add(new MenuItem("Show shopping list"));
+            tempButton.getItems().add(new MenuItem("Show recipes"));
             tempButton.getItems().add(new SeparatorMenuItem());
+            Menu kickMenu = new Menu("Kick user");
             List<String> tempStringList = getGroupParticipants(resultSet.getString("ID"));
-            for (String s : tempStringList) tempButton.getItems().add(new MenuItem("Kick "+s));
+            for (String s : tempStringList) kickMenu.getItems().add(new MenuItem(s));
+            tempButton.getItems().add(kickMenu);
+            tempButton.getItems().add(new MenuItem("Delete group"));
 //            String tempString = resultSet.getString("RECIPE_ID");
 //            tempButton.setOnMouseClicked(e -> mainPane.onRecipeClick(Integer.parseInt(tempString)));
             panelist.add(tempButton);
@@ -247,9 +255,18 @@ public class DatabaseConnection {
     public static void fillResults(MainPane mainPane, TilePane tilePain, String whereStatement) throws SQLException, IOException {
         setConnection();
         Statement statement = connection.createStatement();
-        String query = "select distinct rcp.RECIPE_ID, rcp.NAME, rcp.PREPARATION_TIME, rcp.COST, CALC_RATING(rcp.RECIPE_ID) as RATING from RECIPE rcp join INGREDIENT_LIST ing on rcp.RECIPE_ID = ing.RECIPE_ID";
-        if (whereStatement != null)
-            query = query + " WHERE " + whereStatement;
+        String insideQuery;
+        if (mainPane.activeUser != null)
+            insideQuery = "select distinct pub.RECIPE_ID from PUBLICITY pub join BELONG blg on blg.GROUP_ID = pub.GROUP_ID where lower(blg.USERNAME) = \'"+mainPane.activeUser.getUsername().toLowerCase()+"\'";
+        else
+            insideQuery = "select distinct RECIPE_ID from PUBLICITY where GROUP_ID = 0";
+        String query = "select distinct rcp.RECIPE_ID, rcp.NAME, rcp.PREPARATION_TIME, rcp.COST, CALC_RATING(rcp.RECIPE_ID) as RATING from RECIPE rcp join INGREDIENT_LIST ing on rcp.RECIPE_ID = ing.RECIPE_ID where rcp.RECIPE_ID in ("+insideQuery+")";
+        if (whereStatement != null) {
+            if (mainPane.activeUser == null)
+                query = query + " WHERE " + whereStatement;
+            else
+                query = query + " AND " + whereStatement;
+        }
         ResultSet resultSet = statement.executeQuery(query);
         List<GridPane> panelist = new ArrayList<>();
         while (resultSet.next()) {
@@ -336,6 +353,23 @@ public class DatabaseConnection {
         return new Recipe(recipeId, recipeName, ownerName, preparationMethod, accessibility, dateAdded, prepareTime, cost, portions, ingredientList);
     }
 
+    public static void getUnitSystems(Menu unitSystemMenu, User activeUser) throws SQLException, IOException {
+        setConnection();
+        Statement statement = connection.createStatement();
+        String query = "select NAME from UNIT_SYSTEM where not NAME like 'N%A'";
+        ResultSet resultSet = statement.executeQuery(query);
+        List<MenuItem> itemList = new ArrayList<>();
+        while (resultSet.next()) {
+            MenuItem tempItem = new MenuItem(resultSet.getString("name"));
+            tempItem.setOnAction(e -> activeUser.setDefaultUnitSystem(tempItem.getText()));
+            itemList.add(tempItem);
+        }
+        unitSystemMenu.getItems().clear();
+        unitSystemMenu.getItems().addAll(itemList);
+        resultSet.close();
+        statement.close();
+        closeConnection();
+    }
 
     public static void createOpinion(Opinion opinion, Label opinionLabel, ListView opinionsView) throws SQLException, IOException {
         setConnection();
@@ -373,7 +407,6 @@ public class DatabaseConnection {
         closeConnection();
     }
 
-
     public static void reportOpinion(ListView opinionList, String username, Label label,String opinionAuthor, int recipeId) throws SQLException, IOException {
 
         setConnection();
@@ -395,5 +428,22 @@ public class DatabaseConnection {
         closeConnection();
     }
 
+    public static ObservableList<String> get_units() throws IOException, SQLException {
+        ObservableList<String> unitsList = FXCollections.observableArrayList();
+        setConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("select NAME from UNIT where name != 'piece'" );
+        while (resultSet.next()){
+            unitsList.add(resultSet.getString("NAME"));
+        }
+        return unitsList;
+    }
+public static Double convertUnit(Double quantity, String first_unit, String second_unit) throws IOException, SQLException {
+    setConnection();
+    Statement statement = connection.createStatement();
+    ResultSet resultSet = statement.executeQuery("select round(convert_unit('" +first_unit+ "', '" +second_unit+ "', " +quantity+ "),2) as result from dual");
+    resultSet.next();
+    return resultSet.getDouble("result");
+}
 
 }

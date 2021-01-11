@@ -132,7 +132,7 @@
                   <Insets />
                </GridPane.margin>
             </Button>
-            <MenuButton fx:id="settingsButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" popupSide="RIGHT" prefHeight="64.0" prefWidth="64.0" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+            <MenuButton fx:id="settingsButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" popupSide="RIGHT" prefHeight="64.0" prefWidth="64.0" GridPane.halignment="CENTER" GridPane.rowIndex="4">
                <items>
                   <Menu mnemonicParsing="false" text="Change password">
                     <items>
@@ -153,11 +153,7 @@
                         </MenuItem>
                     </items>
                   </Menu>
-                  <Menu mnemonicParsing="false" text="Change prefered unit system">
-                    <items>
-                      <MenuItem mnemonicParsing="false" text="Action 1" />
-                    </items>
-                  </Menu>
+                  <Menu fx:id="unitSystemMenu" mnemonicParsing="false" text="Change prefered unit system" />
                   <Menu mnemonicParsing="false" text="Change theme">
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#onThemeDarkSelection" text="Dark" />
@@ -175,7 +171,7 @@
                   </ImageView>
                </graphic>
             </MenuButton>
-            <Button fx:id="myRecipesButton" mnemonicParsing="false" onMouseClicked="#onMyRecipesAction" prefHeight="64.0" prefWidth="64.0" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+            <Button fx:id="myRecipesButton" mnemonicParsing="false" onMouseClicked="#onMyRecipesAction" prefHeight="64.0" prefWidth="64.0" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                <graphic>
                   <ImageView fx:id="recipePic" fitHeight="46.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -183,7 +179,7 @@
                      </image>
                   </ImageView>
                </graphic></Button>
-            <Button fx:id="socialButton" mnemonicParsing="false" onMouseClicked="#onSocialButtonClick" prefHeight="64.0" prefWidth="64.0" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+            <Button fx:id="socialButton" mnemonicParsing="false" onMouseClicked="#onSocialButtonClick" prefHeight="64.0" prefWidth="64.0" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                <graphic>
                   <ImageView fx:id="socialPic" fitHeight="46.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -191,7 +187,7 @@
                      </image>
                   </ImageView>
                </graphic></Button>
-            <Button fx:id="basketButton" mnemonicParsing="false" onMouseClicked="#onBasketButtonClick" prefHeight="64.0" prefWidth="64.0" GridPane.halignment="CENTER" GridPane.rowIndex="4">
+            <Button fx:id="basketButton" mnemonicParsing="false" onMouseClicked="#onBasketButtonClick" prefHeight="64.0" prefWidth="64.0" GridPane.halignment="CENTER" GridPane.rowIndex="3">
                <graphic>
                   <ImageView fx:id="basketPic" fitHeight="46.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
                      <image>

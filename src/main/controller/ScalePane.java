@@ -13,6 +13,8 @@ import main.converterModel.Converter;
 import main.recipeModel.Recipe;
 import main.userModel.User;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 
 public class ScalePane extends BasicPaneActions {
@@ -46,19 +48,59 @@ public class ScalePane extends BasicPaneActions {
     public TextArea Height2;
     public Label moldLabel;
     public Button moldButton;
+    public TextArea unitArea1;
+    public TextArea unitArea2;
+    public ChoiceBox unitChoiceBox1;
+    public ChoiceBox unitChoiceBox2;
+    public Button okUnit;
+    public Label unitLabel;
 
     @FXML
-    private void initialize() {
+    private void initialize() throws IOException, SQLException {
         if (DatabaseConnection.isThemeLight()) {
             exitPic.setImage(new Image("icons/berryExit.png"));
         }
         exitButton.setOnAction(e -> onAction());
+        unitChoiceBox1.setItems(DatabaseConnection.get_units());
+        unitChoiceBox2.setItems(DatabaseConnection.get_units());
         IHaveBox.setItems(shapeList);
         inRecipeBox.setItems(shapeList);
         IHaveBox.setOnAction(e -> sizeBoxAction(IHaveBox));
         inRecipeBox.setOnAction(e -> sizeBoxAction(inRecipeBox));
         moldButton.setOnAction(e -> okMoldAction());
+        okUnit.setOnAction(e-> {
+            try {
+                okUnitAction();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        });
+        unitArea2.setDisable(true);
+        unitArea2.setStyle("-fx-opacity: 1;");
+    }
 
+    public void okUnitAction() throws IOException, SQLException {
+        unitLabel.setText("");
+        String unitArea1Text = unitArea1.getText();
+        Double quantity = 0.0;
+        String firstChoice;
+        String secondChoice;
+        try {
+            firstChoice = unitChoiceBox1.getValue().toString();
+            secondChoice = unitChoiceBox2.getValue().toString();
+        }
+        catch(NullPointerException e){
+            unitLabel.setText("Not enough info");
+            return;
+        }
+        try{
+            quantity = Double.parseDouble(unitArea1Text);
+        }catch(NumberFormatException e){
+            unitLabel.setText("Wrong quantity");
+        }
+        unitArea2.setText(Double.toString(DatabaseConnection.convertUnit(quantity,firstChoice,secondChoice)));
     }
 
     private void sizeBoxAction(ChoiceBox box) {

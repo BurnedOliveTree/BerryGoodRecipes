@@ -62,6 +62,7 @@ public class User {
     public void addToShoppingList(Ingredient ingredient) {shoppingList.put(ingredient.getId(), ingredient);}
     public void removeFromShoppingList(int ingredientId) {shoppingList.remove(ingredientId);}
     public boolean checkIfIngredientInShoppingList(int ingredientId) {return shoppingList.containsKey(ingredientId);}
+    public void setDefaultUnitSystem(String unitSystem) { defaultUnitSystem = unitSystem; System.out.println(unitSystem); }
     public Map<String, Ingredient> showShoppingList() {
         Map<String, Ingredient> showMap = new HashMap<>();
         for (Map.Entry<Integer, Ingredient> entry : shoppingList.entrySet()) {
