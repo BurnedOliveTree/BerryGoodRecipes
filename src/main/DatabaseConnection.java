@@ -2,20 +2,9 @@ package main;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.geometry.HPos;
-import javafx.geometry.Pos;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.TilePane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.RowConstraints;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.text.TextAlignment;
 
-import main.controller.MainPane;
 import main.controller.Status;
-import main.controller.UserAdminPane;
 import main.userModel.Opinion;
 import main.userModel.User;
 import main.recipeModel.Ingredient;
@@ -272,11 +261,11 @@ public class DatabaseConnection {
         return users;
     }
 
-    public static List<String> getGroups(User user) throws SQLException, IOException {
+    public static List<String> getGroupNames(User user) throws SQLException, IOException {
         setConnection();
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT NAME FROM \"GROUP\" JOIN BELONG USING (GROUP_ID) WHERE USERNAME = '" + user.getUsername() + "' AND GROUP_ID != 0");
-        List<String> groups = new ArrayList<String>();
+        List<String> groups = new ArrayList<>();
         while(resultSet.next()) {
             groups.add(resultSet.getString("NAME"));
         }
@@ -286,91 +275,23 @@ public class DatabaseConnection {
         return groups;
     }
 
-    public static void getGroups(UserAdminPane adminPane, TilePane tilePane, User user) throws SQLException, IOException {
+    public static List<List<String>> getGroups(User user) throws SQLException, IOException {
         setConnection();
         Statement statement = connection.createStatement();
         String query = "select g.GROUP_ID as ID, g.NAME as group_name from \"GROUP\" g join BELONG b on g.GROUP_ID = b.GROUP_ID where b.GROUP_ID != 0 and lower(b.USERNAME) = '"+user.getUsername().toLowerCase()+"'";
         ResultSet resultSet = statement.executeQuery(query);
-        List<MenuButton> panelist = new ArrayList<>();
+        List<List<String>> stringList = new ArrayList<>();
         while (resultSet.next()) {
-            int groupID = resultSet.getInt("ID");
-            String groupName = resultSet.getString("group_name");
-            MenuButton tempButton = new MenuButton(groupName);
-            tempButton.setWrapText(true);
-            tempButton.setTextAlignment(TextAlignment.CENTER);
-            tempButton.setAlignment(Pos.CENTER);
-            tempButton.setPrefSize(192, 64);
-            MenuItem menuItem = new MenuItem("Show shopping list");
-            menuItem.setOnAction(e -> System.out.println("TODO jump to shopping list"));
-            tempButton.getItems().add(menuItem);
-            menuItem = new MenuItem("Show recipes");
-            menuItem.setOnAction(e -> adminPane.getGroupRecipes(groupName));
-            tempButton.getItems().add(menuItem);
-            Menu followMenu = new Menu("Follow user");
-            List<String> tempStringList = getGroupParticipants(resultSet.getString("ID"));
-            tempStringList.remove(user.getUsername());
-            for (String s : tempStringList) {
-                menuItem = new MenuItem(s);
-                if (user.getFollowed().contains(s))
-                    menuItem.setDisable(true);
-                MenuItem finalMenuItem = menuItem;
-                menuItem.setOnAction(e -> {
-                    user.followUser(s);
-                    adminPane.refreshFollowedList();
-                    finalMenuItem.setDisable(true);
-                });
-                followMenu.getItems().add(menuItem);
-            }
-            tempButton.getItems().add(followMenu);
-            tempButton.getItems().add(new SeparatorMenuItem());
-            Menu kickMenu = new Menu("Kick user");
-            tempStringList = getGroupParticipants(Integer.toString(groupID));
-            for (String s : tempStringList) {
-                menuItem = new MenuItem(s);
-                menuItem.setOnAction(e -> {
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert.setTitle("Kick "+s+" from "+groupName);
-                    alert.setHeaderText(null);
-                    alert.setGraphic(null);
-                    alert.setContentText("Are you sure?");
-                    Optional<ButtonType> result = alert.showAndWait();
-                    if (result.get() == ButtonType.OK) {
-                        try {
-                            kickUser(s, groupID);
-                            adminPane.refreshWindow();
-                        } catch (IOException | SQLException err) {
-                            err.printStackTrace();
-                        }
-                    }
-                });
-                kickMenu.getItems().add(menuItem);
-            }
-            tempButton.getItems().add(kickMenu);
-            menuItem = new MenuItem("Delete group");
-            menuItem.setOnAction(e -> {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Delete "+groupName);
-                alert.setHeaderText(null);
-                alert.setGraphic(null);
-                alert.setContentText("Are you sure?\nYou will not be able to recover your group");
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.OK) {
-                    try {
-                        deleteGroup(groupID);
-                        adminPane.refreshWindow();
-                    } catch (IOException | SQLException err) {
-                        err.printStackTrace();
-                    }
-                }
-            });
-            tempButton.getItems().add(menuItem);
-            panelist.add(tempButton);
+            List<String> tempList = new ArrayList<>();
+            tempList.add(resultSet.getString("ID"));
+            tempList.add(resultSet.getString("group_name"));
+            tempList.addAll(getGroupParticipants(resultSet.getString("ID")));
+            stringList.add(tempList);
         }
-        tilePane.getChildren().clear();
-        tilePane.getChildren().addAll(panelist);
         resultSet.close();
         statement.close();
         closeConnection();
+        return stringList;
     }
 
     public static List<Integer> getGroupByName(String[] groupName) throws IOException, SQLException {
@@ -426,19 +347,18 @@ public class DatabaseConnection {
         closeConnection();
     }
 
-    public static void fillResults(MainPane mainPane, TilePane tilePain) throws SQLException, IOException {
-        fillResults(mainPane, tilePain, null, null);
+    public static List<Recipe> search(User activeUser) throws SQLException, IOException {
+        return search(activeUser, null, null);
     }
 
-    public static void fillResults(MainPane mainPane, TilePane tilePain, String whereStatement, List<Integer> groupID) throws SQLException, IOException {
-        tilePain.getChildren().clear();
-        if (mainPane.activeUser == null && groupID != null)
-            return;  // TODO show a message that not logged in user cannot search by groups
+    public static List<Recipe> search(User activeUser, String whereStatement, List<Integer> groupID) throws SQLException, IOException {
+        if (activeUser == null && groupID != null)
+            return null;
         setConnection();
         Statement statement = connection.createStatement();
         String insideQuery;
-        if (mainPane.activeUser != null) {
-            insideQuery = "select distinct pub.RECIPE_ID from PUBLICITY pub join BELONG blg on blg.GROUP_ID = pub.GROUP_ID where lower(blg.USERNAME) = \'" + mainPane.activeUser.getUsername().toLowerCase() + "\'";
+        if (activeUser != null) {
+            insideQuery = "select distinct pub.RECIPE_ID from PUBLICITY pub join BELONG blg on blg.GROUP_ID = pub.GROUP_ID where lower(blg.USERNAME) = \'" + activeUser.getUsername().toLowerCase() + "\'";
             if (groupID != null) {
                 insideQuery = insideQuery + " and pub.GROUP_ID in (" + groupID.get(0);
                 for (int i : groupID)
@@ -448,54 +368,24 @@ public class DatabaseConnection {
         }
         else
             insideQuery = "select distinct RECIPE_ID from PUBLICITY where GROUP_ID = 0";
-        String query = "select distinct rcp.RECIPE_ID, rcp.NAME, rcp.PREPARATION_TIME, rcp.COST, CALC_RATING(rcp.RECIPE_ID) as RATING from RECIPE rcp join INGREDIENT_LIST ing on rcp.RECIPE_ID = ing.RECIPE_ID where rcp.RECIPE_ID in ("+insideQuery+")";
+        String query = "select distinct rcp.RECIPE_ID, rcp.NAME, rcp.OWNER_NAME, rcp.PREPARATION_TIME, rcp.COST, CALC_RATING(rcp.RECIPE_ID) as RATING from RECIPE rcp join INGREDIENT_LIST ing on rcp.RECIPE_ID = ing.RECIPE_ID where rcp.RECIPE_ID in ("+insideQuery+")";
         if (whereStatement != null) {
             query = query + " AND " + whereStatement;
         }
         System.out.println(query);
         ResultSet resultSet = statement.executeQuery(query);
-        List<GridPane> panelist = new ArrayList<>();
+        List<Recipe> resultList = new ArrayList<>();
         while (resultSet.next()) {
-            GridPane tempPane = new GridPane();
-            for (int i = 0; i < 3; i++) {
-                tempPane.getRowConstraints().add(new RowConstraints(32));
-            }
-            for (int i = 0; i < 6; i++) {
-                ColumnConstraints columnConstraints = new ColumnConstraints(32);
-                columnConstraints.setHalignment(HPos.CENTER);
-                tempPane.getColumnConstraints().add(columnConstraints);
-            }
-            tempPane.setPrefSize(192, 96);
-            Button tempButton = new Button(resultSet.getString("NAME"));
-            tempButton.setWrapText(true);
-            tempButton.setTextAlignment(TextAlignment.CENTER);
-            tempButton.setPrefSize(192, 64);
-            int tempInt = resultSet.getInt("RECIPE_ID");
-            tempButton.setOnMouseClicked(e -> mainPane.onRecipeClick(tempInt));
-            tempPane.add(tempButton, 0, 0, 6, 2);
-            String tempString = resultSet.getString("RATING");
-            if (tempString == null)
-                tempString = "N/A";
-            else
-                tempString = tempString + "/10";
-            tempPane.add(new ImageView(new Image("icons/star.png")), 0, 2, 1, 1);
-            tempPane.add(new Label(tempString), 1, 2, 1, 1);
-            tempString = resultSet.getString("PREPARATION_TIME");
-            if (tempString == null)
-                tempString = "N/A";
-            tempPane.add(new ImageView(new Image("icons/time.png")), 2, 2, 1, 1);
-            tempPane.add(new Label(tempString), 3, 2, 1, 1);
-            tempString = resultSet.getString("COST");
-            if (tempString == null)
-                tempString = "N/A";
-            tempPane.add(new ImageView(new Image("icons/coin.png")), 4, 2, 1, 1);
-            tempPane.add(new Label(tempString), 5, 2, 1, 1);
-            panelist.add(tempPane);
+            Recipe tempRecipe = new Recipe(resultSet.getInt("RECIPE_ID"), resultSet.getString("NAME"), resultSet.getString("OWNER_NAME"));
+            tempRecipe.setAvgRate(resultSet.getString("RATING"));
+            tempRecipe.setCost(resultSet.getInt("COST"));
+            tempRecipe.setPrepareTime(resultSet.getInt("PREPARATION_TIME"));
+            resultList.add(tempRecipe);
         }
-        tilePain.getChildren().addAll(panelist);
         resultSet.close();
         statement.close();
         closeConnection();
+        return resultList;
     }
 
     public static Recipe getSelectedRecipe(int recipeId) {
@@ -538,22 +428,19 @@ public class DatabaseConnection {
         return new Recipe(recipeId, recipeName, ownerName, preparationMethod, accessibility, dateAdded, prepareTime, cost, portions, ingredientList);
     }
 
-    public static void getUnitSystems(Menu unitSystemMenu, User activeUser) throws SQLException, IOException {
+    public static List<String> getUnitSystems() throws SQLException, IOException {
         setConnection();
         Statement statement = connection.createStatement();
         String query = "select NAME from UNIT_SYSTEM where not NAME like 'N%A'";
         ResultSet resultSet = statement.executeQuery(query);
-        List<MenuItem> itemList = new ArrayList<>();
+        List<String> stringList = new ArrayList<>();
         while (resultSet.next()) {
-            MenuItem tempItem = new MenuItem(resultSet.getString("name"));
-            tempItem.setOnAction(e -> activeUser.setDefaultUnitSystem(tempItem.getText()));
-            itemList.add(tempItem);
+            stringList.add(resultSet.getString("name"));
         }
-        unitSystemMenu.getItems().clear();
-        unitSystemMenu.getItems().addAll(itemList);
         resultSet.close();
         statement.close();
         closeConnection();
+        return stringList;
     }
 
     public static void createOpinion(Opinion opinion, Label opinionLabel, ListView opinionsView) throws SQLException, IOException {

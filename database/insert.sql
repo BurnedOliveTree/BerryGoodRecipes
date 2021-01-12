@@ -55,8 +55,8 @@ insert into "USER" values ('Rokarolka', '12345', null);
 insert into "USER" values ('Marianka', '12345', null);
 insert into "USER" values ('Madzik', '12345', null);
 insert into "USER" values ('KD', '12345', null);
-insert into "USER" values ('Oskar', 'kółeczko', null);
-insert into "USER" values ('Paweł', 'kółeczko', null);
+insert into "USER" values ('Ardiego', 'kółeczko', null);
+insert into "USER" values ('Mrkhrova', 'kółeczko', null);
 commit;
 
 insert into FOLLOWED values (null, 'BurnedOliveTree', 'Rokarolka');
@@ -69,8 +69,8 @@ insert into BELONG values (null, 1, 'Marianka');
 
 insert into BELONG values (null, 2, 'Marianka');
 insert into BELONG values (null, 2, 'Rokarolka');
-insert into BELONG values (null, 2, 'Oskar');
-insert into BELONG values (null, 2, 'Paweł');
+insert into BELONG values (null, 2, 'Ardiego');
+insert into BELONG values (null, 2, 'Mrkhrova');
 insert into BELONG values (null, 2, 'BurnedOliveTree');
 
 insert into BELONG values (null, 3, 'Rokarolka');
@@ -168,10 +168,10 @@ insert into RECIPE values (null, 'Madzik', 'Kurczak w miodzie', 'Pokroic kurczak
 insert into RECIPE values (null, 'Madzik', 'Sernikobrownie z malinami', 'Blaszkę 20x30 cm (może być mniejsza) wysmarować masłem i wyłożyć papierem. Czekoladę rozpuścić w kąpieli wodnej i ostudzić.' || chr(13) || 'Masło i 250 gram cukur pudru zmiksować na gładką masę, dodać 3 jajka-ubijając po jednym i miksując przed dodaniem kolejnego. Wlać roztopioną czekoladę i zmiksować. Dodać mąkę, wymieszać. 1/2 mikstury wyłożyć na spód blachy. Pozostała część będzie na górę ciasta' || chr(13) || 'W drugiej misce utrzeć ser (ja dodałam dwa serki półtłuste po 250 gram i przecisnełam je przez sitko) Dodać cukier - 150g, 2 jajka i cukier waniliowy. Masa powinna mieć gładką konsystencję' || chr(13) || 'Wylać masę serową na masę czekoladową. Na wierzch wylać resztę masy czekoladowej o włożyć maliny. Masa czekoladowa jest dość gęsta, dlatego ciężko się ją wlewa i wyrównuje' || chr(13) || 'Piec w temperaturze 170°C przez około 45-60 minut. Studzić w ciepłym, ale otwartym piekarniku.', null, sysdate, 120, 1);
 insert into RECIPE values (null, 'Madzik', 'Makowiec', 'Mak zaparzyć we wrzącej wodzie (parzyć około 2h) odstawić do ostygnięcia, odsączyć z nadmiaru wody, trzykrotnie zmielić' || chr(13) || 'Dodać pozostałe składniki, wymieszać. Na koniec delikatnie wymieszać z ubitymi na sztywno białkami' || chr(13) || 'Piec w temp. 180°C ok.30 minut.', null, sysdate, 200, 1);
 insert into RECIPE values (null, 'KD', 'Ciasto z białą polewą', 'Rozgniatasz puchary lub krakersy I mieszasz z Nutellą. Wkładasz na wybraną przez siebie blaszkę (Dobra jest tortownica lub do Brownie)' || chr(13) || 'Wkładasz do zamrażarki, nie musi być na długo. Chodzi o to żeby stwardnialo na tyle, żeby kolejna warstwa nie zmieszała się poprzednią.' || chr(13) || 'Kiedy dolna część odpoczywa sobie w zamrażalniku bierzemy się za polewę. Rozpuszczamy delikatnie w rondelku lub na patelni czekoladę. Zdejmujemy z gazu, dodajemy stopniowo mascarpone i mieszamy do uzyskania jednolitej konsystencji. Całość wylewamy na pierwszą część. Chowamy znów do zamrażarki na 1h. Potem może leżeć w lodówce, żeby ciasto nie zamarzło całkowicie.', null, sysdate, null, 1);
-insert into RECIPE values (null, 'Oskar', 'Kurczak w cieście francuskim z migdałami', 'Farsz to pół na pół migdały z pietruszką' || chr(13) || 'Doprawiasz pół na pół curry i złocisty kurczak, sól pieprz, papryka słodka według uznania'|| chr(13) ||'W piecu musi być 10 minut w 220 st i 15 minut w 200'|| chr(13) ||'No a reszta to rozinanie kurczaka, zaplatanie w ciasto itd'|| chr(13) ||' Przed wstawieniem do pieca smarujesz całym jajkiem'|| chr(13) ||'i posypujesz migdałami', null, sysdate, null, 2);
-insert into RECIPE values (null, 'Paweł', 'Najłatwiejsze kruche ciastka', 'Z podanych składników wyrobić szybko ciasto. Włożyć na 1h do lodówki. Potem cienko rozwałkować i wykrawać foremkami ciastka. Piec na papierze do pieczenia na ostrym ogniu (temp ok 220°C-200°C. Można przed pieczeniem posmarować rozbitym jajkiem itp.', null, sysdate, null, 1);
--- insert into RECIPE values (null, 'Paweł', 'Kołacz na 50 blach', '')
-insert into RECIPE values (null, 'Paweł', 'Rogaliki migdałowe', 'Zmielić migdały. Całość wyrobić i formować wałek o średnicy 1cm. Pokroić na paseczki o dł. 5 cm i formować rogaliki. Piec na papierze. Gorące posypać cukrem pudrem i cukrem waniliowym', null, sysdate, null, 35);
+insert into RECIPE values (null, 'Ardiego', 'Kurczak w cieście francuskim z migdałami', 'Farsz to pół na pół migdały z pietruszką' || chr(13) || 'Doprawiasz pół na pół curry i złocisty kurczak, sól pieprz, papryka słodka według uznania'|| chr(13) ||'W piecu musi być 10 minut w 220 st i 15 minut w 200'|| chr(13) ||'No a reszta to rozinanie kurczaka, zaplatanie w ciasto itd'|| chr(13) ||' Przed wstawieniem do pieca smarujesz całym jajkiem'|| chr(13) ||'i posypujesz migdałami', null, sysdate, null, 2);
+insert into RECIPE values (null, 'Mrkhrova', 'Najłatwiejsze kruche ciastka', 'Z podanych składników wyrobić szybko ciasto. Włożyć na 1h do lodówki. Potem cienko rozwałkować i wykrawać foremkami ciastka. Piec na papierze do pieczenia na ostrym ogniu (temp ok 220°C-200°C. Można przed pieczeniem posmarować rozbitym jajkiem itp.', null, sysdate, null, 1);
+-- insert into RECIPE values (null, 'Mrkhrova', 'Kołacz na 50 blach', '')
+insert into RECIPE values (null, 'Mrkhrova', 'Rogaliki migdałowe', 'Zmielić migdały. Całość wyrobić i formować wałek o średnicy 1cm. Pokroić na paseczki o dł. 5 cm i formować rogaliki. Piec na papierze. Gorące posypać cukrem pudrem i cukrem waniliowym', null, sysdate, null, 35);
 commit;
 
 insert into INGREDIENT_LIST values (null, 1, 500, 'gram', 'mięso mielone');

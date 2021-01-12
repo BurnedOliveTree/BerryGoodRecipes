@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Recipe {
     private String author;
     private Integer id;
-    private double cost = 0;
+    private double cost;
     private String name;
     private int accessibility;
     private String groupName;
@@ -16,9 +16,15 @@ public class Recipe {
     private int prepareTime; // in minutes
     // @TODO private LinkList<Opinion> opinions = new LinkList<Opinion>();
     private ArrayList<Ingredient> ingredientList;
-    private double avgRate;
+    private String avgRate;
 
     public Recipe() {}
+
+    public Recipe(int id, String name, String author) {
+        this.id = id;
+        this.name = name;
+        this.author = author;
+    }
 
     public Recipe(int id, String name, String author, String prepareMethod, int accessibility, String dateAdded, int prepareTime, double cost, double portion_number, ArrayList<Ingredient> ingredientList) {
         this.name = name;
@@ -154,9 +160,11 @@ public class Recipe {
         return ingredientList;
     }
 
-    public double getAvgRate() {
+    public String getAvgRate() {
         return avgRate;
     }
+
+    public void setAvgRate(String avgRate) { this.avgRate = avgRate; }
 
     public String getDateAdded() {return dateAdded;}
 

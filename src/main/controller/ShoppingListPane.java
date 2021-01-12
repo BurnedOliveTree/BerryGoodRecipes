@@ -35,7 +35,7 @@ public class ShoppingListPane extends BasicPaneActions {
     public ShoppingListPane(User activeUser, BasicPaneActions returnPane) throws IOException, SQLException {
         this.activeUser = activeUser;
         this.returnPane = returnPane;
-        this.groups =  DatabaseConnection.getGroups(activeUser);
+        this.groups =  DatabaseConnection.getGroupNames(activeUser);
         this.groups.add("User");
     }
 
