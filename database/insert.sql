@@ -176,7 +176,8 @@ commit;
 
 insert into INGREDIENT_LIST values (null, 1, 500, 'gram', 'mięso mielone');
 insert into INGREDIENT_LIST values (null, 1, 700, 'gram', 'passata pomidorowa');;
-insert into INGREDIENT_LIST values (null, 1, 75, 'gram', 'ser żółty');
+insert into INGREDIENT_L
+IST values (null, 1, 75, 'gram', 'ser żółty');
 insert into INGREDIENT_LIST values (null, 1, 15, 'piece', 'makaron lasagne');
 
 insert into INGREDIENT_LIST values (null, 2,  250, 'gram', 'twaróg');

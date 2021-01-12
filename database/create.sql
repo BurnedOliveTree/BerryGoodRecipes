@@ -22,7 +22,7 @@ CREATE TABLE Unit
 (
     Name VARCHAR2(40) NOT NULL CONSTRAINT Unit_pk PRIMARY KEY,
     Unit_system_id VARCHAR2(40) NOT NULL CONSTRAINT Unit_Unit_system_fk REFERENCES Unit_system (name),
-    Liter_per_unit_ratio NUMBER(7,2) NOT NULL
+    Liter_per_unit_ratio NUMBER(6,5) NOT NULL
 );
 
 create table "USER"

@@ -21,7 +21,11 @@ import main.recipeModel.Recipe;
 import main.userModel.User;
 
 import java.io.IOException;
+
 import java.sql.SQLException;
+
+import java.util.ArrayList;
+
 
 public class RecipePane  extends BasicPaneActions {
     private final Recipe recipe;
@@ -161,6 +165,9 @@ public class RecipePane  extends BasicPaneActions {
     private void setIngredListView() {
         ingredientListView.getItems().clear();
         if (activeUser != null) {
+            ArrayList<Ingredient> ingredients;
+            for (int i = 0; i < this.recipe.getIngredientList().size(); i++){
+            }
             ingredientListView.getItems().addAll(this.recipe.getIngredientList());
             ingredientListView.setCellFactory(ingredientListView -> new ButtonCell(activeUser));
         } else {

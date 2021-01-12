@@ -61,8 +61,8 @@ public class ScalePane extends BasicPaneActions {
             exitPic.setImage(new Image("icons/berryExit.png"));
         }
         exitButton.setOnAction(e -> onAction());
-        unitChoiceBox1.setItems(DatabaseConnection.get_units());
-        unitChoiceBox2.setItems(DatabaseConnection.get_units());
+        unitChoiceBox1.setItems(DatabaseConnection.getUnits());
+        unitChoiceBox2.setItems(DatabaseConnection.getUnits());
         IHaveBox.setItems(shapeList);
         inRecipeBox.setItems(shapeList);
         IHaveBox.setOnAction(e -> sizeBoxAction(IHaveBox));

@@ -104,7 +104,7 @@ public class User {
             }
         }
         return showMap;
-        }
+    }
     public Map<Integer, Ingredient> getShoppingList() {return shoppingList;}
 
 //
