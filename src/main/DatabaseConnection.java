@@ -27,7 +27,7 @@ public class DatabaseConnection {
     static Connection connection;
     public static String theme;
 
-    // TODO save shoppingList, read shoppingList, addRecipe, deleteRecipe
+    // TODO addRecipe, deleteRecipe
     // TODO inviteUser
     public DatabaseConnection() throws IOException {
         Properties prop = new Properties();
