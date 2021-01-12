@@ -7,14 +7,14 @@ begin
     select count(*), sum(SCORE) into rating_amount, rating_sum from OPINION where RECIPE_ID = r_id;
     return rating_sum / rating_amount;
 end;
-
+/
 create or replace trigger tg_add_to_public
     after insert on "USER"
     for each row
 begin
     insert into BELONG values (null, 0, :new.USERNAME);
 end;
-
+/
 create or replace function convert_unit(first_unit varchar, second_unit varchar, quantity number)
     return number
 as 
@@ -30,7 +30,7 @@ begin
     return (first_ratio*quantity)/second_ratio;
     end if;
 end;
-
+/
 create or replace procedure add_group(u_id varchar2, g_name varchar2)
 as
     new_id number(4);
@@ -39,7 +39,7 @@ begin
     returning GROUP_ID into new_id;
     insert into BELONG values (null, new_id, u_id);
 end;
-
+/
 create or replace procedure delete_account(u_id varchar2)
 as
 begin
@@ -54,7 +54,7 @@ begin
     delete from "USER" where USERNAME = u_id;
 --  TODO delete_group if no one belongs there
 end;
-
+/
 create or replace procedure delete_group(g_id number)
 as
 begin
@@ -63,3 +63,4 @@ begin
     delete from PUBLICITY where GROUP_ID = g_id;
     delete from "GROUP" where GROUP_ID = g_id;
 end;
+/

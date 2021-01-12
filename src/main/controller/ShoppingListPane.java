@@ -59,6 +59,9 @@ public class ShoppingListPane extends BasicPaneActions {
                     menuItem.setOnAction(e -> {
                         try {
                             DatabaseConnection.shareList(activeUser, groupName);
+                            activeUser.getShoppingList().clear();
+                            shoppingList.getItems().clear();
+                            shoppingList.refresh();
                         } catch (IOException | SQLException ioException) {
                             ioException.printStackTrace();
                         }
@@ -72,6 +75,7 @@ public class ShoppingListPane extends BasicPaneActions {
     }
 
     private void setOtherListsMenu() {
+        otherListsMenu.getItems().clear();
         for (String groupName : groups) {
             if (!groupName.equals(this.currentList)) {
                 MenuItem menuItem = new MenuItem(groupName);
@@ -104,6 +108,8 @@ public class ShoppingListPane extends BasicPaneActions {
                 shoppingList.getItems().add(String.format((ingredient.getQuantity() % 1 == 0)?"%1.0f %s %s\t%s":"%1.2f %s %s\t%s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName(), author));
             }
         }
+        shoppingList.refresh();
+        setOtherListsMenu();
     }
 
 

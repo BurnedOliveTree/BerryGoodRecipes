@@ -320,3 +320,13 @@ insert into PUBLICITY values(null, 0, 15);
 insert into PUBLICITY values(null, 0, 16);
 insert into PUBLICITY values(null, 0, 17);
 commit;
+
+UPDATE SHOPPING_LIST SLIST SET GROUP_ID=1
+WHERE USERNAME='Rokarolka'
+  AND GROUP_ID IS NULL
+  AND NOT EXISTS
+        (SELECT *
+        FROM SHOPPING_LIST SLIST2
+        WHERE SLIST.INGREDIENT_LIST_ID = SLIST2.INGREDIENT_LIST_ID
+          AND SLIST2.GROUP_ID=1);
+commit;

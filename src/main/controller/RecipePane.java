@@ -2,6 +2,7 @@ package main.controller;
 
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -25,6 +26,7 @@ import main.userModel.User;
 import javax.swing.plaf.nimbus.State;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 public class RecipePane  extends BasicPaneActions {
     private final Recipe recipe;
@@ -101,85 +103,21 @@ public class RecipePane  extends BasicPaneActions {
             if (activeUser.checkIfRecipeFavorite(this.recipe)) {
                 LikePic.setImage(new Image("icons/favoriteClicked.png"));
             }
+            setContextMenu(ingredientListView, createDeleteFromShoppingListItem(), createAddToShoppingListItem());
         }
 
         Platform.runLater(() -> {
             commentButton.setPrefWidth(propertyBox.getWidth());
         });
-
     }
-//    // inner class which extends ListCell with additional button - for adding ingredient to shopping list - option for logged users
-//    static class ButtonCell {
-//        HBox box = new HBox();
-//        Pane pane = new Pane();
-//        Label label = new Label("(empty)");
-//        Ingredient selectedIngredient;
-//        User activeUser;
-//        private ImageView view;
-//
-//        public ButtonCell(User activeUser) {
-//            super();
-//            view = new ImageView(new Image("icons/plus.png"));
-//            view.setFitHeight(20);
-//            view.setFitWidth(20);
-//            box.getChildren().addAll(view, label, pane);
-//            HBox.setHgrow(pane, Priority.ALWAYS);
-//            this.activeUser = activeUser;
-//
-//            view.setOnMouseClicked(mouseEvent -> {
-//                if (activeUser.checkIfIngredientInShoppingList(selectedIngredient.getId())) {
-//                    view.setImage(new Image("icons/plus.png"));
-//                    selectedIngredient.setShoppingListStatus(Status.deleted);
-//                } else {
-//                    view.setImage(new Image("icons/minus.png"));
-//                    activeUser.addToShoppingList(selectedIngredient);
-//                    selectedIngredient.setShoppingListStatus(Status.added);
-//                }
-//            });
-//        }
-////
-////        @Override
-////        protected void updateItem(Ingredient ingredient, boolean empty) {
-////            super.updateItem(ingredient, empty);
-////            if (empty) {
-////                selectedIngredient = null;
-////                setGraphic(null);
-////            } else {
-////                selectedIngredient = ingredient;
-////                label.setText(String.format((ingredient.getQuantity() % 1 == 0)?" %1.0f %s %s":" %1.2f %s %s",  ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
-////                if (activeUser.checkIfIngredientInShoppingList(selectedIngredient.getId())) {
-////                    view.setImage(new Image("icons/minus.png"));
-////                }
-////                else{
-////                    view.setImage(new Image("icons/plus.png"));
-////                }
-////                setGraphic(box);
-////            }
-////        }
-//    }
-//
-//
-//    // format properly listView - with button or without
-//    private void setIngredListView() {
-//        ingredientListView.getItems().clear();
-//        if (activeUser != null) {
-//            ingredientListView.getItems().addAll(this.recipe.getIngredientList());
-//            ingredientListView.setCellFactory(ingredientListView -> new ButtonCell(activeUser));
-//        } else {
-//            for (Ingredient ingredient: this.recipe.getIngredientList()) {
-//                ingredientListView.getItems().add(String.format((ingredient.getQuantity() % 1 == 0)?"%1.0f %s %s":"%1.2f %s %s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
-//            }
-//        }
-//
-//    }
 
     // inner class which extends ListCell with additional button - for adding ingredient to shopping list - option for logged users
     static class ButtonCell extends ListCell<Ingredient> {
-        HBox box = new HBox();
-        Pane pane = new Pane();
-        Label label = new Label("(empty)");
-        Ingredient selectedIngredient;
-        User activeUser;
+        private HBox box = new HBox();
+        private Pane pane = new Pane();
+        private Label label = new Label("(empty)");
+        public Ingredient selectedIngredient;
+        private User activeUser;
         private ImageView view;
 
         public ButtonCell(User activeUser) {
@@ -208,6 +146,7 @@ public class RecipePane  extends BasicPaneActions {
                 }
             });
         }
+
 
         @Override
         protected void updateItem(Ingredient ingredient, boolean empty) {
@@ -243,6 +182,47 @@ public class RecipePane  extends BasicPaneActions {
             }
         }
 
+    }
+
+    // return Item for MenuContext which delete selected item in ingredient List, User can delete several ingredients at once
+    public MenuItem createDeleteFromShoppingListItem() {
+        MenuItem delete = new MenuItem("Delete");
+        delete.setOnAction(actionEvent -> {
+            ObservableList<Ingredient> ingredients=  ingredientListView.getSelectionModel().getSelectedItems();
+                for (Ingredient selectedIngredient :ingredients){
+                    if (activeUser.checkIfIngredientInShoppingList(selectedIngredient.getId())) {
+                        Ingredient ingredient = activeUser.getIngredientFromShoppingList(selectedIngredient.getId());
+                        Status status = ingredient.getShoppingListStatus();
+                        if (status == Status.added || status == Status.loaded) {
+                            ingredient.setShoppingListStatus(Status.deleted);
+                        }
+                    }
+                }
+                ingredientListView.refresh();
+        });
+        return delete;
+    }
+
+    // return Item for MenuContext which delete selected item in ingredient List, User can add several ingredients at once
+    public MenuItem createAddToShoppingListItem() {
+        MenuItem add = new MenuItem("Add");
+        add.setOnAction(actionEvent -> {
+            ObservableList<Ingredient> ingredients=  ingredientListView.getSelectionModel().getSelectedItems();
+            for (Ingredient selectedIngredient :ingredients){
+                if (activeUser.checkIfIngredientInShoppingList(selectedIngredient.getId())) {
+                    Ingredient ingredient = activeUser.getIngredientFromShoppingList(selectedIngredient.getId());
+                    Status status = ingredient.getShoppingListStatus();
+                    if (status == Status.deleted) {
+                        ingredient.setShoppingListStatus(Status.added);
+                    }
+                } else {
+                    selectedIngredient.setShoppingListStatus(Status.added);
+                    activeUser.addToShoppingList(selectedIngredient);
+                }
+            }
+            ingredientListView.refresh();
+        });
+        return add;
     }
 
 
