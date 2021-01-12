@@ -52,6 +52,15 @@ public class UserAdminPane extends BasicPaneActions {
                 refreshFollowedList();
             }
         });
+        menuItem = new MenuItem("Invite");
+        menuItem.setOnAction(actionEvent -> {
+            String username = followedList.getSelectionModel().getSelectedItem();
+            if (username != null) {
+                System.out.println("TODO, get groups and invite user to one of them");
+//                activeUser.invite();
+//                refreshWindow();
+            }
+        });
         setContextMenu(followedList, menuItem);
     }
 
