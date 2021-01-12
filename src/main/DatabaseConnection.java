@@ -590,7 +590,7 @@ public class DatabaseConnection {
             int groupId = resultSet.getInt("GROUP_ID");
             Statement update = connection.createStatement();
             int updateResult = update.executeUpdate("UPDATE SHOPPING_LIST SLIST SET GROUP_ID="+ groupId +
-                                                            "WHERE USERNAME='"+ activeUser.getUsername() + "'" +
+                                                            " WHERE USERNAME='"+ activeUser.getUsername() + "'" +
                                                             "  AND GROUP_ID IS NULL" +
                                                             "  AND NOT EXISTS" +
                                                             "        (SELECT *" +
