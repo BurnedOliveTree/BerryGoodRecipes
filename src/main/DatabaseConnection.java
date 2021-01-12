@@ -516,7 +516,7 @@ public class DatabaseConnection {
     public static Double convertUnit(Double quantity, String first_unit, String second_unit) throws IOException, SQLException {
         setConnection();
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("select round(convert_unit('" +first_unit+ "', '" +second_unit+ "', " +quantity+ "),2) as result from dual");
+        ResultSet resultSet = statement.executeQuery("select convert_unit('" +first_unit+ "', '" +second_unit+ "', " +quantity+ ") as result from dual");
         resultSet.next();
         Double result =  resultSet.getDouble("result");
         resultSet.close();
