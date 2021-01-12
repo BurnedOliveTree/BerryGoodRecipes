@@ -500,7 +500,7 @@ public class DatabaseConnection {
         closeConnection();
     }
 
-    public static ObservableList<String> get_units() throws IOException, SQLException {
+    public static ObservableList<String> getUnits() throws IOException, SQLException {
         ObservableList<String> unitsList = FXCollections.observableArrayList();
         setConnection();
         Statement statement = connection.createStatement();
@@ -508,6 +508,9 @@ public class DatabaseConnection {
         while (resultSet.next()){
             unitsList.add(resultSet.getString("NAME"));
         }
+        resultSet.close();
+        statement.close();
+        closeConnection();
         return unitsList;
     }
     public static Double convertUnit(Double quantity, String first_unit, String second_unit) throws IOException, SQLException {
@@ -515,7 +518,31 @@ public class DatabaseConnection {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("select round(convert_unit('" +first_unit+ "', '" +second_unit+ "', " +quantity+ "),2) as result from dual");
         resultSet.next();
-        return resultSet.getDouble("result");
+        Double result =  resultSet.getDouble("result");
+        resultSet.close();
+        statement.close();
+        closeConnection();
+        return result;
+    }
+
+    public static String getBestUnit(String preferedSystem, String currentUnit) throws IOException, SQLException {
+        setConnection();
+        Statement statement = connection.createStatement();
+        String unit;
+        String bestUnit = "";
+        Double error = Double.POSITIVE_INFINITY;
+        ResultSet resultSet = statement.executeQuery("select name from unit where unit_system_id = '" + preferedSystem+ "'");
+        while (resultSet.next()){
+            unit = resultSet.getString("name");
+            if(Math.abs(1-convertUnit((double) 1, currentUnit, unit)) < error) {
+                error = Math.abs(1 - convertUnit((double) 1, currentUnit, unit));
+                bestUnit = unit;
+            }
+        }
+        resultSet.close();
+        statement.close();
+        closeConnection();
+        return bestUnit;
     }
 
     public static void updateShoppingList(User aciveUser) throws IOException, SQLException {
