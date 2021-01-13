@@ -459,9 +459,11 @@ public class DatabaseConnection {
             String score = String.valueOf(opinion.getScore());
             String comment = username + "    Score: " +score + "\n" + opinion.getOpinionText() + "\n";
             opinionsView.getItems().add(comment);
-            statement.close();
-            closeConnection();
+
         }
+        resultSet.close();
+        statement.close();
+        closeConnection();
     }
 
     public static void fillOpinions(Recipe recipe, ListView opinionsView) throws SQLException, IOException {
