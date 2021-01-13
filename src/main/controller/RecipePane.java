@@ -22,10 +22,11 @@ import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
 import main.userModel.User;
-
+import main.recipeModel.Unit;
 import javax.swing.plaf.nimbus.State;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RecipePane  extends BasicPaneActions {
@@ -59,7 +60,7 @@ public class RecipePane  extends BasicPaneActions {
     }
 
     @FXML
-    void initialize() {
+    void initialize() throws IOException, SQLException {
         if (DatabaseConnection.isThemeLight()) {
             ScalePic.setImage(new Image("icons/berryScale.png"));
             ShoppingPic.setImage(new Image("icons/berryBasket.png"));
@@ -171,13 +172,32 @@ public class RecipePane  extends BasicPaneActions {
     }
 
     // format properly listView - with button or without
-    private void setIngredListView() {
+    private void setIngredListView() throws IOException, SQLException {
         ingredientListView.getItems().clear();
-        if (activeUser != null) {
-            ingredientListView.getItems().addAll(this.recipe.getIngredientList());
+
+        if (activeUser != null){
+            if (activeUser.getDefaultUnitSystem() == null || activeUser.getDefaultUnitSystem().equals("Default")) {
+                ingredientListView.getItems().addAll(this.recipe.getIngredientList());
+                ingredientListView.setCellFactory(ingredientListView -> new ButtonCell(activeUser));
+                return;
+            }
+        String bestUnit = "";
+        Double quantitiy = 0.0;
+        ArrayList<Ingredient> goodIngredients;
+        ArrayList<Ingredient> recipeIngredients = this.recipe.getIngredientList();
+        for (Ingredient ing : recipeIngredients) {
+            if (ing.getUnit().getName().equals("piece")) {
+                ingredientListView.getItems().add(ing);
+            } else {
+                bestUnit = DatabaseConnection.getBestUnit(activeUser.getDefaultUnitSystem(), ing.getUnit().getName(), ing.getQuantity());
+                ingredientListView.getItems().add(new Ingredient(0, DatabaseConnection.convertUnit(ing.getQuantity(), ing.getUnit().getName(), bestUnit), new Unit(bestUnit), ing.getName()));
+            }
             ingredientListView.setCellFactory(ingredientListView -> new ButtonCell(activeUser));
-        } else {
-            for (Ingredient ingredient: this.recipe.getIngredientList()) {
+        }
+
+        }
+        else {
+            for (Ingredient ingredient : this.recipe.getIngredientList()) {
                 ingredientListView.getItems().add(String.format((ingredient.getQuantity() % 1 == 0)?"%1.0f %s %s":"%1.2f %s %s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
             }
         }
@@ -243,6 +263,10 @@ public class RecipePane  extends BasicPaneActions {
                         portionArea.getEditor().textProperty().set(String.format((recipe.getPortionNumber() % 1 == 0)?"%1.0f":"%1.2f", recipe.getPortionNumber()));
                 } catch (NumberFormatException e) {
                     portionArea.getEditor().textProperty().set(String.format((recipe.getPortionNumber() % 1 == 0)?"%1.0f":"%1.2f", recipe.getPortionNumber()));
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -262,7 +286,7 @@ public class RecipePane  extends BasicPaneActions {
         }
     }
 
-    private void changeIngredListViewScale(Double numPortions) {
+    private void changeIngredListViewScale(Double numPortions) throws IOException, SQLException {
         double currNumPortions = this.recipe.getPortionNumber();
         if (!numPortions.equals(currNumPortions)) {
             double scale = numPortions / currNumPortions;

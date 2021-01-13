@@ -95,6 +95,8 @@ public class DatabaseConnection {
         return activeUser;
     }
 
+
+
     private static Map<Integer, Ingredient> getShoppingList(String username) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM SHOPPING_LIST WHERE USERNAME = '" + username + "' AND GROUP_ID IS NULL" );
@@ -525,7 +527,7 @@ public class DatabaseConnection {
         return result;
     }
 
-    public static String getBestUnit(String preferedSystem, String currentUnit) throws IOException, SQLException {
+    public static String getBestUnit(String preferedSystem, String currentUnit, Double quantity) throws IOException, SQLException {
         setConnection();
         Statement statement = connection.createStatement();
         String unit;
@@ -534,7 +536,7 @@ public class DatabaseConnection {
         ResultSet resultSet = statement.executeQuery("select name from unit where unit_system_id = '" + preferedSystem+ "'");
         while (resultSet.next()){
             unit = resultSet.getString("name");
-            if(Math.abs(1-convertUnit((double) 1, currentUnit, unit)) < error) {
+            if(Math.abs(1-convertUnit(quantity, currentUnit, unit)) < error) {
                 error = Math.abs(1 - convertUnit((double) 1, currentUnit, unit));
                 bestUnit = unit;
             }

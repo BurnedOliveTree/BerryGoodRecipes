@@ -18,6 +18,12 @@ public class User {
     private Map<Integer, Ingredient> shoppingList;
     private String defaultUnitSystem = null;
 
+    public String getDefaultUnitSystem() {
+        return defaultUnitSystem;
+    }
+
+
+
     public User(String username) {
         this.username = username;
         this.userRecipes = new ArrayList<>();
@@ -32,6 +38,7 @@ public class User {
         this.favorites = favorites;
         this.followed = followed;
         this.shoppingList = shoppingList;
+
     }
 
 //    public void setNewPassword(String newPassword) {
