@@ -72,7 +72,7 @@ public class RecipePane  extends BasicPaneActions {
         text.setFont(Font.font("System", FontPosture.REGULAR, 13));
         descText.getChildren().add(text);
         ingredientListView = new ListView();
-        setIngredListView();
+        setIngredListView(this.recipe.getIngredientList());
         ingredientPane.getChildren().add(ingredientListView);
         ingredientListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         titleLabel.setText(this.recipe.getName());
@@ -104,7 +104,7 @@ public class RecipePane  extends BasicPaneActions {
             if (activeUser.checkIfRecipeFavorite(this.recipe)) {
                 LikePic.setImage(new Image("icons/favoriteClicked.png"));
             }
-            setContextMenu(ingredientListView, createDeleteFromShoppingListItem(), createAddToShoppingListItem());
+            setContextMenu(ingredientListView, createDeleteFromShoppingListItem(), createAddToShoppingListItem(), createChangeUnit());
         }
 
         Platform.runLater(() -> {
@@ -172,19 +172,19 @@ public class RecipePane  extends BasicPaneActions {
     }
 
     // format properly listView - with button or without
-    private void setIngredListView() throws IOException, SQLException {
+    private void setIngredListView(ArrayList<Ingredient> ingredientsList) throws IOException, SQLException {
         ingredientListView.getItems().clear();
 
         if (activeUser != null){
             if (activeUser.getDefaultUnitSystem() == null || activeUser.getDefaultUnitSystem().equals("Default")) {
-                ingredientListView.getItems().addAll(this.recipe.getIngredientList());
+                ingredientListView.getItems().addAll(ingredientsList);
                 ingredientListView.setCellFactory(ingredientListView -> new ButtonCell(activeUser));
                 return;
             }
         String bestUnit = "";
         Double quantitiy = 0.0;
         ArrayList<Ingredient> goodIngredients;
-        ArrayList<Ingredient> recipeIngredients = this.recipe.getIngredientList();
+        ArrayList<Ingredient> recipeIngredients = ingredientsList;
         for (Ingredient ing : recipeIngredients) {
             if (ing.getUnit().getName().equals("piece")) {
                 ingredientListView.getItems().add(ing);
@@ -197,7 +197,7 @@ public class RecipePane  extends BasicPaneActions {
 
         }
         else {
-            for (Ingredient ingredient : this.recipe.getIngredientList()) {
+            for (Ingredient ingredient : ingredientsList) {
                 ingredientListView.getItems().add(String.format((ingredient.getQuantity() % 1 == 0)?"%1.0f %s %s":"%1.2f %s %s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
             }
         }
@@ -245,6 +245,44 @@ public class RecipePane  extends BasicPaneActions {
         return add;
     }
 
+    public Menu createChangeUnit() throws IOException, SQLException {
+        Menu change = new Menu("Change unit");
+        change.getItems().clear();
+        for (String item : DatabaseConnection.getUnits()){
+            MenuItem temp = new MenuItem(item);
+            change.getItems().add(temp);
+            temp.setOnAction(e -> {
+                try {
+                    changeUnit(temp.getText(), ingredientListView.getSelectionModel().getSelectedItems(), ingredientListView.getItems());
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
+            });
+        }
+
+        return change;
+    }
+
+    private void changeUnit(String newUnit, ObservableList<Ingredient> selIngredients, ObservableList<Ingredient> allIngredients) throws IOException, SQLException {
+        ArrayList<Ingredient> newList = new ArrayList<>();
+        for (Ingredient ingredient : allIngredients){
+            if (selIngredients.contains(ingredient) && !ingredient.getUnit().getName().equals("piece")){
+                String oldUnit = ingredient.getUnit().getName();
+                Double oldQuantity = ingredient.getQuantity();
+                Double newQuantity = DatabaseConnection.convertUnit(oldQuantity, oldUnit, newUnit);
+                Unit tempUn = new Unit(newUnit);
+                Ingredient tempIn = new Ingredient(0, newQuantity, tempUn, ingredient.getName());
+                newList.add(tempIn);
+            }
+
+            else {
+                newList.add(ingredient);
+            }
+        }
+        setIngredListView(newList);
+    }
 
     private void setPortionAreaProperty(){
         portionArea.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000));
@@ -292,7 +330,7 @@ public class RecipePane  extends BasicPaneActions {
             double scale = numPortions / currNumPortions;
             this.recipe.setPortionNumber(numPortions);
             this.recipe.scaleIngredientList(scale);
-            setIngredListView();
+            setIngredListView(this.recipe.getIngredientList());
         }
     }
     @FXML
