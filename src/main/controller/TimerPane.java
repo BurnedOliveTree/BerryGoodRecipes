@@ -45,7 +45,7 @@ public class TimerPane extends BasicPaneActions {
         setSpinnerProperty(hoursBox);
         setSpinnerProperty(minutesBox);
         setSpinnerProperty(secondsBox);
-        setMedia();
+//        setMedia();
 
         Platform.runLater(() -> {
         Stage stage = (Stage) hoursBox.getScene().getWindow();
@@ -82,6 +82,7 @@ public class TimerPane extends BasicPaneActions {
     public void startTimer() {
         scrollUp();
         timer = new DownTimer(hoursBox.getValue(), minutesBox.getValue(), secondsBox.getValue());
+        setMedia();
     }
 
     @FXML

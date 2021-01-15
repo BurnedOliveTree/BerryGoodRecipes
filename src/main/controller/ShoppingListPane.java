@@ -82,7 +82,7 @@ public class ShoppingListPane extends BasicPaneActions {
                 }
             }
         });
-        newIngredient.getChildren().addAll(quantity,unit, name);
+        newIngredient.getChildren().addAll(quantity,unit, name, addButton);
         customMenuItem.setContent(newIngredient);
         customMenuItem.setHideOnClick(false);
         addIngredient.getItems().add(customMenuItem);
