@@ -17,6 +17,7 @@
                   </ImageView>
                </graphic></Button>
             <MenuButton fx:id="shareMenu" mnemonicParsing="false" text="Share" />
+            <MenuButton fx:id="addIngredient" mnemonicParsing="false" prefHeight="25.0" prefWidth="129.0" text="Add ingredient" />
             <MenuButton fx:id="otherListsMenu" mnemonicParsing="false" text="My Shopping List" />
         </items>
       </ToolBar>

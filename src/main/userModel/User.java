@@ -4,6 +4,7 @@ import main.controller.Status;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
 
+import java.nio.channels.MulticastChannel;
 import java.util.*;
 
 public class User {
@@ -16,7 +17,7 @@ public class User {
     private List<String> userGroups;
     private List<String> newFollowed = new LinkedList<>();
     private List<String> deletedFollowed = new LinkedList<>();
-    private Map<Integer, Ingredient> shoppingList;
+    private List<Ingredient> shoppingList;
     private String defaultUnitSystem = null;
 
     public String getDefaultUnitSystem() {
@@ -30,10 +31,10 @@ public class User {
         this.userRecipes = new ArrayList<>();
         this.favorites = new LinkedList<>();
         this.followed = new LinkedList<>();
-        this.shoppingList = new HashMap<Integer, Ingredient>();
+        this.shoppingList = new ArrayList<Ingredient>();
     }
 
-    public User(String argUsername, List<Recipe> userRecipes, List<Recipe> favorites, List<String> followed, Map<Integer, Ingredient> shoppingList, List<String> userGroups) {
+    public User(String argUsername, List<Recipe> userRecipes, List<Recipe> favorites, List<String> followed, ArrayList<Ingredient> shoppingList, List<String> userGroups) {
         username = argUsername;
         this.userRecipes = userRecipes;
         this.favorites = favorites;
@@ -88,28 +89,31 @@ public class User {
     public List<String> getNewFollowed() { return newFollowed; }
     public List<String> getDeletedFollowed() { return deletedFollowed; }
 
-    public void addToShoppingList(Ingredient ingredient) {shoppingList.put(ingredient.getId(), ingredient);}
-    public void removeFromShoppingList(int ingredientId) {shoppingList.remove(ingredientId);}
-    public boolean checkIfIngredientInShoppingList(int ingredientId) {
-        return shoppingList.containsKey(ingredientId);
+    public void addToShoppingList(Ingredient ingredient) {
+        shoppingList.add(ingredient);}
+    public void removeFromShoppingList(Ingredient ingredient) {
+        shoppingList.remove(ingredient);}
+    public boolean checkIfIngredientInShoppingList(Ingredient ingredient) {
+        return shoppingList.contains(ingredient);
     }
 
-    public Status getIngredientStatus(int ingredientId) {
-        if (shoppingList.containsKey(ingredientId))
-            return shoppingList.get(ingredientId).getShoppingListStatus();
+    public Status getIngredientStatus(Ingredient ingredient) {
+        if (shoppingList.contains(ingredient)){
+            Ingredient foundIngredient = shoppingList.stream().filter(lookingIngredient  -> lookingIngredient.equals(ingredient)).findAny().orElse(null);
+            return foundIngredient.getShoppingListStatus();
+        }
         else
             return null;
     }
 
-    public Ingredient getIngredientFromShoppingList(int ingredientId) {
-        return shoppingList.getOrDefault(ingredientId, null);
+    public Ingredient getIngredientFromShoppingList(Ingredient ingredient) {
+        return shoppingList.stream().filter(lookingIngredient  -> lookingIngredient.equals(ingredient)).findAny().orElse(null);
     }
     public void setDefaultUnitSystem(String unitSystem) { defaultUnitSystem = unitSystem; System.out.println(unitSystem); }
     public Map<String, Ingredient> showShoppingList() {
         Map<String, Ingredient> showMap = new HashMap<>();
-        for (Map.Entry<Integer, Ingredient> entry : shoppingList.entrySet()) {
+        for (Ingredient ingredient: shoppingList) {
             //@TODO zamiana składników na jednostke domyślną podczas dodawania
-            Ingredient ingredient = entry.getValue();
             if (ingredient.getShoppingListStatus() != Status.deleted) {
                 Ingredient shopIngredient = showMap.get(ingredient.getName());
                 if (shopIngredient != null && shopIngredient.getUnit().getName().equals(ingredient.getUnit().getName()) ){
@@ -123,7 +127,7 @@ public class User {
         }
         return showMap;
         }
-    public Map<Integer, Ingredient> getShoppingList() {return shoppingList;}
+    public List<Ingredient> getShoppingList() {return shoppingList;}
 
 //
 //    public void saveToFile()

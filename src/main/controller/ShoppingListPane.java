@@ -1,19 +1,24 @@
 package main.controller;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
+import main.recipeModel.Unit;
 import main.userModel.User;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -29,8 +34,7 @@ public class ShoppingListPane extends BasicPaneActions {
     @FXML private ListView<String> shoppingList;
     @FXML private MenuButton shareMenu;
     @FXML private MenuButton otherListsMenu;
-
-    // TODO context menu dodanie opcji add ingredient to grouplist
+    @FXML private MenuButton addIngredient;
 
     public ShoppingListPane(User activeUser, BasicPaneActions returnPane) throws IOException, SQLException {
         this.activeUser = activeUser;
@@ -47,13 +51,47 @@ public class ShoppingListPane extends BasicPaneActions {
         showShoppingList();
         Platform.runLater(()->{
             setShareMenu();
+            // if user in group shopping list he cannot share list
             shareMenu.managedProperty().bind(shareMenu.visibleProperty());
             setOtherListsMenu();
         });
+
+        // set add ingredient option
+        CustomMenuItem customMenuItem = new CustomMenuItem();
+        VBox newIngredient = new VBox();
+        TextField quantity = new TextField();
+        MenuButton unit = new MenuButton();
+        TextField name = new TextField();
+        Button addButton = new Button();
+        quantity.setPromptText("Qty");
+        name.setPromptText("Name");
+        unit.setText("Unit");
+        addButton.setText("Add Ingredient");
+        quantity.setStyle("-fx-text-box-border: transparent");
+        name.setStyle("-fx-text-box-border: transparent");
+        newIngredient.setPrefWidth(addIngredient.getPrefWidth() - 10);
+        unit.setPrefWidth(newIngredient.getPrefWidth());
+        addButton.setPrefWidth(newIngredient.getPrefWidth());
+        addButton.setOnAction(new EventHandler<>() {
+
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                if (currentList.equals("User")) {
+                    Ingredient ingredient = new Ingredient(null, Double.parseDouble(quantity.getText()), new Unit("unknown"), name.getText());
+                    activeUser.addToShoppingList(ingredient);
+                }
+            }
+        });
+        newIngredient.getChildren().addAll(quantity,unit, name);
+        customMenuItem.setContent(newIngredient);
+        customMenuItem.setHideOnClick(false);
+        addIngredient.getItems().add(customMenuItem);
+
     }
 
     private void setShareMenu() {
         if (currentList == "User") {
+            // only in user shopping list user can share list
             shareMenu.setVisible(true);
             for (String groupName : groups) {
                 if (groupName != "User") {

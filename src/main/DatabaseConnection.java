@@ -77,7 +77,7 @@ public class DatabaseConnection {
                 List<Recipe> favorites = getUserFavorites(username);
                 List<String> followed = getUserFollowed(username);
                 List<String>  groups = getGroupNames(username);
-                Map<Integer, Ingredient> shoppingList = getShoppingList(username);
+                ArrayList<Ingredient> shoppingList = getShoppingList(username);
                 activeUser = new User(username, userRecipes, favorites, followed, shoppingList, groups);
                 // TODO add all the other columns in the future
                 errMess.setText("Successfully logged in!");
@@ -98,10 +98,10 @@ public class DatabaseConnection {
 
 
 
-    private static Map<Integer, Ingredient> getShoppingList(String username) throws SQLException {
+    private static ArrayList<Ingredient> getShoppingList(String username) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM SHOPPING_LIST WHERE USERNAME = '" + username + "' AND GROUP_ID IS NULL" );
-        Map<Integer, Ingredient> shoppingList = new HashMap<>();
+        ArrayList<Ingredient> shoppingList = new ArrayList<>();
         while (resultSet.next()) {
             int ingredientId = resultSet.getInt("INGREDIENT_LIST_ID");
             Statement ingredientStatement = connection.createStatement();
@@ -109,7 +109,7 @@ public class DatabaseConnection {
             if (ingredientResult.next()); {
                 Ingredient ingredient = new Ingredient(ingredientId, resultSet.getDouble("AMOUNT"), new Unit(ingredientResult.getString("INGREDIENT_UNIT")), ingredientResult.getString("INGREDIENT_NAME"));
                 ingredient.setShoppingListStatus(Status.loaded);
-                shoppingList.put(ingredientId, ingredient);
+                shoppingList.add(ingredient);
 
             }
             ingredientResult.close();
@@ -569,7 +569,7 @@ public class DatabaseConnection {
             }
         }
         // add records with Status.added
-        for (Ingredient ingredient : activeUser.getShoppingList().values()) {
+        for (Ingredient ingredient : activeUser.getShoppingList()) {
             if (ingredient.getShoppingListStatus() == Status.added) {
                 statement.execute("INSERT INTO SHOPPING_LIST values(null, " + ingredient.getQuantity() + ", '" + ingredient.getId()  + "', '"  + activeUser.getUsername() + "', NULL)");
                 ingredient.setShoppingListStatus(Status.loaded);
