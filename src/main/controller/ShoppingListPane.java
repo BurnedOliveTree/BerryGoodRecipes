@@ -47,12 +47,14 @@ public class ShoppingListPane extends BasicPaneActions {
         showShoppingList();
         Platform.runLater(()->{
             setShareMenu();
+            shareMenu.managedProperty().bind(shareMenu.visibleProperty());
             setOtherListsMenu();
         });
     }
 
     private void setShareMenu() {
         if (currentList == "User") {
+            shareMenu.setVisible(true);
             for (String groupName : groups) {
                 if (groupName != "User") {
                     MenuItem menuItem = new MenuItem(groupName);
@@ -70,18 +72,20 @@ public class ShoppingListPane extends BasicPaneActions {
                 }
             }
         } else {
-            shareMenu.hide();
+            shareMenu.setVisible(false);
         }
     }
 
     private void setOtherListsMenu() {
         otherListsMenu.getItems().clear();
+        otherListsMenu.setText(((this.currentList.equals("User"))?"My":this.currentList) + " Shopping List");
         for (String groupName : groups) {
             if (!groupName.equals(this.currentList)) {
                 MenuItem menuItem = new MenuItem(groupName);
                 menuItem.setOnAction(e -> {
                     menuItem.setText(String.format("%s", groupName));
                     currentList = groupName;
+                    setShareMenu();
                     try {
                         showShoppingList();
                     } catch (IOException | SQLException ioException) {
