@@ -76,8 +76,9 @@ public class DatabaseConnection {
                 List<Recipe> userRecipes = getUserRecipes(username);
                 List<Recipe> favorites = getUserFavorites(username);
                 List<String> followed = getUserFollowed(username);
+                List<String>  groups = getGroupNames(username);
                 Map<Integer, Ingredient> shoppingList = getShoppingList(username);
-                activeUser = new User(username, userRecipes, favorites, followed, shoppingList);
+                activeUser = new User(username, userRecipes, favorites, followed, shoppingList, groups);
                 // TODO add all the other columns in the future
                 errMess.setText("Successfully logged in!");
             } else {
@@ -263,17 +264,15 @@ public class DatabaseConnection {
         return users;
     }
 
-    public static List<String> getGroupNames(User user) throws SQLException, IOException {
-        setConnection();
+    public static List<String> getGroupNames(String username) throws SQLException, IOException {
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT NAME FROM \"GROUP\" JOIN BELONG USING (GROUP_ID) WHERE USERNAME = '" + user.getUsername() + "' AND GROUP_ID != 0");
+        ResultSet resultSet = statement.executeQuery("SELECT NAME FROM \"GROUP\" JOIN BELONG USING (GROUP_ID) WHERE USERNAME = '" + username + "' AND GROUP_ID != 0");
         List<String> groups = new ArrayList<>();
         while(resultSet.next()) {
             groups.add(resultSet.getString("NAME"));
         }
         statement.close();
         resultSet.close();
-        closeConnection();
         return groups;
     }
 

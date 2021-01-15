@@ -13,6 +13,7 @@ public class User {
     private List<Recipe> newFavorites = new LinkedList<>();
     private List<Recipe> deletedFavorites = new LinkedList<>();
     private List<String> followed;
+    private List<String> userGroups;
     private List<String> newFollowed = new LinkedList<>();
     private List<String> deletedFollowed = new LinkedList<>();
     private Map<Integer, Ingredient> shoppingList;
@@ -32,12 +33,13 @@ public class User {
         this.shoppingList = new HashMap<Integer, Ingredient>();
     }
 
-    public User(String argUsername, List<Recipe> userRecipes, List<Recipe> favorites, List<String> followed, Map<Integer, Ingredient> shoppingList) {
+    public User(String argUsername, List<Recipe> userRecipes, List<Recipe> favorites, List<String> followed, Map<Integer, Ingredient> shoppingList, List<String> userGroups) {
         username = argUsername;
         this.userRecipes = userRecipes;
         this.favorites = favorites;
         this.followed = followed;
         this.shoppingList = shoppingList;
+        this.userGroups = userGroups;
 
     }
 
@@ -82,6 +84,7 @@ public class User {
         newFollowed.remove(oldFollowedUser);
         deletedFollowed.add(oldFollowedUser);
     }
+    public List<String> getUserGroups() { return userGroups; }
     public List<String> getNewFollowed() { return newFollowed; }
     public List<String> getDeletedFollowed() { return deletedFollowed; }
 
