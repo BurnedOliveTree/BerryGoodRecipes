@@ -6,7 +6,7 @@ public class Ingredient {
     Double quantity;
     Unit unit;
     String name;
-    int id;
+    Integer id;
     Status shoppingListStatus = Status.none;
     // class which is necessary for the correct implementation of the converter and the recipe
     public Ingredient(Integer id, Double quantity, Unit unit, String name) {
@@ -16,7 +16,7 @@ public class Ingredient {
         this.name = name;
     }
 
-    public int getId() {return id;}
+    public Integer getId() {return id;}
 
     public void setShoppingListStatus(Status status) {shoppingListStatus = status;}
 

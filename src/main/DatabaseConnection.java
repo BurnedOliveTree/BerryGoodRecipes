@@ -357,18 +357,18 @@ public class DatabaseConnection {
             return null;
         setConnection();
         Statement statement = connection.createStatement();
-        String insideQuery;
+        StringBuilder insideQuery;
         if (activeUser != null) {
-            insideQuery = "select distinct pub.RECIPE_ID from PUBLICITY pub join BELONG blg on blg.GROUP_ID = pub.GROUP_ID where lower(blg.USERNAME) = \'" + activeUser.getUsername().toLowerCase() + "\'";
+            insideQuery = new StringBuilder("select distinct pub.RECIPE_ID from PUBLICITY pub join BELONG blg on blg.GROUP_ID = pub.GROUP_ID where lower(blg.USERNAME) = \'" + activeUser.getUsername().toLowerCase() + "\'");
             if (groupID != null) {
-                insideQuery = insideQuery + " and pub.GROUP_ID in (" + groupID.get(0);
+                insideQuery.append(" and pub.GROUP_ID in (").append(groupID.get(0));
                 for (int i : groupID)
-                    insideQuery = insideQuery + ", " + i;
-                insideQuery = insideQuery + ")";
+                    insideQuery.append(", ").append(i);
+                insideQuery.append(")");
             }
         }
         else
-            insideQuery = "select distinct RECIPE_ID from PUBLICITY where GROUP_ID = 0";
+            insideQuery = new StringBuilder("select distinct RECIPE_ID from PUBLICITY where GROUP_ID = 0");
         String query = "select distinct rcp.RECIPE_ID, rcp.NAME, rcp.OWNER_NAME, rcp.PREPARATION_TIME, rcp.COST, CALC_RATING(rcp.RECIPE_ID) as RATING from RECIPE rcp join INGREDIENT_LIST ing on rcp.RECIPE_ID = ing.RECIPE_ID where rcp.RECIPE_ID in ("+insideQuery+")";
         if (whereStatement != null) {
             query = query + " AND " + whereStatement;
@@ -548,20 +548,18 @@ public class DatabaseConnection {
         return bestUnit;
     }
 
-    public static void updateShoppingList(User aciveUser) throws IOException, SQLException {
-        setConnection();
-        updateShoppingListView(aciveUser);
-        closeConnection();
-    }
-
     private static void updateShoppingListView(User activeUser) throws SQLException {
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM SHOPPING_LIST WHERE UPPER(USERNAME) = '" + activeUser.getUsername().toUpperCase() + "' AND GROUP_ID=NULL");
+        ResultSet resultSet = statement.executeQuery("SELECT * FROM SHOPPING_LIST " +
+                                                            "WHERE UPPER(USERNAME) = '" + activeUser.getUsername().toUpperCase() +
+                                                            "' AND GROUP_ID=NULL");
         // check if the records are not being deleted
         while (resultSet.next()) {
             Ingredient ingredient = activeUser.getShoppingList().get(resultSet.getInt("INGREDIENT_LIST_ID"));
             if (ingredient != null && ingredient.getShoppingListStatus() == Status.deleted){
-                statement.execute("DELETE FROM SHOPPING_LIST WHERE UPPER(USERNAME) = '" + activeUser.getUsername().toUpperCase() + "' AND INGREDIENT_LIST_ID = " + ingredient.getId());
+                statement.execute("DELETE FROM SHOPPING_LIST " +
+                                            "WHERE UPPER(USERNAME) = '" + activeUser.getUsername().toUpperCase() +
+                                            "' AND INGREDIENT_LIST_ID = " + ingredient.getId());
                 activeUser.getShoppingList().remove(resultSet.getInt("INGREDIENT_LIST_ID"));
             } else if (ingredient != null && ingredient.getShoppingListStatus() == Status.added && ingredient.getQuantity() == resultSet.getDouble("AMOUNT")) {
                 // if someone delete and add again recipe
@@ -570,8 +568,18 @@ public class DatabaseConnection {
         }
         // add records with Status.added
         for (Ingredient ingredient : activeUser.getShoppingList()) {
-            if (ingredient.getShoppingListStatus() == Status.added) {
-                statement.execute("INSERT INTO SHOPPING_LIST values(null, " + ingredient.getQuantity() + ", '" + ingredient.getId()  + "', '"  + activeUser.getUsername() + "', NULL)");
+            if (ingredient.getShoppingListStatus() == Status.added && ingredient.getId() != null) {
+                statement.execute("INSERT INTO SHOPPING_LIST values(null, "
+                                                                + ingredient.getQuantity() + ", '"
+                                                                + ingredient.getId()  + "', '"
+                                                                + activeUser.getUsername() + "', NULL)");
+                ingredient.setShoppingListStatus(Status.loaded);
+            } else if (ingredient.getShoppingListStatus() == Status.added && ingredient.getId() == null) {
+                statement.execute("BEGIN add_new_ingredient_to_shopping_list('"
+                                                                    + ingredient.getName() + "', '"
+                                                                    + ingredient.getUnit().getName() + "', "
+                                                                    + ingredient.getQuantity() + ", '"
+                                                                    + activeUser.getUsername() +"'); END;");
                 ingredient.setShoppingListStatus(Status.loaded);
             }
         }
