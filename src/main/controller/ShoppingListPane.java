@@ -1,9 +1,6 @@
 package main.controller;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
@@ -11,7 +8,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
@@ -55,8 +51,12 @@ public class ShoppingListPane extends BasicPaneActions {
             // if user in group shopping list he cannot share list
             shareMenu.managedProperty().bind(shareMenu.visibleProperty());
             setOtherListsMenu();
+            setAddIngredient();
         });
 
+    }
+
+    private void setAddIngredient() {
         // set add ingredient option
         CustomMenuItem customMenuItem = new CustomMenuItem();
         VBox newIngredient = new VBox();
@@ -94,7 +94,6 @@ public class ShoppingListPane extends BasicPaneActions {
         customMenuItem.setContent(newIngredient);
         customMenuItem.setHideOnClick(false);
         addIngredient.getItems().add(customMenuItem);
-
     }
 
     private void setShareMenu() {
