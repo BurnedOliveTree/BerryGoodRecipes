@@ -64,3 +64,16 @@ begin
     delete from "GROUP" where GROUP_ID = g_id;
 end;
 /
+create or replace procedure add_new_ingredient_to_shopping_list(p_name varchar2, p_unit varchar2, p_amount number, p_username varchar2)
+as
+    v_ingexist NUMBER;
+    v_ing_list_id NUMBER;
+    begin
+        select count(*) into v_ingexist from INGREDIENT where NAME = p_name;
+        if v_ingexist = 0 then
+            insert into INGREDIENT(NAME) values(p_name);
+        end if;
+        insert into INGREDIENT_LIST(INGREDIENT_UNIT, INGREDIENT_NAME) values (p_unit,p_name) returning INGREDIENT_LIST_ID into v_ing_list_id;
+        insert into SHOPPING_LIST(AMOUNT, INGREDIENT_LIST_ID, USERNAME) values (p_amount,v_ing_list_id, p_username);
+    end;
+/

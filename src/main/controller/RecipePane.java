@@ -130,8 +130,8 @@ public class RecipePane  extends BasicPaneActions {
             HBox.setHgrow(pane, Priority.ALWAYS);
             this.activeUser = activeUser;
             view.setOnMouseClicked(mouseEvent -> {
-                if (activeUser.checkIfIngredientInShoppingList(selectedIngredient.getId())) {
-                    Ingredient ingredient = activeUser.getIngredientFromShoppingList(selectedIngredient.getId());
+                if (activeUser.checkIfIngredientInShoppingList(selectedIngredient)) {
+                    Ingredient ingredient = activeUser.getIngredientFromShoppingList(selectedIngredient);
                     Status status = ingredient.getShoppingListStatus();
                     if (status == Status.deleted) {
                         ingredient.setShoppingListStatus(Status.added);
@@ -158,7 +158,7 @@ public class RecipePane  extends BasicPaneActions {
             } else {
                 selectedIngredient = ingredient;
                 label.setText(String.format((ingredient.getQuantity() % 1 == 0)?" %1.0f %s %s":" %1.2f %s %s",  ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
-                Status status = activeUser.getIngredientStatus(selectedIngredient.getId());
+                Status status = activeUser.getIngredientStatus(selectedIngredient);
                 if (status == Status.deleted || status == Status.none || status == null) {
                     view.setImage(new Image("icons/plus.png"));
                 }
@@ -210,8 +210,8 @@ public class RecipePane  extends BasicPaneActions {
         delete.setOnAction(actionEvent -> {
             ObservableList<Ingredient> ingredients=  ingredientListView.getSelectionModel().getSelectedItems();
                 for (Ingredient selectedIngredient :ingredients){
-                    if (activeUser.checkIfIngredientInShoppingList(selectedIngredient.getId())) {
-                        Ingredient ingredient = activeUser.getIngredientFromShoppingList(selectedIngredient.getId());
+                    if (activeUser.checkIfIngredientInShoppingList(selectedIngredient)) {
+                        Ingredient ingredient = activeUser.getIngredientFromShoppingList(selectedIngredient);
                         Status status = ingredient.getShoppingListStatus();
                         if (status == Status.added || status == Status.loaded) {
                             ingredient.setShoppingListStatus(Status.deleted);
@@ -229,8 +229,8 @@ public class RecipePane  extends BasicPaneActions {
         add.setOnAction(actionEvent -> {
             ObservableList<Ingredient> ingredients=  ingredientListView.getSelectionModel().getSelectedItems();
             for (Ingredient selectedIngredient :ingredients){
-                if (activeUser.checkIfIngredientInShoppingList(selectedIngredient.getId())) {
-                    Ingredient ingredient = activeUser.getIngredientFromShoppingList(selectedIngredient.getId());
+                if (activeUser.checkIfIngredientInShoppingList(selectedIngredient)) {
+                    Ingredient ingredient = activeUser.getIngredientFromShoppingList(selectedIngredient);
                     Status status = ingredient.getShoppingListStatus();
                     if (status == Status.deleted) {
                         ingredient.setShoppingListStatus(Status.added);
