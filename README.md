@@ -1,4 +1,5 @@
 # BerryGoodRecipes
+![Screenshot](documentation/logo_big.png)
 A cook book app created for a university project made to be fully functional and usable.
 It is made using Java 11, JavaFX and Oracle DB (with OJDBC).
 
