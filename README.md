@@ -1,5 +1,5 @@
 # BerryGoodRecipes
-![Screenshot](documentation/logo_big.png)
+![Screenshot](documentation/logo.png)
 A cook book app created for a university project made to be fully functional and usable.
 It is made using Java 11, JavaFX and Oracle DB (with OJDBC).
 
@@ -19,4 +19,4 @@ Features:
 
 Sadly, in the current form it will not launch after clone, because of missing config file in the repository. For the time being it will not be here because of security reasons.
 
-Original, unmodified logo image is available at [www.freevector.com]
+Original, unmodified logo image is available at www.freevector.com
