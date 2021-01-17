@@ -249,7 +249,7 @@ public class DatabaseConnection {
             connection.commit();
             updateShoppingListView(user);
             connection.commit();
-            connection.close();
+            closeConnection();
         }
     }
 
