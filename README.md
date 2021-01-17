@@ -18,3 +18,5 @@ Features:
 * Choose from a plethora of themes to personalize your cook book just the way you want
 
 Sadly, in the current form it will not launch after clone, because of missing config file in the repository. For the time being it will not be here because of security reasons.
+
+Original, unmodified logo image is available at [www.freevector.com]
