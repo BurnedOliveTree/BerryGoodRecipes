@@ -16,46 +16,40 @@ import java.sql.SQLException;
 
 public class LogInWindow extends BasicPaneActions {
     private final MainPane mainPane;
-    @FXML
-    public TextField usernameField;
-    public TextField passwordField;
-    public Label errMess;
+    @FXML private TextField usernameField;
+    @FXML private TextField passwordField;
+    @FXML private Label errMess;
 
     public LogInWindow(MainPane mainPane) {
         this.mainPane = mainPane;
     }
 
-    @FXML
-    void initialize() {
+    @FXML void initialize() {
         errMess.setText("");
         Platform.runLater(() -> usernameField.requestFocus());
     }
 
-    @FXML
-    private void onLoginEnter(ActionEvent ae) {
+    @FXML private void onLoginEnter(ActionEvent ae) {
         passwordField.requestFocus();
     }
 
-    @FXML
-    private void onPasswordEnter(ActionEvent ae) throws SQLException, IOException {
+    @FXML private void onPasswordEnter(ActionEvent ae) throws SQLException, IOException {
         login(usernameField.getText(), passwordField.getText());
     }
 
-    @FXML
-    private void getDataLogin(MouseEvent event) throws SQLException, IOException {
+    @FXML private void getDataLogin(MouseEvent event) throws SQLException, IOException {
         event.consume();
         System.out.println("Hello "+usernameField.getText()+", your password is "+passwordField.getText());
         login(usernameField.getText(), passwordField.getText());
     }
 
-    @FXML
-    private void getDataRegister(MouseEvent event) throws SQLException, IOException {
+    @FXML private void getDataRegister(MouseEvent event) throws SQLException, IOException {
         event.consume();
         mainPane.activeUser = DatabaseConnection.register(usernameField.getText(), passwordField.getText(), errMess);
         checkLoginStatus();
     }
 
-    public void login(String username, String password) throws SQLException, IOException {
+    private void login(String username, String password) throws SQLException, IOException {
         mainPane.activeUser = DatabaseConnection.login(username, password, errMess);
         checkLoginStatus();
     }
