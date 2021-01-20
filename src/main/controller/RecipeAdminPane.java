@@ -13,7 +13,6 @@ import javafx.collections.ObservableList;
 import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
-import main.recipeModel.Unit;
 import main.userModel.User;
 
 import java.io.IOException;
@@ -150,7 +149,7 @@ public class RecipeAdminPane extends BasicPaneActions {
             if (quantityStr != null && unit != null && name != null){
                 if (!quantityStr.equals("") && !unit.equals("") && !name.equals("")){
                     Double quantity = Double.parseDouble(quantityStr);
-                    Ingredient ingredient = new Ingredient(null, quantity, new Unit(unit), name);
+                    Ingredient ingredient = new Ingredient(null, quantity, unit, name);
                     ingredientList.add(ingredient);
                 }
                 // @TODO KAROLINA else alert

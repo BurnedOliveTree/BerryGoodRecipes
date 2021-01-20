@@ -19,7 +19,7 @@ public class User {
     private List<String> deletedFollowed = new LinkedList<>();
     private List<Ingredient> shoppingList;
     private String defaultUnitSystem = null;
-
+    public List<String> units;
     public String getDefaultUnitSystem() {
         return defaultUnitSystem;
     }
@@ -113,7 +113,7 @@ public class User {
             //@TODO MARIANKA zamiana składników na jednostke domyślną podczas dodawania
             if (ingredient.getShoppingListStatus() != Status.deleted) {
                 Ingredient shopIngredient = showMap.get(ingredient.getName());
-                if (shopIngredient != null && shopIngredient.getUnit().getName().equals(ingredient.getUnit().getName()) ){
+                if (shopIngredient != null && shopIngredient.getUnit().equals(ingredient.getUnit()) ){
                     double quantity =  ingredient.getQuantity() + shopIngredient.getQuantity();
                     shopIngredient.setQuantity(quantity);
                 }

@@ -22,12 +22,10 @@ import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
 import main.userModel.User;
-import main.recipeModel.Unit;
-import javax.swing.plaf.nimbus.State;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class RecipePane  extends BasicPaneActions {
     private final Recipe recipe;
@@ -157,7 +155,7 @@ public class RecipePane  extends BasicPaneActions {
                 setGraphic(null);
             } else {
                 selectedIngredient = ingredient;
-                label.setText(String.format((ingredient.getQuantity() % 1 == 0)?" %1.0f %s %s":" %1.2f %s %s",  ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
+                label.setText(String.format((ingredient.getQuantity() % 1 == 0)?" %1.0f %s %s":" %1.2f %s %s",  ingredient.getQuantity(), ingredient.getUnit(), ingredient.getName()));
                 Status status = activeUser.getIngredientStatus(selectedIngredient);
                 if (status == Status.deleted || status == Status.none || status == null) {
                     view.setImage(new Image("icons/plus.png"));
@@ -186,11 +184,11 @@ public class RecipePane  extends BasicPaneActions {
         ArrayList<Ingredient> goodIngredients;
         ArrayList<Ingredient> recipeIngredients = ingredientsList;
         for (Ingredient ing : recipeIngredients) {
-            if (ing.getUnit().getName().equals("piece")) {
+            if (ing.getUnit().equals("piece")) {
                 ingredientListView.getItems().add(ing);
             } else {
-                bestUnit = DatabaseConnection.getBestUnit(activeUser.getDefaultUnitSystem(), ing.getUnit().getName(), ing.getQuantity());
-                ingredientListView.getItems().add(new Ingredient(0, DatabaseConnection.convertUnit(ing.getQuantity(), ing.getUnit().getName(), bestUnit), new Unit(bestUnit), ing.getName()));
+                bestUnit = DatabaseConnection.getBestUnit(activeUser.getDefaultUnitSystem(), ing.getUnit(), ing.getQuantity());
+                ingredientListView.getItems().add(new Ingredient(0, DatabaseConnection.convertUnit(ing.getQuantity(), ing.getUnit(), bestUnit), bestUnit, ing.getName()));
             }
             ingredientListView.setCellFactory(ingredientListView -> new ButtonCell(activeUser));
         }
@@ -198,7 +196,7 @@ public class RecipePane  extends BasicPaneActions {
         }
         else {
             for (Ingredient ingredient : ingredientsList) {
-                ingredientListView.getItems().add(String.format((ingredient.getQuantity() % 1 == 0)?"%1.0f %s %s":"%1.2f %s %s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
+                ingredientListView.getItems().add(String.format((ingredient.getQuantity() % 1 == 0)?"%1.0f %s %s":"%1.2f %s %s", ingredient.getQuantity(), ingredient.getUnit(), ingredient.getName()));
             }
         }
 
@@ -268,12 +266,11 @@ public class RecipePane  extends BasicPaneActions {
     private void changeUnit(String newUnit, ObservableList<Ingredient> selIngredients, ObservableList<Ingredient> allIngredients) throws IOException, SQLException {
         ArrayList<Ingredient> newList = new ArrayList<>();
         for (Ingredient ingredient : allIngredients){
-            if (selIngredients.contains(ingredient) && !ingredient.getUnit().getName().equals("piece")){
-                String oldUnit = ingredient.getUnit().getName();
+            if (selIngredients.contains(ingredient) && !ingredient.getUnit().equals("piece")){
+                String oldUnit = ingredient.getUnit();
                 Double oldQuantity = ingredient.getQuantity();
                 Double newQuantity = DatabaseConnection.convertUnit(oldQuantity, oldUnit, newUnit);
-                Unit tempUn = new Unit(newUnit);
-                Ingredient tempIn = new Ingredient(0, newQuantity, tempUn, ingredient.getName());
+                Ingredient tempIn = new Ingredient(0, newQuantity, newUnit, ingredient.getName());
                 newList.add(tempIn);
             }
 

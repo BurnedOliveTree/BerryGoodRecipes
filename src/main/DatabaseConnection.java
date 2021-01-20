@@ -9,7 +9,6 @@ import main.userModel.Opinion;
 import main.userModel.User;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
-import main.recipeModel.Unit;
 
 import oracle.jdbc.pool.OracleDataSource;
 
@@ -108,7 +107,7 @@ public class DatabaseConnection {
             Statement ingredientStatement = connection.createStatement();
             ResultSet ingredientResult = ingredientStatement.executeQuery("SELECT * FROM INGREDIENT_LIST WHERE INGREDIENT_LIST_ID =" + ingredientId);
             if (ingredientResult.next()); {
-                Ingredient ingredient = new Ingredient(ingredientId, resultSet.getDouble("AMOUNT"), new Unit(ingredientResult.getString("INGREDIENT_UNIT")), ingredientResult.getString("INGREDIENT_NAME"));
+                Ingredient ingredient = new Ingredient(ingredientId, resultSet.getDouble("AMOUNT"), ingredientResult.getString("INGREDIENT_UNIT"), ingredientResult.getString("INGREDIENT_NAME"));
                 ingredient.setShoppingListStatus(Status.loaded);
                 shoppingList.add(ingredient);
 
@@ -433,8 +432,7 @@ public class DatabaseConnection {
             String unitName = result.getString("INGREDIENT_UNIT");
             String name = result.getString("INGREDIENT_NAME");
             int id = result.getInt("INGREDIENT_LIST_ID");
-            Unit unit = new Unit(unitName);
-            Ingredient ingredient = new Ingredient(id, amount, unit, name);
+            Ingredient ingredient = new Ingredient(id, amount, unitName, name);
             ingredientList.add(ingredient);
         }
         result.close();
@@ -622,7 +620,7 @@ public class DatabaseConnection {
             } else if (ingredient.getShoppingListStatus() == Status.added && ingredient.getId() == null) {
                 statement.execute("BEGIN add_new_ingredient_to_shopping_list('"
                                                                     + ingredient.getName() + "', '"
-                                                                    + ingredient.getUnit().getName() + "', "
+                                                                    + ingredient.getUnit() + "', "
                                                                     + ingredient.getQuantity() + ", '"
                                                                     + activeUser.getUsername() +"'); END;");
                 ingredient.setShoppingListStatus(Status.loaded);
@@ -661,7 +659,7 @@ public class DatabaseConnection {
                 Statement ingredientStatement = connection.createStatement();
                 ResultSet ingredientResult = ingredientStatement.executeQuery("SELECT * FROM INGREDIENT_LIST WHERE INGREDIENT_LIST_ID =" + ingredientId);
                 if(ingredientResult.next()){
-                    shoppingList.put(new Ingredient(ingredientId, listResult.getDouble("AMOUNT"), new Unit(ingredientResult.getString("INGREDIENT_UNIT")), ingredientResult.getString("INGREDIENT_NAME")), listResult.getString("USERNAME"));
+                    shoppingList.put(new Ingredient(ingredientId, listResult.getDouble("AMOUNT"), ingredientResult.getString("INGREDIENT_UNIT"), ingredientResult.getString("INGREDIENT_NAME")), listResult.getString("USERNAME"));
                 }
                 ingredientResult.close();
                 ingredientStatement.close();

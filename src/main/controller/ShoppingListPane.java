@@ -15,7 +15,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
-import main.recipeModel.Unit;
 import main.userModel.User;
 
 import java.io.IOException;
@@ -87,7 +86,7 @@ public class ShoppingListPane extends BasicPaneActions {
         addButton.setOnAction(actionEvent -> {
             if (!quantity.getText().equals("") && !name.getText().equals("")) {
                 // @TODO MARIANKA available unit show
-                Ingredient ingredient = new Ingredient(null, Double.parseDouble(quantity.getText()), new Unit("gram"), name.getText());
+                Ingredient ingredient = new Ingredient(null, Double.parseDouble(quantity.getText()), "gram", name.getText());
                 ingredient.setShoppingListStatus(Status.added);
                 activeUser.addToShoppingList(ingredient);
                 quantity.clear();
@@ -151,10 +150,12 @@ public class ShoppingListPane extends BasicPaneActions {
     private void showShoppingList(String currentList) throws IOException, SQLException {
         shoppingList.getItems().clear();
         ingredientList.clear();
+
         if (currentList.equals("User")) {
             for (Ingredient ingredient : activeUser.showShoppingList().values()) {
                 ingredientList.add(ingredient);
-                shoppingList.getItems().add(String.format((ingredient.getQuantity() % 1 == 0) ? "%1.0f %s %s" : "%1.2f %s %s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
+                Ingredient temp = new Ingredient(0, DatabaseConnection.convertUnit(ingredient.getQuantity(), ingredient.getUnit(), "gram"), "gram", ingredient.getName());
+                shoppingList.getItems().add(String.format((temp.getQuantity() % 1 == 0)?"%1.0f %s %s":"%1.2f %s %s", temp.getQuantity(), "gram", temp.getName()));
             }
         } else {
             Map<Ingredient, String> ShoppingList = DatabaseConnection.getGroupShoppingList(activeUser, currentList);
@@ -163,7 +164,8 @@ public class ShoppingListPane extends BasicPaneActions {
                 String author = entry.getValue();
                 Ingredient ingredient = entry.getKey();
                 ingredientList.add(ingredient);
-                shoppingList.getItems().add(String.format((ingredient.getQuantity() % 1 == 0) ? "%1.0f %s %s\t%s" : "%1.2f %s %s\t%s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName(), author));
+                Ingredient temp = new Ingredient(0, DatabaseConnection.convertUnit(ingredient.getQuantity(), ingredient.getUnit(), "gram"), "gram", ingredient.getName());
+                shoppingList.getItems().add(String.format((temp.getQuantity() % 1 == 0)?"%1.0f %s %s\t%s":"%1.2f %s %s\t%s", temp.getQuantity(), "gram", temp.getName(), author));
             }
         }
         shoppingList.refresh();

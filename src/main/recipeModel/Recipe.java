@@ -64,7 +64,7 @@ public class Recipe {
             throw new IllegalArgumentException("Value must be greater than 0");
     }
 
-    public void editIngredientUnit(Unit unit, String ingredientName)
+    public void editIngredientUnit(String unit, String ingredientName)
     {
         Ingredient ingredient = findInIngredientList(ingredientName);
         // @TODO MARIANKA calculate method from unit
