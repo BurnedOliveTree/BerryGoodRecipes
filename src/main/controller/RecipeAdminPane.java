@@ -84,7 +84,7 @@ public class RecipeAdminPane extends BasicPaneActions {
     @FXML
     private void addIngredient() {
         TextField quantity = new TextField();
-        MenuButton unit = new MenuButton();
+        ChoiceBox unit = new ChoiceBox();
         unit.setPrefWidth(ingredientPane.getColumnConstraints().get(1).getPrefWidth());
         TextField name = new TextField();
         quantity.setPromptText("Qty");

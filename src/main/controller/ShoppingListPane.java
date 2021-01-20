@@ -1,10 +1,14 @@
 package main.controller;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -24,20 +28,20 @@ public class ShoppingListPane extends BasicPaneActions {
     private final User activeUser;
     private final BasicPaneActions returnPane;
     private final List<String> groups;
-    private String currentList = "User";
 
     @FXML private Button exitButton;
     @FXML private ImageView exitPic;
     @FXML private ListView<String> shoppingList;
     @FXML private MenuButton shareMenu;
-    @FXML private MenuButton otherListsMenu;
+    @FXML private ChoiceBox<String> otherListsMenu;
     @FXML private MenuButton addIngredient;
 
     public ShoppingListPane(User activeUser, BasicPaneActions returnPane) {
         this.activeUser = activeUser;
         this.returnPane = returnPane;
         this.groups =  activeUser.getUserGroups();
-        this.groups.add("User");
+        if (!this.groups.contains("User"))
+            this.groups.add("User");
     }
 
     @FXML
@@ -45,9 +49,9 @@ public class ShoppingListPane extends BasicPaneActions {
         if (DatabaseConnection.isThemeLight()) {
             exitPic.setImage(new Image("icons/berryExit.png"));
         }
-        showShoppingList();
+        showShoppingList("User");
         Platform.runLater(()->{
-            setShareMenu();
+            setShareMenu("User");
             // if user in group shopping list he cannot share list
             shareMenu.managedProperty().bind(shareMenu.visibleProperty());
             addIngredient.managedProperty().bind(addIngredient.visibleProperty());
@@ -79,7 +83,7 @@ public class ShoppingListPane extends BasicPaneActions {
         addButton.setPrefWidth(newIngredient.getPrefWidth());
         addButton.setOnAction(actionEvent -> {
             // @TODO other shopping list
-            if (currentList.equals("User") && !quantity.getText().equals("") && !name.getText().equals("")) {
+            if (!quantity.getText().equals("") && !name.getText().equals("")) {
                 // @TODO available unit show
                 Ingredient ingredient = new Ingredient(null, Double.parseDouble(quantity.getText()), new Unit("gram"), name.getText());
                 ingredient.setShoppingListStatus(Status.added);
@@ -87,11 +91,10 @@ public class ShoppingListPane extends BasicPaneActions {
                 quantity.clear();
                 name.clear();
                 try {
-                    showShoppingList();
+                    showShoppingList("User");
                 } catch (IOException | SQLException e) {
                     e.printStackTrace();
                 }
-
             }
         });
         newIngredient.getChildren().addAll(quantity,unit, name, addButton);
@@ -100,7 +103,7 @@ public class ShoppingListPane extends BasicPaneActions {
         addIngredient.getItems().add(customMenuItem);
     }
 
-    private void setShareMenu() {
+    private void setShareMenu(String currentList) {
         shareMenu.getItems().clear();
         if (currentList.equals("User")) {
             // only in user shopping list user can share list
@@ -130,27 +133,19 @@ public class ShoppingListPane extends BasicPaneActions {
     }
 
     private void setOtherListsMenu() {
-        otherListsMenu.getItems().clear();
-        otherListsMenu.setText(((this.currentList.equals("User"))?"My":this.currentList) + " Shopping List");
-        for (String groupName : groups) {
-            if (!groupName.equals(this.currentList)) {
-                MenuItem menuItem = new MenuItem(groupName);
-                menuItem.setOnAction(e -> {
-                    menuItem.setText(String.format("%s", groupName));
-                    currentList = groupName;
-                    setShareMenu();
-                    try {
-                        showShoppingList();
-                    } catch (IOException | SQLException ioException) {
-                        ioException.printStackTrace();
-                    }
-                });
-                otherListsMenu.getItems().add(menuItem);
+        otherListsMenu.setItems(FXCollections.observableArrayList(groups));
+        otherListsMenu.getSelectionModel().select(groups.size()-1);
+        otherListsMenu.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, t1) -> {
+            setShareMenu(groups.get(t1.intValue()));
+            try {
+                showShoppingList(groups.get(t1.intValue()));
+            } catch (IOException | SQLException e) {
+                e.printStackTrace();
             }
-        }
+        });
     }
 
-    private void showShoppingList() throws IOException, SQLException {
+    private void showShoppingList(String currentList) throws IOException, SQLException {
         shoppingList.getItems().clear();
         if (currentList.equals("User")) {
             for (Ingredient ingredient : activeUser.showShoppingList().values()) {
@@ -166,7 +161,6 @@ public class ShoppingListPane extends BasicPaneActions {
             }
         }
         shoppingList.refresh();
-        setOtherListsMenu();
     }
 
 
