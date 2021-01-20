@@ -472,16 +472,32 @@ public class DatabaseConnection {
     public static void fillOpinions(Recipe recipe, ListView opinionsView) throws SQLException, IOException {
         if (connection == null)
             setConnection();
+        opinionsView.getItems().clear();
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("select * from OPINION where RECIPE_ID = " +recipe.getId());
         while (resultSet.next()){
             String username = resultSet.getString("USERNAME");
             String score = String.valueOf(resultSet.getInt("SCORE"));
+            if (resultSet.getString("COMMENT") == null){
+                opinionsView.getItems().add(username + "    Score: " +score +"\n\n");
+            }
+            else{
+                opinionsView.getItems().add(username + "    Score: " + score + "\n" + resultSet.getString("COMMENT") + "\n");
+            }
 
-            //if (comment.equals(null)){comment = " ";}
-            String item = username + "    Score: " +score +"\n" +resultSet.getString("COMMENT") +"\n";
-            opinionsView.getItems().add(item);
         }
+        resultSet.close();
+        statement.close();
+    }
+
+    public static void deleteOpinion(Recipe recipe, String userName, ListView opinionsView) throws IOException, SQLException {
+
+        if (connection == null)
+            setConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("delete from OPINION where USERNAME = '" +userName+ "' and RECIPE_ID = " +recipe.getId());
+        connection.commit();
+        fillOpinions(recipe, opinionsView);
         resultSet.close();
         statement.close();
     }
@@ -499,9 +515,19 @@ public class DatabaseConnection {
             label.setWrapText(true);
         }
         else {
-            statement.execute("insert into REPORTED values (null,'" + username + "', '" + opinionId + "')");
-            label.setText("Done!");
+            resultSet = statement.executeQuery("select count(*) as counter from REPORTED where OPINION_ID =" + opinionId);
+            resultSet.next();
+            if (resultSet.getInt("counter") > 3){
+                statement.execute("delete from REPORTED where opinion_id = " +opinionId);
+                statement.execute("delete from OPINION where opinion_id = " +opinionId);
+                label.setText("Done!!");
+            }
+            else {
+                statement.execute("insert into REPORTED values (null,'" + username + "', '" + opinionId + "')");
+                label.setText("Done!");
+            }
         }
+        connection.commit();
         resultSet.close();
         statement.close();
     }

@@ -29,7 +29,6 @@ public class OpinionPane extends BasicPaneActions {
     public TextField commentTextField;
     public Label opinionLabel;
     public ListView opinionView;
-    public Button editButton;
     public Button deleteButton;
     public Button reportButton;
     public Label reportLabel;
@@ -50,7 +49,6 @@ public class OpinionPane extends BasicPaneActions {
         exitButton.setOnAction( e-> exitAction());
         okButton.setDisable(true);
         reportButton.setDisable(true);
-        editButton.setDisable(true);
         deleteButton.setDisable(true);
         scoreBox.setOnAction(e->okButtonActivity());
         okButton.setOnAction(e-> {
@@ -75,6 +73,15 @@ public class OpinionPane extends BasicPaneActions {
                 throwables.printStackTrace();
             }
         });
+        deleteButton.setOnAction(e->{
+            try {
+                DatabaseConnection.deleteOpinion(recipe, activeUser.getUsername(), opinionView);
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        });
     }
 
 
@@ -94,12 +101,10 @@ public class OpinionPane extends BasicPaneActions {
         if (activeUser != null){
             if (getOpinionAuthor().equals(activeUser.getUsername())){
                 deleteButton.setDisable(false);
-                editButton.setDisable(false);
                 reportButton.setDisable(true);
             }
             else {
                 deleteButton.setDisable(true);
-                editButton.setDisable(true);
                 reportButton.setDisable(false); }
         }
     }
@@ -109,6 +114,8 @@ public class OpinionPane extends BasicPaneActions {
             okButton.setDisable(false);
         }
     }
+
+
 
     private void okButtonAction() throws SQLException, IOException {
         String comment = commentTextField.getText();
