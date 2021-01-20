@@ -136,6 +136,7 @@ public class ShoppingListPane extends BasicPaneActions {
         }
     }
 
+
     private void setOtherListsMenu() {
         otherListsMenu.setItems(FXCollections.observableArrayList(groups));
         otherListsMenu.getSelectionModel().select(groups.size()-1);
@@ -182,13 +183,24 @@ public class ShoppingListPane extends BasicPaneActions {
                     e.printStackTrace();
                 }
             }
+            ingredientList.remove(shoppingList.getSelectionModel().getSelectedIndex());
             shoppingList.getItems().remove(shoppingList.getSelectionModel().getSelectedIndex());
             shoppingList.refresh();
         });
         return delete;
     }
 
-
+    @FXML
+    public void clearShoppingList() throws IOException, SQLException {
+        if (otherListsMenu.getValue().equals("User")) {
+            activeUser.removeShoppingList();
+        } else {
+            DatabaseConnection.deleteGroupShoppingList(activeUser, otherListsMenu.getValue());
+        }
+        ingredientList.clear();
+        shoppingList.getItems().clear();
+        shoppingList.refresh();
+    }
 
     @FXML   // return to proper window
     public void onExitButtonAction(){

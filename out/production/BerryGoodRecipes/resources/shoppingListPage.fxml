@@ -22,8 +22,9 @@
                 <MenuItem mnemonicParsing="false" text="Action 2" />
               </items>
             </MenuButton>
+            <Button mnemonicParsing="false" onAction="#clearShoppingList" text="Clear" />
             <MenuButton fx:id="addIngredient" mnemonicParsing="false" prefHeight="25.0" prefWidth="129.0" text="Add ingredient" />
-            <ChoiceBox fx:id="otherListsMenu" prefWidth="150.0" />
+            <ChoiceBox fx:id="otherListsMenu" />
         </items>
       </ToolBar>
    </top>

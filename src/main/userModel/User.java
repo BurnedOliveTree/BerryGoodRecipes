@@ -93,6 +93,10 @@ public class User {
         shoppingList.add(ingredient);}
     public void removeFromShoppingList(Ingredient ingredient) {
         shoppingList.remove(ingredient);}
+    public void removeShoppingList() {
+        for (Ingredient ingredient: shoppingList)
+            ingredient.setShoppingListStatus(Status.deleted);
+    }
 
     public boolean checkIfIngredientInShoppingList(Ingredient ingredient) {
         return shoppingList.contains(ingredient);
