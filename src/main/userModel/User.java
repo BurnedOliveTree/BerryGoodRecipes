@@ -44,17 +44,6 @@ public class User {
 
     }
 
-//    public void setNewPassword(String newPassword) {
-//        password = newPassword;
-//    }
-//    public void addRecipe(Recipe newRecipe) {
-//        userRecipes.add(newRecipe);
-//    }
-//    public void removeRecipe(Recipe oldRecipe) {
-//        userRecipes.remove(oldRecipe);
-//    }
-    // @TODO przenieść powyższe funkcje do BD
-
     public String getUsername() { return username; }
 
     public List<Recipe> getUserRecipes() { return userRecipes; }
@@ -121,7 +110,7 @@ public class User {
     public Map<String, Ingredient> showShoppingList() {
         Map<String, Ingredient> showMap = new HashMap<>();
         for (Ingredient ingredient: shoppingList) {
-            //@TODO zamiana składników na jednostke domyślną podczas dodawania
+            //@TODO MARIANKA zamiana składników na jednostke domyślną podczas dodawania
             if (ingredient.getShoppingListStatus() != Status.deleted) {
                 Ingredient shopIngredient = showMap.get(ingredient.getName());
                 if (shopIngredient != null && shopIngredient.getUnit().getName().equals(ingredient.getUnit().getName()) ){

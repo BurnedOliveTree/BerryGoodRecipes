@@ -324,3 +324,6 @@ commit;
 
 insert into OPINION values (null, 'Rokarolka', 1, 5, 'Ok');
 insert into REPORTED values (null, 'Ardiego', 1);
+commit;
+
+

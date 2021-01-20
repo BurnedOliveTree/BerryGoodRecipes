@@ -27,8 +27,8 @@ public class DatabaseConnection {
     static Connection connection;
     public static String theme;
 
-    // TODO addRecipe, deleteRecipe
-    // TODO inviteUser
+    // TODO KAROLINA addRecipe
+    // TODO KSAWERY inviteUser
     public DatabaseConnection() throws IOException {
         Properties prop = new Properties();
         String fileName = "src/resources/app.config";
@@ -51,6 +51,7 @@ public class DatabaseConnection {
                 prop.getProperty("app.login"), prop.getProperty("app.password"), prop.getProperty("app.host"), prop.getProperty("app.port"), prop.getProperty("app.service.name"));
         OracleDataSource ods = new OracleDataSource();
         ods.setURL(connectionURL);
+        // @TODO KSAWERY java.sql.SQLRecoverableException
         connection = ods.getConnection();
         System.out.println("Connection with database opened.");
         connection.setAutoCommit(false);
@@ -81,7 +82,7 @@ public class DatabaseConnection {
                 List<String>  groups = getGroupNames(username);
                 ArrayList<Ingredient> shoppingList = getShoppingList(username);
                 activeUser = new User(username, userRecipes, favorites, followed, shoppingList, groups);
-                // TODO add all the other columns in the future
+                // TODO KSAWERY add all the other columns in the future
                 errMess.setText("Successfully logged in!");
             } else {
                 errMess.setText("Incorrect password!");
@@ -381,7 +382,7 @@ public class DatabaseConnection {
         while (resultSet.next()) {
             Recipe tempRecipe = new Recipe(resultSet.getInt("RECIPE_ID"), resultSet.getString("NAME"), resultSet.getString("OWNER_NAME"));
             tempRecipe.setAvgRate(resultSet.getString("RATING"));
-            tempRecipe.setCost(resultSet.getInt("COST"));
+            tempRecipe.setCost(resultSet.getDouble("COST"));
             tempRecipe.setPrepareTime(resultSet.getInt("PREPARATION_TIME"));
             resultList.add(tempRecipe);
         }
@@ -413,7 +414,7 @@ public class DatabaseConnection {
         double cost = result.getDouble("COST");
         String dateAdded = result.getString("DATE_ADDED");
         int prepareTime = result.getInt("PREPARATION_TIME");
-        int portions = result.getInt("PORTIONS");
+        double portions = result.getDouble("PORTIONS");
         int accessibility = result.getInt("GROUP_ID");
 
         result = statement.executeQuery(String.format("SELECT * FROM INGREDIENT_LIST WHERE RECIPE_ID = %s", recipeId));
@@ -660,7 +661,7 @@ public class DatabaseConnection {
         return null;
     }
 
-    private static Integer getGroupIdWithName(String groupName, User activeUser) throws IOException, SQLException {
+    public static Integer getGroupIdWithName(String groupName, User activeUser) throws IOException, SQLException {
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
@@ -709,4 +710,20 @@ public class DatabaseConnection {
         statement.close();
     }
 
+    public static void addRecipe(Recipe recipe, User activeUser) throws IOException, SQLException {
+        if (connection == null)
+            setConnection();
+        Statement statement = connection.createStatement();
+        statement.execute("BEGIN add_recipe('"
+                + activeUser.getUsername() + "', '"
+                + recipe.getName() + "', '"
+                + recipe.getPrepareMethod() + "', "
+                + ((recipe.getCost() == 0.0)?"null":recipe.getCost())
+                + ", " +  recipe.getPortionNumber()
+                + ", '" + recipe.getDateAdded() + "', "
+                + ((recipe.getPrepareTime() == null)?"null":recipe.getPrepareTime()) + ", "
+                + ((recipe.getAccessibility() == null)?"null":recipe.getAccessibility()) + "); END;");
+        connection.commit();
+        statement.close();
+    }
 }

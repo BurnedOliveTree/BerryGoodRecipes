@@ -17,7 +17,7 @@ end;
 /
 create or replace function convert_unit(first_unit varchar, second_unit varchar, quantity number)
     return number
-as 
+as
     new_quantity number(9,5);
     first_ratio number(9,5);
     second_ratio number(9,5);
@@ -100,3 +100,12 @@ begin
     end loop;
 end;
 /
+-- @TODO MARIANKA trigger
+/
+create or replace procedure add_recipe(p_username varchar2, p_name varchar2, p_description varchar2,  p_cost number, p_portion number, p_date varchar2, p_prepare_time number, p_group_id number)
+as
+    v_recipe_id number;
+    begin
+        INSERT INTO RECIPE VALUES(null, p_username, p_name, p_description, p_cost, TO_DATE(p_date, 'yyyy-mm-dd hh24:mi:ss'), p_prepare_time, p_portion) returning RECIPE_ID into v_recipe_id;
+        INSERT INTO PUBLICITY VALUES(null, p_group_id, v_recipe_id);
+    end;

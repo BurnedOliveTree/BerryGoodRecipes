@@ -11,15 +11,22 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import main.DatabaseConnection;
+import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
+import main.recipeModel.Unit;
 import main.userModel.User;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class RecipeAdminPane extends BasicPaneActions {
     private final User activeUser;
+    private List<String> accessibility = new ArrayList<String>();
 
     @FXML private ScrollBar scrollIngredient;
     @FXML private TableView<Recipe> myRecipesTable;
@@ -39,6 +46,9 @@ public class RecipeAdminPane extends BasicPaneActions {
 
     public RecipeAdminPane( User activeUser) {
         this.activeUser = activeUser;
+        accessibility.add("public");
+        accessibility.add("private");
+        accessibility.addAll(activeUser.getUserGroups());
     }
 
     @FXML
@@ -68,6 +78,9 @@ public class RecipeAdminPane extends BasicPaneActions {
                 }
             }
         });
+
+        accessibilityBox.setItems(FXCollections.observableArrayList(accessibility));
+        accessibilityBox.getSelectionModel().select(0);
         setContextMenu(favTable, createDeleteFavItem());
         setContextMenu(myRecipesTable, createDeleteMyRecipeItem());
 
@@ -85,19 +98,93 @@ public class RecipeAdminPane extends BasicPaneActions {
     @FXML
     private void addIngredient() {
         TextField quantity = new TextField();
-        ChoiceBox unit = new ChoiceBox();
+        // @TODO MARIANKA - składniki dla użytkownika do wyboru podczas tworzenia
+        ArrayList<String> units = new ArrayList<>();
+        units.add("gram");
+
+        ChoiceBox<String> unit = new ChoiceBox<>();
         unit.setPrefWidth(ingredientPane.getColumnConstraints().get(1).getPrefWidth());
+        unit.setItems(FXCollections.observableArrayList(units));
         TextField name = new TextField();
         quantity.setPromptText("Qty");
         name.setPromptText("Name");
         quantity.setStyle("-fx-text-box-border: transparent");
         name.setStyle("-fx-text-box-border: transparent");
-        ingredientPane.addRow(ingredientPane.getRowCount()+1, quantity, unit, name);
+        ingredientPane.addRow(ingredientPane.getRowCount(), quantity, unit, name);
     }
 
     @FXML
-    private void saveRecipe() {
+    private void saveRecipe() throws IOException, SQLException {
+        String groupName = accessibilityBox.getSelectionModel().getSelectedItem();
+        Integer publicity = null;
+        if (!groupName.equals("private")){
+            publicity = DatabaseConnection.getGroupIdWithName(groupName, activeUser);
+        }
+        ArrayList<Ingredient> ingredientList = getIngredientList();
+        if (!titleField.getText().equals("") && !descriptionArea.getText().equals("") && ingredientList.size() != 0){
+            Recipe recipe = new Recipe(null, titleField.getText(), activeUser.getUsername(), descriptionArea.getText(), publicity, getDateAdded(), getTimePreparationInMins(), getCost(), getPortions(),ingredientList);
+            DatabaseConnection.addRecipe(recipe, activeUser);
+            titleField.clear();
+            portionField.clear();
+            costField.clear();
+            accessibilityBox.getSelectionModel().select(0);
+            hrsField.clear();
+            minsField.clear();
+            descriptionArea.clear();
+            ingredientPane.getChildren().clear();
+            for (int i = 0; i < 3; i++) {
+                addIngredient();
+            }
+        }                 // @TODO KAROLINA else alert
+    }
 
+    private ArrayList<Ingredient> getIngredientList() {
+        ArrayList<Ingredient> ingredientList = new ArrayList<>();
+        for (int i = 0; i < ingredientPane.getRowCount(); i++){
+            TextField quantityField = (TextField) ingredientPane.getChildren().get(i*3);
+            ChoiceBox<String> units = (ChoiceBox<String>) ingredientPane.getChildren().get(i*3+1);
+            TextField nameField = (TextField) ingredientPane.getChildren().get(i*3+2);
+            String quantityStr = quantityField.getText();
+            String unit = units.getSelectionModel().getSelectedItem();
+            String name = nameField.getText();
+            if (quantityStr != null && unit != null && name != null){
+                if (!quantityStr.equals("") && !unit.equals("") && !name.equals("")){
+                    Double quantity = Double.parseDouble(quantityStr);
+                    Ingredient ingredient = new Ingredient(null, quantity, new Unit(unit), name);
+                    ingredientList.add(ingredient);
+                }
+                // @TODO KAROLINA else alert
+            }
+        }
+        return ingredientList;
+    }
+
+    private Double getCost(){
+        if (costField.getText().equals(""))
+            return 0.0;
+        else
+            return Double.parseDouble(costField.getText());
+    }
+    private Double getPortions() {
+        if (portionField.getText().equals(""))
+            return 1.0;
+        else
+            return Double.parseDouble(portionField.getText());
+    }
+
+    private Integer getTimePreparationInMins() {
+        if (hrsField.getText().equals("") && minsField.getText().equals(""))
+            return null;
+        else {
+            int mins = Integer.parseInt(minsField.getText());
+            mins += 60 * Integer.parseInt(hrsField.getText());
+            return mins;
+        }
+    }
+    private String getDateAdded() {
+        LocalDateTime date = LocalDateTime.now();
+        DateTimeFormatter dateTimeFormatter =  DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return date.format(dateTimeFormatter);
     }
 
 

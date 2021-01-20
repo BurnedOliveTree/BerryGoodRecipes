@@ -355,7 +355,7 @@ public class RecipePane  extends BasicPaneActions {
         FXMLLoader loader = loadFXML(new ScalePane(this.recipe, activeUser), "/resources/scalePage.fxml");
         changeScene(scaleButton, loader);
     }
-    @FXML //@TODO always on another window?
+    @FXML //@TODO KAROLINA always on another window?
     private void onExitButtonAction(){
         exitButton.getScene().getWindow().hide();
     }

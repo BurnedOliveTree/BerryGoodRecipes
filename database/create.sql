@@ -68,7 +68,7 @@ create table RECIPE
   COST number(8, 2),
   DATE_ADDED date default sysdate not null,
   PREPARATION_TIME number(8),
-  PORTIONS number(4) default 0 not null CHECK (PORTIONS >= 0)
+  PORTIONS number(4, 2) default 0 not null CHECK (PORTIONS >= 0.0)
 
 );
 

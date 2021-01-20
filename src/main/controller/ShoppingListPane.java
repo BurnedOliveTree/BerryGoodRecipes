@@ -60,7 +60,6 @@ public class ShoppingListPane extends BasicPaneActions {
             setOtherListsMenu();
             setAddIngredient();
             setContextMenu(shoppingList, createDeleteIngredientItem());
-
         });
 
     }
@@ -86,9 +85,8 @@ public class ShoppingListPane extends BasicPaneActions {
         unit.setPrefWidth(newIngredient.getPrefWidth());
         addButton.setPrefWidth(newIngredient.getPrefWidth());
         addButton.setOnAction(actionEvent -> {
-            // @TODO other shopping list
             if (!quantity.getText().equals("") && !name.getText().equals("")) {
-                // @TODO available unit show
+                // @TODO MARIANKA available unit show
                 Ingredient ingredient = new Ingredient(null, Double.parseDouble(quantity.getText()), new Unit("gram"), name.getText());
                 ingredient.setShoppingListStatus(Status.added);
                 activeUser.addToShoppingList(ingredient);
