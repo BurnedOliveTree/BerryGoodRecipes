@@ -478,10 +478,13 @@ public class DatabaseConnection {
         while (resultSet.next()){
             String username = resultSet.getString("USERNAME");
             String score = String.valueOf(resultSet.getInt("SCORE"));
+            if (resultSet.getString("COMMENT") == null){
+                opinionsView.getItems().add(username + "    Score: " +score +"\n\n");
+            }
+            else{
+                opinionsView.getItems().add(username + "    Score: " + score + "\n" + resultSet.getString("COMMENT") + "\n");
+            }
 
-            //if (comment.equals(null)){comment = " ";}
-            String item = username + "    Score: " +score +"\n" +resultSet.getString("COMMENT") +"\n";
-            opinionsView.getItems().add(item);
         }
         resultSet.close();
         statement.close();
