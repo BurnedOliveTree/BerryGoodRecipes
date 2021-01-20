@@ -20,6 +20,7 @@ import main.userModel.User;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -28,6 +29,7 @@ public class ShoppingListPane extends BasicPaneActions {
     private final User activeUser;
     private final BasicPaneActions returnPane;
     private final List<String> groups;
+    private List<Ingredient> ingredientList = new ArrayList<>();
 
     @FXML private Button exitButton;
     @FXML private ImageView exitPic;
@@ -57,6 +59,8 @@ public class ShoppingListPane extends BasicPaneActions {
             addIngredient.managedProperty().bind(addIngredient.visibleProperty());
             setOtherListsMenu();
             setAddIngredient();
+            setContextMenu(shoppingList, createDeleteIngredientItem());
+
         });
 
     }
@@ -147,9 +151,11 @@ public class ShoppingListPane extends BasicPaneActions {
 
     private void showShoppingList(String currentList) throws IOException, SQLException {
         shoppingList.getItems().clear();
+        ingredientList.clear();
         if (currentList.equals("User")) {
             for (Ingredient ingredient : activeUser.showShoppingList().values()) {
-                shoppingList.getItems().add(String.format((ingredient.getQuantity() % 1 == 0)?"%1.0f %s %s":"%1.2f %s %s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
+                ingredientList.add(ingredient);
+                shoppingList.getItems().add(String.format((ingredient.getQuantity() % 1 == 0) ? "%1.0f %s %s" : "%1.2f %s %s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
             }
         } else {
             Map<Ingredient, String> ShoppingList = DatabaseConnection.getGroupShoppingList(activeUser, currentList);
@@ -157,10 +163,29 @@ public class ShoppingListPane extends BasicPaneActions {
             for (Map.Entry<Ingredient, String> entry : ShoppingList.entrySet()) {
                 String author = entry.getValue();
                 Ingredient ingredient = entry.getKey();
-                shoppingList.getItems().add(String.format((ingredient.getQuantity() % 1 == 0)?"%1.0f %s %s\t%s":"%1.2f %s %s\t%s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName(), author));
+                ingredientList.add(ingredient);
+                shoppingList.getItems().add(String.format((ingredient.getQuantity() % 1 == 0) ? "%1.0f %s %s\t%s" : "%1.2f %s %s\t%s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName(), author));
             }
         }
         shoppingList.refresh();
+    }
+
+    private MenuItem createDeleteIngredientItem(){
+        MenuItem delete = new MenuItem("Delete");
+        delete.setOnAction(actionEvent -> {
+            if (otherListsMenu.getValue().equals("User")) {
+                activeUser.removeFromShoppingList(ingredientList.get(shoppingList.getSelectionModel().getSelectedIndex()));
+            } else {
+                try {
+                    DatabaseConnection.deleteIngredientFromGroupShoppingList(activeUser, otherListsMenu.getValue(), ingredientList.get(shoppingList.getSelectionModel().getSelectedIndex()));
+                } catch (IOException | SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            shoppingList.getItems().remove(shoppingList.getSelectionModel().getSelectedIndex());
+            shoppingList.refresh();
+        });
+        return delete;
     }
 
 

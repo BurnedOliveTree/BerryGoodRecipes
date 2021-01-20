@@ -93,6 +93,7 @@ public class User {
         shoppingList.add(ingredient);}
     public void removeFromShoppingList(Ingredient ingredient) {
         shoppingList.remove(ingredient);}
+
     public boolean checkIfIngredientInShoppingList(Ingredient ingredient) {
         return shoppingList.contains(ingredient);
     }
@@ -111,6 +112,7 @@ public class User {
     public Ingredient getIngredientFromShoppingList(Ingredient ingredient) {
         return shoppingList.stream().filter(lookingIngredient  -> lookingIngredient.equals(ingredient)).findAny().orElse(null);
     }
+
     public void setDefaultUnitSystem(String unitSystem) { defaultUnitSystem = unitSystem; System.out.println(unitSystem); }
     public Map<String, Ingredient> showShoppingList() {
         Map<String, Ingredient> showMap = new HashMap<>();
