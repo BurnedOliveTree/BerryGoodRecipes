@@ -33,6 +33,8 @@ public class RecipeAdminPane extends BasicPaneActions {
     @FXML private TextField minsField;
     @FXML private TextArea descriptionArea;
     @FXML private ScrollPane scrollInfo;
+    @FXML private ChoiceBox<String> accessibilityBox;
+
 
     public RecipeAdminPane( User activeUser) {
         this.activeUser = activeUser;
@@ -69,6 +71,7 @@ public class RecipeAdminPane extends BasicPaneActions {
         setContextMenu(myRecipesTable, createDeleteMyRecipeItem());
 
         titleField.setPromptText("Recipe Title");
+//        accessibilityBox.setT
         hrsField.setPromptText("Hrs");
         minsField.setPromptText("Mins");
         ingredientPane.getRowConstraints().clear();

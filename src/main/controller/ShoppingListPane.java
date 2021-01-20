@@ -50,6 +50,7 @@ public class ShoppingListPane extends BasicPaneActions {
             setShareMenu();
             // if user in group shopping list he cannot share list
             shareMenu.managedProperty().bind(shareMenu.visibleProperty());
+            addIngredient.managedProperty().bind(addIngredient.visibleProperty());
             setOtherListsMenu();
             setAddIngredient();
         });
@@ -77,11 +78,14 @@ public class ShoppingListPane extends BasicPaneActions {
         unit.setPrefWidth(newIngredient.getPrefWidth());
         addButton.setPrefWidth(newIngredient.getPrefWidth());
         addButton.setOnAction(actionEvent -> {
-            if (currentList.equals("User")) {
+            // @TODO other shopping list
+            if (currentList.equals("User") && !quantity.getText().equals("") && !name.getText().equals("")) {
                 // @TODO available unit show
                 Ingredient ingredient = new Ingredient(null, Double.parseDouble(quantity.getText()), new Unit("gram"), name.getText());
                 ingredient.setShoppingListStatus(Status.added);
                 activeUser.addToShoppingList(ingredient);
+                quantity.clear();
+                name.clear();
                 try {
                     showShoppingList();
                 } catch (IOException | SQLException e) {
@@ -97,9 +101,11 @@ public class ShoppingListPane extends BasicPaneActions {
     }
 
     private void setShareMenu() {
+        shareMenu.getItems().clear();
         if (currentList.equals("User")) {
             // only in user shopping list user can share list
             shareMenu.setVisible(true);
+            addIngredient.setVisible(true);
             for (String groupName : groups) {
                 if (!groupName.equals("User")) {
                     MenuItem menuItem = new MenuItem(groupName);
@@ -109,6 +115,7 @@ public class ShoppingListPane extends BasicPaneActions {
                             activeUser.getShoppingList().clear();
                             shoppingList.getItems().clear();
                             shoppingList.refresh();
+
                         } catch (IOException | SQLException ioException) {
                             ioException.printStackTrace();
                         }
@@ -118,6 +125,7 @@ public class ShoppingListPane extends BasicPaneActions {
             }
         } else {
             shareMenu.setVisible(false);
+            addIngredient.setVisible(false);
         }
     }
 

@@ -97,6 +97,8 @@ public class User {
         return shoppingList.contains(ingredient);
     }
 
+    public void setShoppingList(List<Ingredient> shoppingList) {this.shoppingList = shoppingList;}
+
     public Status getIngredientStatus(Ingredient ingredient) {
         if (shoppingList.contains(ingredient)){
             Ingredient foundIngredient = shoppingList.stream().filter(lookingIngredient  -> lookingIngredient.equals(ingredient)).findAny().orElse(null);

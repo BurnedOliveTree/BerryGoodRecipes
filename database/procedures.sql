@@ -66,14 +66,37 @@ end;
 /
 create or replace procedure add_new_ingredient_to_shopping_list(p_name varchar2, p_unit varchar2, p_amount number, p_username varchar2)
 as
-    v_ingexist NUMBER;
+    v_exist NUMBER;
+    v_ing varchar2(40);
     v_ing_list_id NUMBER;
-    begin
-        select count(*) into v_ingexist from INGREDIENT where NAME = p_name;
-        if v_ingexist = 0 then
-            insert into INGREDIENT(NAME) values(p_name);
-        end if;
+begin
+    select count(*) into v_exist from INGREDIENT where NAME = p_name;
+    if v_exist = 0 then
+        insert into INGREDIENT(NAME) values(p_name) returning NAME into v_ing;
+    end if;
+
+    select count(*) into v_exist from INGREDIENT_LIST where RECIPE_ID is null and INGREDIENT_NAME = p_name;
+    if v_exist = 0 then
         insert into INGREDIENT_LIST(INGREDIENT_UNIT, INGREDIENT_NAME) values (p_unit,p_name) returning INGREDIENT_LIST_ID into v_ing_list_id;
+    else
+        select INGREDIENT_LIST_ID into v_ing_list_id from INGREDIENT_LIST where RECIPE_ID is null and INGREDIENT_NAME = p_name;
+    end if;
+
+    select count(*) into v_exist from SHOPPING_LIST where USERNAME = p_username and GROUP_ID is null and INGREDIENT_LIST_ID = v_ing_list_id;
+    if v_exist = 0 then
         insert into SHOPPING_LIST(AMOUNT, INGREDIENT_LIST_ID, USERNAME) values (p_amount,v_ing_list_id, p_username);
-    end;
+    end if;
+end;
+/
+create or replace procedure share_shopping_list(p_name varchar2, p_group_id number)
+as
+        v_found_ingredient number;
+begin
+    for c_info in (select INGREDIENT_LIST_ID from SHOPPING_LIST  where USERNAME like p_name and GROUP_ID is null) LOOP
+        select COUNT(*) into v_found_ingredient from SHOPPING_LIST where GROUP_ID = p_group_id and INGREDIENT_LIST_ID = c_info.INGREDIENT_LIST_ID;
+        if v_found_ingredient = 0 then
+            UPDATE SHOPPING_LIST SET GROUP_ID = p_group_id WHERE INGREDIENT_LIST_ID = c_info.INGREDIENT_LIST_ID and GROUP_ID is null and USERNAME = p_name;
+        end if;
+    end loop;
+end;
 /

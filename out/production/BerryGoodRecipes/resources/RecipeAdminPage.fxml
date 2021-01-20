@@ -73,6 +73,7 @@
                       <RowConstraints maxHeight="32.0" minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="22.666656494140625" minHeight="-Infinity" prefHeight="7.333343505859375" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="29.666656494140625" minHeight="-Infinity" prefHeight="14.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="29.666656494140625" minHeight="-Infinity" prefHeight="14.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="147.6666717529297" minHeight="64.0" prefHeight="143.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="35.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="4.0" vgrow="SOMETIMES" />
@@ -85,13 +86,13 @@
                         <Label text="  Portion:" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.vgrow="ALWAYS" />
                         <TextField fx:id="portionField" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
                         <Label text="  Preparation time:" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
-                        <TextField fx:id="hrsField" alignment="CENTER_RIGHT" GridPane.columnIndex="5" GridPane.rowIndex="3">
+                        <TextField fx:id="minsField" alignment="CENTER_RIGHT" GridPane.columnIndex="5" GridPane.rowIndex="3">
                            <GridPane.margin>
                               <Insets left="2.0" />
                            </GridPane.margin></TextField>
                         <Label text="  Cost:" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
                         <TextField fx:id="costField" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                        <TextField fx:id="minsField" alignment="CENTER_RIGHT" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                        <TextField fx:id="hrsField" alignment="CENTER_RIGHT" prefHeight="25.0" prefWidth="80.0" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
                            <GridPane.margin>
                               <Insets right="5.0" />
                            </GridPane.margin>
@@ -105,19 +106,19 @@
                            </font>
                         </Label>
                         <Separator prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="4" />
-                        <Separator prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="8" />
-                        <Label text="  Description" GridPane.columnIndex="1" GridPane.rowIndex="9">
+                        <Separator prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="9" />
+                        <Label text="  Description" GridPane.columnIndex="1" GridPane.rowIndex="10">
                            <font>
                               <Font name="System Italic" size="12.0" />
                            </font>
                         </Label>
-                        <TextArea fx:id="descriptionArea" prefWidth="471.0" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="10">
+                        <TextArea fx:id="descriptionArea" prefWidth="471.0" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="11">
                            <GridPane.margin>
                               <Insets top="5.0" />
                            </GridPane.margin>
                         </TextArea>
-                        <Button mnemonicParsing="false" onAction="#addIngredient" prefWidth="999.0" text="+ Add ingredient" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="7" />
-                        <ScrollPane fitToHeight="true" fitToWidth="true" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.halignment="CENTER" GridPane.rowIndex="6">
+                        <Button mnemonicParsing="false" onAction="#addIngredient" prefWidth="999.0" text="+ Add ingredient" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.rowIndex="8" />
+                        <ScrollPane fitToHeight="true" fitToWidth="true" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.halignment="CENTER" GridPane.rowIndex="7">
                            <content>
                               <GridPane fx:id="ingredientPane" alignment="TOP_CENTER" prefHeight="121.0" prefWidth="469.0">
                                 <columnConstraints>
@@ -134,9 +135,9 @@
                               <Insets top="5.0" />
                            </GridPane.margin>
                         </ScrollPane>
-                        <Button mnemonicParsing="false" onAction="#saveRecipe" prefHeight="25.0" prefWidth="999.0" text="Save" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="11" />
+                        <Button mnemonicParsing="false" onAction="#saveRecipe" prefHeight="25.0" prefWidth="999.0" text="Save" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="12" />
                         <Label prefHeight="17.0" prefWidth="85.0" text="  Accessibility:" GridPane.columnIndex="3" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="2" GridPane.valignment="CENTER" GridPane.vgrow="ALWAYS" />
-                        <ChoiceBox prefWidth="999.0" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+                        <ChoiceBox fx:id="accessibilityBox" prefWidth="999.0" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
                      </children>
                   </GridPane>
                </content></Tab>

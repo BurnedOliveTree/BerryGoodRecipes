@@ -99,7 +99,7 @@ public class DatabaseConnection {
 
 
 
-    private static ArrayList<Ingredient> getShoppingList(String username) throws SQLException {
+    private static ArrayList<Ingredient> getShoppingList(String username) throws SQLException, IOException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM SHOPPING_LIST WHERE USERNAME = '" + username + "' AND GROUP_ID IS NULL" );
         ArrayList<Ingredient> shoppingList = new ArrayList<>();
@@ -601,20 +601,26 @@ public class DatabaseConnection {
                                                             "    JOIN BELONG USING (GROUP_ID) " +
                                                             "    WHERE NAME = '" + groupName + "' " +
                                                             "      AND USERNAME = '" + activeUser.getUsername() +"'");
-        if (resultSet.next()){
+//        if (resultSet.next()){
+//            int groupId = resultSet.getInt("GROUP_ID");
+//            Statement update = connection.createStatement();
+//            int updateResult = update.executeUpdate("UPDATE SHOPPING_LIST SLIST SET GROUP_ID="+ groupId +
+//                                                            " WHERE USERNAME='"+ activeUser.getUsername() + "'" +
+//                                                            "  AND GROUP_ID IS NULL" +
+//                                                            "  AND NOT EXISTS" +
+//                                                            "        (SELECT *" +
+//                                                            "        FROM SHOPPING_LIST SLIST2" +
+//                                                            "        WHERE SLIST.INGREDIENT_LIST_ID = SLIST2.INGREDIENT_LIST_ID" +
+//                                                            "          AND SLIST2.GROUP_ID="+ groupId + ")");
+//            connection.commit();
+//            activeUser.getShoppingList().clear();
+//            update.close();
+//        }
+        if (resultSet.next()) {
             int groupId = resultSet.getInt("GROUP_ID");
-            Statement update = connection.createStatement();
-            int updateResult = update.executeUpdate("UPDATE SHOPPING_LIST SLIST SET GROUP_ID="+ groupId +
-                                                            " WHERE USERNAME='"+ activeUser.getUsername() + "'" +
-                                                            "  AND GROUP_ID IS NULL" +
-                                                            "  AND NOT EXISTS" +
-                                                            "        (SELECT *" +
-                                                            "        FROM SHOPPING_LIST SLIST2" +
-                                                            "        WHERE SLIST.INGREDIENT_LIST_ID = SLIST2.INGREDIENT_LIST_ID" +
-                                                            "          AND SLIST2.GROUP_ID="+ groupId + ")");
+            System.out.println("BEGIN share_shopping_list('" + activeUser.getUsername() +  "', "+  groupId + "); END;");
+            statement.execute("BEGIN share_shopping_list('" + activeUser.getUsername() +  "', "+  groupId + "); END;");
             connection.commit();
-            activeUser.getShoppingList().clear();
-            update.close();
         }
         resultSet.close();
         statement.close();
