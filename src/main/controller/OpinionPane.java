@@ -110,7 +110,7 @@ public class OpinionPane extends BasicPaneActions {
     }
 
     private void okButtonActivity(){
-        if (activeUser != null){
+        if (activeUser != null && !activeUser.getUsername().equals(recipe.getAuthor())){
             okButton.setDisable(false);
         }
     }

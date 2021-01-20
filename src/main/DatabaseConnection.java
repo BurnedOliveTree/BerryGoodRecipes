@@ -506,8 +506,15 @@ public class DatabaseConnection {
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("select OPINION_ID from OPINION where USERNAME = '" +opinionAuthor+ "' and recipe_id = " +recipeId);
+        ResultSet resultSet = statement.executeQuery("select * from OPINION where USERNAME = '" +opinionAuthor+ "' and recipe_id = " +recipeId);
         resultSet.next();
+        if (resultSet.getString("COMMENT") == null){
+            label.setText("You can't report score only opinions");
+            label.setWrapText(true);
+            resultSet.close();
+            statement.close();
+            return;
+        }
         int opinionId = resultSet.getInt("OPINION_ID");
         resultSet = statement.executeQuery("select * from REPORTED where REPORTING_USER = '"+username+ "' and OPINION_ID = " + opinionId );
         if (resultSet.next()) {
