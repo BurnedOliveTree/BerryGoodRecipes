@@ -28,7 +28,6 @@ public class DatabaseConnection {
     public static String theme;
 
     // TODO addRecipe, deleteRecipe
-    // TODO inviteUser
     public DatabaseConnection() throws IOException {
         Properties prop = new Properties();
         String fileName = "src/resources/app.config";
@@ -266,7 +265,7 @@ public class DatabaseConnection {
         return users;
     }
 
-    public static List<String> getGroupNames(String username) throws SQLException, IOException {
+    public static List<String> getGroupNames(String username) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT NAME FROM \"GROUP\" JOIN BELONG USING (GROUP_ID) WHERE USERNAME = '" + username + "' AND GROUP_ID != 0");
         List<String> groups = new ArrayList<>();
@@ -346,6 +345,16 @@ public class DatabaseConnection {
             setConnection();
         Statement statement = connection.createStatement();
         statement.execute("begin delete_account(\'"+username+"\'); end;");
+        connection.commit();
+        statement.close();
+    }
+
+    public static void invite(String username, String groupName) throws IOException, SQLException {
+        if (connection == null)
+            setConnection();
+        Statement statement = connection.createStatement();
+        String[] temp = {groupName};
+        statement.execute("insert into BELONG values (null, "+getGroupByName(temp).get(0)+", '"+username+"')");
         connection.commit();
         statement.close();
     }
