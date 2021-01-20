@@ -33,7 +33,7 @@ public class UserAdminPane extends BasicPaneActions {
         this.activeUser = activeUser;
     }
 
-    @FXML void initialize() throws SQLException, IOException {
+    @FXML void initialize() {
         if (DatabaseConnection.isThemeLight()) {
             exitPic.setImage(new Image("icons/berryExit.png"));
         }
@@ -44,24 +44,33 @@ public class UserAdminPane extends BasicPaneActions {
                 err.printStackTrace();
             }
         });
-        MenuItem menuItem = new MenuItem("Unfollow");
-        menuItem.setOnAction(actionEvent -> {
+        MenuItem unfollowMenuItem = new MenuItem("Unfollow");
+        unfollowMenuItem.setOnAction(actionEvent -> {
             String username = followedList.getSelectionModel().getSelectedItem();
             if (username != null) {
                 activeUser.unfollowUser(username);
                 refreshFollowedList();
             }
         });
-        menuItem = new MenuItem("Invite");
-        menuItem.setOnAction(actionEvent -> {
-            String username = followedList.getSelectionModel().getSelectedItem();
-            if (username != null) {
-                System.out.println("TODO, get groups and invite user to one of them");
-//                activeUser.invite();
-//                refreshWindow();
-            }
-        });
-        setContextMenu(followedList, menuItem);
+        Menu menu = new Menu("Invite");
+        List<MenuItem> menuItemList = new ArrayList<>();
+        for (String groupName: activeUser.getUserGroups()) {
+            MenuItem tempMenuItem = new MenuItem(groupName);
+            tempMenuItem.setOnAction(actionEvent -> {
+                String username = followedList.getSelectionModel().getSelectedItem();
+                if (username != null) {
+                    try {
+                        DatabaseConnection.invite(username, groupName);
+                        refreshWindow();
+                    } catch (IOException | SQLException err) {
+                        err.printStackTrace();
+                    }
+                }
+            });
+            menuItemList.add(tempMenuItem);
+        }
+        menu.getItems().addAll(menuItemList);
+        setContextMenu(followedList, unfollowMenuItem, menu);
     }
 
     @FXML private void onRefreshButtonClick() throws IOException, SQLException {
