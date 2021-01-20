@@ -14,6 +14,7 @@ import main.DatabaseConnection;
 import main.recipeModel.Recipe;
 import main.userModel.User;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Optional;
 
@@ -167,7 +168,12 @@ public class RecipeAdminPane extends BasicPaneActions {
 
                 Optional<ButtonType> result = alert.showAndWait();
                 if (result.get() == ButtonType.OK){
-                    // @TODO usun przepis
+                    try {
+                        DatabaseConnection.deleteRecipe(activeUser, recipe);
+                        myRecipesTable.getItems().remove(recipe);
+                    } catch (IOException | SQLException e) {
+                        e.printStackTrace();
+                    }
                     myRecipesTable.refresh();
                 }
             }

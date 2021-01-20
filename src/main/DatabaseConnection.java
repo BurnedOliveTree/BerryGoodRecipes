@@ -699,4 +699,14 @@ public class DatabaseConnection {
             statement.close();
         }
     }
+
+    public static void deleteRecipe(User activeUser, Recipe recipe) throws IOException, SQLException {
+        if (connection == null)
+            setConnection();
+        Statement statement = connection.createStatement();
+        statement.execute("DELETE RECIPE WHERE OWNER_NAME='" + activeUser.getUsername() + "' AND NAME='" + recipe.getName() +"'");
+        connection.commit();
+        statement.close();
+    }
+
 }

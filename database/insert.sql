@@ -321,3 +321,6 @@ insert into PUBLICITY values(null, 0, 15);
 insert into PUBLICITY values(null, 0, 16);
 insert into PUBLICITY values(null, 0, 17);
 commit;
+
+insert into OPINION values (null, 'Rokarolka', 1, 5, 'Ok');
+insert into REPORTED values (null, 'Ardiego', 1);
