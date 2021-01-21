@@ -120,19 +120,41 @@ public class RecipeAdminPane extends BasicPaneActions {
         if (!titleField.getText().equals("") && !descriptionArea.getText().equals("") && ingredientList.size() != 0){
             Recipe recipe = new Recipe(null, titleField.getText(), activeUser.getUsername(), descriptionArea.getText(), publicity, getDateAdded(), getTimePreparationInMins(), getCost(), getPortions(),ingredientList);
             DatabaseConnection.addRecipe(recipe, activeUser);
-            titleField.clear();
-            portionField.clear();
-            costField.clear();
-            accessibilityBox.getSelectionModel().select(0);
-            hrsField.clear();
-            minsField.clear();
-            descriptionArea.clear();
-            ingredientPane.getChildren().clear();
-            for (int i = 0; i < 3; i++) {
-                addIngredient();
-            }
-        }                 // @TODO KAROLINA else alert
+            clearRecipe();
+        } else {
+            String warining = "";
+            if (titleField.getText().equals(""))
+                warining += "Please enter title\n";
+            if (descriptionArea.getText().equals(""))
+                warining += "Please enter description.\n";
+            if (ingredientList.size() == 0)
+                warining += "Please add 1 or more ingredient";
+            showWarning(warining);
+        }
     }
+
+    @FXML
+    private void clearRecipe() {
+        titleField.clear();
+        portionField.clear();
+        costField.clear();
+        accessibilityBox.getSelectionModel().select(0);
+        hrsField.clear();
+        minsField.clear();
+        descriptionArea.clear();
+        ingredientPane.getChildren().clear();
+        for (int i = 0; i < 3; i++) {
+            addIngredient();
+        }
+    }
+
+    private void showWarning(String warning) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle("Not enough information!");
+        alert.setContentText(warning);
+        alert.showAndWait();
+    }
+
 
     private ArrayList<Ingredient> getIngredientList() {
         ArrayList<Ingredient> ingredientList = new ArrayList<>();
@@ -149,7 +171,6 @@ public class RecipeAdminPane extends BasicPaneActions {
                     Ingredient ingredient = new Ingredient(null, quantity, unit, name);
                     ingredientList.add(ingredient);
                 }
-                // @TODO KAROLINA else alert
             }
         }
         return ingredientList;
