@@ -13,13 +13,11 @@ import main.recipeModel.Unit;
 
 import oracle.jdbc.pool.OracleDataSource;
 
+import javax.swing.plaf.nimbus.State;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.*;
 
 
@@ -729,17 +727,35 @@ public class DatabaseConnection {
     public static void addRecipe(Recipe recipe, User activeUser) throws IOException, SQLException {
         if (connection == null)
             setConnection();
-        Statement statement = connection.createStatement();
-        statement.execute("BEGIN add_recipe('"
-                + activeUser.getUsername() + "', '"
-                + recipe.getName() + "', '"
-                + recipe.getPrepareMethod() + "', "
-                + ((recipe.getCost() == 0.0)?"null":recipe.getCost())
-                + ", " +  recipe.getPortionNumber()
-                + ", '" + recipe.getDateAdded() + "', "
-                + ((recipe.getPrepareTime() == null)?"null":recipe.getPrepareTime()) + ", "
-                + ((recipe.getAccessibility() == null)?"null":recipe.getAccessibility()) + "); END;");
+        CallableStatement statement = connection.prepareCall("{ call add_recipe(?, ?, ?, ?, ?, ?, ?, ?, ?) }");
+        statement.setString(1, activeUser.getUsername());
+        statement.setString(2, recipe.getName());
+        statement.setString(3, recipe.getPrepareMethod());
+        if (recipe.getCost() == 0.0)
+            statement.setNull(4 ,  Types.NULL);
+        else
+            statement.setDouble(4, recipe.getCost());
+        statement.setDouble(5, recipe.getPortionNumber());
+        statement.setString(6, recipe.getDateAdded());
+        if (recipe.getPrepareTime() == null)
+            statement.setNull(7, Types.NULL);
+        else
+            statement.setInt(7, recipe.getPrepareTime());
+        if (recipe.getAccessibility() == null)
+            statement.setNull(8, Types.NULL);
+        else
+            statement.setInt(8, recipe.getAccessibility());
+        statement.registerOutParameter(9, Types.NUMERIC);
+        statement.execute();
+        int recipe_id = statement.getInt(9);
         connection.commit();
         statement.close();
+        Statement ingredientStatement = connection.createStatement();
+        for (Ingredient ingredient: recipe.getIngredientList()){
+            System.out.println("BEGIN add_ingredient_to_recipe('" + ingredient.getName() +  "', '" + ingredient.getUnit() +"', "+ ingredient.getQuantity() +  ", " +  recipe_id + "); END;");
+            ingredientStatement.execute("BEGIN add_ingredient_to_recipe('" + ingredient.getName() +  "', '" + ingredient.getUnit().getName() +"', "+ ingredient.getQuantity() +  ", " +  recipe_id + "); END;");
+        }
+        connection.commit();
+        ingredientStatement.close();
     }
 }
