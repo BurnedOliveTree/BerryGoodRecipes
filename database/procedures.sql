@@ -108,7 +108,14 @@ begin
     end loop;
 end;
 /
--- @TODO MARIANKA trigger
+create or replace trigger add_favourites_tg
+after insert on FOLLOWED
+for each row
+begin
+    for rec_id in (select RECIPE_ID  from RECIPE where OWNER_NAME = :new.followed_username) loop
+        insert into FAVORITE values(null, :new.following_username, rec_id.RECIPE_ID);
+    end loop;
+end;
 /
 create or replace procedure add_recipe(p_username IN varchar2, p_name IN varchar2, p_description IN varchar2,  p_cost IN number, p_portion IN number, p_date IN varchar2, p_prepare_time IN number, p_group_id IN number, r_recipe_id out number)
 as
