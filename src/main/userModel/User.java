@@ -1,10 +1,15 @@
 package main.userModel;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import main.DatabaseConnection;
 import main.controller.Status;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
 
+import java.io.IOException;
 import java.nio.channels.MulticastChannel;
+import java.sql.SQLException;
 import java.util.*;
 
 public class User {
@@ -19,14 +24,14 @@ public class User {
     private List<String> deletedFollowed = new LinkedList<>();
     private List<Ingredient> shoppingList;
     private String defaultUnitSystem = null;
-    public List<String> units;
+    public ObservableList<String> units = FXCollections.observableArrayList();
     public String getDefaultUnitSystem() {
         return defaultUnitSystem;
     }
 
 
 
-    public User(String username) {
+    public User(String username) throws IOException, SQLException {
         this.username = username;
         this.userRecipes = new ArrayList<>();
         this.favorites = new LinkedList<>();
@@ -34,14 +39,18 @@ public class User {
         this.shoppingList = new ArrayList<Ingredient>();
     }
 
-    public User(String argUsername, List<Recipe> userRecipes, List<Recipe> favorites, List<String> followed, ArrayList<Ingredient> shoppingList, List<String> userGroups) {
+    public ObservableList<String> getUnits() {
+        return units;
+    }
+
+    public User(String argUsername, List<Recipe> userRecipes, List<Recipe> favorites, List<String> followed, ArrayList<Ingredient> shoppingList, List<String> userGroups, ObservableList<String> units) {
         username = argUsername;
         this.userRecipes = userRecipes;
         this.favorites = favorites;
         this.followed = followed;
         this.shoppingList = shoppingList;
         this.userGroups = userGroups;
-
+        this.units = units;
     }
 
     public String getUsername() { return username; }

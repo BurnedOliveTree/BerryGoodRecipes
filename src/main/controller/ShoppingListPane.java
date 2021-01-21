@@ -69,6 +69,10 @@ public class ShoppingListPane extends BasicPaneActions {
         VBox newIngredient = new VBox();
         TextField quantity = new TextField();
         MenuButton unit = new MenuButton();
+        for (String item : activeUser.getUnits()) {
+            MenuItem temp = new MenuItem(item);
+            unit.getItems().add(temp);
+        }
         TextField name = new TextField();
         Button addButton = new Button();
         quantity.setPromptText("Qty");

@@ -79,7 +79,7 @@ public class DatabaseConnection {
                 List<String> followed = getUserFollowed(username);
                 List<String>  groups = getGroupNames(username);
                 ArrayList<Ingredient> shoppingList = getShoppingList(username);
-                activeUser = new User(username, userRecipes, favorites, followed, shoppingList, groups);
+                activeUser = new User(username, userRecipes, favorites, followed, shoppingList, groups, DatabaseConnection.getUnits());
                 // TODO KSAWERY add all the other columns in the future
                 errMess.setText("Successfully logged in!");
             } else {

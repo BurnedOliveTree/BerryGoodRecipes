@@ -246,7 +246,7 @@ public class RecipePane  extends BasicPaneActions {
     public Menu createChangeUnit() throws IOException, SQLException {
         Menu change = new Menu("Change unit");
         change.getItems().clear();
-        for (String item : DatabaseConnection.getUnits()){
+        for (String item : activeUser.getUnits()){
             MenuItem temp = new MenuItem(item);
             change.getItems().add(temp);
             temp.setOnAction(e -> {

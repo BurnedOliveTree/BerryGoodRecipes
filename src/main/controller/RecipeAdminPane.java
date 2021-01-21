@@ -97,10 +97,7 @@ public class RecipeAdminPane extends BasicPaneActions {
     @FXML
     private void addIngredient() {
         TextField quantity = new TextField();
-        // @TODO MARIANKA - składniki dla użytkownika do wyboru podczas tworzenia
-        ArrayList<String> units = new ArrayList<>();
-        units.add("gram");
-
+        ObservableList<String> units = activeUser.getUnits();
         ChoiceBox<String> unit = new ChoiceBox<>();
         unit.setPrefWidth(ingredientPane.getColumnConstraints().get(1).getPrefWidth());
         unit.setItems(FXCollections.observableArrayList(units));
