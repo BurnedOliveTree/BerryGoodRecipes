@@ -343,6 +343,11 @@ public class RecipePane  extends BasicPaneActions {
     }
 
     @FXML
+    private void saveRecipe() {
+        recipe.saveToFile("Recipe.txt"); // @todo karolina
+    }
+
+    @FXML
     private void onCommentButtonAction() {
         FXMLLoader loader = loadFXML(new OpinionPane(this.recipe, activeUser), "/resources/opinionPage.fxml");
         changeScene(commentButton, loader);

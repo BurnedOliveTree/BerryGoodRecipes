@@ -61,6 +61,7 @@
                         </ImageView>
                     </graphic>
                 </Button>
+            <Button mnemonicParsing="false" onAction="#saveRecipe" text="Save" />
             </items>
         </ToolBar>
     </top>

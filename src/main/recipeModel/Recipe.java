@@ -100,13 +100,13 @@ public class Recipe {
             FileWriter file = new FileWriter(filename);
             file.write(this.name + "\nIngredients:\n");
             for (Ingredient ingredient: this.ingredientList){
-                file.write(ingredient.getQuantity() + ingredient.getUnit().toString() + ingredient.getName());
+                file.write(ingredient.getQuantity() + " " + ingredient.getUnit() + " "  + ingredient.getName() + "\n" );
             }
             file.write("\nPreparation method:\n" + this.prepareMethod);
-            file.write("Additional information:" );
-            file.write("Cost: " + this.cost);
-            file.write("Preparation time: " + this.prepareTime);
-            file.write("Number of portions" + this.portionNumber);
+            file.write("\nAdditional information: \n");
+            file.write("Cost: " + this.cost + "\n");
+            file.write("Preparation time: " + this.prepareTime + "\n");
+            file.write("Number of portions: " + this.portionNumber + "\n");
             file.close();
         } catch (IOException err) {
             System.out.println("Error: ");

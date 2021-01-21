@@ -24,7 +24,6 @@ public class DatabaseConnection {
     static Connection connection;
     public static String theme;
 
-    // TODO KAROLINA addRecipe
     public DatabaseConnection() throws IOException {
         Properties prop = new Properties();
         String fileName = "src/resources/app.config";
