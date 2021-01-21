@@ -95,10 +95,9 @@ public class Recipe {
 
 
     public void saveToFile(String filename) {
-        // @TODO KAROLINA update and add to GUI
         try {
             FileWriter file = new FileWriter(filename);
-            file.write(this.name + "\nIngredients:\n");
+            file.write(this.name + "\n\nIngredients:\n");
             for (Ingredient ingredient: this.ingredientList){
                 file.write(ingredient.getQuantity() + " " + ingredient.getUnit() + " "  + ingredient.getName() + "\n" );
             }

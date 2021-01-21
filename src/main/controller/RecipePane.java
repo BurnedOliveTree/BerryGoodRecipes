@@ -344,7 +344,7 @@ public class RecipePane  extends BasicPaneActions {
 
     @FXML
     private void saveRecipe() {
-        recipe.saveToFile("Recipe.txt"); // @todo karolina
+        recipe.saveToFile( "./savedRecipes/" + recipe.getName() + ".txt");
     }
 
     @FXML
