@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
@@ -202,7 +203,15 @@ public class MainPane extends BasicPaneActions {
             tempButton.setTextAlignment(TextAlignment.CENTER);
             tempButton.setPrefSize(192, 64);
             int tempInt = recipe.getId();
-            tempButton.setOnMouseClicked(e -> onRecipeClick(tempInt));
+            tempButton.setOnMouseClicked(mouseEvent -> {
+                if(mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+                    FXMLLoader loader = loadFXML(new RecipePane(DatabaseConnection.getSelectedRecipe(tempInt), activeUser, new MainPane(activeUser)), "/resources/recipePage.fxml");
+                    changeScene(basketButton, loader);
+                } else if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
+                    FXMLLoader loader = loadFXML(new RecipePane(DatabaseConnection.getSelectedRecipe(tempInt), activeUser, null), "/resources/recipePage.fxml");
+                    changeScene(null, loader);
+                }
+        });
             tempPane.add(tempButton, 0, 0, 6, 2);
             String tempString = recipe.getAvgRate();
             if (tempString == null)
@@ -254,11 +263,6 @@ public class MainPane extends BasicPaneActions {
         mouseEvent.consume();
         FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, new MainPane(activeUser)), "/shoppingListPage.fxml");
         changeScene(basketButton, loader);
-    }
-
-    public void onRecipeClick(int RecipeID) {
-        FXMLLoader loader = loadFXML(new RecipePane(DatabaseConnection.getSelectedRecipe(RecipeID), activeUser), "/resources/recipePage.fxml");
-        changeScene(loader);
     }
 
     @FXML

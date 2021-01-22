@@ -1,10 +1,14 @@
 package main.userModel;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import main.controller.Status;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
 
-import java.nio.channels.MulticastChannel;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.*;
 
 public class User {
@@ -19,14 +23,14 @@ public class User {
     private List<String> deletedFollowed = new LinkedList<>();
     private List<Ingredient> shoppingList;
     private String defaultUnitSystem = null;
-
+    public ObservableList<String> units = FXCollections.observableArrayList();
     public String getDefaultUnitSystem() {
         return defaultUnitSystem;
     }
 
 
 
-    public User(String username) {
+    public User(String username) throws IOException, SQLException {
         this.username = username;
         this.userRecipes = new ArrayList<>();
         this.favorites = new LinkedList<>();
@@ -34,26 +38,19 @@ public class User {
         this.shoppingList = new ArrayList<Ingredient>();
     }
 
-    public User(String argUsername, List<Recipe> userRecipes, List<Recipe> favorites, List<String> followed, ArrayList<Ingredient> shoppingList, List<String> userGroups) {
+    public ObservableList<String> getUnits() {
+        return units;
+    }
+
+    public User(String argUsername, List<Recipe> userRecipes, List<Recipe> favorites, List<String> followed, ArrayList<Ingredient> shoppingList, List<String> userGroups, ObservableList<String> units) {
         username = argUsername;
         this.userRecipes = userRecipes;
         this.favorites = favorites;
         this.followed = followed;
         this.shoppingList = shoppingList;
         this.userGroups = userGroups;
-
+        this.units = units;
     }
-
-//    public void setNewPassword(String newPassword) {
-//        password = newPassword;
-//    }
-//    public void addRecipe(Recipe newRecipe) {
-//        userRecipes.add(newRecipe);
-//    }
-//    public void removeRecipe(Recipe oldRecipe) {
-//        userRecipes.remove(oldRecipe);
-//    }
-    // @TODO przenieść powyższe funkcje do BD
 
     public String getUsername() { return username; }
 
@@ -93,6 +90,11 @@ public class User {
         shoppingList.add(ingredient);}
     public void removeFromShoppingList(Ingredient ingredient) {
         shoppingList.remove(ingredient);}
+    public void removeShoppingList() {
+        for (Ingredient ingredient: shoppingList)
+            ingredient.setShoppingListStatus(Status.deleted);
+    }
+
     public boolean checkIfIngredientInShoppingList(Ingredient ingredient) {
         return shoppingList.contains(ingredient);
     }
@@ -111,14 +113,15 @@ public class User {
     public Ingredient getIngredientFromShoppingList(Ingredient ingredient) {
         return shoppingList.stream().filter(lookingIngredient  -> lookingIngredient.equals(ingredient)).findAny().orElse(null);
     }
+
     public void setDefaultUnitSystem(String unitSystem) { defaultUnitSystem = unitSystem; System.out.println(unitSystem); }
     public Map<String, Ingredient> showShoppingList() {
         Map<String, Ingredient> showMap = new HashMap<>();
         for (Ingredient ingredient: shoppingList) {
-            //@TODO zamiana składników na jednostke domyślną podczas dodawania
+            //@TODO MARIANKA zamiana składników na jednostke domyślną podczas dodawania
             if (ingredient.getShoppingListStatus() != Status.deleted) {
                 Ingredient shopIngredient = showMap.get(ingredient.getName());
-                if (shopIngredient != null && shopIngredient.getUnit().getName().equals(ingredient.getUnit().getName()) ){
+                if (shopIngredient != null && shopIngredient.getUnit().equals(ingredient.getUnit()) ){
                     double quantity =  ingredient.getQuantity() + shopIngredient.getQuantity();
                     shopIngredient.setQuantity(quantity);
                 }

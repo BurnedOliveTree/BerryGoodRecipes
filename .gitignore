@@ -3,3 +3,5 @@ BerryGoodRecipes.iml
 /src/resources/app.config
 /out/production/BerryGoodRecipes/app.config
 /out/production/BerryGoodRecipes/resources/app.config
+/out/
+/savedRecipes/

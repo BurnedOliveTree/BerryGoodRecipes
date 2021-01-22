@@ -5,6 +5,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -22,16 +23,18 @@ import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
 import main.userModel.User;
-import main.recipeModel.Unit;
-import javax.swing.plaf.nimbus.State;
+
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class RecipePane  extends BasicPaneActions {
     private final Recipe recipe;
     private final User activeUser;
+    private final BasicPaneActions returnPane;
+
     @FXML private TextFlow descText;
     @FXML private ImageView ExitPic;
     @FXML private ImageView ScalePic;
@@ -53,10 +56,14 @@ public class RecipePane  extends BasicPaneActions {
     @FXML private Button commentButton;
     @FXML private Button scaleButton;
     @FXML private VBox propertyBox;
+    @FXML private ToggleButton deleteButton;
+    @FXML private ToggleButton saveButton;
+    @FXML private HBox saveDeleteBox;
 
-    public RecipePane(Recipe recipe, User activeUser) {
+    public RecipePane(Recipe recipe, User activeUser, BasicPaneActions returnPane) {
         this.recipe = recipe;
         this.activeUser = activeUser;
+        this.returnPane = returnPane;
     }
 
     @FXML
@@ -81,7 +88,6 @@ public class RecipePane  extends BasicPaneActions {
         authorLabel.setText("Author: " + this.recipe.getAuthor());
         dateAddedLabel.setText("Date added: " + this.recipe.getDateAdded());
         setPortionAreaProperty();
-
         if (this.recipe.getCost() == 0) {
             costLabel.setText("Cost: Unknown");
         } else {
@@ -92,6 +98,12 @@ public class RecipePane  extends BasicPaneActions {
             timePrepLabel.setText("Preparation time: Unknown");
         } else {
             timePrepLabel.setText("Preparation time: " + this.recipe.getPrepareTime());
+        }
+        Files.createDirectories(Paths.get("./savedRecipes/"));
+        if(Files.exists(Paths.get(getRecipeFileDirectory()))) {
+            setSavedRecipe();
+        } else {
+            setSaveRecipe();
         }
 
         // options for logged in users
@@ -157,7 +169,7 @@ public class RecipePane  extends BasicPaneActions {
                 setGraphic(null);
             } else {
                 selectedIngredient = ingredient;
-                label.setText(String.format((ingredient.getQuantity() % 1 == 0)?" %1.0f %s %s":" %1.2f %s %s",  ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
+                label.setText(String.format((ingredient.getQuantity() % 1 == 0)?" %1.0f %s %s":" %1.2f %s %s",  ingredient.getQuantity(), ingredient.getUnit(), ingredient.getName()));
                 Status status = activeUser.getIngredientStatus(selectedIngredient);
                 if (status == Status.deleted || status == Status.none || status == null) {
                     view.setImage(new Image("icons/plus.png"));
@@ -186,11 +198,11 @@ public class RecipePane  extends BasicPaneActions {
         ArrayList<Ingredient> goodIngredients;
         ArrayList<Ingredient> recipeIngredients = ingredientsList;
         for (Ingredient ing : recipeIngredients) {
-            if (ing.getUnit().getName().equals("piece")) {
+            if (ing.getUnit().equals("piece")) {
                 ingredientListView.getItems().add(ing);
             } else {
-                bestUnit = DatabaseConnection.getBestUnit(activeUser.getDefaultUnitSystem(), ing.getUnit().getName(), ing.getQuantity());
-                ingredientListView.getItems().add(new Ingredient(0, DatabaseConnection.convertUnit(ing.getQuantity(), ing.getUnit().getName(), bestUnit), new Unit(bestUnit), ing.getName()));
+                bestUnit = DatabaseConnection.getBestUnit(activeUser.getDefaultUnitSystem(), ing.getUnit(), ing.getQuantity());
+                ingredientListView.getItems().add(new Ingredient(0, DatabaseConnection.convertUnit(ing.getQuantity(), ing.getUnit(), bestUnit), bestUnit, ing.getName()));
             }
             ingredientListView.setCellFactory(ingredientListView -> new ButtonCell(activeUser));
         }
@@ -198,7 +210,7 @@ public class RecipePane  extends BasicPaneActions {
         }
         else {
             for (Ingredient ingredient : ingredientsList) {
-                ingredientListView.getItems().add(String.format((ingredient.getQuantity() % 1 == 0)?"%1.0f %s %s":"%1.2f %s %s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
+                ingredientListView.getItems().add(String.format((ingredient.getQuantity() % 1 == 0)?"%1.0f %s %s":"%1.2f %s %s", ingredient.getQuantity(), ingredient.getUnit(), ingredient.getName()));
             }
         }
 
@@ -248,7 +260,7 @@ public class RecipePane  extends BasicPaneActions {
     public Menu createChangeUnit() throws IOException, SQLException {
         Menu change = new Menu("Change unit");
         change.getItems().clear();
-        for (String item : DatabaseConnection.getUnits()){
+        for (String item : activeUser.getUnits()){
             MenuItem temp = new MenuItem(item);
             change.getItems().add(temp);
             temp.setOnAction(e -> {
@@ -268,12 +280,11 @@ public class RecipePane  extends BasicPaneActions {
     private void changeUnit(String newUnit, ObservableList<Ingredient> selIngredients, ObservableList<Ingredient> allIngredients) throws IOException, SQLException {
         ArrayList<Ingredient> newList = new ArrayList<>();
         for (Ingredient ingredient : allIngredients){
-            if (selIngredients.contains(ingredient) && !ingredient.getUnit().getName().equals("piece")){
-                String oldUnit = ingredient.getUnit().getName();
+            if (selIngredients.contains(ingredient) && !ingredient.getUnit().equals("piece")){
+                String oldUnit = ingredient.getUnit();
                 Double oldQuantity = ingredient.getQuantity();
                 Double newQuantity = DatabaseConnection.convertUnit(oldQuantity, oldUnit, newUnit);
-                Unit tempUn = new Unit(newUnit);
-                Ingredient tempIn = new Ingredient(0, newQuantity, tempUn, ingredient.getName());
+                Ingredient tempIn = new Ingredient(ingredient.getId(), newQuantity, newUnit, ingredient.getName());
                 newList.add(tempIn);
             }
 
@@ -346,30 +357,70 @@ public class RecipePane  extends BasicPaneActions {
     }
 
     @FXML
+    private void saveRecipe() {
+        setSavedRecipe();
+        recipe.saveToFile( getRecipeFileDirectory());
+    }
+
+    private void setSavedRecipe(){
+        deleteButton.setStyle("-fx-background-radius: 50;");
+        deleteButton.setText("");
+        saveButton.setStyle("-fx-background-color: transparent;");
+        saveButton.setPrefWidth(50);
+        deleteButton.setPrefWidth(35);
+        saveDeleteBox.setStyle("-fx-background-color: -fx-accent;-fx-background-radius: 50;");
+        saveButton.setText("Saved");
+    }
+
+    private void setSaveRecipe(){
+        saveButton.setStyle("-fx-background-radius: 50;");
+        saveButton.setText("");
+        saveButton.setPrefWidth(35);
+        deleteButton.setPrefWidth(50);
+        deleteButton.setStyle("-fx-background-color: transparent;");
+        saveDeleteBox.setStyle("-fx-background-color: transparent;-fx-background-radius: 50;-fx-border-radius: 50; -fx-border-width: 0.2;-fx-border-color: grey;");
+        deleteButton.setText("Save");
+    }
+
+    @FXML
+    private void deleteRecipe() {
+        setSaveRecipe();
+        recipe.deleteFile( getRecipeFileDirectory());
+    }
+
+    private String getRecipeFileDirectory() {
+        return "./savedRecipes/" + recipe.getName() +"-"+ recipe.getAuthor() + ".txt";
+    }
+
+    @FXML
     private void onCommentButtonAction() {
-        FXMLLoader loader = loadFXML(new OpinionPane(this.recipe, activeUser), "/resources/opinionPage.fxml");
+        FXMLLoader loader = loadFXML(new OpinionPane(this.recipe, activeUser, this), "/resources/opinionPage.fxml");
         changeScene(commentButton, loader);
     }
     @FXML
     private void onScaleButtonAction() {
-        FXMLLoader loader = loadFXML(new ScalePane(this.recipe, activeUser), "/resources/scalePage.fxml");
+        FXMLLoader loader = loadFXML(new ScalePane(this.recipe, activeUser, this), "/resources/scalePage.fxml");
         changeScene(scaleButton, loader);
     }
-    @FXML //@TODO always on another window?
-    private void onExitButtonAction(){
-        exitButton.getScene().getWindow().hide();
+    @FXML
+    private void onExitButtonAction() {
+        if (returnPane != null) {
+            FXMLLoader loader = loadFXML(returnPane, "/resources/mainPage.fxml");
+            changeScene(exitButton, loader);
+        } else {
+            exitButton.getScene().getWindow().hide();
+        }
     }
 
     @FXML
     private void onShoppingListButtonAction() throws IOException, SQLException {
-        FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, new RecipePane(recipe, activeUser)), "/resources/shoppingListPage.fxml");
+        FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, this), "/resources/shoppingListPage.fxml");
         changeScene(shoppingListButton, loader);
     }
 
     @FXML
     private void onTimeButtonAction() throws IOException {
         FXMLLoader loader = loadFXML(new TimerPane(), "/resources/timerPage.fxml");
-
         Scene scene = new Scene(loader.load());
         Stage stage = new Stage();
         scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());

@@ -21,12 +21,14 @@ public class ScalePane extends BasicPaneActions {
     private final Recipe recipe;
     private final User activeUser;
     private final Converter converter;
+    private final BasicPaneActions returnPane;
     ObservableList<String> shapeList = FXCollections.observableArrayList("Round", "Rectangular");
 
-    public ScalePane(Recipe recipe, User activeUser) {
+    public ScalePane(Recipe recipe, User activeUser, BasicPaneActions returnPane) {
         this.recipe = recipe;
         this.activeUser = activeUser;
         this.converter = new Converter();
+        this.returnPane = returnPane;
     }
 
     @FXML
@@ -184,6 +186,6 @@ public class ScalePane extends BasicPaneActions {
     }
 
     private void onAction() {
-        FXMLLoader loader = loadFXML(new RecipePane(this.recipe, activeUser), "/resources/recipePage.fxml");
+        FXMLLoader loader = loadFXML(returnPane, "/resources/recipePage.fxml");
         changeScene(exitButton, loader);
     }}

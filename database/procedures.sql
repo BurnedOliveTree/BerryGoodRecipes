@@ -17,7 +17,7 @@ end;
 /
 create or replace function convert_unit(first_unit varchar, second_unit varchar, quantity number)
     return number
-as 
+as
     new_quantity number(9,5);
     first_ratio number(9,5);
     second_ratio number(9,5);
@@ -52,7 +52,7 @@ begin
     delete from FAVORITE where USERNAME = u_id;
     delete from RECIPE where OWNER_NAME = u_id;
     delete from "USER" where USERNAME = u_id;
---  TODO delete_group if no one belongs there
+--  TODO KSAWERY delete_group if no one belongs there
 end;
 /
 create or replace procedure delete_group(g_id number)
@@ -64,24 +64,32 @@ begin
     delete from "GROUP" where GROUP_ID = g_id;
 end;
 /
-create or replace procedure add_new_ingredient_to_shopping_list(p_name varchar2, p_unit varchar2, p_amount number, p_username varchar2)
+create or replace procedure add_ingredient_to_ingredient_list(p_name IN varchar2, p_unit IN varchar2, r_ing_list_id OUT NUMBER)
 as
     v_exist NUMBER;
     v_ing varchar2(40);
-    v_ing_list_id NUMBER;
 begin
     select count(*) into v_exist from INGREDIENT where NAME = p_name;
     if v_exist = 0 then
-        insert into INGREDIENT(NAME) values(p_name) returning NAME into v_ing;
+        insert into INGREDIENT(NAME, STANDARD_UNIT) values(p_name, p_unit) returning NAME into v_ing;
     end if;
 
     select count(*) into v_exist from INGREDIENT_LIST where RECIPE_ID is null and INGREDIENT_NAME = p_name;
     if v_exist = 0 then
-        insert into INGREDIENT_LIST(INGREDIENT_UNIT, INGREDIENT_NAME) values (p_unit,p_name) returning INGREDIENT_LIST_ID into v_ing_list_id;
+        insert into INGREDIENT_LIST(INGREDIENT_UNIT, INGREDIENT_NAME) values (p_unit,p_name) returning INGREDIENT_LIST_ID into r_ing_list_id;
     else
-        select INGREDIENT_LIST_ID into v_ing_list_id from INGREDIENT_LIST where RECIPE_ID is null and INGREDIENT_NAME = p_name;
+        select INGREDIENT_LIST_ID into r_ing_list_id from INGREDIENT_LIST where RECIPE_ID is null and INGREDIENT_NAME = p_name;
     end if;
-
+end;
+/
+create or replace procedure add_new_ingredient_to_shopping_list(p_name varchar2, p_unit varchar2, p_amount number, p_username varchar2)
+as
+    v_exist NUMBER;
+    v_ing_list_id NUMBER;
+begin
+    begin
+        add_ingredient_to_ingredient_list(p_name, p_unit, v_ing_list_id);
+    end;
     select count(*) into v_exist from SHOPPING_LIST where USERNAME = p_username and GROUP_ID is null and INGREDIENT_LIST_ID = v_ing_list_id;
     if v_exist = 0 then
         insert into SHOPPING_LIST(AMOUNT, INGREDIENT_LIST_ID, USERNAME) values (p_amount,v_ing_list_id, p_username);
@@ -100,3 +108,28 @@ begin
     end loop;
 end;
 /
+create or replace trigger add_favourites_tg
+after insert on FOLLOWED
+for each row
+begin
+    for rec_id in (select RECIPE_ID  from RECIPE where OWNER_NAME = :new.followed_username) loop
+        insert into FAVORITE values(null, :new.following_username, rec_id.RECIPE_ID);
+    end loop;
+end;
+/
+create or replace procedure add_recipe(p_username IN varchar2, p_name IN varchar2, p_description IN varchar2,  p_cost IN number, p_portion IN number, p_date IN varchar2, p_prepare_time IN number, p_group_id IN number, r_recipe_id out number)
+as
+begin
+    INSERT INTO RECIPE VALUES(null, p_username, p_name, p_description, p_cost, TO_DATE(p_date, 'yyyy-mm-dd hh24:mi:ss'), p_prepare_time, p_portion) returning RECIPE_ID into r_recipe_id;
+    INSERT INTO PUBLICITY VALUES(null, p_group_id, r_recipe_id);
+end;
+/
+create or replace procedure add_ingredient_to_recipe(p_name varchar2, p_unit varchar2, p_amount number, p_recipe_id number)
+as
+    v_ing_list_id NUMBER;
+begin
+    begin
+        add_ingredient_to_ingredient_list(p_name, p_unit, v_ing_list_id);
+    end;
+    UPDATE INGREDIENT_LIST SET RECIPE_ID = p_recipe_id, AMOUNT = p_amount WHERE INGREDIENT_LIST_ID = v_ing_list_id;
+end;

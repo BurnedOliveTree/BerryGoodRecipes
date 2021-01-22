@@ -3,13 +3,13 @@ package main.recipeModel;
 import main.controller.Status;
 
 public class Ingredient {
-    Double quantity;
-    Unit unit;
-    String name;
-    Integer id;
-    Status shoppingListStatus = Status.none;
     // class which is necessary for the correct implementation of the converter and the recipe
-    public Ingredient(Integer id, Double quantity, Unit unit, String name) {
+    Double quantity;
+    String unit;
+    String name;
+    Integer id; // id of record in ingredient_list in database
+    Status shoppingListStatus = Status.none; // status of ingredient in shopping list - solution to save on database connections, all information is modified at the end of the program
+    public Ingredient(Integer id, Double quantity, String unit, String name) {
         this.id = id;
         this.quantity = quantity;
         this.unit = unit;
@@ -30,7 +30,7 @@ public class Ingredient {
         return quantity;
     }
 
-    public Unit getUnit() {
+    public String getUnit() {
         return unit;
     }
 
@@ -38,7 +38,7 @@ public class Ingredient {
         this.quantity = quantity;
     }
 
-    public void setUnit(Unit unit) {
+    public void setUnit(String unit) {
         this.unit = unit;
     }
 

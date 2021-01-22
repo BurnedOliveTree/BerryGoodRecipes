@@ -20,26 +20,16 @@ public class TimerPane extends BasicPaneActions {
     DownTimer timer;
     Media media;
     private MediaPlayer mediaPlayer;
-    @FXML
-    private Label secondsTimer;
-    @FXML
-    private Label minutesTimer;
-    @FXML
-    private Label hoursTimer;
-    @FXML
-    private Button cancelButton;
-    @FXML
-    private Spinner<Integer> minutesBox;
-    @FXML
-    private Spinner<Integer> secondsBox;
-    @FXML
-    private Spinner<Integer> hoursBox;
-    @FXML
-    private Button startButton;
-    @FXML
-    private AnchorPane selectPane;
-    @FXML
-    private  AnchorPane showPane;
+    @FXML private Label secondsTimer;
+    @FXML private Label minutesTimer;
+    @FXML private Label hoursTimer;
+    @FXML private Button cancelButton;
+    @FXML private Spinner<Integer> minutesBox;
+    @FXML private Spinner<Integer> secondsBox;
+    @FXML private Spinner<Integer> hoursBox;
+    @FXML private Button startButton;
+    @FXML private AnchorPane selectPane;
+    @FXML private  AnchorPane showPane;
 
     public void initialize() {
         setSpinnerProperty(hoursBox);
@@ -50,7 +40,8 @@ public class TimerPane extends BasicPaneActions {
         Platform.runLater(() -> {
         Stage stage = (Stage) hoursBox.getScene().getWindow();
         stage.setOnCloseRequest(event -> {
-            mediaPlayer.pause();
+            if (mediaPlayer != null)
+                mediaPlayer.pause();
             if (timer != null)
                 timer.stopTimer();
         });});
@@ -181,6 +172,5 @@ public class TimerPane extends BasicPaneActions {
             }
         }
     }
-
 
 }

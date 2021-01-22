@@ -1,20 +1,22 @@
 package main.recipeModel;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.DirectoryNotEmptyException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Recipe {
     private String author;
     private Integer id;
-    private double cost;
+    private Double cost;
     private String name;
-    private int accessibility;
+    private Integer accessibility;
     private String groupName;
-    private double portionNumber;
+    private Double portionNumber;
     private String dateAdded;
     private String prepareMethod;
-    private int prepareTime; // in minutes
-    // @TODO private LinkList<Opinion> opinions = new LinkList<Opinion>();
+    private Integer prepareTime; // in minutes
     private ArrayList<Ingredient> ingredientList;
     private String avgRate;
 
@@ -26,7 +28,7 @@ public class Recipe {
         this.author = author;
     }
 
-    public Recipe(int id, String name, String author, String prepareMethod, int accessibility, String dateAdded, int prepareTime, double cost, double portion_number, ArrayList<Ingredient> ingredientList) {
+    public Recipe(Integer id, String name, String author, String prepareMethod, Integer accessibility, String dateAdded, Integer prepareTime, Double cost, Double portion_number, ArrayList<Ingredient> ingredientList) {
         this.name = name;
         this.author = author;
         this.accessibility = accessibility;
@@ -39,15 +41,11 @@ public class Recipe {
         this.id = id;
     }
 
-    public void setCost(int cost) {
+    public void setCost(Double cost) {
         this.cost = cost;
     }
 
-    public void setPortionNumber(int portionNumber) {
-        this.portionNumber = portionNumber;
-    }
-
-    public void setPrepareTime(int prepareTime) {
+    public void setPrepareTime(Integer prepareTime) {
         this.prepareTime = prepareTime;
     }
 
@@ -69,10 +67,10 @@ public class Recipe {
             throw new IllegalArgumentException("Value must be greater than 0");
     }
 
-    public void editIngredientUnit(Unit unit, String ingredientName)
+    public void editIngredientUnit(String unit, String ingredientName)
     {
         Ingredient ingredient = findInIngredientList(ingredientName);
-        // @TODO calculate method from unit
+        // @TODO MARIANKA calculate method from unit
     }
 
     // scale ingredient taking into account the changed number of portions
@@ -95,29 +93,31 @@ public class Recipe {
         } else  {
             return id.equals(((Recipe) r).getId());
         }
-
     }
 
-
     public void saveToFile(String filename) {
-        // @TODO update and add to GUI
         try {
             FileWriter file = new FileWriter(filename);
-            file.write(this.name + "\nIngredients:\n");
+            file.write(this.name + "\n\nIngredients:\n");
             for (Ingredient ingredient: this.ingredientList){
-                file.write(ingredient.getQuantity() + ingredient.getUnit().toString() + ingredient.getName());
+                file.write(ingredient.getQuantity() + " " + ingredient.getUnit() + " "  + ingredient.getName() + "\n" );
             }
             file.write("\nPreparation method:\n" + this.prepareMethod);
-            file.write("Additional information:" );
-            file.write("Cost: " + this.cost);
-            file.write("Preparation time: " + this.prepareTime);
-            file.write("Number of portions" + this.portionNumber);
+            file.write("\nAdditional information: \n");
+            file.write("Cost: " + this.cost + "\n");
+            file.write("Preparation time: " + this.prepareTime + "\n");
+            file.write("Number of portions: " + this.portionNumber + "\n");
             file.close();
         } catch (IOException err) {
             System.out.println("Error: ");
             err.printStackTrace();
         }
 
+    }
+
+    public void deleteFile(String filename) {
+        File file = new File(filename);
+        file.delete();
     }
 
     public void saveToFile() {
@@ -136,7 +136,7 @@ public class Recipe {
         return name;
     }
 
-    public int getAccessibility() {
+    public Integer getAccessibility() {
         return accessibility;
     }
 
@@ -152,7 +152,7 @@ public class Recipe {
         return prepareMethod;
     }
 
-    public int getPrepareTime() {
+    public Integer getPrepareTime() {
         return prepareTime;
     }
 
@@ -174,8 +174,5 @@ public class Recipe {
 
     public void setGroupName(String groupName) {this.groupName = groupName; }
 
-    public void setAvgRate(){
-        // @TODO with Opinion class
-    }
 
 }

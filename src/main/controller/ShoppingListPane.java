@@ -15,11 +15,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
-import main.recipeModel.Unit;
 import main.userModel.User;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -28,6 +28,7 @@ public class ShoppingListPane extends BasicPaneActions {
     private final User activeUser;
     private final BasicPaneActions returnPane;
     private final List<String> groups;
+    private List<Ingredient> ingredientList = new ArrayList<>();
 
     @FXML private Button exitButton;
     @FXML private ImageView exitPic;
@@ -57,6 +58,7 @@ public class ShoppingListPane extends BasicPaneActions {
             addIngredient.managedProperty().bind(addIngredient.visibleProperty());
             setOtherListsMenu();
             setAddIngredient();
+            setContextMenu(shoppingList, createDeleteIngredientItem());
         });
 
     }
@@ -67,6 +69,10 @@ public class ShoppingListPane extends BasicPaneActions {
         VBox newIngredient = new VBox();
         TextField quantity = new TextField();
         MenuButton unit = new MenuButton();
+        for (String item : activeUser.getUnits()) {
+            MenuItem temp = new MenuItem(item);
+            unit.getItems().add(temp);
+        }
         TextField name = new TextField();
         Button addButton = new Button();
         quantity.setPromptText("Qty");
@@ -82,10 +88,9 @@ public class ShoppingListPane extends BasicPaneActions {
         unit.setPrefWidth(newIngredient.getPrefWidth());
         addButton.setPrefWidth(newIngredient.getPrefWidth());
         addButton.setOnAction(actionEvent -> {
-            // @TODO other shopping list
             if (!quantity.getText().equals("") && !name.getText().equals("")) {
-                // @TODO available unit show
-                Ingredient ingredient = new Ingredient(null, Double.parseDouble(quantity.getText()), new Unit("gram"), name.getText());
+                // @TODO MARIANKA available unit show
+                Ingredient ingredient = new Ingredient(null, Double.parseDouble(quantity.getText()), "gram", name.getText());
                 ingredient.setShoppingListStatus(Status.added);
                 activeUser.addToShoppingList(ingredient);
                 quantity.clear();
@@ -132,6 +137,7 @@ public class ShoppingListPane extends BasicPaneActions {
         }
     }
 
+
     private void setOtherListsMenu() {
         otherListsMenu.setItems(FXCollections.observableArrayList(groups));
         otherListsMenu.getSelectionModel().select(groups.size()-1);
@@ -147,9 +153,17 @@ public class ShoppingListPane extends BasicPaneActions {
 
     private void showShoppingList(String currentList) throws IOException, SQLException {
         shoppingList.getItems().clear();
+        ingredientList.clear();
+
         if (currentList.equals("User")) {
             for (Ingredient ingredient : activeUser.showShoppingList().values()) {
-                shoppingList.getItems().add(String.format((ingredient.getQuantity() % 1 == 0)?"%1.0f %s %s":"%1.2f %s %s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName()));
+                ingredientList.add(ingredient);
+                if (ingredient.getUnit().equals("piece")) {
+                    shoppingList.getItems().add(String.format((ingredient.getQuantity() % 1 == 0) ? "%1.0f %s %s" : "%1.2f %s %s", ingredient.getQuantity(), "piece", ingredient.getName()));
+                } else {
+                    Ingredient temp = new Ingredient(0, DatabaseConnection.convertUnit(ingredient.getQuantity(), ingredient.getUnit(), "gram"), "gram", ingredient.getName());
+                    shoppingList.getItems().add(String.format((temp.getQuantity() % 1 == 0) ? "%1.0f %s %s" : "%1.2f %s %s", temp.getQuantity(), "gram", temp.getName()));
+                }
             }
         } else {
             Map<Ingredient, String> ShoppingList = DatabaseConnection.getGroupShoppingList(activeUser, currentList);
@@ -157,13 +171,48 @@ public class ShoppingListPane extends BasicPaneActions {
             for (Map.Entry<Ingredient, String> entry : ShoppingList.entrySet()) {
                 String author = entry.getValue();
                 Ingredient ingredient = entry.getKey();
-                shoppingList.getItems().add(String.format((ingredient.getQuantity() % 1 == 0)?"%1.0f %s %s\t%s":"%1.2f %s %s\t%s", ingredient.getQuantity(), ingredient.getUnit().getName(), ingredient.getName(), author));
+                ingredientList.add(ingredient);
+                if (ingredient.getUnit().equals("piece")) {
+                    shoppingList.getItems().add(String.format((ingredient.getQuantity() % 1 == 0) ? "%1.0f %s %s\t%s" : "%1.2f %s %s\t%s", ingredient.getQuantity(), "piece", ingredient.getName(), author));
+                } else {
+                    Ingredient temp = new Ingredient(0, DatabaseConnection.convertUnit(ingredient.getQuantity(), ingredient.getUnit(), "gram"), "gram", ingredient.getName());
+                    shoppingList.getItems().add(String.format((temp.getQuantity() % 1 == 0) ? "%1.0f %s %s\t%s" : "%1.2f %s %s\t%s", temp.getQuantity(), "gram", temp.getName(), author));
+                }
             }
         }
         shoppingList.refresh();
     }
 
+    private MenuItem createDeleteIngredientItem(){
+        MenuItem delete = new MenuItem("Delete");
+        delete.setOnAction(actionEvent -> {
+            if (otherListsMenu.getValue().equals("User")) {
+                activeUser.removeFromShoppingList(ingredientList.get(shoppingList.getSelectionModel().getSelectedIndex()));
+            } else {
+                try {
+                    DatabaseConnection.deleteIngredientFromGroupShoppingList(activeUser, otherListsMenu.getValue(), ingredientList.get(shoppingList.getSelectionModel().getSelectedIndex()));
+                } catch (IOException | SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            ingredientList.remove(shoppingList.getSelectionModel().getSelectedIndex());
+            shoppingList.getItems().remove(shoppingList.getSelectionModel().getSelectedIndex());
+            shoppingList.refresh();
+        });
+        return delete;
+    }
 
+    @FXML
+    public void clearShoppingList() throws IOException, SQLException {
+        if (otherListsMenu.getValue().equals("User")) {
+            activeUser.removeShoppingList();
+        } else {
+            DatabaseConnection.deleteGroupShoppingList(activeUser, otherListsMenu.getValue());
+        }
+        ingredientList.clear();
+        shoppingList.getItems().clear();
+        shoppingList.refresh();
+    }
 
     @FXML   // return to proper window
     public void onExitButtonAction(){
