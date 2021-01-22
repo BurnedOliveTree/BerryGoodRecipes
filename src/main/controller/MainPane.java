@@ -257,8 +257,9 @@ public class MainPane extends BasicPaneActions {
     }
 
     public void onRecipeClick(int RecipeID) {
-        FXMLLoader loader = loadFXML(new RecipePane(DatabaseConnection.getSelectedRecipe(RecipeID), activeUser), "/resources/recipePage.fxml");
-        changeScene(loader);
+        // if one click
+        FXMLLoader loader = loadFXML(new RecipePane(DatabaseConnection.getSelectedRecipe(RecipeID), activeUser, new MainPane(activeUser)), "/resources/recipePage.fxml");
+        changeScene(basketButton, loader);
     }
 
     @FXML

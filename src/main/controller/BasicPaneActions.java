@@ -13,10 +13,12 @@ import main.DatabaseConnection;
 
 import java.io.IOException;
 
-// class with methods used by children class
 public class BasicPaneActions {
+    // class with methods used by children class
+    // stores the basic functions supported by a typical application window
 
     // used in MainPane, OpinionPane, RecipeAdminPane, RecipePane, ScalePane, ShoppingListPane, UserAdminPane
+    // set controller to FXML
     public FXMLLoader loadFXML(Object c, String path) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(path));
         loader.setControllerFactory(param -> c);

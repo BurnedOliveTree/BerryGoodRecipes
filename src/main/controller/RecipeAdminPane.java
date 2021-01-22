@@ -234,7 +234,7 @@ public class RecipeAdminPane extends BasicPaneActions {
     }
 
     private void ShowRecipe(Recipe recipe) throws SQLException {
-        FXMLLoader loader = loadFXML(new RecipePane(recipe, activeUser), "/resources/recipePage.fxml");
+        FXMLLoader loader = loadFXML(new RecipePane(recipe, activeUser, null), "/resources/recipePage.fxml");
         changeScene(loader);
         favTable.refresh();
     }

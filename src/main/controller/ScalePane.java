@@ -184,6 +184,6 @@ public class ScalePane extends BasicPaneActions {
     }
 
     private void onAction() {
-        FXMLLoader loader = loadFXML(new RecipePane(this.recipe, activeUser), "/resources/recipePage.fxml");
+        FXMLLoader loader = loadFXML(new RecipePane(this.recipe, activeUser, new MainPane(activeUser)), "/resources/recipePage.fxml");
         changeScene(exitButton, loader);
     }}

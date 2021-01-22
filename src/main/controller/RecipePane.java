@@ -30,6 +30,8 @@ import java.util.ArrayList;
 public class RecipePane  extends BasicPaneActions {
     private final Recipe recipe;
     private final User activeUser;
+    private final BasicPaneActions returnPane;
+
     @FXML private TextFlow descText;
     @FXML private ImageView ExitPic;
     @FXML private ImageView ScalePic;
@@ -52,9 +54,10 @@ public class RecipePane  extends BasicPaneActions {
     @FXML private Button scaleButton;
     @FXML private VBox propertyBox;
 
-    public RecipePane(Recipe recipe, User activeUser) {
+    public RecipePane(Recipe recipe, User activeUser, BasicPaneActions returnPane) {
         this.recipe = recipe;
         this.activeUser = activeUser;
+        this.returnPane = returnPane;
     }
 
     @FXML
@@ -349,7 +352,7 @@ public class RecipePane  extends BasicPaneActions {
 
     @FXML
     private void onCommentButtonAction() {
-        FXMLLoader loader = loadFXML(new OpinionPane(this.recipe, activeUser), "/resources/opinionPage.fxml");
+        FXMLLoader loader = loadFXML(new OpinionPane(this.recipe, activeUser, this), "/resources/opinionPage.fxml");
         changeScene(commentButton, loader);
     }
     @FXML
@@ -358,20 +361,24 @@ public class RecipePane  extends BasicPaneActions {
         changeScene(scaleButton, loader);
     }
     @FXML //@TODO KAROLINA always on another window?
-    private void onExitButtonAction(){
-        exitButton.getScene().getWindow().hide();
+    private void onExitButtonAction() {
+        if (returnPane != null) {
+            FXMLLoader loader = loadFXML(returnPane, "/resources/mainPage.fxml");
+            changeScene(exitButton, loader);
+        } else {
+            exitButton.getScene().getWindow().hide();
+        }
     }
 
     @FXML
     private void onShoppingListButtonAction() throws IOException, SQLException {
-        FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, new RecipePane(recipe, activeUser)), "/resources/shoppingListPage.fxml");
+        FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, new RecipePane(recipe, activeUser, new MainPane(activeUser))), "/resources/shoppingListPage.fxml");
         changeScene(shoppingListButton, loader);
     }
 
     @FXML
     private void onTimeButtonAction() throws IOException {
         FXMLLoader loader = loadFXML(new TimerPane(), "/resources/timerPage.fxml");
-
         Scene scene = new Scene(loader.load());
         Stage stage = new Stage();
         scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());

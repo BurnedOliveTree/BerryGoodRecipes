@@ -20,6 +20,7 @@ public class OpinionPane extends BasicPaneActions {
     private Opinion opinion;
     private final User activeUser;
     private final Recipe recipe;
+    private final BasicPaneActions returnPane;
     ObservableList<String> scoreList = FXCollections.observableArrayList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
     @FXML
     public Button okButton;
@@ -35,9 +36,10 @@ public class OpinionPane extends BasicPaneActions {
     @FXML
     public ChoiceBox scoreBox;
 
-    public OpinionPane(Recipe recipe, User activeUser) {
+    public OpinionPane(Recipe recipe, User activeUser, BasicPaneActions returnPane) {
         this.recipe = recipe;
         this.activeUser = activeUser;
+        this.returnPane = returnPane;
     };
 
     @FXML
@@ -126,7 +128,7 @@ public class OpinionPane extends BasicPaneActions {
     }
 
     private void exitAction() {
-        FXMLLoader loader = loadFXML(new RecipePane(this.recipe, activeUser), "/resources/recipePage.fxml");
+        FXMLLoader loader = loadFXML(returnPane, "/resources/recipePage.fxml");
         changeScene(exitButton, loader);
     }
 

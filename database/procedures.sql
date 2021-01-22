@@ -52,7 +52,7 @@ begin
     delete from FAVORITE where USERNAME = u_id;
     delete from RECIPE where OWNER_NAME = u_id;
     delete from "USER" where USERNAME = u_id;
---  TODO delete_group if no one belongs there
+--  TODO KSAWERY delete_group if no one belongs there
 end;
 /
 create or replace procedure delete_group(g_id number)
