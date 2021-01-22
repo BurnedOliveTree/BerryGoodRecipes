@@ -140,7 +140,7 @@ public class MainPane extends BasicPaneActions {
         String args = "";
         List<Integer> groupID = null;
         if (query.contains(":")) {
-            if (query.contains("with:")) {
+            while (query.contains("with:")) {
                 String[] tempList = split_search("with:");
                 args = args + multiple_search(tempList, "ing.ingredient_name", false);
             }
