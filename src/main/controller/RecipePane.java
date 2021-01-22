@@ -99,6 +99,7 @@ public class RecipePane  extends BasicPaneActions {
         } else {
             timePrepLabel.setText("Preparation time: " + this.recipe.getPrepareTime());
         }
+        Files.createDirectories(Paths.get("./savedRecipes/"));
         if(Files.exists(Paths.get(getRecipeFileDirectory()))) {
             setSavedRecipe();
         } else {
