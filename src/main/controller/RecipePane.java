@@ -5,6 +5,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -24,6 +25,8 @@ import main.recipeModel.Recipe;
 import main.userModel.User;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -53,6 +56,9 @@ public class RecipePane  extends BasicPaneActions {
     @FXML private Button commentButton;
     @FXML private Button scaleButton;
     @FXML private VBox propertyBox;
+    @FXML private ToggleButton deleteButton;
+    @FXML private ToggleButton saveButton;
+    @FXML private HBox saveDeleteBox;
 
     public RecipePane(Recipe recipe, User activeUser, BasicPaneActions returnPane) {
         this.recipe = recipe;
@@ -82,7 +88,6 @@ public class RecipePane  extends BasicPaneActions {
         authorLabel.setText("Author: " + this.recipe.getAuthor());
         dateAddedLabel.setText("Date added: " + this.recipe.getDateAdded());
         setPortionAreaProperty();
-
         if (this.recipe.getCost() == 0) {
             costLabel.setText("Cost: Unknown");
         } else {
@@ -93,6 +98,11 @@ public class RecipePane  extends BasicPaneActions {
             timePrepLabel.setText("Preparation time: Unknown");
         } else {
             timePrepLabel.setText("Preparation time: " + this.recipe.getPrepareTime());
+        }
+        if(Files.exists(Paths.get(getRecipeFileDirectory()))) {
+            setSavedRecipe();
+        } else {
+            setSaveRecipe();
         }
 
         // options for logged in users
@@ -347,7 +357,38 @@ public class RecipePane  extends BasicPaneActions {
 
     @FXML
     private void saveRecipe() {
-        recipe.saveToFile( "./savedRecipes/" + recipe.getName() + ".txt");
+        setSavedRecipe();
+        recipe.saveToFile( getRecipeFileDirectory());
+    }
+
+    private void setSavedRecipe(){
+        deleteButton.setStyle("-fx-background-radius: 50;");
+        deleteButton.setText("");
+        saveButton.setStyle("-fx-background-color: transparent;");
+        saveButton.setPrefWidth(50);
+        deleteButton.setPrefWidth(35);
+        saveDeleteBox.setStyle("-fx-background-color: -fx-accent;-fx-background-radius: 50;");
+        saveButton.setText("Saved");
+    }
+
+    private void setSaveRecipe(){
+        saveButton.setStyle("-fx-background-radius: 50;");
+        saveButton.setText("");
+        saveButton.setPrefWidth(35);
+        deleteButton.setPrefWidth(50);
+        deleteButton.setStyle("-fx-background-color: transparent;");
+        saveDeleteBox.setStyle("-fx-background-color: transparent;-fx-background-radius: 50;-fx-border-radius: 50; -fx-border-width: 0.2;-fx-border-color: grey;");
+        deleteButton.setText("Save");
+    }
+
+    @FXML
+    private void deleteRecipe() {
+        setSaveRecipe();
+        recipe.deleteFile( getRecipeFileDirectory());
+    }
+
+    private String getRecipeFileDirectory() {
+        return "./savedRecipes/" + recipe.getName() +"-"+ recipe.getAuthor() + ".txt";
     }
 
     @FXML

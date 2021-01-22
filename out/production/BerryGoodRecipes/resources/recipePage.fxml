@@ -61,7 +61,13 @@
                         </ImageView>
                     </graphic>
                 </Button>
-            <Button mnemonicParsing="false" onAction="#saveRecipe" text="Save" />
+            <Label minWidth="30.0" />
+            <HBox fx:id="saveDeleteBox" alignment="CENTER_RIGHT" maxHeight="12.0" prefHeight="12.0" prefWidth="85.0">
+               <children>
+                  <ToggleButton fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteRecipe" prefHeight="25.0" prefWidth="35.0" />
+                  <ToggleButton fx:id="saveButton" mnemonicParsing="false" onAction="#saveRecipe" prefHeight="25.0" prefWidth="35.0" />
+               </children>
+            </HBox>
             </items>
         </ToolBar>
     </top>

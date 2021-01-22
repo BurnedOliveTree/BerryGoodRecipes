@@ -1,6 +1,9 @@
 package main.recipeModel;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.DirectoryNotEmptyException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Recipe {
@@ -90,9 +93,7 @@ public class Recipe {
         } else  {
             return id.equals(((Recipe) r).getId());
         }
-
     }
-
 
     public void saveToFile(String filename) {
         try {
@@ -112,6 +113,11 @@ public class Recipe {
             err.printStackTrace();
         }
 
+    }
+
+    public void deleteFile(String filename) {
+        File file = new File(filename);
+        file.delete();
     }
 
     public void saveToFile() {
