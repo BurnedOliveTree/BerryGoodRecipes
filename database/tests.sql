@@ -20,3 +20,16 @@ begin
     add_new_ingredient_to_shopping_list('ketchup', 'tablespoon', 5.0, 'Rokarolka');
 end;
 commit;
+-- add recipe to database
+declare
+    recipe_id number;
+begin
+    add_recipe('Rokarolka', 'Placki', 'Wymieszaj składniki. Smaż na wolnym ogniu.', 5, 1, sysdate,10, 0, recipe_id);
+    add_ingredient_to_recipe('mąka', 'gram', 100, recipe_id);
+    add_ingredient_to_recipe('sól', 'teaspoon', 1, recipe_id);
+end;
+commit;
+-- add ingredient which doesn't exist in past
+begin
+    add_new_ingredient_to_shopping_list('mąka orkiszowa', 'gram', 100, 'Rokarolka');
+end;
