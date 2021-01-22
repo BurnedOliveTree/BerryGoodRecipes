@@ -694,7 +694,7 @@ public class DatabaseConnection {
         Integer groupId = getGroupIdWithName(groupName, activeUser);
         if (groupId != null) {
             Statement statement = connection.createStatement();
-            statement.execute("DELETE SHOPPING_LIST WHERE GROUP_ID ="+ groupId +"AND INGREDIENT_LIST_ID=" + ingredient.getId());
+            statement.execute("DELETE SHOPPING_LIST WHERE GROUP_ID ="+ groupId +" AND INGREDIENT_LIST_ID=" + ingredient.getId());
             statement.close();
         }
     }

@@ -2,13 +2,12 @@ package main.userModel;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import main.DatabaseConnection;
+
 import main.controller.Status;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
 
 import java.io.IOException;
-import java.nio.channels.MulticastChannel;
 import java.sql.SQLException;
 import java.util.*;
 
