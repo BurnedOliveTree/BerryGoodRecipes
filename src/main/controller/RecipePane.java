@@ -283,7 +283,7 @@ public class RecipePane  extends BasicPaneActions {
                 String oldUnit = ingredient.getUnit();
                 Double oldQuantity = ingredient.getQuantity();
                 Double newQuantity = DatabaseConnection.convertUnit(oldQuantity, oldUnit, newUnit);
-                Ingredient tempIn = new Ingredient(0, newQuantity, newUnit, ingredient.getName());
+                Ingredient tempIn = new Ingredient(ingredient.getId(), newQuantity, newUnit, ingredient.getName());
                 newList.add(tempIn);
             }
 

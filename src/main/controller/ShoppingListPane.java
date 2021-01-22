@@ -158,8 +158,12 @@ public class ShoppingListPane extends BasicPaneActions {
         if (currentList.equals("User")) {
             for (Ingredient ingredient : activeUser.showShoppingList().values()) {
                 ingredientList.add(ingredient);
-                Ingredient temp = new Ingredient(0, DatabaseConnection.convertUnit(ingredient.getQuantity(), ingredient.getUnit(), "gram"), "gram", ingredient.getName());
-                shoppingList.getItems().add(String.format((temp.getQuantity() % 1 == 0)?"%1.0f %s %s":"%1.2f %s %s", temp.getQuantity(), "gram", temp.getName()));
+                if (ingredient.getUnit().equals("piece")) {
+                    shoppingList.getItems().add(String.format((ingredient.getQuantity() % 1 == 0) ? "%1.0f %s %s" : "%1.2f %s %s", ingredient.getQuantity(), "piece", ingredient.getName()));
+                } else {
+                    Ingredient temp = new Ingredient(0, DatabaseConnection.convertUnit(ingredient.getQuantity(), ingredient.getUnit(), "gram"), "gram", ingredient.getName());
+                    shoppingList.getItems().add(String.format((temp.getQuantity() % 1 == 0) ? "%1.0f %s %s" : "%1.2f %s %s", temp.getQuantity(), "gram", temp.getName()));
+                }
             }
         } else {
             Map<Ingredient, String> ShoppingList = DatabaseConnection.getGroupShoppingList(activeUser, currentList);
@@ -168,8 +172,12 @@ public class ShoppingListPane extends BasicPaneActions {
                 String author = entry.getValue();
                 Ingredient ingredient = entry.getKey();
                 ingredientList.add(ingredient);
-                Ingredient temp = new Ingredient(0, DatabaseConnection.convertUnit(ingredient.getQuantity(), ingredient.getUnit(), "gram"), "gram", ingredient.getName());
-                shoppingList.getItems().add(String.format((temp.getQuantity() % 1 == 0)?"%1.0f %s %s\t%s":"%1.2f %s %s\t%s", temp.getQuantity(), "gram", temp.getName(), author));
+                if (ingredient.getUnit().equals("piece")) {
+                    shoppingList.getItems().add(String.format((ingredient.getQuantity() % 1 == 0) ? "%1.0f %s %s\t%s" : "%1.2f %s %s\t%s", ingredient.getQuantity(), "piece", ingredient.getName(), author));
+                } else {
+                    Ingredient temp = new Ingredient(0, DatabaseConnection.convertUnit(ingredient.getQuantity(), ingredient.getUnit(), "gram"), "gram", ingredient.getName());
+                    shoppingList.getItems().add(String.format((temp.getQuantity() % 1 == 0) ? "%1.0f %s %s\t%s" : "%1.2f %s %s\t%s", temp.getQuantity(), "gram", temp.getName(), author));
+                }
             }
         }
         shoppingList.refresh();
