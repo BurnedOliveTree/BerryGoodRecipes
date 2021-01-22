@@ -357,10 +357,10 @@ public class RecipePane  extends BasicPaneActions {
     }
     @FXML
     private void onScaleButtonAction() {
-        FXMLLoader loader = loadFXML(new ScalePane(this.recipe, activeUser), "/resources/scalePage.fxml");
+        FXMLLoader loader = loadFXML(new ScalePane(this.recipe, activeUser, this), "/resources/scalePage.fxml");
         changeScene(scaleButton, loader);
     }
-    @FXML //@TODO KAROLINA always on another window?
+    @FXML
     private void onExitButtonAction() {
         if (returnPane != null) {
             FXMLLoader loader = loadFXML(returnPane, "/resources/mainPage.fxml");
@@ -372,7 +372,7 @@ public class RecipePane  extends BasicPaneActions {
 
     @FXML
     private void onShoppingListButtonAction() throws IOException, SQLException {
-        FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, new RecipePane(recipe, activeUser, new MainPane(activeUser))), "/resources/shoppingListPage.fxml");
+        FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, this), "/resources/shoppingListPage.fxml");
         changeScene(shoppingListButton, loader);
     }
 

@@ -12,7 +12,6 @@ import main.recipeModel.Recipe;
 
 import oracle.jdbc.pool.OracleDataSource;
 
-import javax.swing.plaf.nimbus.State;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -401,7 +400,6 @@ public class DatabaseConnection {
             if (connection == null)
                 setConnection();
             Recipe recipe = getRecipe(recipeId);
-            closeConnection();
             return recipe;
         } catch (SQLException | IOException err) {
             err.printStackTrace();

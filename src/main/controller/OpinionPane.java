@@ -117,8 +117,6 @@ public class OpinionPane extends BasicPaneActions {
         }
     }
 
-
-
     private void okButtonAction() throws SQLException, IOException {
         String comment = commentTextField.getText();
         if (comment.equals(null)){comment = " ";};
