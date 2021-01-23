@@ -68,29 +68,31 @@ public class ShoppingListPane extends BasicPaneActions {
         CustomMenuItem customMenuItem = new CustomMenuItem();
         VBox newIngredient = new VBox();
         TextField quantity = new TextField();
-        MenuButton unit = new MenuButton();
-        for (String item : activeUser.getUnits()) {
-            MenuItem temp = new MenuItem(item);
-            unit.getItems().add(temp);
-        }
+        ChoiceBox unit = new ChoiceBox();
+        unit.getItems().addAll(FXCollections.observableArrayList(activeUser.getUnits()));
         TextField name = new TextField();
         Button addButton = new Button();
         quantity.setPromptText("Qty");
         name.setPromptText("Name");
-        unit.setText("Unit");
+        //unit.setText("Unit");
         addButton.setText("Add Ingredient");
         quantity.setStyle("-fx-text-box-border: transparent");
         name.setStyle("-fx-text-box-border: transparent");
         quantity.setAlignment(Pos.CENTER_RIGHT);
         name.setAlignment(Pos.CENTER_RIGHT);
-        unit.setAlignment(Pos.CENTER_RIGHT);
         newIngredient.setPrefWidth(addIngredient.getPrefWidth() - 10);
         unit.setPrefWidth(newIngredient.getPrefWidth());
         addButton.setPrefWidth(newIngredient.getPrefWidth());
         addButton.setOnAction(actionEvent -> {
             if (!quantity.getText().equals("") && !name.getText().equals("")) {
-                // @TODO MARIANKA available unit show
-                Ingredient ingredient = new Ingredient(null, Double.parseDouble(quantity.getText()), "gram", name.getText());
+                Ingredient ingredient = null;
+                try {
+                    ingredient = new Ingredient(null, DatabaseConnection.convertUnit(Double.parseDouble(quantity.getText()), unit.getSelectionModel().getSelectedItem().toString(), "gram"),"gram", name.getText());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                }
                 ingredient.setShoppingListStatus(Status.added);
                 activeUser.addToShoppingList(ingredient);
                 quantity.clear();
