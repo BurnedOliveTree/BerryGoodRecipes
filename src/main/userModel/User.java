@@ -3,6 +3,7 @@ package main.userModel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import main.DatabaseConnection;
 import main.controller.Status;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
@@ -116,6 +117,27 @@ public class User {
     public void removeShoppingList() {
         for (Ingredient ingredient: shoppingList)
             ingredient.setShoppingListStatus(Status.deleted);
+    }
+
+    public void editQuantityInShopping(String name, Double q) throws IOException, SQLException {
+        for (Ingredient ing : shoppingList){
+            if (ing.getName().equals(name)){
+                Double newQ = DatabaseConnection.convertUnit(q, "gram", ing.getUnit());
+                ing.setQuantity(ing.getQuantity() + newQ);
+                System.out.println(ing.getQuantity());
+                ing.setShoppingListStatus(Status.edited);
+                return;
+            }
+        }
+    }
+
+    public Boolean isNameInShoppingList(String name){
+        for (Ingredient ing : shoppingList){
+            if (ing.getName().equals(name)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean checkIfIngredientInShoppingList(Ingredient ingredient) {

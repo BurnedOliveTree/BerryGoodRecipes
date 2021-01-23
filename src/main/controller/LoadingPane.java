@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import main.DatabaseConnection;
 
@@ -21,21 +22,26 @@ public class LoadingPane extends Preloader {
     @Override
     public void start(Stage stage) throws IOException {
         this.stage = stage;
-        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/resources/loadingPage.fxml"));
-        Scene scene = new Scene(loader.load());
-        scene.getStylesheets().add(getClass().getResource("/resources/"+ DatabaseConnection.theme+".css").toExternalForm());
+        FXMLLoader loader;
         if (DatabaseConnection.isThemeLight()) {
             stage.getIcons().add(new Image("icons/berryLogo.png"));
+            loader = new FXMLLoader(this.getClass().getResource("/resources/berryLoadingPage.fxml"));
         }
-        else
+        else {
             stage.getIcons().add(new Image("icons/raspLogo.png"));
-//        Platform.runLater(() -> logo.setImage(stage.getIcons().get(0)));
+            loader = new FXMLLoader(this.getClass().getResource("/resources/raspLoadingPage.fxml"));
+        }
+        Scene scene = new Scene(loader.load());
+        scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
         stage.setScene(scene);
         stage.show();
     }
 
     @Override
     public void handleStateChangeNotification(StateChangeNotification evt) {
+//        if (evt.getType() == StateChangeNotification.Type.BEFORE_LOAD) {
+//            logo.setImage(new Image("icons/berryLogo.png"));
+//        }
         if (evt.getType() == StateChangeNotification.Type.BEFORE_START) {
             stage.hide();
         }
