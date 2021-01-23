@@ -33,6 +33,7 @@ public class User {
         this.userRecipes = new ArrayList<>();
         this.favorites = new LinkedList<>();
         this.followed = new LinkedList<>();
+        this.userGroups = new LinkedList<String>();
         this.shoppingList = new ArrayList<Ingredient>();
     }
 
