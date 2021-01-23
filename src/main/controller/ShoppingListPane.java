@@ -159,7 +159,7 @@ public class ShoppingListPane extends BasicPaneActions {
 
     private void setOtherListsMenu() {
         otherListsMenu.setItems(FXCollections.observableArrayList(groups));
-        otherListsMenu.getSelectionModel().select(groups.size()-1);
+        otherListsMenu.getSelectionModel().select(groups.indexOf(showFirst));
         otherListsMenu.getSelectionModel().selectedIndexProperty().addListener((observableValue, number, t1) -> {
             setShareMenu(groups.get(t1.intValue()));
             try {
@@ -263,13 +263,17 @@ public class ShoppingListPane extends BasicPaneActions {
 
     @FXML   // return to proper window
     public void onExitButtonAction(){
-        String path;
+        String path = "";
         if (Pattern.compile("MainPane").matcher(returnPane.getClass().getName()).find())
             path = "/resources/mainPage.fxml";
-        else
+        else if (Pattern.compile("RecipePane").matcher(returnPane.getClass().getName()).find())
             path = "/resources/recipePage.fxml";
-        FXMLLoader loader = loadFXML(returnPane, path);
-        changeScene(exitButton, loader);
+        else if (Pattern.compile("UserAdminPane").matcher(returnPane.getClass().getName()).find())
+            path = "/resources/userAdminPage.fxml";
+        if (!path.equals("")) {
+            FXMLLoader loader = loadFXML(returnPane, path);
+            changeScene(exitButton, loader);
+        }
     }
 
 }
