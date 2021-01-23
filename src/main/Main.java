@@ -44,8 +44,10 @@ public class Main extends Application {
                 loader.setControllerFactory(param -> new MainPane(activeUser));
                 scene = new Scene(loader.load());
                 scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
-                primaryStage.setScene(scene);
-                primaryStage.show();
+                Stage stage = new Stage();
+                stage.setScene(scene);
+                stage.show();
+                primaryStage.close();
             } else
                 controller.statusLabel.setText("Something went wrong, please try again");
         } catch (IOException | SQLException err) {
