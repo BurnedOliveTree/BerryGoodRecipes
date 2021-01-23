@@ -34,8 +34,8 @@ public class User {
         this.userRecipes = new ArrayList<>();
         this.favorites = new LinkedList<>();
         this.followed = new LinkedList<>();
-        this.userGroups = new LinkedList<String>();
-        this.shoppingList = new ArrayList<Ingredient>();
+        this.userGroups = new LinkedList<>();
+        this.shoppingList = new ArrayList<>();
     }
 
     public ObservableList<String> getUnits() {

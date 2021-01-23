@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
 import javafx.geometry.Side;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -141,7 +140,7 @@ public class MainPane extends BasicPaneActions {
         String args = "";
         List<Integer> groupID = null;
         if (query.contains(":")) {
-            while (query.contains("with:")) {
+            if (query.contains("with:")) {
                 String[] tempList = split_search("with:");
                 args = args + multiple_search(tempList, "ing.ingredient_name", false);
             }
@@ -259,7 +258,7 @@ public class MainPane extends BasicPaneActions {
     }
 
     @FXML
-    private void onBasketButtonClick(MouseEvent mouseEvent) throws IOException, SQLException {
+    private void onBasketButtonClick(MouseEvent mouseEvent) {
         mouseEvent.consume();
         FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, new MainPane(activeUser)), "/shoppingListPage.fxml");
         changeScene(basketButton, loader);
@@ -278,19 +277,7 @@ public class MainPane extends BasicPaneActions {
         }
         else {
             FXMLLoader loader = loadFXML(new LogInWindow(this), "/resources/logInWindow.fxml");
-
-            Scene scene = new Scene(loader.load());
-            Stage stage = new Stage();
-            scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
-            if (DatabaseConnection.isThemeLight())
-                stage.getIcons().add(new Image("icons/berryLogo.png"));
-            else
-                stage.getIcons().add(new Image("icons/raspLogo.png"));
-            stage.setTitle("Sign in");
-            stage.setScene(scene);
-            stage.setMaxWidth(180);
-            stage.setMaxHeight(200);
-            stage.showAndWait();
+            changeScene(loader, "Sign in", 180, 200);
         }
     }
 
@@ -314,12 +301,12 @@ public class MainPane extends BasicPaneActions {
     }
 
     @FXML
-    private void onPasswordChangeClick(ActionEvent actionEvent) throws IOException, SQLException {
+    private void onPasswordChangeClick(ActionEvent ae) throws IOException, SQLException {
         passwordError.setText(DatabaseConnection.setPassword(activeUser.getUsername(), newPasswordField.getText(), oldPasswordField.getText()));
     }
 
     @FXML
-    private void onDeleteAccountRequest(ActionEvent actionEvent) throws IOException, SQLException {
+    private void onDeleteAccountRequest(ActionEvent ae) throws IOException, SQLException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Delete account");
         alert.setHeaderText(null);

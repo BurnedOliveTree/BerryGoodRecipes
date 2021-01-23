@@ -27,26 +27,31 @@ public class BasicPaneActions {
 
     // used in RecipeAdminPane
     public void changeScene(FXMLLoader loader) {
-        changeScene(null, loader, "BerryGood Recipes", 0);
+        changeScene(null, loader, "BerryGood Recipes", 0, 0);
     }
 
     // used in RecipePane
-    public void changeScene(FXMLLoader loader, int maxHeight) {
-        changeScene(null, loader, "BerryGood Recipes", maxHeight);
+    public void changeScene(FXMLLoader loader, int maxWidth, int maxHeight) {
+        changeScene(null, loader, "BerryGood Recipes", maxWidth, maxHeight);
+    }
+    
+    // used in MainPane
+    public void changeScene(FXMLLoader loader, String title, int maxWidth, int maxHeight) {
+        changeScene(null, loader, title, maxWidth, maxHeight);
     }
 
     // used in MainPane, OpinionPane, RecipeAdminPane, RecipePane, ScalePane, ShoppingListPane, UserAdminPane
     public void changeScene(Node node, FXMLLoader loader) {
-        changeScene(node, loader, "BerryGood Recipes", 0);
+        changeScene(node, loader, "BerryGood Recipes", 0, 0);
     }
 
     // currently not used
     public void changeScene(FXMLLoader loader, String title) {
-        changeScene(null, loader, title, 0);
+        changeScene(null, loader, title, 0, 0);
     }
 
     // used by above methods
-    public void changeScene(Node node, FXMLLoader loader, String title, long maxHeight) {
+    public void changeScene(Node node, FXMLLoader loader, String title, int maxWidth, int maxHeight) {
         try {
             Scene scene = new Scene(loader.load());
             Stage stage;
@@ -62,6 +67,10 @@ public class BasicPaneActions {
             if (title != null)
                 stage.setTitle(title);
             stage.setScene(scene);
+            if (maxWidth != 0)
+                stage.setMaxWidth(maxWidth);
+            if (maxHeight != 0)
+                stage.setMaxHeight(maxHeight);
             if (node == null)
                 stage.showAndWait();
             else

@@ -5,7 +5,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -17,7 +16,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.*;
 
-import javafx.stage.Stage;
 import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
@@ -415,7 +413,7 @@ public class RecipePane  extends BasicPaneActions {
     @FXML
     private void onTimeButtonAction() {
         FXMLLoader loader = loadFXML(new TimerPane(), "/resources/timerPage.fxml");
-        changeScene(loader, 200);
+        changeScene(loader, 0, 200);
     }
 
 }
