@@ -102,7 +102,7 @@ public class UserAdminPane extends BasicPaneActions {
 
             MenuItem menuItem = new MenuItem("Show shopping list");
             menuItem.setOnAction(e -> {
-                FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, this), "/resources/shoppingListPage.fxml");
+                FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, this, groupName), "/resources/shoppingListPage.fxml");
                 changeScene(exitButton, loader);
             });
             tempButton.getItems().add(menuItem);

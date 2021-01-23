@@ -1,6 +1,5 @@
 package main.controller;
 
-import javafx.application.Platform;
 import javafx.application.Preloader;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -8,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import main.DatabaseConnection;
 
@@ -17,7 +15,6 @@ import java.io.IOException;
 public class LoadingPane extends Preloader {
     private Stage stage;
     @FXML public static Label statusLabel;
-    @FXML private ImageView logo;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -39,9 +36,6 @@ public class LoadingPane extends Preloader {
 
     @Override
     public void handleStateChangeNotification(StateChangeNotification evt) {
-//        if (evt.getType() == StateChangeNotification.Type.BEFORE_LOAD) {
-//            logo.setImage(new Image("icons/berryLogo.png"));
-//        }
         if (evt.getType() == StateChangeNotification.Type.BEFORE_START) {
             stage.hide();
         }
