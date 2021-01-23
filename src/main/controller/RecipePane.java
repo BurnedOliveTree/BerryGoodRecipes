@@ -216,7 +216,7 @@ public class RecipePane  extends BasicPaneActions {
     public MenuItem createDeleteFromShoppingListItem() {
         MenuItem delete = new MenuItem("Delete");
         delete.setOnAction(actionEvent -> {
-            ObservableList<Ingredient> ingredients=  ingredientListView.getSelectionModel().getSelectedItems();
+            ObservableList<Ingredient> ingredients = ingredientListView.getSelectionModel().getSelectedItems();
             for (Ingredient selectedIngredient :ingredients){
                 if (activeUser.checkIfIngredientInShoppingList(selectedIngredient)) {
                     Ingredient ingredient = activeUser.getIngredientFromShoppingList(selectedIngredient);
@@ -235,7 +235,7 @@ public class RecipePane  extends BasicPaneActions {
     public MenuItem createAddToShoppingListItem() {
         MenuItem add = new MenuItem("Add");
         add.setOnAction(actionEvent -> {
-            ObservableList<Integer> ingredients=  ingredientListView.getSelectionModel().getSelectedIndices();
+            ObservableList<Integer> ingredients = ingredientListView.getSelectionModel().getSelectedIndices();
             for (Integer selectedIngredient :ingredients){
                 if (activeUser.checkIfIngredientInShoppingList(this.recipe.getIngredientList().get(selectedIngredient))) {
                     Ingredient ingredient = activeUser.getIngredientFromShoppingList(this.recipe.getIngredientList().get(selectedIngredient));
@@ -254,7 +254,7 @@ public class RecipePane  extends BasicPaneActions {
         return add;
     }
 
-    public Menu createChangeUnit() throws IOException, SQLException {
+    public Menu createChangeUnit() {
         Menu change = new Menu("Change unit");
         change.getItems().clear();
         for (String item : activeUser.getUnits()){
@@ -263,10 +263,8 @@ public class RecipePane  extends BasicPaneActions {
             temp.setOnAction(e -> {
                 try {
                     changeUnit(temp.getText(), ingredientListView.getSelectionModel().getSelectedItems(), ingredientListView.getItems());
-                } catch (IOException ioException) {
-                    ioException.printStackTrace();
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
+                } catch (IOException | SQLException err) {
+                    err.printStackTrace();
                 }
             });
         }
@@ -310,10 +308,8 @@ public class RecipePane  extends BasicPaneActions {
                         portionArea.getEditor().textProperty().set(String.format((recipe.getPortionNumber() % 1 == 0)?"%1.0f":"%1.2f", recipe.getPortionNumber()));
                 } catch (NumberFormatException e) {
                     portionArea.getEditor().textProperty().set(String.format((recipe.getPortionNumber() % 1 == 0)?"%1.0f":"%1.2f", recipe.getPortionNumber()));
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (SQLException | IOException err) {
+                    err.printStackTrace();
                 }
             }
         });
@@ -411,25 +407,15 @@ public class RecipePane  extends BasicPaneActions {
     }
 
     @FXML
-    private void onShoppingListButtonAction() throws IOException, SQLException {
+    private void onShoppingListButtonAction() {
         FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, this), "/resources/shoppingListPage.fxml");
         changeScene(shoppingListButton, loader);
     }
 
     @FXML
-    private void onTimeButtonAction() throws IOException {
+    private void onTimeButtonAction() {
         FXMLLoader loader = loadFXML(new TimerPane(), "/resources/timerPage.fxml");
-        Scene scene = new Scene(loader.load());
-        Stage stage = new Stage();
-        scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
-        if (DatabaseConnection.isThemeLight())
-            stage.getIcons().add(new Image("icons/berryLogo.png"));
-        else
-            stage.getIcons().add(new Image("icons/raspLogo.png"));
-        stage.setTitle("BerryGood Recipes");
-        stage.setScene(scene);
-        stage.setMaxHeight(200);
-        stage.showAndWait();
+        changeScene(loader, 200);
     }
 
 }
