@@ -268,6 +268,13 @@ public class RecipeAdminPane extends BasicPaneActions {
     private void ShowRecipe(Recipe recipe) {
         FXMLLoader loader = loadFXML(new RecipePane(recipe, activeUser, null), "/resources/recipePage.fxml");
         changeScene(loader);
+        if (activeUser.checkIfFavContainsRecipe(recipe)) {
+            if (!activeUser.checkIfRecipeFavorite(recipe)) {
+                favTable.getItems().remove(recipe);
+            } else {
+                favTable.getItems().add(recipe);
+            }
+        }
 
     }
 

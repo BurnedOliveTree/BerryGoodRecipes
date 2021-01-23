@@ -220,7 +220,7 @@ public class DatabaseConnection {
             if (connection == null)
                 setConnection();
             Statement statement = connection.createStatement();
-            for (Recipe recipe: user.getFavorites()) {
+            for (Recipe recipe: user.getAllFavorites()) {
                 if (recipe.getFavoriteStatus() == Status.added) {
                     statement.executeUpdate("INSERT INTO FAVORITE SELECT null, '" + user.getUsername() + "', "+ recipe.getId() + " FROM DUAL\n" +
                             "WHERE NOT EXISTS (SELECT NULL FROM FAVORITE WHERE RECIPE_ID=" +  recipe.getId() + " AND USERNAME='" + user.getUsername() + "')");

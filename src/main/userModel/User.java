@@ -54,7 +54,15 @@ public class User {
 
     public List<Recipe> getUserRecipes() { return userRecipes; }
 
-    public List<Recipe> getFavorites() { return favorites; }
+    public List<Recipe> getAllFavorites() { return favorites; }
+    public List<Recipe> getFavorites() {
+        List<Recipe> trulyFavorite = new LinkedList<>();
+        for (Recipe favorite : favorites) {
+            if (favorite.getFavoriteStatus() != Status.deleted && favorite.getFavoriteStatus() != Status.none)
+                trulyFavorite.add(favorite);
+        }
+        return trulyFavorite;
+    }
     public void addFavorite(Recipe newFavRecipe) {
         Recipe foundRecipe = favorites.stream().filter(r -> r.getId().equals(newFavRecipe.getId())).findAny().orElse(null);
         if (foundRecipe == null){
@@ -65,18 +73,18 @@ public class User {
         }
     }
     public void removeFavorite(Recipe oldFavRecipe) {
-        Recipe foundRecipe = favorites.stream().filter(r -> r.getId().equals(oldFavRecipe.getId())).findAny().orElse(null);
-        if (foundRecipe != null)
-            foundRecipe.setFavoriteStatus(Status.deleted);
+        favorites.stream().filter(r -> r.getId().equals(oldFavRecipe.getId())).findAny().ifPresent(foundRecipe -> foundRecipe.setFavoriteStatus(Status.deleted));
     }
     public boolean checkIfRecipeFavorite(Recipe recipe) {
         Recipe foundRecipe = favorites.stream().filter(r -> r.getId().equals(recipe.getId())).findAny().orElse(null);
         if (foundRecipe == null)
             return false;
-        else if (foundRecipe.getFavoriteStatus() == Status.added || foundRecipe.getFavoriteStatus() == Status.loaded)
-            return true;
-        else
-            return false;
+        else return foundRecipe.getFavoriteStatus() == Status.added || foundRecipe.getFavoriteStatus() == Status.loaded;
+    }
+
+    public boolean checkIfFavContainsRecipe(Recipe recipe) {
+        Recipe foundRecipe = favorites.stream().filter(r -> r.getId().equals(recipe.getId())).findAny().orElse(null);
+        return foundRecipe != null;
     }
 
     public List<String> getFollowed() {return followed;}
