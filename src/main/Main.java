@@ -21,13 +21,21 @@ public class Main extends Application {
     public static User activeUser = null;
 
     @Override
-    public void start(Stage primaryStage) throws IOException {
-        new DatabaseConnection();
+    public void init() {
+        try {
+            DatabaseConnection.setAndCheckConnection();
+        } catch (IOException | SQLException e) {
+            e.printStackTrace();
+            LoadingPane.statusLabel.setText("Something went wrong, please try again");
+        }
+    }
 
+    @Override
+    public void start(Stage primaryStage) throws IOException {
         primaryStage.setTitle("BerryGood Recipes");
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(this.getClass().getResource("/resources/loadingPage.fxml"));
-        LoadingPane controller = new LoadingPane(activeUser);
+        loader.setLocation(this.getClass().getResource("/resources/mainPage.fxml"));
+        MainPane controller = new MainPane(activeUser);
         loader.setControllerFactory(param -> controller);
         Scene scene = new Scene(loader.load());
         scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
@@ -37,23 +45,6 @@ public class Main extends Application {
             primaryStage.getIcons().add(new Image("icons/raspLogo.png"));
         primaryStage.setScene(scene);
         primaryStage.show();
-
-        try {
-            if (DatabaseConnection.setAndCheckConnection()) {
-                loader = new FXMLLoader(getClass().getResource("/resources/mainPage.fxml"));
-                loader.setControllerFactory(param -> new MainPane(activeUser));
-                scene = new Scene(loader.load());
-                scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
-                Stage stage = new Stage();
-                stage.setScene(scene);
-                stage.show();
-                primaryStage.close();
-            } else
-                controller.statusLabel.setText("Something went wrong, please try again");
-        } catch (IOException | SQLException err) {
-            controller.statusLabel.setText("Something went wrong, please try again");
-            err.printStackTrace();
-        }
 
         // zapisanie listy zakupów i ulubionych do bazy danych
         primaryStage.setOnCloseRequest(e -> {
@@ -71,7 +62,9 @@ public class Main extends Application {
         });
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        new DatabaseConnection();
+        System.setProperty("javafx.preloader", LoadingPane.class.getCanonicalName());
         launch(args);
     }
 }
