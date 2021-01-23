@@ -25,23 +25,28 @@ public class BasicPaneActions {
         return loader;
     }
 
-    // used in MainPane, RecipeAdminPane, RecipePane
+    // used in RecipeAdminPane
     public void changeScene(FXMLLoader loader) {
-        changeScene(null, loader, "BerryGood Recipes");
+        changeScene(null, loader, "BerryGood Recipes", 0);
+    }
+
+    // used in RecipePane
+    public void changeScene(FXMLLoader loader, int maxHeight) {
+        changeScene(null, loader, "BerryGood Recipes", maxHeight);
     }
 
     // used in MainPane, OpinionPane, RecipeAdminPane, RecipePane, ScalePane, ShoppingListPane, UserAdminPane
     public void changeScene(Node node, FXMLLoader loader) {
-        changeScene(node, loader, "BerryGood Recipes");
+        changeScene(node, loader, "BerryGood Recipes", 0);
     }
 
-    // used in MainPane
+    // currently not used
     public void changeScene(FXMLLoader loader, String title) {
-        changeScene(null, loader, title);
+        changeScene(null, loader, title, 0);
     }
 
     // used by above methods
-    public void changeScene(Node node, FXMLLoader loader, String title) {
+    public void changeScene(Node node, FXMLLoader loader, String title, long maxHeight) {
         try {
             Scene scene = new Scene(loader.load());
             Stage stage;
@@ -66,7 +71,7 @@ public class BasicPaneActions {
         }
     }
 
-    // used in RecipeAdminPane...
+    // used in RecipeAdminPane, RecipePane, ShoppingListPane, UserAdminPane
     public void setContextMenu(Control control, MenuItem...  menuItems) {
         ContextMenu menu = new ContextMenu();
         for (MenuItem menuItem: menuItems) {

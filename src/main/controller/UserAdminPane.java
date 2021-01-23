@@ -101,7 +101,10 @@ public class UserAdminPane extends BasicPaneActions {
             tempButton.setPrefSize(192, 64);
 
             MenuItem menuItem = new MenuItem("Show shopping list");
-            menuItem.setOnAction(e -> System.out.println("TODO jump to shopping list"));
+            menuItem.setOnAction(e -> {
+                FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, this, groupName), "/resources/shoppingListPage.fxml");
+                changeScene(exitButton, loader);
+            });
             tempButton.getItems().add(menuItem);
 
             menuItem = new MenuItem("Show recipes");

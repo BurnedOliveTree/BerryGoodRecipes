@@ -11,8 +11,8 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
 import javafx.scene.layout.VBox;
+
 import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
 import main.userModel.User;
@@ -38,7 +38,7 @@ public class ShoppingListPane extends BasicPaneActions {
     @FXML private ChoiceBox<String> otherListsMenu;
     @FXML private MenuButton addIngredient;
 
-    public ShoppingListPane(User activeUser, BasicPaneActions returnPane,String showFirst) {
+    public ShoppingListPane(User activeUser, BasicPaneActions returnPane, String showFirst) {
         this.activeUser = activeUser;
         this.returnPane = returnPane;
         this.groups =  activeUser.getUserGroups();
@@ -98,19 +98,15 @@ public class ShoppingListPane extends BasicPaneActions {
                 Ingredient ingredient = null;
                 try {
                     ingredient = new Ingredient(null, DatabaseConnection.convertUnit(Double.parseDouble(quantity.getText()), unit.getSelectionModel().getSelectedItem().toString(), "gram"),"gram", name.getText());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
+                } catch (IOException | SQLException err) {
+                    err.printStackTrace();
                 }
                 ingredient.setShoppingListStatus(Status.added);
                 if (activeUser.isNameInShoppingList(ingredient.getName())){
                     try {
                         activeUser.editQuantityInShopping(ingredient.getName(), ingredient.getQuantity());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (SQLException throwables) {
-                        throwables.printStackTrace();
+                    } catch (IOException | SQLException err) {
+                        err.printStackTrace();
                     }
                 }
                 else {
