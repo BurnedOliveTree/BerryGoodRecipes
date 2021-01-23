@@ -63,7 +63,7 @@ public class ShoppingListPane extends BasicPaneActions {
         }
         showShoppingList(showFirst);
         Platform.runLater(()->{
-            setShareMenu("User");
+            setShareMenu(showFirst);
             // if user in group shopping list he cannot share list
             shareMenu.managedProperty().bind(shareMenu.visibleProperty());
             addIngredient.managedProperty().bind(addIngredient.visibleProperty());
