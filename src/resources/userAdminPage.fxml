@@ -17,7 +17,6 @@
 <?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 
-
 <GridPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.UserAdminPane">
    <columnConstraints>
       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="204.0" prefWidth="600.0" />
@@ -40,8 +39,15 @@
                   </ImageView>
                </graphic>
             </Button>
-            <Button mnemonicParsing="false" onAction="#onRefreshButtonClick" prefHeight="32.0" prefWidth="32.0" text="refresh" />
-            <MenuButton alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0" text="add group">
+            <Button mnemonicParsing="false" onAction="#onRefreshButtonClick" prefHeight="32.0" prefWidth="32.0">
+               <graphic>
+                  <ImageView fx:id="refreshPic" fitHeight="30.0" fitWidth="30.0">
+                     <image>
+                        <Image url="@icons/raspRefresh.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+            <MenuButton alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" prefHeight="32.0" prefWidth="32.0">
               <items>
                   <MenuItem mnemonicParsing="false">
                      <graphic>
@@ -55,6 +61,13 @@
                      </graphic>
                   </MenuItem>
               </items>
+               <graphic>
+                  <ImageView fx:id="groupPic" fitHeight="30.0" fitWidth="30.0">
+                     <image>
+                        <Image url="@icons/raspGroup.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
             </MenuButton>
         </items>
       </ToolBar>

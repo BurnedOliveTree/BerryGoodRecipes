@@ -24,6 +24,8 @@ import java.util.Optional;
 public class UserAdminPane extends BasicPaneActions {
     private final User activeUser;
     @FXML private Button exitButton;
+    @FXML private ImageView groupPic;
+    @FXML private ImageView refreshPic;
     @FXML private ImageView exitPic;
     @FXML private TilePane tilePane;
     @FXML private TextField newGroupName;
@@ -35,6 +37,8 @@ public class UserAdminPane extends BasicPaneActions {
 
     @FXML void initialize() {
         if (DatabaseConnection.isThemeLight()) {
+            groupPic.setImage(new Image("icons/berryGroup.png"));
+            refreshPic.setImage(new Image("icons/berryRefresh.png"));
             exitPic.setImage(new Image("icons/berryExit.png"));
         }
         Platform.runLater(() -> {

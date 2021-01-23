@@ -50,9 +50,7 @@ public class DatabaseConnection {
                 prop.getProperty("app.login"), prop.getProperty("app.password"), prop.getProperty("app.host"), prop.getProperty("app.port"), prop.getProperty("app.service.name"));
         OracleDataSource ods = new OracleDataSource();
         ods.setURL(connectionURL);
-        System.out.println(connection);
         connection = ods.getConnection();
-        System.out.println(connection);
         System.out.println("Connection with database opened.");
         connection.setAutoCommit(false);
     }
