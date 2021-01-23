@@ -42,7 +42,11 @@ end;
 /
 create or replace procedure delete_account(u_id varchar2)
 as
+    member_count number(4);
+    cursor cr is (select GROUP_ID from BELONG where USERNAME = u_id);
+    grp_id number(4);
 begin
+    open cr;
     delete from BELONG where USERNAME = u_id;
     delete from SHOPPING_LIST where USERNAME = u_id and GROUP_ID is null;
     update SHOPPING_LIST set USERNAME = null where USERNAME = u_id;
@@ -52,7 +56,15 @@ begin
     delete from FAVORITE where USERNAME = u_id;
     delete from RECIPE where OWNER_NAME = u_id;
     delete from "USER" where USERNAME = u_id;
---  TODO KSAWERY delete_group if no one belongs there
+    loop
+        exit when cr%notfound;
+        fetch cr into grp_id;
+        select count(*) into member_count from BELONG where GROUP_ID = grp_id;
+        if member_count = 0 then
+            delete_group(grp_id);
+        end if;
+    end loop;
+    close cr;
 end;
 /
 create or replace procedure delete_group(g_id number)
