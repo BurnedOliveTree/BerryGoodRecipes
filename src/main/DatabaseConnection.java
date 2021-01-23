@@ -630,9 +630,20 @@ public class DatabaseConnection {
                 ingredient.setShoppingListStatus(Status.loaded);
             }
             else if (ingredient.getShoppingListStatus() == Status.edited){
-                System.out.println(ingredient.getQuantity());
-                ingStatement.execute("UPDATE shopping_list SET amount =" +ingredient.getQuantity()+ " WHERE username = '" +activeUser.getUsername()+ "' and ingredient_list_id = " +ingredient.getId());
-                ingredient.setShoppingListStatus(Status.loaded);
+                System.out.println("dupa");
+                ingStatement.execute("SELECT shopping_list_id FROM shopping_list WHERE ingredient_list_id = " +ingredient.getId());
+                if (resultSet.next()) {
+                    ingStatement.execute("UPDATE shopping_list SET amount =" + ingredient.getQuantity() + " WHERE username = '" + activeUser.getUsername() + "' and ingredient_list_id = " + ingredient.getId());
+                    ingredient.setShoppingListStatus(Status.loaded);
+                }
+                else{
+                    Double quantity = changeToDefaultUnit(ingredient);
+                    ingStatement.execute("INSERT INTO SHOPPING_LIST values(null, "
+                            + quantity + ", '"
+                            + ingredient.getId()  + "', '"
+                            + activeUser.getUsername() + "', NULL)");
+                    ingredient.setShoppingListStatus(Status.loaded);
+                }
             }
             ingStatement.close();
         }
