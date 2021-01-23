@@ -78,7 +78,7 @@ public class RecipePane  extends BasicPaneActions {
         text.setFont(Font.font("System", FontPosture.REGULAR, 13));
         descText.getChildren().add(text);
         ingredientListView = new ListView();
-        setIngredListView(this.recipe.getIngredientList());
+        setIngredListView(this.recipe.getIngredientList(), Boolean.FALSE);
         ingredientPane.getChildren().add(ingredientListView);
         ingredientListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         titleLabel.setText(this.recipe.getName());
@@ -183,36 +183,33 @@ public class RecipePane  extends BasicPaneActions {
     }
 
     // format properly listView - with button or without
-    private void setIngredListView(ArrayList<Ingredient> ingredientsList) throws IOException, SQLException {
+    private void setIngredListView(ArrayList<Ingredient> ingredientsList, Boolean changedSingleUnit) throws IOException, SQLException {
         ingredientListView.getItems().clear();
 
         if (activeUser != null){
-            if (activeUser.getDefaultUnitSystem() == null || activeUser.getDefaultUnitSystem().equals("Default")) {
+            if (activeUser.getDefaultUnitSystem() == null || activeUser.getDefaultUnitSystem().equals("Default") || changedSingleUnit) {
                 ingredientListView.getItems().addAll(ingredientsList);
                 ingredientListView.setCellFactory(ingredientListView -> new ButtonCell(activeUser));
                 return;
             }
-        String bestUnit = "";
-        Double quantitiy = 0.0;
-        ArrayList<Ingredient> goodIngredients;
-        ArrayList<Ingredient> recipeIngredients = ingredientsList;
-        for (Ingredient ing : recipeIngredients) {
-            if (ing.getUnit().equals("piece")) {
-                ingredientListView.getItems().add(ing);
-            } else {
-                bestUnit = DatabaseConnection.getBestUnit(activeUser.getDefaultUnitSystem(), ing.getUnit(), ing.getQuantity());
-                ingredientListView.getItems().add(new Ingredient(0, DatabaseConnection.convertUnit(ing.getQuantity(), ing.getUnit(), bestUnit), bestUnit, ing.getName()));
+            String bestUnit = "";
+            ArrayList<Ingredient> goodIngredients;
+            ArrayList<Ingredient> recipeIngredients = ingredientsList;
+            for (Ingredient ing : recipeIngredients) {
+                if (ing.getUnit().equals("piece")) {
+                    ingredientListView.getItems().add(ing);
+                } else {
+                    bestUnit = DatabaseConnection.getBestUnit(activeUser.getDefaultUnitSystem(), ing.getUnit(), ing.getQuantity());
+                    ingredientListView.getItems().add(new Ingredient(ing.getId(), DatabaseConnection.convertUnit(ing.getQuantity(), ing.getUnit(), bestUnit), bestUnit, ing.getName()));
+                }
+                ingredientListView.setCellFactory(ingredientListView -> new ButtonCell(activeUser));
             }
-            ingredientListView.setCellFactory(ingredientListView -> new ButtonCell(activeUser));
-        }
-
         }
         else {
             for (Ingredient ingredient : ingredientsList) {
                 ingredientListView.getItems().add(String.format((ingredient.getQuantity() % 1 == 0)?"%1.0f %s %s":"%1.2f %s %s", ingredient.getQuantity(), ingredient.getUnit(), ingredient.getName()));
             }
         }
-
     }
 
     // return Item for MenuContext which delete selected item in ingredient List, User can delete several ingredients at once
@@ -220,16 +217,16 @@ public class RecipePane  extends BasicPaneActions {
         MenuItem delete = new MenuItem("Delete");
         delete.setOnAction(actionEvent -> {
             ObservableList<Ingredient> ingredients=  ingredientListView.getSelectionModel().getSelectedItems();
-                for (Ingredient selectedIngredient :ingredients){
-                    if (activeUser.checkIfIngredientInShoppingList(selectedIngredient)) {
-                        Ingredient ingredient = activeUser.getIngredientFromShoppingList(selectedIngredient);
-                        Status status = ingredient.getShoppingListStatus();
-                        if (status == Status.added || status == Status.loaded) {
-                            ingredient.setShoppingListStatus(Status.deleted);
-                        }
+            for (Ingredient selectedIngredient :ingredients){
+                if (activeUser.checkIfIngredientInShoppingList(selectedIngredient)) {
+                    Ingredient ingredient = activeUser.getIngredientFromShoppingList(selectedIngredient);
+                    Status status = ingredient.getShoppingListStatus();
+                    if (status == Status.added || status == Status.loaded) {
+                        ingredient.setShoppingListStatus(Status.deleted);
                     }
                 }
-                ingredientListView.refresh();
+            }
+            ingredientListView.refresh();
         });
         return delete;
     }
@@ -238,17 +235,18 @@ public class RecipePane  extends BasicPaneActions {
     public MenuItem createAddToShoppingListItem() {
         MenuItem add = new MenuItem("Add");
         add.setOnAction(actionEvent -> {
-            ObservableList<Ingredient> ingredients=  ingredientListView.getSelectionModel().getSelectedItems();
-            for (Ingredient selectedIngredient :ingredients){
-                if (activeUser.checkIfIngredientInShoppingList(selectedIngredient)) {
-                    Ingredient ingredient = activeUser.getIngredientFromShoppingList(selectedIngredient);
+            ObservableList<Integer> ingredients=  ingredientListView.getSelectionModel().getSelectedIndices();
+            for (Integer selectedIngredient :ingredients){
+                if (activeUser.checkIfIngredientInShoppingList(this.recipe.getIngredientList().get(selectedIngredient))) {
+                    Ingredient ingredient = activeUser.getIngredientFromShoppingList(this.recipe.getIngredientList().get(selectedIngredient));
                     Status status = ingredient.getShoppingListStatus();
                     if (status == Status.deleted) {
                         ingredient.setShoppingListStatus(Status.added);
                     }
                 } else {
-                    selectedIngredient.setShoppingListStatus(Status.added);
-                    activeUser.addToShoppingList(selectedIngredient);
+                    System.out.println(this.recipe.getIngredientList().get(selectedIngredient).getQuantity());
+                    this.recipe.getIngredientList().get(selectedIngredient).setShoppingListStatus(Status.added);
+                    activeUser.addToShoppingList(this.recipe.getIngredientList().get(selectedIngredient));
                 }
             }
             ingredientListView.refresh();
@@ -291,7 +289,8 @@ public class RecipePane  extends BasicPaneActions {
                 newList.add(ingredient);
             }
         }
-        setIngredListView(newList);
+        setIngredListView(newList, Boolean.TRUE);
+
     }
 
     private void setPortionAreaProperty(){
@@ -340,7 +339,7 @@ public class RecipePane  extends BasicPaneActions {
             double scale = numPortions / currNumPortions;
             this.recipe.setPortionNumber(numPortions);
             this.recipe.scaleIngredientList(scale);
-            setIngredListView(this.recipe.getIngredientList());
+            setIngredListView(this.recipe.getIngredientList(), Boolean.FALSE);
         }
     }
     @FXML

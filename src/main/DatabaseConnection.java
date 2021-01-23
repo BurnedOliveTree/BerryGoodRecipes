@@ -592,7 +592,7 @@ public class DatabaseConnection {
         return bestUnit;
     }
 
-    private static void updateShoppingListView(User activeUser) throws SQLException {
+    private static void updateShoppingListView(User activeUser) throws SQLException, IOException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM SHOPPING_LIST " +
                                                             "WHERE UPPER(USERNAME) = '" + activeUser.getUsername().toUpperCase() +
@@ -617,8 +617,9 @@ public class DatabaseConnection {
         for (Ingredient ingredient : activeUser.getShoppingList()) {
                 Statement ingStatement = connection.createStatement();
             if (ingredient.getShoppingListStatus() == Status.added && ingredient.getId() != null) {
+                Double quantity = changeToDefaultUnit(ingredient);
                 ingStatement.execute("INSERT INTO SHOPPING_LIST values(null, "
-                                                                + ingredient.getQuantity() + ", '"
+                                                                + quantity + ", '"
                                                                 + ingredient.getId()  + "', '"
                                                                 + activeUser.getUsername() + "', NULL)");
                 ingredient.setShoppingListStatus(Status.loaded);
@@ -635,6 +636,19 @@ public class DatabaseConnection {
         connection.commit();
         resultSet.close();
         statement.close();
+    }
+
+    private static Double changeToDefaultUnit(Ingredient ingredient) throws IOException, SQLException {
+        if (connection == null)
+            setConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("select INGREDIENT_UNIT from INGREDIENT_LIST where INGREDIENT_LIST_ID = " +ingredient.getId());
+        resultSet.next();
+        String defaultUnit = resultSet.getString("INGREDIENT_UNIT");
+        Double result = convertUnit(ingredient.getQuantity(), ingredient.getUnit(), defaultUnit);
+        resultSet.close();
+        statement.close();
+        return result;
     }
 
     public static void shareList(User activeUser, String groupName) throws IOException, SQLException {
