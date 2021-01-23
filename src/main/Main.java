@@ -2,6 +2,7 @@ package main;
 
 import javafx.application.Platform;
 import javafx.scene.image.Image;
+import main.controller.LoadingPane;
 import main.controller.MainPane;
 import main.userModel.User;
 
@@ -25,8 +26,8 @@ public class Main extends Application {
 
         primaryStage.setTitle("BerryGood Recipes");
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(this.getClass().getResource("/resources/mainPage.fxml"));
-        MainPane controller = new MainPane(activeUser);
+        loader.setLocation(this.getClass().getResource("/resources/loadingPage.fxml"));
+        LoadingPane controller = new LoadingPane(activeUser);
         loader.setControllerFactory(param -> controller);
         Scene scene = new Scene(loader.load());
         scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
@@ -36,6 +37,22 @@ public class Main extends Application {
             primaryStage.getIcons().add(new Image("icons/raspLogo.png"));
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        try {
+            if (DatabaseConnection.setAndCheckConnection()) {
+                loader = new FXMLLoader(getClass().getResource("/resources/mainPage.fxml"));
+                loader.setControllerFactory(param -> new MainPane(activeUser));
+                scene = new Scene(loader.load());
+                scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
+                primaryStage.setScene(scene);
+                primaryStage.show();
+            } else
+                controller.statusLabel.setText("Something went wrong, please try again");
+        } catch (IOException | SQLException err) {
+            controller.statusLabel.setText("Something went wrong, please try again");
+            err.printStackTrace();
+        }
+
         // zapisanie listy zakupów i ulubionych do bazy danych
         primaryStage.setOnCloseRequest(e -> {
             try {

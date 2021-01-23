@@ -35,6 +35,11 @@ public class DatabaseConnection {
         return DatabaseConnection.theme.equals("light") || DatabaseConnection.theme.equals("winter");
     }
 
+    public static boolean setAndCheckConnection() throws IOException, SQLException {
+        setConnection();
+        return connection != null;
+    }
+
     private static void setConnection() throws SQLException, IOException {
         Properties prop = new Properties();
         String fileName = "src/resources/app.config";
@@ -45,8 +50,9 @@ public class DatabaseConnection {
                 prop.getProperty("app.login"), prop.getProperty("app.password"), prop.getProperty("app.host"), prop.getProperty("app.port"), prop.getProperty("app.service.name"));
         OracleDataSource ods = new OracleDataSource();
         ods.setURL(connectionURL);
-        // @TODO KSAWERY java.sql.SQLRecoverableException
+        System.out.println(connection);
         connection = ods.getConnection();
+        System.out.println(connection);
         System.out.println("Connection with database opened.");
         connection.setAutoCommit(false);
     }
@@ -76,7 +82,6 @@ public class DatabaseConnection {
                 List<String>  groups = getGroupNames(username);
                 ArrayList<Ingredient> shoppingList = getShoppingList(username);
                 activeUser = new User(username, userRecipes, favorites, followed, shoppingList, groups, DatabaseConnection.getUnits());
-                // TODO KSAWERY add all the other columns in the future
                 errMess.setText("Successfully logged in!");
             } else {
                 errMess.setText("Incorrect password!");
