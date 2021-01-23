@@ -173,6 +173,7 @@ public class DatabaseConnection {
         while (result.next()) {
             int id = result.getInt("RECIPE_ID");
             Recipe recipe = getRecipe(id);
+            recipe.setFavoriteStatus(Status.loaded);
             favorites.add(recipe);
         }
         result.close();
@@ -219,17 +220,17 @@ public class DatabaseConnection {
             if (connection == null)
                 setConnection();
             Statement statement = connection.createStatement();
-            if (user.getNewFavorites().size() != 0) {
-                for (Recipe recipe: user.getNewFavorites()) {
+            for (Recipe recipe: user.getFavorites()) {
+                if (recipe.getFavoriteStatus() == Status.added) {
                     statement.executeUpdate("INSERT INTO FAVORITE SELECT null, '" + user.getUsername() + "', "+ recipe.getId() + " FROM DUAL\n" +
                             "WHERE NOT EXISTS (SELECT NULL FROM FAVORITE WHERE RECIPE_ID=" +  recipe.getId() + " AND USERNAME='" + user.getUsername() + "')");
+
                 }
-            }
-            if (user.getDeletedFavorites().size() != 0) {
-                for (Recipe recipe: user.getDeletedFavorites()) {
-                    statement.executeUpdate(String.format("DELETE FROM FAVORITE WHERE RECIPE_ID = %d AND USERNAME = '%s'", recipe.getId(),  user.getUsername()));
+                if (recipe.getFavoriteStatus() == Status.deleted){
+                        statement.executeUpdate(String.format("DELETE FROM FAVORITE WHERE RECIPE_ID = %d AND USERNAME = '%s'", recipe.getId(),  user.getUsername()));
+                    }
                 }
-            }
+
             if (user.getNewFollowed().size() != 0) {
                 for (String username: user.getNewFollowed()) {
                     statement.executeUpdate(String.format("insert into FOLLOWED values (null, '%s', '%s')", user.getUsername(), username));

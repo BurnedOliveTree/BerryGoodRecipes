@@ -1,4 +1,6 @@
 package main.recipeModel;
+import main.controller.Status;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -19,6 +21,7 @@ public class Recipe {
     private Integer prepareTime; // in minutes
     private ArrayList<Ingredient> ingredientList;
     private String avgRate;
+    private Status favoriteStatus = Status.none;
 
     public Recipe() {}
 
@@ -176,4 +179,14 @@ public class Recipe {
 
 
     public void setId(int recipeId) { this.id = recipeId; }
+
+    public void setFavoriteStatus(Status status) {
+        this.favoriteStatus = status;
+    }
+
+    public Status getFavoriteStatus() {
+        return favoriteStatus;
+    }
+
+
 }

@@ -15,8 +15,6 @@ public class User {
     private final String username;
     private List<Recipe> userRecipes;
     private List<Recipe> favorites;
-    private List<Recipe> newFavorites = new LinkedList<>();
-    private List<Recipe> deletedFavorites = new LinkedList<>();
     private List<String> followed;
     private List<String> userGroups;
     private List<String> newFollowed = new LinkedList<>();
@@ -58,18 +56,28 @@ public class User {
 
     public List<Recipe> getFavorites() { return favorites; }
     public void addFavorite(Recipe newFavRecipe) {
-        favorites.add(newFavRecipe);
-        newFavorites.add(newFavRecipe);
-        deletedFavorites.remove(newFavRecipe);
+        Recipe foundRecipe = favorites.stream().filter(r -> r.getId().equals(newFavRecipe.getId())).findAny().orElse(null);
+        if (foundRecipe == null){
+            newFavRecipe.setFavoriteStatus(Status.added);
+            favorites.add(newFavRecipe);
+        } else if (foundRecipe.getFavoriteStatus() == Status.deleted){
+            foundRecipe.setFavoriteStatus(Status.added);
+        }
     }
     public void removeFavorite(Recipe oldFavRecipe) {
-        favorites.remove(oldFavRecipe);
-        deletedFavorites.add(oldFavRecipe);
-        newFavorites.remove(oldFavRecipe);
+        Recipe foundRecipe = favorites.stream().filter(r -> r.getId().equals(oldFavRecipe.getId())).findAny().orElse(null);
+        if (foundRecipe != null)
+            foundRecipe.setFavoriteStatus(Status.deleted);
     }
-    public List<Recipe> getNewFavorites() { return newFavorites; }
-    public List<Recipe> getDeletedFavorites() { return deletedFavorites; }
-    public boolean checkIfRecipeFavorite(Recipe recipe) { return favorites.stream().anyMatch(r -> r.getId().equals(recipe.getId())); }
+    public boolean checkIfRecipeFavorite(Recipe recipe) {
+        Recipe foundRecipe = favorites.stream().filter(r -> r.getId().equals(recipe.getId())).findAny().orElse(null);
+        if (foundRecipe == null)
+            return false;
+        else if (foundRecipe.getFavoriteStatus() == Status.added || foundRecipe.getFavoriteStatus() == Status.loaded)
+            return true;
+        else
+            return false;
+    }
 
     public List<String> getFollowed() {return followed;}
     public void followUser(String newFollowedUser) {
@@ -104,6 +112,7 @@ public class User {
     public Status getIngredientStatus(Ingredient ingredient) {
         if (shoppingList.contains(ingredient)){
             Ingredient foundIngredient = shoppingList.stream().filter(lookingIngredient  -> lookingIngredient.equals(ingredient)).findAny().orElse(null);
+            assert foundIngredient != null;
             return foundIngredient.getShoppingListStatus();
         }
         else
