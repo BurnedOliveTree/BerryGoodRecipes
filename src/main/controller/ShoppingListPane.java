@@ -74,7 +74,6 @@ public class ShoppingListPane extends BasicPaneActions {
         Button addButton = new Button();
         quantity.setPromptText("Qty");
         name.setPromptText("Name");
-        //unit.setText("Unit");
         addButton.setText("Add Ingredient");
         quantity.setStyle("-fx-text-box-border: transparent");
         name.setStyle("-fx-text-box-border: transparent");
@@ -94,7 +93,18 @@ public class ShoppingListPane extends BasicPaneActions {
                     throwables.printStackTrace();
                 }
                 ingredient.setShoppingListStatus(Status.added);
-                activeUser.addToShoppingList(ingredient);
+                if (activeUser.isNameInShoppingList(ingredient.getName())){
+                    try {
+                        activeUser.editQuantityInShopping(ingredient.getName(), ingredient.getQuantity());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (SQLException throwables) {
+                        throwables.printStackTrace();
+                    }
+                }
+                else {
+                    activeUser.addToShoppingList(ingredient);
+                }
                 quantity.clear();
                 name.clear();
                 try {
@@ -151,6 +161,34 @@ public class ShoppingListPane extends BasicPaneActions {
                 e.printStackTrace();
             }
         });
+    }
+
+    private Boolean ingredientInList(String ingredientName, ArrayList<String> usedIngredients) {
+        for (String usedIng : usedIngredients) {
+            if (usedIng.equals(ingredientName)) return true;
+        }
+        return false;
+    }
+
+    private Ingredient addSameIngredients(Ingredient ingredient) throws IOException, SQLException {
+        Double newQuantity = 0.0;
+        if (!ingredient.getUnit().equals("piece")) {
+            for (Ingredient nextIngredient : activeUser.showShoppingList().values()) {
+                if (nextIngredient.getName().equals(ingredient.getName())) {
+                    System.out.println("!");
+                    newQuantity += DatabaseConnection.convertUnit(nextIngredient.getQuantity(), nextIngredient.getUnit(), "gram");
+                }
+            }
+            return new Ingredient(0, newQuantity, "gram", ingredient.getName());
+        }
+        else{
+            for (Ingredient nextIngredient : activeUser.showShoppingList().values()) {
+                if (nextIngredient.getName().equals(ingredient.getName())) {
+                    newQuantity += nextIngredient.getQuantity();
+                }
+            }
+            return new Ingredient(0, newQuantity, "piece", ingredient.getName());
+        }
     }
 
     private void showShoppingList(String currentList) throws IOException, SQLException {

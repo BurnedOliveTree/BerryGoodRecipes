@@ -611,7 +611,7 @@ public class DatabaseConnection {
                 ingredient.setShoppingListStatus(Status.loaded);
             }
         }
-        // add records with Status.added
+        // add records with Status.added or Status.edited
         for (Ingredient ingredient : activeUser.getShoppingList()) {
                 Statement ingStatement = connection.createStatement();
             if (ingredient.getShoppingListStatus() == Status.added && ingredient.getId() != null) {
@@ -629,8 +629,14 @@ public class DatabaseConnection {
                                                                     + activeUser.getUsername() +"'); END;");
                 ingredient.setShoppingListStatus(Status.loaded);
             }
+            else if (ingredient.getShoppingListStatus() == Status.edited){
+                System.out.println(ingredient.getQuantity());
+                ingStatement.execute("UPDATE shopping_list SET amount =" +ingredient.getQuantity()+ " WHERE username = '" +activeUser.getUsername()+ "' and ingredient_list_id = " +ingredient.getId());
+                ingredient.setShoppingListStatus(Status.loaded);
+            }
             ingStatement.close();
         }
+
         connection.commit();
         resultSet.close();
         statement.close();
