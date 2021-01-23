@@ -29,6 +29,7 @@ public class ShoppingListPane extends BasicPaneActions {
     private final BasicPaneActions returnPane;
     private final List<String> groups;
     private List<Ingredient> ingredientList = new ArrayList<>();
+    private String showFirst;
 
     @FXML private Button exitButton;
     @FXML private ImageView exitPic;
@@ -37,20 +38,30 @@ public class ShoppingListPane extends BasicPaneActions {
     @FXML private ChoiceBox<String> otherListsMenu;
     @FXML private MenuButton addIngredient;
 
+    public ShoppingListPane(User activeUser, BasicPaneActions returnPane,String showFirst) {
+        this.activeUser = activeUser;
+        this.returnPane = returnPane;
+        this.groups =  activeUser.getUserGroups();
+        if (!this.groups.contains("User"))
+            this.groups.add("User");
+        this.showFirst = showFirst;
+    }
     public ShoppingListPane(User activeUser, BasicPaneActions returnPane) {
         this.activeUser = activeUser;
         this.returnPane = returnPane;
         this.groups =  activeUser.getUserGroups();
         if (!this.groups.contains("User"))
             this.groups.add("User");
+        this.showFirst = "User";
     }
+
 
     @FXML
     void initialize() throws IOException, SQLException {
         if (DatabaseConnection.isThemeLight()) {
             exitPic.setImage(new Image("icons/berryExit.png"));
         }
-        showShoppingList("User");
+        showShoppingList(showFirst);
         Platform.runLater(()->{
             setShareMenu("User");
             // if user in group shopping list he cannot share list
