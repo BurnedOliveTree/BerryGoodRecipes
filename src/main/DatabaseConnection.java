@@ -591,15 +591,18 @@ public class DatabaseConnection {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM SHOPPING_LIST " +
                                                             "WHERE UPPER(USERNAME) = '" + activeUser.getUsername().toUpperCase() +
-                                                            "' AND GROUP_ID=NULL");
+                                                            "' AND GROUP_ID IS NULL");
         // check if the records are not being deleted
         while (resultSet.next()) {
-            Ingredient ingredient = activeUser.getShoppingList().get(resultSet.getInt("INGREDIENT_LIST_ID"));
+            int id = resultSet.getInt("INGREDIENT_LIST_ID");
+            Ingredient ingredient = activeUser.getIngredientFromShoppingListWithID(id);
             if (ingredient != null && ingredient.getShoppingListStatus() == Status.deleted){
-                statement.execute("DELETE FROM SHOPPING_LIST " +
+                Statement deleteStatement = connection.createStatement();
+                deleteStatement.execute("DELETE FROM SHOPPING_LIST " +
                                             "WHERE UPPER(USERNAME) = '" + activeUser.getUsername().toUpperCase() +
                                             "' AND INGREDIENT_LIST_ID = " + ingredient.getId());
-                activeUser.getShoppingList().remove(resultSet.getInt("INGREDIENT_LIST_ID"));
+                activeUser.removeFromShoppingList(ingredient);
+                deleteStatement.close();
             } else if (ingredient != null && ingredient.getShoppingListStatus() == Status.added && ingredient.getQuantity() == resultSet.getDouble("AMOUNT")) {
                 // if someone delete and add again recipe
                 ingredient.setShoppingListStatus(Status.loaded);
@@ -607,20 +610,22 @@ public class DatabaseConnection {
         }
         // add records with Status.added
         for (Ingredient ingredient : activeUser.getShoppingList()) {
+                Statement ingStatement = connection.createStatement();
             if (ingredient.getShoppingListStatus() == Status.added && ingredient.getId() != null) {
-                statement.execute("INSERT INTO SHOPPING_LIST values(null, "
+                ingStatement.execute("INSERT INTO SHOPPING_LIST values(null, "
                                                                 + ingredient.getQuantity() + ", '"
                                                                 + ingredient.getId()  + "', '"
                                                                 + activeUser.getUsername() + "', NULL)");
                 ingredient.setShoppingListStatus(Status.loaded);
             } else if (ingredient.getShoppingListStatus() == Status.added && ingredient.getId() == null) {
-                statement.execute("BEGIN add_new_ingredient_to_shopping_list('"
+                ingStatement.execute("BEGIN add_new_ingredient_to_shopping_list('"
                                                                     + ingredient.getName() + "', '"
                                                                     + ingredient.getUnit() + "', "
                                                                     + ingredient.getQuantity() + ", '"
                                                                     + activeUser.getUsername() +"'); END;");
                 ingredient.setShoppingListStatus(Status.loaded);
             }
+            ingStatement.close();
         }
         connection.commit();
         resultSet.close();

@@ -103,9 +103,15 @@ public class User {
     public List<String> getDeletedFollowed() { return deletedFollowed; }
 
     public void addToShoppingList(Ingredient ingredient) {
-        shoppingList.add(ingredient);}
+        ingredient.setShoppingListStatus(Status.added);
+        shoppingList.add(ingredient);
+    }
+
     public void removeFromShoppingList(Ingredient ingredient) {
-        shoppingList.remove(ingredient);}
+        Ingredient delIngredient = getIngredientFromShoppingList(ingredient);
+        delIngredient.setShoppingListStatus(Status.deleted);
+    }
+
     public void removeShoppingList() {
         for (Ingredient ingredient: shoppingList)
             ingredient.setShoppingListStatus(Status.deleted);
@@ -131,7 +137,12 @@ public class User {
         return shoppingList.stream().filter(lookingIngredient  -> lookingIngredient.equals(ingredient)).findAny().orElse(null);
     }
 
+    public Ingredient getIngredientFromShoppingListWithID(int id){
+        return shoppingList.stream().filter(lookingIngredient  -> lookingIngredient.getId().equals(id)).findAny().orElse(null);
+    }
+
     public void setDefaultUnitSystem(String unitSystem) { defaultUnitSystem = unitSystem; System.out.println(unitSystem); }
+
     public Map<String, Ingredient> showShoppingList() {
         Map<String, Ingredient> showMap = new HashMap<>();
         for (Ingredient ingredient: shoppingList) {
