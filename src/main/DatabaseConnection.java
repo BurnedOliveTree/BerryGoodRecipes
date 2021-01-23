@@ -719,7 +719,7 @@ public class DatabaseConnection {
         statement.close();
     }
 
-    public static void addRecipe(Recipe recipe, User activeUser) throws IOException, SQLException {
+    public static int addRecipe(Recipe recipe, User activeUser) throws IOException, SQLException {
         if (connection == null)
             setConnection();
         CallableStatement statement = connection.prepareCall("{ call add_recipe(?, ?, ?, ?, ?, ?, ?, ?, ?) }");
@@ -752,5 +752,6 @@ public class DatabaseConnection {
         }
         connection.commit();
         ingredientStatement.close();
+        return recipe_id;
     }
 }

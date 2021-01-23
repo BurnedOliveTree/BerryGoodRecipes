@@ -175,4 +175,5 @@ public class Recipe {
     public void setGroupName(String groupName) {this.groupName = groupName; }
 
 
+    public void setId(int recipeId) { this.id = recipeId; }
 }

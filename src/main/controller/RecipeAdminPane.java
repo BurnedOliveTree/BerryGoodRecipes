@@ -60,21 +60,13 @@ public class RecipeAdminPane extends BasicPaneActions {
         favTable.setOnMousePressed(mouseEvent -> {
             if (mouseEvent.isPrimaryButtonDown() && mouseEvent.getClickCount() == 2) {
                 Recipe recipe = favTable.getSelectionModel().getSelectedItem();
-                try {
-                    ShowRecipe(recipe);
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
+                ShowRecipe(recipe);
             }
         });
         myRecipesTable.setOnMousePressed(mouseEvent -> {
             if (mouseEvent.isPrimaryButtonDown() && mouseEvent.getClickCount() == 2) {
                 Recipe recipe = myRecipesTable.getSelectionModel().getSelectedItem();
-                try {
-                    ShowRecipe(recipe);
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                }
+                ShowRecipe(recipe);
             }
         });
 
@@ -112,25 +104,54 @@ public class RecipeAdminPane extends BasicPaneActions {
     @FXML
     private void saveRecipe() throws IOException, SQLException {
         String groupName = accessibilityBox.getSelectionModel().getSelectedItem();
-        Integer publicity = null;
-        if (!groupName.equals("private")){
-            publicity = DatabaseConnection.getGroupIdWithName(groupName, activeUser);
-        }
         ArrayList<Ingredient> ingredientList = getIngredientList();
-        if (!titleField.getText().equals("") && !descriptionArea.getText().equals("") && ingredientList.size() != 0){
-            Recipe recipe = new Recipe(null, titleField.getText(), activeUser.getUsername(), descriptionArea.getText(), publicity, getDateAdded(), getTimePreparationInMins(), getCost(), getPortions(),ingredientList);
-            DatabaseConnection.addRecipe(recipe, activeUser);
+        String warining = checkCorrectness(getIngredientList());
+        if (warining.equals("")){
+            Integer publicity = null;
+            if (!groupName.equals("private")){
+                publicity = DatabaseConnection.getGroupIdWithName(groupName, activeUser);
+            }
+            Integer preparationTime = getTimePreparationInMins();
+            Double cost = getCost();
+            Double portions = getPortions();
+            Recipe recipe = new Recipe(null, titleField.getText(), activeUser.getUsername(), descriptionArea.getText(), publicity, getDateAdded(), preparationTime, cost, portions, ingredientList);
+            recipe.setGroupName(groupName);
+            int recipeId  = DatabaseConnection.addRecipe(recipe, activeUser);
+            recipe.setId(recipeId);
             clearRecipe();
+            activeUser.addUserRecipe(recipe);
+            myRecipesTable.getItems().add(recipe);
+            myRecipesTable.refresh();
         } else {
-            String warining = "";
-            if (titleField.getText().equals(""))
-                warining += "Please enter title\n";
-            if (descriptionArea.getText().equals(""))
-                warining += "Please enter description.\n";
-            if (ingredientList.size() == 0)
-                warining += "Please add 1 or more ingredient";
             showWarning(warining);
         }
+    }
+
+    private String checkCorrectness(ArrayList<Ingredient> ingredientList) {
+        String warining = "";
+        if (titleField.getText().equals(""))
+            warining += "Please enter title\n";
+        if (descriptionArea.getText().equals(""))
+            warining += "Please enter description.\n";
+        if (ingredientList.size() == 0)
+            warining += "Please add 1 or more ingredient\n";
+        if (!checkIfDouble(costField.getText()) && !costField.getText().equals("")) {
+            warining += "Please enter correct cost value\n";
+            costField.clear();
+        }
+        if (!checkIfDouble(portionField.getText()) && !portionField.getText().equals("")){
+            warining += "Please enter correct number of portions value\n";
+            portionField.clear();
+        }
+        if (!checkIfInteger(hrsField.getText()) && !hrsField.getText().equals("")) {
+            warining += "Please enter correct hours value\n";
+            hrsField.clear();
+        }
+        if (!checkIfInteger(minsField.getText()) && !minsField.getText().equals("")) {
+            warining += "Please enter correct hours value\n";
+            minsField.clear();
+        }
+        return warining;
     }
 
     @FXML
@@ -166,7 +187,7 @@ public class RecipeAdminPane extends BasicPaneActions {
             String unit = units.getSelectionModel().getSelectedItem();
             String name = nameField.getText();
             if (quantityStr != null && unit != null && name != null){
-                if (!quantityStr.equals("") && !unit.equals("") && !name.equals("")){
+                if (!quantityStr.equals("") && quantityStr.matches("\\d+(\\.\\d+)?") && !unit.equals("") && !name.equals("")){
                     Double quantity = Double.parseDouble(quantityStr);
                     Ingredient ingredient = new Ingredient(null, quantity, unit, name);
                     ingredientList.add(ingredient);
@@ -191,10 +212,13 @@ public class RecipeAdminPane extends BasicPaneActions {
 
     private Integer getTimePreparationInMins() {
         if (hrsField.getText().equals("") && minsField.getText().equals(""))
-            return null;
+            return 0;
         else {
-            int mins = Integer.parseInt(minsField.getText());
-            mins += 60 * Integer.parseInt(hrsField.getText());
+            int mins = 0;
+            if (!minsField.getText().equals(""))
+                    mins += Integer.parseInt(minsField.getText());
+            if (!hrsField.getText().equals(""))
+                mins += 60 * Integer.parseInt(hrsField.getText());
             return mins;
         }
     }
@@ -204,21 +228,28 @@ public class RecipeAdminPane extends BasicPaneActions {
         return date.format(dateTimeFormatter);
     }
 
+    private boolean checkIfDouble(String match){
+        return match.matches("\\d+(\\.\\d+)?");
+    }
+
+    private boolean checkIfInteger(String match) {
+        return match.matches("\\d+");
+    }
 
     private void setMyRecipesTable() {
-        ObservableList<Recipe> RecipeList = FXCollections.observableArrayList(activeUser.getUserRecipes());
+        myRecipesTable.getItems().clear();
         TableColumn<Recipe, String> nameColumn = new TableColumn<>("Name");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         TableColumn<Recipe, String> groupNameColumn = new TableColumn<>("Group name");
         groupNameColumn.setCellValueFactory(new PropertyValueFactory<>("groupName"));
         TableColumn<Recipe, String> dateAddedColumn = new TableColumn<>("Date added");
         dateAddedColumn.setCellValueFactory(new PropertyValueFactory<>("dateAdded"));
-
+        ObservableList<Recipe> RecipeList = FXCollections.observableArrayList(activeUser.getUserRecipes());
         myRecipesTable.setItems(RecipeList);
         myRecipesTable.getColumns().addAll(nameColumn, groupNameColumn, dateAddedColumn);
     }
     private void setFavTable() {
-        ObservableList<Recipe> FavList = FXCollections.observableList(activeUser.getFavorites());
+        favTable.getItems().clear();
         TableColumn<Recipe,String> nameColumn = new TableColumn<>("Name");
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         TableColumn<Recipe, String> dateAddedColumn = new TableColumn<>("Date added");
@@ -229,14 +260,15 @@ public class RecipeAdminPane extends BasicPaneActions {
         costColumn.setCellValueFactory(new PropertyValueFactory<>("cost"));
         TableColumn<Recipe, Integer> timeColumn = new TableColumn<>("Preparation time");
         timeColumn.setCellValueFactory(new PropertyValueFactory<>("prepareTime"));
+        ObservableList<Recipe> FavList = FXCollections.observableList(activeUser.getFavorites());
         favTable.setItems(FavList);
         favTable.getColumns().addAll(nameColumn, authorColumn, dateAddedColumn, costColumn, timeColumn);
     }
 
-    private void ShowRecipe(Recipe recipe) throws SQLException {
+    private void ShowRecipe(Recipe recipe) {
         FXMLLoader loader = loadFXML(new RecipePane(recipe, activeUser, null), "/resources/recipePage.fxml");
         changeScene(loader);
-        favTable.refresh();
+
     }
 
     @FXML
@@ -274,6 +306,7 @@ public class RecipeAdminPane extends BasicPaneActions {
                 if (result.get() == ButtonType.OK){
                     try {
                         DatabaseConnection.deleteRecipe(activeUser, recipe);
+                        activeUser.getUserRecipes().remove(recipe);
                         myRecipesTable.getItems().remove(recipe);
                     } catch (IOException | SQLException e) {
                         e.printStackTrace();

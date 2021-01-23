@@ -134,19 +134,7 @@ public class User {
         }
     public List<Ingredient> getShoppingList() {return shoppingList;}
 
-//
-//    public void saveToFile()
-//    {
-//        try {
-//            FileWriter file = new FileWriter("shoppinglist.txt");
-//            for (Ingredient ingredient: this.shoppingList){
-//                file.write(ingredient.getQuantity() + ingredient.getUnit().toString() + ingredient.getName());
-//            }
-//            file.close();
-//
-//        } catch (IOException err) {
-//            System.out.println("Error: ");
-//            err.printStackTrace();
-//    }
-//    }
+    public void addUserRecipe(Recipe recipe) {
+        userRecipes.add(recipe);
+    }
 }
