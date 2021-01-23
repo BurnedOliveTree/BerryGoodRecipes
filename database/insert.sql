@@ -325,7 +325,3 @@ commit;
 insert into OPINION values (null, 'Rokarolka', 1, 5, 'Ok');
 insert into REPORTED values (null, 'Ardiego', 1);
 commit;
-
-
-SELECT * FROM SHOPPING_LIST WHERE UPPER(USERNAME) = 'ROKAROLKA' AND GROUP_ID=NULL;
-
