@@ -353,27 +353,27 @@ public class MainPane extends BasicPaneActions {
     }
 
     @FXML
-    private void onNameOrderSelection() {
+    private void onNameOrderSelection() throws IOException, SQLException {
         orderBy = "rcp.name";
-        System.out.println(orderBy);
+        search(new ActionEvent());
     }
 
     @FXML
-    private void onCostOrderSelection() {
+    private void onCostOrderSelection() throws IOException, SQLException {
         orderBy = "rcp.cost";
-        System.out.println(orderBy);
+        search(new ActionEvent());
     }
 
     @FXML
-    private void onTimeOrderSelection() {
+    private void onTimeOrderSelection() throws IOException, SQLException {
         orderBy = "rcp.preparation_time";
-        System.out.println(orderBy);
+        search(new ActionEvent());
     }
 
     @FXML
-    private void onRatingOrderSelection() {
+    private void onRatingOrderSelection() throws IOException, SQLException {
         orderBy = "rating desc";
-        System.out.println(orderBy);
+        search(new ActionEvent());
     }
 
     @FXML private void onSearchWith() { search.setText(search.getText() + " with:"); }
