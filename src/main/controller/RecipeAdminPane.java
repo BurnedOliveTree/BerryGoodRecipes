@@ -25,7 +25,7 @@ import java.util.Optional;
 
 public class RecipeAdminPane extends BasicPaneActions {
     private final User activeUser;
-    private List<String> accessibility = new ArrayList<String>();
+    private List<String> accessibility = new ArrayList<>();
 
     @FXML private TableView<Recipe> myRecipesTable;
     @FXML private Button exitButton;
@@ -132,19 +132,19 @@ public class RecipeAdminPane extends BasicPaneActions {
             warining += "Please enter description.\n";
         if (ingredientList.size() == 0)
             warining += "Please add 1 or more ingredient\n";
-        if (!checkIfDouble(costField.getText()) && !costField.getText().equals("")) {
+        if (checkIfNotDouble(costField.getText()) && !costField.getText().equals("")) {
             warining += "Please enter correct cost value\n";
             costField.clear();
         }
-        if (!checkIfDouble(portionField.getText()) && !portionField.getText().equals("")){
+        if (checkIfNotDouble(portionField.getText()) && !portionField.getText().equals("")){
             warining += "Please enter correct number of portions value\n";
             portionField.clear();
         }
-        if (!checkIfInteger(hrsField.getText()) && !hrsField.getText().equals("")) {
+        if (checkIfNotInteger(hrsField.getText()) && !hrsField.getText().equals("")) {
             warining += "Please enter correct hours value\n";
             hrsField.clear();
         }
-        if (!checkIfInteger(minsField.getText()) && !minsField.getText().equals("")) {
+        if (checkIfNotInteger(minsField.getText()) && !minsField.getText().equals("")) {
             warining += "Please enter correct hours value\n";
             minsField.clear();
         }
@@ -225,12 +225,12 @@ public class RecipeAdminPane extends BasicPaneActions {
         return date.format(dateTimeFormatter);
     }
 
-    private boolean checkIfDouble(String match){
-        return match.matches("\\d+(\\.\\d+)?");
+    private boolean checkIfNotDouble(String match){
+        return !match.matches("\\d+(\\.\\d+)?");
     }
 
-    private boolean checkIfInteger(String match) {
-        return match.matches("\\d+");
+    private boolean checkIfNotInteger(String match) {
+        return !match.matches("\\d+");
     }
 
     private void setMyRecipesTable() {
@@ -307,7 +307,7 @@ public class RecipeAdminPane extends BasicPaneActions {
                 alert.setContentText("You are now deleting your recipe.\n Are you sure?");
 
                 Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.OK){
+                if (result.isPresent() && result.get() == ButtonType.OK){
                     try {
                         DatabaseConnection.deleteRecipe(activeUser, recipe);
                         activeUser.getUserRecipes().remove(recipe);
