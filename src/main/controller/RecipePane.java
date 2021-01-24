@@ -408,7 +408,7 @@ public class RecipePane  extends BasicPaneActions {
 
     @FXML
     private void onShoppingListButtonAction() {
-        FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, this), "/resources/shoppingListPage.fxml");
+        FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, new RecipePane(new Recipe(this.recipe), this.activeUser, this.returnPane)), "/resources/shoppingListPage.fxml");
         changeScene(shoppingListButton, loader);
     }
 

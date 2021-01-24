@@ -44,6 +44,10 @@ public class Recipe {
         this.id = id;
     }
 
+    public Recipe(Recipe that) {
+        this(that.getId(), that.getName(), that.getAuthor(), that.getPrepareMethod(), that.getAccessibility(), that.getDateAdded(), that.getPrepareTime(), that.getPortionNumber(), that.getPortionNumber(), that.getIngredientList());
+    }
+
     public void setCost(Double cost) {
         this.cost = cost;
     }
