@@ -24,6 +24,9 @@ end;
 /
 -- TEST PROCEDURE add_new_ingredient_to_shopping_list
 -- adding ingredient to shopping list which isn't in ingredient list
+delete INGREDIENT_LIST where INGREDIENT_NAME = 'ketchup' and INGREDIENT_UNIT = 'tablespoon';
+delete INGREDIENT where NAME = 'ketchup';
+commit;
 declare
     ing_list_id NUMERIC;
     before_adding NUMERIC;
@@ -35,8 +38,13 @@ begin
     commit;
     DBMS_OUTPUT.PUT_LINE('Before: ' || before_adding || ', after: ' || after_adding || ', new id in ingredient_list: ' || ing_list_id);
 end;
--- add ingredient which doesn't exist in past
 /
+-- TEST PROCEDURE dd_new_ingredient_to_shopping_list
+-- which doesn't exist in past
+delete SHOPPING_LIST sl where sl.INGREDIENT_LIST_ID = (SELECT il.INGREDIENT_LIST_ID FROM INGREDIENT_LIST il WHERE il.INGREDIENT_NAME = 'mąka orkiszowa');
+delete INGREDIENT_LIST where INGREDIENT_NAME = 'mąka orkiszowa';
+delete INGREDIENT where NAME = 'mąka orkiszowa';
+commit;
 declare
     before_adding_in_il NUMERIC;
     after_adding_in_il NUMERIC;
@@ -58,6 +66,7 @@ end;
 /
 -- TEST PROCEDURE add_recipe, PROCEDURE add_ingredient_to_recipe
 -- add recipe to database
+delete RECIPE where NAME = 'Placki' and OWNER_NAME = 'Rokarolka';
 declare
     new_recipe_id number;
 begin
