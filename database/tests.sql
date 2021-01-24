@@ -166,5 +166,4 @@ end;
 /
 
 -- function convert_unit
--- procedure add_ingredient_to_ingredient_list
 -- trigger add_favourites_tg
