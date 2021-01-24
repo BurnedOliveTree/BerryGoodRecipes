@@ -82,11 +82,13 @@ public class UserAdminPane extends BasicPaneActions {
     }
 
     public void refreshWindow() throws IOException, SQLException {
+        // refresh window to check for new groups of followed users
         setGroupTiles(DatabaseConnection.getGroups(activeUser));
         refreshFollowedList();
     }
 
     private void setGroupTiles(List<List<String>> listOfLists) {
+        // create group tiles from a list of raw group data
         List<MenuButton> panelist = new ArrayList<>();
         for (int i=0; i<listOfLists.size(); i++) {
             int groupID = Integer.parseInt((listOfLists.get(i)).get(0));
@@ -195,6 +197,7 @@ public class UserAdminPane extends BasicPaneActions {
     }
 
     public void getGroupRecipes(String groupName) {
+        // show recipes of a given group
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/mainPage.fxml"));
             MainPane controller = new MainPane(activeUser);
@@ -209,6 +212,7 @@ public class UserAdminPane extends BasicPaneActions {
     }
 
     public void refreshFollowedList() {
+        // refresh list of followed users
         followedList.getItems().clear();
         followedList.getItems().addAll(activeUser.getFollowed());
     }

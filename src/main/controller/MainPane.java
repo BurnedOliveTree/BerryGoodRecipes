@@ -83,6 +83,7 @@ public class MainPane extends BasicPaneActions {
     }
 
     public void setButtonActivity() {
+        // disable and hide buttons that should not be available to a anonymous user
         if (activeUser != null) {
             loginButton.setText("Sign out");
             settingsButton.getItems().get(0).setVisible(true);
@@ -104,6 +105,7 @@ public class MainPane extends BasicPaneActions {
     }
 
     private String[] split_search(String arg) {
+        // helping method for search
         int argPosStart = query.indexOf(arg);
         query = query.replaceFirst(arg, "");
         String result = query.substring(argPosStart);
@@ -118,6 +120,7 @@ public class MainPane extends BasicPaneActions {
     }
 
     private String multiple_search(String[] args, String query, boolean isNumber) {
+        // another helping method for search
         String result = "";
         if (isNumber) {
             result = result + " and (" + query+" " + args[args.length - 1];
@@ -135,6 +138,7 @@ public class MainPane extends BasicPaneActions {
 
     @FXML
     public void search(ActionEvent ae) throws SQLException, IOException {
+        // our search engine for the app
         query = search.getText();
         System.out.println(query);
         String args = "";
@@ -182,6 +186,7 @@ public class MainPane extends BasicPaneActions {
     }
 
     private void setRecipeTiles(List<Recipe> recipeList) {
+        // set up tiles with recipes
         tilePain.getChildren().clear();
         if (recipeList == null)
             return;
@@ -235,6 +240,7 @@ public class MainPane extends BasicPaneActions {
     }
 
     private void setUnitSystemMenu(List<String> unitSystemNames) {
+        // fill menu items of unit system configuration
         List<MenuItem> itemList = new ArrayList<>();
         for (String s: unitSystemNames) {
             MenuItem tempItem = new MenuItem(s);
@@ -276,7 +282,7 @@ public class MainPane extends BasicPaneActions {
             setButtonActivity();
         }
         else {
-            FXMLLoader loader = loadFXML(new LogInWindow(this), "/resources/logInWindow.fxml");
+            FXMLLoader loader = loadFXML(new SignInPane(this), "/resources/logInWindow.fxml");
             changeScene(loader, "Sign in", 180, 200);
         }
     }
@@ -381,6 +387,7 @@ public class MainPane extends BasicPaneActions {
     @FXML private void onSearchGroup() { search.setText(search.getText() + " group:"); }
 
     private void resetTheme() {
+        // resets theme, useful for setting preferred theme
         logo.getScene().getStylesheets().remove(0);
         ((Stage) logo.getScene().getWindow()).getIcons().remove(0);
         logo.getScene().getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());

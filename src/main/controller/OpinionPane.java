@@ -22,19 +22,17 @@ public class OpinionPane extends BasicPaneActions {
     private final Recipe recipe;
     private final BasicPaneActions returnPane;
     ObservableList<String> scoreList = FXCollections.observableArrayList("1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
-    @FXML
-    public Button okButton;
-    public Button exitButton;
+    @FXML private Button okButton;
+    @FXML private Button exitButton;
     @FXML private ImageView exitPic;
     public Label scoreLabel;
-    public TextField commentTextField;
-    public Label opinionLabel;
-    public ListView opinionView;
-    public Button deleteButton;
-    public Button reportButton;
-    public Label reportLabel;
-    @FXML
-    public ChoiceBox scoreBox;
+    @FXML private TextField commentTextField;
+    @FXML private Label opinionLabel;
+    @FXML private ListView opinionView;
+    @FXML private Button deleteButton;
+    @FXML private Button reportButton;
+    @FXML private Label reportLabel;
+    @FXML private ChoiceBox scoreBox;
 
     public OpinionPane(Recipe recipe, User activeUser, BasicPaneActions returnPane) {
         this.recipe = recipe;
@@ -48,46 +46,28 @@ public class OpinionPane extends BasicPaneActions {
             exitPic.setImage(new Image("icons/berryExit.png"));
         }
         scoreBox.setItems(scoreList);
-        exitButton.setOnAction( e-> exitAction());
         okButton.setDisable(true);
         reportButton.setDisable(true);
         deleteButton.setDisable(true);
-        scoreBox.setOnAction(e->okButtonActivity());
-        okButton.setOnAction(e-> {
-            try {
-                okButtonAction();
-            } catch (SQLException | IOException throwables) {
-                throwables.printStackTrace();
-            }
-        });
-        opinionView.setOnMousePressed(e-> {
-            try {
-                opinionViewOnAction();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
-        });
         DatabaseConnection.fillOpinions(recipe, opinionView);
         reportButton.setOnAction(e->{
             try {
                 DatabaseConnection.reportOpinion(opinionView, activeUser.getUsername(), reportLabel, getOpinionAuthor(), recipe.getId());
-            } catch (SQLException | IOException throwables) {
-                throwables.printStackTrace();
+            } catch (SQLException | IOException err) {
+                err.printStackTrace();
             }
         });
         deleteButton.setOnAction(e->{
             try {
                 DatabaseConnection.deleteOpinion(recipe, activeUser.getUsername(), opinionView);
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
+            } catch (IOException | SQLException err) {
+                err.printStackTrace();
             }
         });
     }
 
 
-    private String getOpinionAuthor(){
+    private String getOpinionAuthor() {
         String opinion = (String) opinionView.getSelectionModel().getSelectedItem();
         String username = "";
         int i = 0;
@@ -98,7 +78,7 @@ public class OpinionPane extends BasicPaneActions {
         return username;
     }
 
-    private void opinionViewOnAction() throws SQLException {
+    @FXML private void opinionViewOnAction() {
         reportLabel.setText("");
         if (activeUser != null){
             if (getOpinionAuthor().equals(activeUser.getUsername())){
@@ -111,24 +91,24 @@ public class OpinionPane extends BasicPaneActions {
         }
     }
 
-    private void okButtonActivity(){
+    @FXML private void okButtonActivity() {
         if (activeUser != null && !activeUser.getUsername().equals(recipe.getAuthor())){
             okButton.setDisable(false);
         }
     }
 
-    private void okButtonAction() throws SQLException, IOException {
+    @FXML private void okButtonAction() throws SQLException, IOException {
         String comment = commentTextField.getText();
-        if (comment.equals(null)){comment = " ";};
+        if (comment.equals(null)) {
+            comment = " ";
+        }
         int score = Integer.parseInt(scoreBox.getValue().toString());
         opinion = new Opinion(comment, score, activeUser, recipe);
         DatabaseConnection.createOpinion(opinion, opinionLabel, opinionView);
     }
 
-    private void exitAction() {
+    @FXML private void exitAction() {
         FXMLLoader loader = loadFXML(returnPane, "/resources/recipePage.fxml");
         changeScene(exitButton, loader);
     }
-
-
 }

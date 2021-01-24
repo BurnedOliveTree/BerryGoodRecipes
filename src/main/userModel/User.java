@@ -14,32 +14,23 @@ import java.util.*;
 
 public class User {
     private final String username;
-    private List<Recipe> userRecipes;
-    private List<Recipe> favorites;
-    private List<String> followed;
-    private List<String> userGroups;
-    private List<String> newFollowed = new LinkedList<>();
-    private List<String> deletedFollowed = new LinkedList<>();
+    private final List<Recipe> userRecipes;
+    private final List<Recipe> favorites;
+    private final List<String> followed;
+    private final List<String> userGroups;
+    private final List<String> newFollowed = new LinkedList<>();
+    private final List<String> deletedFollowed = new LinkedList<>();
     private List<Ingredient> shoppingList;
     private String defaultUnitSystem = null;
     public ObservableList<String> units = FXCollections.observableArrayList();
-    public String getDefaultUnitSystem() {
-        return defaultUnitSystem;
-    }
 
-
-
-    public User(String username) throws IOException, SQLException {
+    public User(String username) {
         this.username = username;
         this.userRecipes = new ArrayList<>();
         this.favorites = new LinkedList<>();
         this.followed = new LinkedList<>();
         this.userGroups = new LinkedList<>();
         this.shoppingList = new ArrayList<>();
-    }
-
-    public ObservableList<String> getUnits() {
-        return units;
     }
 
     public User(String argUsername, List<Recipe> userRecipes, List<Recipe> favorites, List<String> followed, ArrayList<Ingredient> shoppingList, List<String> userGroups, ObservableList<String> units) {
@@ -52,11 +43,32 @@ public class User {
         this.units = units;
     }
 
-    public String getUsername() { return username; }
+    public String getUsername() {
+        return username;
+    }
 
-    public List<Recipe> getUserRecipes() { return userRecipes; }
+    public List<Recipe> getUserRecipes() {
+        return userRecipes;
+    }
+    public void addUserRecipe(Recipe recipe) {
+        userRecipes.add(recipe);
+    }
 
-    public List<Recipe> getAllFavorites() { return favorites; }
+    public ObservableList<String> getUnits() {
+        return units;
+    }
+
+    public String getDefaultUnitSystem() {
+        return defaultUnitSystem;
+    }
+    public void setDefaultUnitSystem(String unitSystem) {
+        defaultUnitSystem = unitSystem;
+        System.out.println(unitSystem);
+    }
+
+    public List<Recipe> getAllFavorites() {
+        return favorites;
+    }
     public List<Recipe> getFavorites() {
         List<Recipe> trulyFavorite = new LinkedList<>();
         for (Recipe favorite : favorites) {
@@ -83,13 +95,14 @@ public class User {
             return false;
         else return foundRecipe.getFavoriteStatus() == Status.added || foundRecipe.getFavoriteStatus() == Status.loaded;
     }
-
     public boolean checkIfFavContainsRecipe(Recipe recipe) {
         Recipe foundRecipe = favorites.stream().filter(r -> r.getId().equals(recipe.getId())).findAny().orElse(null);
         return foundRecipe != null;
     }
 
-    public List<String> getFollowed() {return followed;}
+    public List<String> getFollowed() {
+        return followed;
+    }
     public void followUser(String newFollowedUser) {
         followed.add(newFollowedUser);
         newFollowed.add(newFollowedUser);
@@ -100,36 +113,38 @@ public class User {
         newFollowed.remove(oldFollowedUser);
         deletedFollowed.add(oldFollowedUser);
     }
-    public List<String> getUserGroups() { return userGroups; }
-    public List<String> getNewFollowed() { return newFollowed; }
-    public List<String> getDeletedFollowed() { return deletedFollowed; }
+    public List<String> getUserGroups() {
+        return userGroups;
+    }
+    public List<String> getNewFollowed() {
+        return newFollowed;
+    }
+    public List<String> getDeletedFollowed() {
+        return deletedFollowed;
+    }
 
     public void addToShoppingList(Ingredient ingredient) {
         ingredient.setShoppingListStatus(Status.added);
         shoppingList.add(ingredient);
     }
-
     public void removeFromShoppingList(Ingredient ingredient) {
         Ingredient delIngredient = getIngredientFromShoppingList(ingredient);
         delIngredient.setShoppingListStatus(Status.deleted);
     }
-
-    public void removeSameNamedFromSL(String name){
+    public void removeSameNamedFromSL(String name) {
         for (Ingredient ing : shoppingList){
             if (ing.getName().equals(name)){
                 ing.setShoppingListStatus(Status.deleted);
             }
         }
     }
-
     public void removeShoppingList() {
         for (Ingredient ingredient: shoppingList)
             ingredient.setShoppingListStatus(Status.deleted);
     }
-
     public void editQuantityInShopping(String name, Double q) throws IOException, SQLException {
-        for (Ingredient ing : shoppingList){
-            if (ing.getName().equals(name)){
+        for (Ingredient ing : shoppingList) {
+            if (ing.getName().equals(name)) {
                 Double newQ = DatabaseConnection.convertUnit(q, "gram", ing.getUnit());
                 ing.setQuantity(ing.getQuantity() + newQ);
                 ing.setShoppingListStatus(Status.edited);
@@ -137,7 +152,6 @@ public class User {
             }
         }
     }
-
     public Boolean isNameInShoppingList(String name){
         for (Ingredient ing : shoppingList){
             if (ing.getName().equals(name)){
@@ -146,33 +160,27 @@ public class User {
         }
         return false;
     }
-
     public boolean checkIfIngredientInShoppingList(Ingredient ingredient) {
         return shoppingList.contains(ingredient);
     }
-
-    public void setShoppingList(List<Ingredient> shoppingList) {this.shoppingList = shoppingList;}
-
+    public void setShoppingList(List<Ingredient> shoppingList) {
+        this.shoppingList = shoppingList;
+    }
     public Status getIngredientStatus(Ingredient ingredient) {
-        if (shoppingList.contains(ingredient)){
-            Ingredient foundIngredient = shoppingList.stream().filter(lookingIngredient  -> lookingIngredient.equals(ingredient)).findAny().orElse(null);
+        if (shoppingList.contains(ingredient)) {
+            Ingredient foundIngredient = getIngredientFromShoppingList(ingredient);
             assert foundIngredient != null;
             return foundIngredient.getShoppingListStatus();
         }
         else
             return null;
     }
-
     public Ingredient getIngredientFromShoppingList(Ingredient ingredient) {
-        return shoppingList.stream().filter(lookingIngredient  -> lookingIngredient.equals(ingredient)).findAny().orElse(null);
+        return shoppingList.stream().filter(lookingIngredient -> lookingIngredient.equals(ingredient)).findAny().orElse(null);
     }
-
     public Ingredient getIngredientFromShoppingListWithID(int id){
-        return shoppingList.stream().filter(lookingIngredient  -> lookingIngredient.getId().equals(id)).findAny().orElse(null);
+        return shoppingList.stream().filter(lookingIngredient -> lookingIngredient.getId().equals(id)).findAny().orElse(null);
     }
-
-    public void setDefaultUnitSystem(String unitSystem) { defaultUnitSystem = unitSystem; System.out.println(unitSystem); }
-
     public Map<String, Ingredient> showShoppingList() throws IOException, SQLException {
         Map<String, Ingredient> showMap = new HashMap<>();
         for (Ingredient ingredient: shoppingList) {
@@ -189,10 +197,8 @@ public class User {
             }
         }
         return showMap;
-        }
-    public List<Ingredient> getShoppingList() {return shoppingList;}
-
-    public void addUserRecipe(Recipe recipe) {
-        userRecipes.add(recipe);
+    }
+    public List<Ingredient> getShoppingList() {
+        return shoppingList;
     }
 }

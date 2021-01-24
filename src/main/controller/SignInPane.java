@@ -14,13 +14,13 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.SQLException;
 
-public class LogInWindow extends BasicPaneActions {
+public class SignInPane extends BasicPaneActions {
     private final MainPane mainPane;
     @FXML private TextField usernameField;
     @FXML private TextField passwordField;
     @FXML private Label errMess;
 
-    public LogInWindow(MainPane mainPane) {
+    public SignInPane(MainPane mainPane) {
         this.mainPane = mainPane;
     }
 
@@ -38,23 +38,27 @@ public class LogInWindow extends BasicPaneActions {
     }
 
     @FXML private void getDataLogin(MouseEvent event) throws SQLException, IOException {
+        // sign in
         event.consume();
         System.out.println("Hello "+usernameField.getText()+", your password is "+passwordField.getText());
         login(usernameField.getText(), passwordField.getText());
     }
 
     @FXML private void getDataRegister(MouseEvent event) throws SQLException, IOException {
+        // sign up
         event.consume();
         mainPane.activeUser = DatabaseConnection.register(usernameField.getText(), passwordField.getText(), errMess);
         checkLoginStatus();
     }
 
     private void login(String username, String password) throws SQLException, IOException {
+        // call log-in in database
         mainPane.activeUser = DatabaseConnection.login(username, password, errMess);
         checkLoginStatus();
     }
 
     private void checkLoginStatus() {
+        // close window if user is logged in
         Main.activeUser = mainPane.activeUser;
         if (mainPane.activeUser != null) {
             mainPane.setButtonActivity();
