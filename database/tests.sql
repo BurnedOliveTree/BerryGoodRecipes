@@ -89,12 +89,14 @@ declare
     user_after_count number(4);
     belong_after_count number(4);
 begin
-    select count(*) into user_before_count from "USER" where USERNAME = 'testing1';
-    select count(*) into belong_before_count from BELONG where USERNAME = 'testing1';
-    delete_account('testing1');
+    insert into "USER" values ('testing4', '1111', null);
     commit;
-    select count(*) into user_after_count from "USER" where USERNAME = 'testing1';
-    select count(*) into belong_after_count from BELONG where USERNAME = 'testing1';
+    select count(*) into user_before_count from "USER" where USERNAME = 'testing4';
+    select count(*) into belong_before_count from BELONG where USERNAME = 'testing4';
+    delete_account('testing4');
+    commit;
+    select count(*) into user_after_count from "USER" where USERNAME = 'testing4';
+    select count(*) into belong_after_count from BELONG where USERNAME = 'testing4';
     DBMS_OUTPUT.PUT_LINE('Before: ' || user_before_count || ', after: ' || user_after_count);
     DBMS_OUTPUT.PUT_LINE('Before: ' || belong_before_count || ', after: ' || belong_after_count);
 end;
