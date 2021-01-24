@@ -114,6 +114,9 @@ declare
     before_count number(4);
     after_count number(4);
 begin
+    delete_account('testing1');
+    delete_account('testing2');
+    delete_account('testing3');
     select count(*) into before_count from BELONG where GROUP_ID = 0; -- PUBLIC is always 0
     insert into "USER" values ('testing1', '1111', null);
     insert into "USER" values ('testing2', '1111', null);
