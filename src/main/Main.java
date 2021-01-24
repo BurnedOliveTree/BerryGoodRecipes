@@ -23,7 +23,7 @@ public class Main extends Application {
     @Override
     public void init() {
         try {
-            DatabaseConnection.setAndCheckConnection();
+            DatabaseConnection.setConnection();
         } catch (IOException | SQLException e) {
             e.printStackTrace();
             LoadingPane.statusLabel.setText("Something went wrong, please try again");
@@ -46,7 +46,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        // zapisanie listy zakupów i ulubionych do bazy danych
+        // save shopping list and add favorites to database
         primaryStage.setOnCloseRequest(e -> {
             try {
                 DatabaseConnection.saveUser(activeUser);

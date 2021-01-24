@@ -1,15 +1,14 @@
 package main.controller;
 
-import javafx.application.Platform;
-import javafx.geometry.Pos;
-import javafx.scene.control.*;
-import javafx.scene.text.TextAlignment;
 import main.DatabaseConnection;
 import main.userModel.User;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.event.ActionEvent;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
+import javafx.scene.text.TextAlignment;
 import javafx.scene.layout.TilePane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.image.Image;
@@ -192,7 +191,7 @@ public class UserAdminPane extends BasicPaneActions {
             changeScene(exitButton, loader);
 
             controller.search.setText("user:"+username);
-            controller.search(new ActionEvent());
+            controller.search();
         }
     }
 
@@ -205,7 +204,7 @@ public class UserAdminPane extends BasicPaneActions {
             changeScene(exitButton, loader);
 
             controller.search.setText("group:"+groupName);
-            controller.search(new ActionEvent());
+            controller.search();
         } catch (SQLException | IOException err) {
             err.printStackTrace();
         }

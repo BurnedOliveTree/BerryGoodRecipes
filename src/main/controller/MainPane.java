@@ -1,7 +1,11 @@
 package main.controller;
 
+import main.DatabaseConnection;
+import main.Main;
+import main.recipeModel.Recipe;
+import main.userModel.User;
+
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
@@ -17,11 +21,6 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.TilePane;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
-
-import main.DatabaseConnection;
-import main.Main;
-import main.recipeModel.Recipe;
-import main.userModel.User;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -137,10 +136,9 @@ public class MainPane extends BasicPaneActions {
     }
 
     @FXML
-    public void search(ActionEvent ae) throws SQLException, IOException {
+    public void search() throws SQLException, IOException {
         // our search engine for the app
         query = search.getText();
-        System.out.println(query);
         String args = "";
         List<Integer> groupID = null;
         if (query.contains(":")) {
@@ -303,16 +301,16 @@ public class MainPane extends BasicPaneActions {
     @FXML
     private void onSearchButtonClick(MouseEvent mouseEvent) throws IOException, SQLException {
         mouseEvent.consume();
-        search(new ActionEvent());
+        search();
     }
 
     @FXML
-    private void onPasswordChangeClick(ActionEvent ae) throws IOException, SQLException {
+    private void onPasswordChangeClick() throws IOException, SQLException {
         passwordError.setText(DatabaseConnection.setPassword(activeUser.getUsername(), newPasswordField.getText(), oldPasswordField.getText()));
     }
 
     @FXML
-    private void onDeleteAccountRequest(ActionEvent ae) throws IOException, SQLException {
+    private void onDeleteAccountRequest() throws IOException, SQLException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Delete account");
         alert.setHeaderText(null);
@@ -355,25 +353,25 @@ public class MainPane extends BasicPaneActions {
     @FXML
     private void onNameOrderSelection() throws IOException, SQLException {
         orderBy = "rcp.name";
-        search(new ActionEvent());
+        search();
     }
 
     @FXML
     private void onCostOrderSelection() throws IOException, SQLException {
         orderBy = "rcp.cost";
-        search(new ActionEvent());
+        search();
     }
 
     @FXML
     private void onTimeOrderSelection() throws IOException, SQLException {
         orderBy = "rcp.preparation_time";
-        search(new ActionEvent());
+        search();
     }
 
     @FXML
     private void onRatingOrderSelection() throws IOException, SQLException {
         orderBy = "rating desc";
-        search(new ActionEvent());
+        search();
     }
 
     @FXML private void onSearchWith() { search.setText(search.getText() + " with:"); }

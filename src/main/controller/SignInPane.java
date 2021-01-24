@@ -4,7 +4,6 @@ import main.DatabaseConnection;
 import main.Main;
 
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -29,18 +28,17 @@ public class SignInPane extends BasicPaneActions {
         Platform.runLater(() -> usernameField.requestFocus());
     }
 
-    @FXML private void onLoginEnter(ActionEvent ae) {
+    @FXML private void onLoginEnter() {
         passwordField.requestFocus();
     }
 
-    @FXML private void onPasswordEnter(ActionEvent ae) throws SQLException, IOException {
+    @FXML private void onPasswordEnter() throws SQLException, IOException {
         login(usernameField.getText(), passwordField.getText());
     }
 
     @FXML private void getDataLogin(MouseEvent event) throws SQLException, IOException {
         // sign in
         event.consume();
-        System.out.println("Hello "+usernameField.getText()+", your password is "+passwordField.getText());
         login(usernameField.getText(), passwordField.getText());
     }
 
