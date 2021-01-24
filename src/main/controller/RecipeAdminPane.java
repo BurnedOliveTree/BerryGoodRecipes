@@ -27,7 +27,6 @@ public class RecipeAdminPane extends BasicPaneActions {
     private final User activeUser;
     private List<String> accessibility = new ArrayList<String>();
 
-    @FXML private ScrollBar scrollIngredient;
     @FXML private TableView<Recipe> myRecipesTable;
     @FXML private Button exitButton;
     @FXML private ImageView exitPic;
@@ -39,7 +38,6 @@ public class RecipeAdminPane extends BasicPaneActions {
     @FXML private TextField hrsField;
     @FXML private TextField minsField;
     @FXML private TextArea descriptionArea;
-    @FXML private ScrollPane scrollInfo;
     @FXML private ChoiceBox<String> accessibilityBox;
 
 
