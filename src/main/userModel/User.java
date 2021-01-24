@@ -131,9 +131,9 @@ public class User {
         Ingredient delIngredient = getIngredientFromShoppingList(ingredient);
         delIngredient.setShoppingListStatus(Status.deleted);
     }
-    public void removeSameNamedFromSL(String name) {
+    public void removeSameNamedFromSL(String name, String unit){
         for (Ingredient ing : shoppingList){
-            if (ing.getName().equals(name)){
+            if (ing.getName().equals(name) && ing.getUnit().equals(unit)){
                 ing.setShoppingListStatus(Status.deleted);
             }
         }
@@ -143,8 +143,8 @@ public class User {
             ingredient.setShoppingListStatus(Status.deleted);
     }
     public void editQuantityInShopping(String name, Double q) throws IOException, SQLException {
-        for (Ingredient ing : shoppingList) {
-            if (ing.getName().equals(name)) {
+        for (Ingredient ing : shoppingList){
+            if (ing.getName().equals(name)  && !ing.getUnit().equals("piece")){
                 Double newQ = DatabaseConnection.convertUnit(q, "gram", ing.getUnit());
                 ing.setQuantity(ing.getQuantity() + newQ);
                 ing.setShoppingListStatus(Status.edited);
@@ -152,9 +152,9 @@ public class User {
             }
         }
     }
-    public Boolean isNameInShoppingList(String name){
+    public Boolean qualifiesToAdd(String name){
         for (Ingredient ing : shoppingList){
-            if (ing.getName().equals(name)){
+            if (ing.getName().equals(name) && !ing.getUnit().equals("piece")){
                 return true;
             }
         }
@@ -187,9 +187,20 @@ public class User {
             if (ingredient.getShoppingListStatus() != Status.deleted) {
                 Ingredient shopIngredient = showMap.get(ingredient.getName());
                 if (shopIngredient != null){
-                    double quantity =  DatabaseConnection.convertUnit(ingredient.getQuantity(),ingredient.getUnit(),"gram") + DatabaseConnection.convertUnit(shopIngredient.getQuantity(), shopIngredient.getUnit(),"gram");
-                    shopIngredient.setQuantity(quantity);
-                    shopIngredient.setUnit("gram");
+                    if (ingredient.getUnit().equals("piece") && shopIngredient.getUnit().equals("piece")){
+                        shopIngredient.setQuantity(ingredient.getQuantity() + shopIngredient.getQuantity());
+                    }
+                    else if (ingredient.getUnit().equals("piece") && !shopIngredient.getUnit().equals("piece")){
+                        showMap.put(ingredient.getName() + "'", new Ingredient(ingredient.getId(), ingredient.getQuantity(), ingredient.getUnit(), ingredient.getName()));
+                    }
+                    else if (!ingredient.getUnit().equals("piece") && shopIngredient.getUnit().equals("piece")){
+                        showMap.put(ingredient.getName() + "'", new Ingredient(ingredient.getId(), ingredient.getQuantity(), ingredient.getUnit(), ingredient.getName()));
+                    }
+                    else {
+                        double quantity = DatabaseConnection.convertUnit(ingredient.getQuantity(), ingredient.getUnit(), "gram") + DatabaseConnection.convertUnit(shopIngredient.getQuantity(), shopIngredient.getUnit(), "gram");
+                        shopIngredient.setQuantity(quantity);
+                        shopIngredient.setUnit("gram");
+                    }
                 }
                 else {
                     showMap.put(ingredient.getName(), new Ingredient(ingredient.getId(), ingredient.getQuantity(), ingredient.getUnit(), ingredient.getName()));

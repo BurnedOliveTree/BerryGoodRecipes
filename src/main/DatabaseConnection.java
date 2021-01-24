@@ -615,7 +615,10 @@ public class DatabaseConnection {
         for (Ingredient ingredient : activeUser.getShoppingList()) {
                 Statement ingStatement = connection.createStatement();
             if (ingredient.getShoppingListStatus() == Status.added && ingredient.getId() != null) {
-                Double quantity = changeToDefaultUnit(ingredient);
+                Double quantity = ingredient.getQuantity();
+                if (!ingredient.getUnit().equals("piece")) {
+                    quantity = changeToDefaultUnit(ingredient);
+                }
                 ingStatement.execute("INSERT INTO SHOPPING_LIST values(null, "
                                                                 + quantity + ", '"
                                                                 + ingredient.getId()  + "', '"
@@ -630,14 +633,16 @@ public class DatabaseConnection {
                 ingredient.setShoppingListStatus(Status.loaded);
             }
             else if (ingredient.getShoppingListStatus() == Status.edited){
-                System.out.println("dupa");
                 ingStatement.execute("SELECT shopping_list_id FROM shopping_list WHERE ingredient_list_id = " +ingredient.getId());
                 if (resultSet.next()) {
                     ingStatement.execute("UPDATE shopping_list SET amount =" + ingredient.getQuantity() + " WHERE username = '" + activeUser.getUsername() + "' and ingredient_list_id = " + ingredient.getId());
                     ingredient.setShoppingListStatus(Status.loaded);
                 }
                 else{
-                    Double quantity = changeToDefaultUnit(ingredient);
+                    Double quantity = ingredient.getQuantity();
+                    if (!ingredient.getUnit().equals("piece")) {
+                        quantity = changeToDefaultUnit(ingredient);
+                    }
                     ingStatement.execute("INSERT INTO SHOPPING_LIST values(null, "
                             + quantity + ", '"
                             + ingredient.getId()  + "', '"

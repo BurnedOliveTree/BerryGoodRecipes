@@ -98,7 +98,7 @@ public class ShoppingListPane extends BasicPaneActions {
         unit.setPrefWidth(newIngredient.getPrefWidth());
         addButton.setPrefWidth(newIngredient.getPrefWidth());
         addButton.setOnAction(actionEvent -> {
-            if (!quantity.getText().equals("") && !name.getText().equals("")) {
+            if (!quantity.getText().equals("")  && quantity.getText().matches("\\d+(\\.\\d+)?") && !name.getText().equals("")) {
                 Ingredient ingredient = null;
                 try {
                     ingredient = new Ingredient(null, DatabaseConnection.convertUnit(Double.parseDouble(quantity.getText()), unit.getSelectionModel().getSelectedItem().toString(), "gram"),"gram", name.getText());
@@ -106,7 +106,7 @@ public class ShoppingListPane extends BasicPaneActions {
                     err.printStackTrace();
                 }
                 ingredient.setShoppingListStatus(Status.added);
-                if (activeUser.isNameInShoppingList(ingredient.getName())){
+                if (activeUser.qualifiesToAdd(ingredient.getName())){
                     try {
                         activeUser.editQuantityInShopping(ingredient.getName(), ingredient.getQuantity());
                     } catch (IOException | SQLException err) {
@@ -123,6 +123,8 @@ public class ShoppingListPane extends BasicPaneActions {
                 } catch (IOException | SQLException e) {
                     e.printStackTrace();
                 }
+            } else {
+                quantity.clear();
             }
         });
         newIngredient.getChildren().addAll(quantity,unit, name, addButton);
@@ -210,7 +212,7 @@ public class ShoppingListPane extends BasicPaneActions {
         MenuItem delete = new MenuItem("Delete");
         delete.setOnAction(actionEvent -> {
             if (otherListsMenu.getValue().equals("User")) {
-                activeUser.removeSameNamedFromSL(ingredientList.get(shoppingList.getSelectionModel().getSelectedIndex()).getName());
+                activeUser.removeSameNamedFromSL(ingredientList.get(shoppingList.getSelectionModel().getSelectedIndex()).getName(), ingredientList.get(shoppingList.getSelectionModel().getSelectedIndex()).getUnit());
             } else {
                 try {
                     DatabaseConnection.deleteIngredientFromGroupShoppingList(activeUser, otherListsMenu.getValue(), ingredientList.get(shoppingList.getSelectionModel().getSelectedIndex()));
