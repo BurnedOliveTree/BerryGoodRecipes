@@ -63,7 +63,6 @@ public class User {
     }
     public void setDefaultUnitSystem(String unitSystem) {
         defaultUnitSystem = unitSystem;
-        System.out.println(unitSystem);
     }
 
     public List<Recipe> getAllFavorites() {
