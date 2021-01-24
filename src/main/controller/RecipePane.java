@@ -45,7 +45,7 @@ public class RecipePane  extends BasicPaneActions {
     @FXML private Label timePrepLabel;
     @FXML private Spinner<Integer> portionArea;
     @FXML private Pane ingredientPane;
-    @FXML private ListView ingredientListView;
+    @FXML private ListView<Ingredient> ingredientListView;
     @FXML private Button exitButton;
     @FXML private Button shoppingListButton;
     @FXML private Button likeButton;
@@ -200,7 +200,7 @@ public class RecipePane  extends BasicPaneActions {
         }
         else {
             for (Ingredient ing : ingredientsList) {
-                ingredientListView.getItems().add(String.format((ing.getQuantity() % 1 == 0)?"%1.0f %s %s":"%1.2f %s %s", ing.getQuantity(), ing.getUnit(), ing.getName()));
+                ingredientListView.getItems().add(ing);
             }
         }
     }

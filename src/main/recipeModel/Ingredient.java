@@ -78,4 +78,9 @@ public class Ingredient {
             return ingredient.getId().equals(this.id);
         }
     }
+
+    @Override
+    public String toString() {
+        return String.format((this.getQuantity() % 1 == 0)?"%1.0f %s %s":"%1.2f %s %s", this.getQuantity(), this.getUnit(), this.getName());
+    }
 }
