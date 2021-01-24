@@ -49,7 +49,6 @@ public class RecipePane  extends BasicPaneActions {
     @FXML private Button exitButton;
     @FXML private Button shoppingListButton;
     @FXML private Button likeButton;
-    @FXML private Button timeButton;
     @FXML private Button commentButton;
     @FXML private Button scaleButton;
     @FXML private VBox propertyBox;
