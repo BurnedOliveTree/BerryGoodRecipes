@@ -116,6 +116,8 @@ begin
         select COUNT(*) into v_found_ingredient from SHOPPING_LIST where GROUP_ID = p_group_id and INGREDIENT_LIST_ID = c_info.INGREDIENT_LIST_ID;
         if v_found_ingredient = 0 then
             UPDATE SHOPPING_LIST SET GROUP_ID = p_group_id WHERE INGREDIENT_LIST_ID = c_info.INGREDIENT_LIST_ID and GROUP_ID is null and USERNAME = p_name;
+        else
+            DELETE SHOPPING_LIST WHERE INGREDIENT_LIST_ID = c_info.INGREDIENT_LIST_ID and GROUP_ID is null and USERNAME = p_name;
         end if;
     end loop;
 end;

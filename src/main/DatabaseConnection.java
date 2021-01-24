@@ -184,7 +184,16 @@ public class DatabaseConnection {
         ResultSet result = statement.executeQuery(String.format("SELECT RECIPE_ID, NAME, DATE_ADDED FROM RECIPE WHERE UPPER(OWNER_NAME) = '%s'", username.toUpperCase()));
         List<Recipe> userRecipes = new ArrayList<>();
         while (result.next()) {
-            userRecipes.add(getRecipe(result.getInt("RECIPE_ID")));
+            int id = result.getInt("RECIPE_ID");
+            Recipe recipe = getRecipe(id);
+            Statement stat = connection.createStatement();
+            ResultSet resPublicity = stat.executeQuery(String.format("SELECT G.NAME FROM \"GROUP\" G WHERE G.GROUP_ID = (SELECT P.GROUP_ID FROM PUBLICITY P WHERE P.RECIPE_ID = %d)", id));
+            resPublicity.next();
+            String groupName = resPublicity.getString("NAME");
+            recipe.setGroupName(groupName);
+            resPublicity.close();
+            stat.close();
+            userRecipes.add(recipe);
         }
         result.close();
         statement.close();

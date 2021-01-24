@@ -8,36 +8,77 @@ insert into SHOPPING_LIST values (null, 5, 10, 'Rokarolka', null);
 insert into SHOPPING_LIST values (null, 5, 29, 'Rokarolka', null);
 insert into SHOPPING_LIST values (null, 34, 30, 'BurnedOliveTree', null);
 commit;
+declare
+    before_share NUMERIC;
+    after_share_group NUMERIC;
+    after_share_user NUMERIC;
 begin
+    select count(*) into before_share from shopping_list where username = 'Rokarolka' and GROUP_ID is null;
     share_shopping_list('Rokarolka', 1);
+    commit;
+    select count(*) into after_share_user from shopping_list where username = 'Rokarolka' and GROUP_ID=1;
+    select count(*) into after_share_group from shopping_list where username = 'Rokarolka' and GROUP_ID=null;
+    DBMS_OUTPUT.PUT_LINE('If some ingredient already in group shopping list, then dont add them to group shopping list');
+    DBMS_OUTPUT.PUT_LINE('Before: ' || before_share || ', after in user shopping list ' || after_share_user || ', after in group shopping list ' || after_share_group);
 end;
-commit;
-begin
-    share_shopping_list('BurnedOliveTree', 1);
-end;
-commit;
 /
 -- TEST PROCEDURE add_new_ingredient_to_shopping_list
--- adding ingredient to shopping list which isn't in ingredient list 
-begin
-    add_new_ingredient_to_shopping_list('ketchup', 'tablespoon', 5.0, 'Rokarolka');
-end;
+-- adding ingredient to shopping list which isn't in ingredient list
+delete INGREDIENT_LIST where INGREDIENT_NAME = 'ketchup' and INGREDIENT_UNIT = 'tablespoon';
+delete INGREDIENT where NAME = 'ketchup';
 commit;
--- add ingredient which doesn't exist in past
+declare
+    ing_list_id NUMERIC;
+    before_adding NUMERIC;
+    after_adding NUMERIC;
 begin
+    select count(*) into before_adding from ingredient_list;
+    add_ingredient_to_ingredient_list('ketchup', 'tablespoon', ing_list_id);
+    select count(*) into after_adding from ingredient_list;
+    commit;
+    DBMS_OUTPUT.PUT_LINE('Before: ' || before_adding || ', after: ' || after_adding || ', new id in ingredient_list: ' || ing_list_id);
+end;
+/
+-- TEST PROCEDURE dd_new_ingredient_to_shopping_list
+-- which doesn't exist in past
+delete SHOPPING_LIST sl where sl.INGREDIENT_LIST_ID = (SELECT il.INGREDIENT_LIST_ID FROM INGREDIENT_LIST il WHERE il.INGREDIENT_NAME = 'mąka orkiszowa');
+delete INGREDIENT_LIST where INGREDIENT_NAME = 'mąka orkiszowa';
+delete INGREDIENT where NAME = 'mąka orkiszowa';
+commit;
+declare
+    before_adding_in_il NUMERIC;
+    after_adding_in_il NUMERIC;
+    before_adding_in_ing NUMERIC;
+    after_adding_in_ing NUMERIC;
+     new_id NUMERIC;
+begin
+    select count(*) into before_adding_in_il from ingredient_list;
+    select count(*) into before_adding_in_ing from ingredient;
     add_new_ingredient_to_shopping_list('mąka orkiszowa', 'gram', 100, 'Rokarolka');
+    commit;
+    select count(*) into after_adding_in_il from ingredient_list;
+    select count(*) into after_adding_in_ing from ingredient;
+    select sl.INGREDIENT_LIST_ID into new_id from SHOPPING_LIST sl where sl.INGREDIENT_LIST_ID = (select il.INGREDIENT_LIST_ID from INGREDIENT_LIST il where il.INGREDIENT_NAME = 'mąka orkiszowa');
+    DBMS_OUTPUT.PUT_LINE('Before in ingredient list: ' || before_adding_in_il || ', after in ingredient list: ' || after_adding_in_il);
+    DBMS_OUTPUT.PUT_LINE('Before in ingredient: ' || before_adding_in_ing || ', after in ingredient: ' || after_adding_in_ing);
+    DBMS_OUTPUT.PUT_LINE('New ingredient in shopping list: ' || new_id);
 end;
 /
 -- TEST PROCEDURE add_recipe, PROCEDURE add_ingredient_to_recipe
 -- add recipe to database
+delete RECIPE where NAME = 'Placki' and OWNER_NAME = 'Rokarolka';
 declare
-    recipe_id number;
+    new_recipe_id number;
 begin
-    add_recipe('Rokarolka', 'Placki', 'Wymieszaj składniki. Smaż na wolnym ogniu.', 5, 1, sysdate,10, 0, recipe_id);
-    add_ingredient_to_recipe('mąka', 'gram', 100, recipe_id);
-    add_ingredient_to_recipe('sól', 'teaspoon', 1, recipe_id);
+    add_recipe('Rokarolka', 'Placki', 'Wymieszaj składniki. Smaż na wolnym ogniu.', 5, 1, sysdate,10, 0, new_recipe_id);
+    add_ingredient_to_recipe('mąka', 'gram', 100, new_recipe_id);
+    add_ingredient_to_recipe('sól', 'teaspoon', 1, new_recipe_id);
+    commit;
+    DBMS_OUTPUT.PUT_LINE('New recipe id: ' || new_recipe_id);
+    for cr in (select * from INGREDIENT_LIST where RECIPE_ID = new_recipe_id) loop
+        DBMS_OUTPUT.PUT_LINE('Recipe id: ' ||  cr.RECIPE_ID  || ' -- > Ingredient name: ' || cr.INGREDIENT_NAME || ' Unit: ' || cr.INGREDIENT_UNIT || ' Amount: ' || cr.AMOUNT);
+    end loop;
 end;
-commit;
 /
 -- TEST FUNCTION calc_rating
 -- insert few opinions and return the average rating

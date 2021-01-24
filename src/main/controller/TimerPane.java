@@ -33,7 +33,6 @@ public class TimerPane extends BasicPaneActions {
         setSpinnerProperty(hoursBox);
         setSpinnerProperty(minutesBox);
         setSpinnerProperty(secondsBox);
-//        setMedia();
 
         Platform.runLater(() -> {
         Stage stage = (Stage) hoursBox.getScene().getWindow();
