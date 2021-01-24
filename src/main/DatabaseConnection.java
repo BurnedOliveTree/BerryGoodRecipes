@@ -391,7 +391,6 @@ public class DatabaseConnection {
         statement.close();
         Statement ingredientStatement = connection.createStatement();
         for (Ingredient ingredient: recipe.getIngredientList()){
-            System.out.println("BEGIN add_ingredient_to_recipe('" + ingredient.getName() +  "', '" + ingredient.getUnit() +"', "+ ingredient.getQuantity() +  ", " +  recipe_id + "); END;");
             ingredientStatement.execute("BEGIN add_ingredient_to_recipe('" + ingredient.getName() +  "', '" + ingredient.getUnit() +"', "+ ingredient.getQuantity() +  ", " +  recipe_id + "); END;");
         }
         connection.commit();
@@ -431,7 +430,7 @@ public class DatabaseConnection {
         }
         else
             insideQuery = new StringBuilder("select distinct RECIPE_ID from PUBLICITY where GROUP_ID = 0");
-        String query = "select distinct rcp.RECIPE_ID, rcp.NAME, rcp.OWNER_NAME, rcp.PREPARATION_TIME, rcp.COST, CALC_RATING(rcp.RECIPE_ID) as RATING from RECIPE rcp join INGREDIENT_LIST ing on rcp.RECIPE_ID = ing.RECIPE_ID where rcp.RECIPE_ID in ("+insideQuery+")";
+        String query = "select distinct rcp.RECIPE_ID, rcp.NAME, rcp.OWNER_NAME, rcp.PREPARATION_TIME, rcp.COST, CALC_RATING(rcp.RECIPE_ID) as RATING from RECIPE rcp where rcp.RECIPE_ID in ("+insideQuery+")";
         if (whereStatement != null) {
             query = query + " AND " + whereStatement;
         }
