@@ -57,6 +57,7 @@ public class DatabaseConnection {
     }
 
     public static User login(String username, String password, Label errMess) throws SQLException, IOException {
+        // sign into users account and set him as the active user
         if (connection == null)
             setConnection();
         User activeUser = null;
@@ -90,8 +91,6 @@ public class DatabaseConnection {
         return activeUser;
     }
 
-
-
     private static ArrayList<Ingredient> getShoppingList(String username) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM SHOPPING_LIST WHERE USERNAME = '" + username + "' AND GROUP_ID IS NULL" );
@@ -115,6 +114,7 @@ public class DatabaseConnection {
     }
 
     public static User register(String username, String password, Label errMess) throws SQLException, IOException {
+        // register a new account
         if (connection == null)
             setConnection();
 
@@ -143,6 +143,7 @@ public class DatabaseConnection {
     }
 
     public static String setPassword(String username, String newPassword, String oldPassword) throws SQLException, IOException {
+        // change password of a given user
         String status;
         if (connection == null)
             setConnection();
@@ -201,6 +202,7 @@ public class DatabaseConnection {
     }
 
     private static List<String> getUserFollowed(String username) throws SQLException {
+        // get all users which are followed by a given user
         Statement statement = connection.createStatement();
         String query = "select FOLLOWING_USERNAME, FOLLOWED_USERNAME from FOLLOWED where lower(FOLLOWING_USERNAME) = '"+username.toLowerCase()+"'";
         ResultSet resultSet = statement.executeQuery(query);
@@ -248,6 +250,7 @@ public class DatabaseConnection {
     }
 
     private static List<String> getGroupParticipants(String GroupID) throws SQLException {
+        // get all users which belong to a given group
         Statement statement = connection.createStatement();
         String query = "select USERNAME from BELONG where GROUP_ID = "+GroupID;
         ResultSet resultSet = statement.executeQuery(query);
@@ -261,6 +264,7 @@ public class DatabaseConnection {
     }
 
     public static List<String> getGroupNames(String username) throws SQLException {
+        // get all group in which the active user belongs - just names
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT NAME FROM \"GROUP\" JOIN BELONG USING (GROUP_ID) WHERE USERNAME = '" + username + "' AND GROUP_ID != 0");
         List<String> groups = new ArrayList<>();
@@ -273,6 +277,7 @@ public class DatabaseConnection {
     }
 
     public static List<List<String>> getGroups(User user) throws SQLException, IOException {
+        // get all groups in which the active user belongs
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
@@ -292,6 +297,7 @@ public class DatabaseConnection {
     }
 
     public static List<Integer> getGroupByName(String[] groupName) throws IOException, SQLException {
+        // retrieve a list of IDs of groups of given names
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
@@ -309,6 +315,7 @@ public class DatabaseConnection {
     }
 
     public static void addGroup(String name, String username) throws IOException, SQLException {
+        // add group of the given name and add user to it
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
@@ -318,6 +325,7 @@ public class DatabaseConnection {
     }
 
     public static void deleteGroup(int groupID) throws IOException, SQLException {
+        // delete group of a given ID
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
@@ -327,6 +335,7 @@ public class DatabaseConnection {
     }
 
     public static void kickUser(String username, int groupID) throws IOException, SQLException {
+        // kick a user from a specified group
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
@@ -336,6 +345,7 @@ public class DatabaseConnection {
     }
 
     public static void deleteUser(String username) throws IOException, SQLException {
+        // delete account and all directly linked data
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
@@ -345,6 +355,7 @@ public class DatabaseConnection {
     }
 
     public static void invite(String username, String groupName) throws IOException, SQLException {
+        // add given user to a given group
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
@@ -359,6 +370,7 @@ public class DatabaseConnection {
     }
 
     public static List<Recipe> search(User activeUser, String whereStatement, List<Integer> groupID) throws SQLException, IOException {
+        // the search engine of our app, queries all available recipes with given conditions
         if (activeUser == null && groupID != null)
             return null;
         if (connection == null)
@@ -395,6 +407,7 @@ public class DatabaseConnection {
     }
 
     public static Recipe getSelectedRecipe(int recipeId) {
+        // get data of a selected recipe
         try {
             if (connection == null)
                 setConnection();
@@ -433,6 +446,7 @@ public class DatabaseConnection {
     }
 
     public static List<String> getUnitSystems() throws SQLException, IOException {
+        // get all unit systems from the database
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
