@@ -280,7 +280,7 @@ public class MainPane extends BasicPaneActions {
             setButtonActivity();
         }
         else {
-            FXMLLoader loader = loadFXML(new SignInPane(this), "/resources/logInWindow.fxml");
+            FXMLLoader loader = loadFXML(new SignInPane(this), "/signInPage.fxml");
             changeScene(loader, "Sign in", 180, 200);
         }
     }

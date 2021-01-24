@@ -182,7 +182,7 @@ public class DatabaseConnection {
     private static List<Recipe> getUserRecipes(String username) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery(String.format("SELECT RECIPE_ID, NAME, DATE_ADDED FROM RECIPE WHERE UPPER(OWNER_NAME) = '%s'", username.toUpperCase()));
-        List<Recipe> UserRecipes = new ArrayList<>();
+        List<Recipe> userRecipes = new ArrayList<>();
         while (result.next()) {
             int id = result.getInt("RECIPE_ID");
             Recipe recipe = getRecipe(id);
@@ -190,13 +190,14 @@ public class DatabaseConnection {
             ResultSet resPublicity = stat.executeQuery(String.format("SELECT G.NAME FROM \"GROUP\" G WHERE G.GROUP_ID = (SELECT P.GROUP_ID FROM PUBLICITY P WHERE P.RECIPE_ID = %d)", id));
             resPublicity.next();
             String groupName = resPublicity.getString("NAME");
+            recipe.setGroupName(groupName);
             resPublicity.close();
             stat.close();
-            UserRecipes.add(recipe);
+            userRecipes.add(recipe);
         }
         result.close();
         statement.close();
-        return UserRecipes;
+        return userRecipes;
     }
 
     private static List<String> getUserFollowed(String username) throws SQLException {
@@ -447,7 +448,7 @@ public class DatabaseConnection {
         return stringList;
     }
 
-    public static void createOpinion(Opinion opinion, Label opinionLabel, ListView opinionsView) throws SQLException, IOException {
+    public static void createOpinion(Opinion opinion, Label opinionLabel, ListView<String> opinionsView) throws SQLException, IOException {
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
@@ -468,7 +469,7 @@ public class DatabaseConnection {
         statement.close();
     }
 
-    public static void fillOpinions(Recipe recipe, ListView opinionsView) throws SQLException, IOException {
+    public static void fillOpinions(Recipe recipe, ListView<String> opinionsView) throws SQLException, IOException {
         if (connection == null)
             setConnection();
         opinionsView.getItems().clear();
@@ -489,7 +490,7 @@ public class DatabaseConnection {
         statement.close();
     }
 
-    public static void deleteOpinion(Recipe recipe, String userName, ListView opinionsView) throws IOException, SQLException {
+    public static void deleteOpinion(Recipe recipe, String userName, ListView<String> opinionsView) throws IOException, SQLException {
 
         if (connection == null)
             setConnection();
@@ -501,7 +502,7 @@ public class DatabaseConnection {
         statement.close();
     }
 
-    public static void reportOpinion(ListView opinionList, String username, Label label,String opinionAuthor, int recipeId) throws SQLException, IOException {
+    public static void reportOpinion(String username, Label label, String opinionAuthor, int recipeId) throws SQLException, IOException {
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();

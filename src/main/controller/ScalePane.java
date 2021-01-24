@@ -10,23 +10,17 @@ import javafx.scene.image.ImageView;
 
 import main.DatabaseConnection;
 import main.converterModel.Converter;
-import main.recipeModel.Recipe;
-import main.userModel.User;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 
 public class ScalePane extends BasicPaneActions {
-    private final Recipe recipe;
-    private final User activeUser;
     private final Converter converter;
     private final BasicPaneActions returnPane;
     ObservableList<String> shapeList = FXCollections.observableArrayList("Round", "Rectangular");
 
-    public ScalePane(Recipe recipe, User activeUser, BasicPaneActions returnPane) {
-        this.recipe = recipe;
-        this.activeUser = activeUser;
+    public ScalePane(BasicPaneActions returnPane) {
         this.converter = new Converter();
         this.returnPane = returnPane;
     }
@@ -34,8 +28,8 @@ public class ScalePane extends BasicPaneActions {
     @FXML
     public Button exitButton;
     @FXML private ImageView exitPic;
-    public ChoiceBox IHaveBox;
-    public ChoiceBox inRecipeBox;
+    public ChoiceBox<String> IHaveBox;
+    public ChoiceBox<String> inRecipeBox;
     public Label inRecipeSize;
     public Label IHaveSize;
     public TextArea inRecipeArea1;
@@ -52,8 +46,8 @@ public class ScalePane extends BasicPaneActions {
     public Button moldButton;
     public TextArea unitArea1;
     public TextArea unitArea2;
-    public ChoiceBox unitChoiceBox1;
-    public ChoiceBox unitChoiceBox2;
+    public ChoiceBox<String> unitChoiceBox1;
+    public ChoiceBox<String> unitChoiceBox2;
     public Button okUnit;
     public Label unitLabel;
 
@@ -73,10 +67,8 @@ public class ScalePane extends BasicPaneActions {
         okUnit.setOnAction(e-> {
             try {
                 okUnitAction();
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
+            } catch (IOException | SQLException err) {
+                err.printStackTrace();
             }
         });
         unitArea2.setDisable(true);
@@ -86,12 +78,12 @@ public class ScalePane extends BasicPaneActions {
     public void okUnitAction() throws IOException, SQLException {
         unitLabel.setText("");
         String unitArea1Text = unitArea1.getText();
-        Double quantity = 0.0;
+        double quantity = 0.0;
         String firstChoice;
         String secondChoice;
         try {
-            firstChoice = unitChoiceBox1.getValue().toString();
-            secondChoice = unitChoiceBox2.getValue().toString();
+            firstChoice = unitChoiceBox1.getValue();
+            secondChoice = unitChoiceBox2.getValue();
         }
         catch(NullPointerException e){
             unitLabel.setText("Not enough info");
@@ -105,9 +97,9 @@ public class ScalePane extends BasicPaneActions {
         unitArea2.setText(Double.toString(DatabaseConnection.convertUnit(quantity,firstChoice,secondChoice)));
     }
 
-    private void sizeBoxAction(ChoiceBox box) {
+    private void sizeBoxAction(ChoiceBox<String> box) {
         if (box.getId().equals("inRecipeBox")) {
-            if (inRecipeBox.getValue().toString() == "Rectangular") {
+            if (inRecipeBox.getValue().equals("Rectangular")) {
                 inRecipeArea1.setVisible(false);
                 inRecipeArea2.setVisible(false);
                 cm1.setText("");
@@ -128,7 +120,7 @@ public class ScalePane extends BasicPaneActions {
             }
         }
         else {
-            if (IHaveBox.getValue().toString() == "Rectangular") {
+            if (IHaveBox.getValue().equals("Rectangular")) {
                 IHaveArea1.setVisible(false);
                 IHaveArea2.setVisible(false);
                 cm2.setText("");
@@ -160,7 +152,7 @@ public class ScalePane extends BasicPaneActions {
         double IHaveVolume;
         double inRecipeVolume;
         if (a1.equals("") || h1.equals("") || a2.equals("")|| h2.equals("")){
-            moldLabel.setText("Too little informations");
+            moldLabel.setText("Too little information");
             return;
         }
         try {

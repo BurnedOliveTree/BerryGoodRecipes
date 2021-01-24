@@ -45,7 +45,7 @@ public class RecipePane  extends BasicPaneActions {
     @FXML private Label timePrepLabel;
     @FXML private Spinner<Integer> portionArea;
     @FXML private Pane ingredientPane;
-    @FXML private ListView ingredientListView;
+    @FXML private ListView<Ingredient> ingredientListView;
     @FXML private Button exitButton;
     @FXML private Button shoppingListButton;
     @FXML private Button likeButton;
@@ -74,7 +74,7 @@ public class RecipePane  extends BasicPaneActions {
         Text text = new Text(this.recipe.getPrepareMethod());
         text.setFont(Font.font("System", FontPosture.REGULAR, 13));
         descText.getChildren().add(text);
-        ingredientListView = new ListView();
+        ingredientListView = new ListView<>();
         setIngredListView(this.recipe.getIngredientList(), Boolean.FALSE);
         ingredientPane.getChildren().add(ingredientListView);
         ingredientListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -115,25 +115,23 @@ public class RecipePane  extends BasicPaneActions {
             setContextMenu(ingredientListView, createDeleteFromShoppingListItem(), createAddToShoppingListItem(), createChangeUnit());
         }
 
-        Platform.runLater(() -> {
-            commentButton.setPrefWidth(propertyBox.getWidth());
-        });
+        Platform.runLater(() -> commentButton.setPrefWidth(propertyBox.getWidth()));
     }
 
     // inner class which extends ListCell with additional button - for adding ingredient to shopping list - option for logged users
     static class ButtonCell extends ListCell<Ingredient> {
-        private HBox box = new HBox();
-        private Pane pane = new Pane();
-        private Label label = new Label("(empty)");
+        private final HBox box = new HBox();
+        private final Label label = new Label("(empty)");
         public Ingredient selectedIngredient;
-        private User activeUser;
-        private ImageView view;
+        private final User activeUser;
+        private final ImageView view;
 
         public ButtonCell(User activeUser) {
             super();
             view = new ImageView(new Image("icons/plus.png"));
             view.setFitHeight(20);
             view.setFitWidth(20);
+            Pane pane = new Pane();
             box.getChildren().addAll(view, label, pane);
             HBox.setHgrow(pane, Priority.ALWAYS);
             this.activeUser = activeUser;
@@ -189,10 +187,8 @@ public class RecipePane  extends BasicPaneActions {
                 ingredientListView.setCellFactory(ingredientListView -> new ButtonCell(activeUser));
                 return;
             }
-            String bestUnit = "";
-            ArrayList<Ingredient> goodIngredients;
-            ArrayList<Ingredient> recipeIngredients = ingredientsList;
-            for (Ingredient ing : recipeIngredients) {
+            String bestUnit;
+            for (Ingredient ing : ingredientsList) {
                 if (ing.getUnit().equals("piece")) {
                     ingredientListView.getItems().add(ing);
                 } else {
@@ -203,8 +199,8 @@ public class RecipePane  extends BasicPaneActions {
             }
         }
         else {
-            for (Ingredient ingredient : ingredientsList) {
-                ingredientListView.getItems().add(String.format((ingredient.getQuantity() % 1 == 0)?"%1.0f %s %s":"%1.2f %s %s", ingredient.getQuantity(), ingredient.getUnit(), ingredient.getName()));
+            for (Ingredient ing : ingredientsList) {
+                ingredientListView.getItems().add(ing);
             }
         }
     }
@@ -390,7 +386,7 @@ public class RecipePane  extends BasicPaneActions {
     }
     @FXML
     private void onScaleButtonAction() {
-        FXMLLoader loader = loadFXML(new ScalePane(this.recipe, activeUser, this), "/resources/scalePage.fxml");
+        FXMLLoader loader = loadFXML(new ScalePane(this), "/resources/scalePage.fxml");
         changeScene(scaleButton, loader);
     }
     @FXML

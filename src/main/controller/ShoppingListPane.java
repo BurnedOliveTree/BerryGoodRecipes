@@ -29,7 +29,7 @@ public class ShoppingListPane extends BasicPaneActions {
     private final BasicPaneActions returnPane;
     private final List<String> groups;
     private List<Ingredient> ingredientList = new ArrayList<>();
-    private String showFirst;
+    private final String showFirst;
 
     @FXML private Button exitButton;
     @FXML private ImageView exitPic;
@@ -83,7 +83,7 @@ public class ShoppingListPane extends BasicPaneActions {
         CustomMenuItem customMenuItem = new CustomMenuItem();
         VBox newIngredient = new VBox();
         TextField quantity = new TextField();
-        ChoiceBox unit = new ChoiceBox();
+        ChoiceBox<String> unit = new ChoiceBox<>();
         unit.getItems().addAll(FXCollections.observableArrayList(activeUser.getUnits()));
         TextField name = new TextField();
         Button addButton = new Button();
@@ -99,29 +99,20 @@ public class ShoppingListPane extends BasicPaneActions {
         addButton.setPrefWidth(newIngredient.getPrefWidth());
         addButton.setOnAction(actionEvent -> {
             if (!quantity.getText().equals("")  && quantity.getText().matches("\\d+(\\.\\d+)?") && !name.getText().equals("")) {
-                Ingredient ingredient = null;
                 try {
-                    ingredient = new Ingredient(null, DatabaseConnection.convertUnit(Double.parseDouble(quantity.getText()), unit.getSelectionModel().getSelectedItem().toString(), "gram"),"gram", name.getText());
+                    Ingredient ingredient = new Ingredient(null, DatabaseConnection.convertUnit(Double.parseDouble(quantity.getText()), unit.getSelectionModel().getSelectedItem(), "gram"),"gram", name.getText());
+                    ingredient.setShoppingListStatus(Status.added);
+                    if (activeUser.qualifiesToAdd(ingredient.getName())){
+                        activeUser.editQuantityInShopping(ingredient.getName(), ingredient.getQuantity());
+                    }
+                    else {
+                        activeUser.addToShoppingList(ingredient);
+                    }
+                    quantity.clear();
+                    name.clear();
+                    showShoppingList("User");
                 } catch (IOException | SQLException err) {
                     err.printStackTrace();
-                }
-                ingredient.setShoppingListStatus(Status.added);
-                if (activeUser.qualifiesToAdd(ingredient.getName())){
-                    try {
-                        activeUser.editQuantityInShopping(ingredient.getName(), ingredient.getQuantity());
-                    } catch (IOException | SQLException err) {
-                        err.printStackTrace();
-                    }
-                }
-                else {
-                    activeUser.addToShoppingList(ingredient);
-                }
-                quantity.clear();
-                name.clear();
-                try {
-                    showShoppingList("User");
-                } catch (IOException | SQLException e) {
-                    e.printStackTrace();
                 }
             } else {
                 quantity.clear();

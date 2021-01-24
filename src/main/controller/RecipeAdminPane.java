@@ -25,7 +25,7 @@ import java.util.Optional;
 
 public class RecipeAdminPane extends BasicPaneActions {
     private final User activeUser;
-    private List<String> accessibility = new ArrayList<>();
+    private final List<String> accessibility = new ArrayList<>();
 
     @FXML private TableView<Recipe> myRecipesTable;
     @FXML private Button exitButton;
@@ -74,7 +74,6 @@ public class RecipeAdminPane extends BasicPaneActions {
         setContextMenu(myRecipesTable, createDeleteMyRecipeItem());
 
         titleField.setPromptText("Recipe Title");
-//        accessibilityBox.setT
         hrsField.setPromptText("Hrs");
         minsField.setPromptText("Mins");
         ingredientPane.getRowConstraints().clear();
@@ -103,13 +102,13 @@ public class RecipeAdminPane extends BasicPaneActions {
     private void saveRecipe() throws IOException, SQLException {
         String groupName = accessibilityBox.getSelectionModel().getSelectedItem();
         ArrayList<Ingredient> ingredientList = getIngredientList();
-        String warining = checkCorrectness(getIngredientList());
-        if (warining.equals("")){
+        String warning = checkCorrectness(getIngredientList());
+        if (warning.equals("")){
             Integer publicity = null;
             if (!groupName.equals("private")){
                 publicity = DatabaseConnection.getGroupIdWithName(groupName, activeUser);
             }
-            Integer preparationTime = getTimePreparationInMins();
+            Integer preparationTime = getTimePreparationInMinutes();
             Double cost = getCost();
             Double portions = getPortions();
             Recipe recipe = new Recipe(null, titleField.getText(), activeUser.getUsername(), descriptionArea.getText(), publicity, getDateAdded(), preparationTime, cost, portions, ingredientList);
@@ -120,35 +119,35 @@ public class RecipeAdminPane extends BasicPaneActions {
             myRecipesTable.getItems().add(recipe);
             myRecipesTable.refresh();
         } else {
-            showWarning(warining);
+            showWarning(warning);
         }
     }
 
     private String checkCorrectness(ArrayList<Ingredient> ingredientList) {
-        String warining = "";
+        String warning = "";
         if (titleField.getText().equals(""))
-            warining += "Please enter title\n";
+            warning += "Please enter title\n";
         if (descriptionArea.getText().equals(""))
-            warining += "Please enter description.\n";
+            warning += "Please enter description.\n";
         if (ingredientList.size() == 0)
-            warining += "Please add 1 or more ingredient\n";
+            warning += "Please add 1 or more ingredient\n";
         if (checkIfNotDouble(costField.getText()) && !costField.getText().equals("")) {
-            warining += "Please enter correct cost value\n";
+            warning += "Please enter correct cost value\n";
             costField.clear();
         }
         if (checkIfNotDouble(portionField.getText()) && !portionField.getText().equals("")){
-            warining += "Please enter correct number of portions value\n";
+            warning += "Please enter correct number of portions value\n";
             portionField.clear();
         }
         if (checkIfNotInteger(hrsField.getText()) && !hrsField.getText().equals("")) {
-            warining += "Please enter correct hours value\n";
+            warning += "Please enter correct hours value\n";
             hrsField.clear();
         }
         if (checkIfNotInteger(minsField.getText()) && !minsField.getText().equals("")) {
-            warining += "Please enter correct hours value\n";
+            warning += "Please enter correct hours value\n";
             minsField.clear();
         }
-        return warining;
+        return warning;
     }
 
     @FXML
@@ -207,7 +206,7 @@ public class RecipeAdminPane extends BasicPaneActions {
             return Double.parseDouble(portionField.getText());
     }
 
-    private Integer getTimePreparationInMins() {
+    private Integer getTimePreparationInMinutes() {
         if (hrsField.getText().equals("") && minsField.getText().equals(""))
             return 0;
         else {

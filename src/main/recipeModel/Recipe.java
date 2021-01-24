@@ -13,6 +13,7 @@ public class Recipe {
     private Double cost;
     private String name;
     private Integer accessibility;
+    private String groupName;
     private Double portionNumber;
     private String dateAdded;
     private String prepareMethod;
@@ -122,7 +123,6 @@ public class Recipe {
             System.out.println("Error: ");
             err.printStackTrace();
         }
-
     }
 
     public void deleteFile(String filename) {
@@ -190,5 +190,6 @@ public class Recipe {
         return favoriteStatus;
     }
 
-
+    public void setGroupName(String groupName) { this.groupName = groupName; }
+    public String getGroupName() { return this.groupName; }
 }
