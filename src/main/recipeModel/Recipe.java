@@ -13,7 +13,6 @@ public class Recipe {
     private Double cost;
     private String name;
     private Integer accessibility;
-    private String groupName;
     private Double portionNumber;
     private String dateAdded;
     private String prepareMethod;
@@ -179,12 +178,7 @@ public class Recipe {
 
     public String getDateAdded() {return dateAdded;}
 
-    public String getGroupName() {return groupName;}
-
     public Integer getId() {return id;}
-
-    public void setGroupName(String groupName) {this.groupName = groupName; }
-
 
     public void setId(int recipeId) { this.id = recipeId; }
 

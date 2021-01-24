@@ -192,7 +192,6 @@ public class DatabaseConnection {
             String groupName = resPublicity.getString("NAME");
             resPublicity.close();
             stat.close();
-            recipe.setGroupName(groupName);
             UserRecipes.add(recipe);
         }
         result.close();

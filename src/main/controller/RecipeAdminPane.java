@@ -115,7 +115,6 @@ public class RecipeAdminPane extends BasicPaneActions {
             Double cost = getCost();
             Double portions = getPortions();
             Recipe recipe = new Recipe(null, titleField.getText(), activeUser.getUsername(), descriptionArea.getText(), publicity, getDateAdded(), preparationTime, cost, portions, ingredientList);
-            recipe.setGroupName(groupName);
             int recipeId  = DatabaseConnection.addRecipe(recipe, activeUser);
             recipe.setId(recipeId);
             clearRecipe();
