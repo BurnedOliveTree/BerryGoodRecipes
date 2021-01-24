@@ -176,7 +176,7 @@ public class MainPane extends BasicPaneActions {
             }
             if (query.contains("group:")) {
                 String[] tempList = split_search("group:");
-                groupID = DatabaseConnection.getGroupByName(tempList);
+                groupID = DatabaseConnection.getGroupIDs(tempList);
             }
         }
         query = "lower(rcp.name) like lower('%" + query + "%')" + args + " order by " + orderBy;

@@ -56,6 +56,42 @@ public class DatabaseConnection {
         System.out.println("Connection with database closed.");
     }
 
+    // USER
+
+    public static void saveUser(User user) throws SQLException, IOException {
+        if (user != null) {
+            if (connection == null)
+                setConnection();
+            Statement statement = connection.createStatement();
+            for (Recipe recipe: user.getAllFavorites()) {
+                if (recipe.getFavoriteStatus() == Status.added) {
+                    statement.executeUpdate("INSERT INTO FAVORITE SELECT null, '" + user.getUsername() + "', "+ recipe.getId() + " FROM DUAL\n" +
+                            "WHERE NOT EXISTS (SELECT NULL FROM FAVORITE WHERE RECIPE_ID=" +  recipe.getId() + " AND USERNAME='" + user.getUsername() + "')");
+
+                }
+                if (recipe.getFavoriteStatus() == Status.deleted){
+                    statement.executeUpdate(String.format("DELETE FROM FAVORITE WHERE RECIPE_ID = %d AND USERNAME = '%s'", recipe.getId(),  user.getUsername()));
+                }
+            }
+
+            if (user.getNewFollowed().size() != 0) {
+                for (String username: user.getNewFollowed()) {
+                    statement.executeUpdate(String.format("insert into FOLLOWED values (null, '%s', '%s')", user.getUsername(), username));
+                }
+            }
+            if (user.getDeletedFollowed().size() != 0) {
+                for (String username: user.getDeletedFollowed()) {
+                    statement.executeUpdate(String.format("delete from FOLLOWED where FOLLOWING_USERNAME = '%s' and FOLLOWED_USERNAME = '%s'", user.getUsername(), username));
+                }
+            }
+            statement.close();
+            connection.commit();
+            updateShoppingListView(user);
+            connection.commit();
+        }
+        closeConnection();
+    }
+
     public static User login(String username, String password, Label errMess) throws SQLException, IOException {
         // sign into users account and set him as the active user
         if (connection == null)
@@ -91,28 +127,6 @@ public class DatabaseConnection {
         return activeUser;
     }
 
-    private static ArrayList<Ingredient> getShoppingList(String username) throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM SHOPPING_LIST WHERE USERNAME = '" + username + "' AND GROUP_ID IS NULL" );
-        ArrayList<Ingredient> shoppingList = new ArrayList<>();
-        while (resultSet.next()) {
-            int ingredientId = resultSet.getInt("INGREDIENT_LIST_ID");
-            Statement ingredientStatement = connection.createStatement();
-            ResultSet ingredientResult = ingredientStatement.executeQuery("SELECT * FROM INGREDIENT_LIST WHERE INGREDIENT_LIST_ID =" + ingredientId);
-            if (ingredientResult.next()) {
-                Ingredient ingredient = new Ingredient(ingredientId, resultSet.getDouble("AMOUNT"), ingredientResult.getString("INGREDIENT_UNIT"), ingredientResult.getString("INGREDIENT_NAME"));
-                ingredient.setShoppingListStatus(Status.loaded);
-                shoppingList.add(ingredient);
-
-            }
-            ingredientResult.close();
-            ingredientStatement.close();
-        }
-        resultSet.close();
-        statement.close();
-        return shoppingList;
-    }
-
     public static User register(String username, String password, Label errMess) throws SQLException, IOException {
         // register a new account
         if (connection == null)
@@ -140,6 +154,16 @@ public class DatabaseConnection {
         statement.close();
 
         return activeUser;
+    }
+
+    public static void deleteUser(String username) throws IOException, SQLException {
+        // delete account and all directly linked data
+        if (connection == null)
+            setConnection();
+        Statement statement = connection.createStatement();
+        statement.execute("begin delete_account('" +username+ "'); end;");
+        connection.commit();
+        statement.close();
     }
 
     public static String setPassword(String username, String newPassword, String oldPassword) throws SQLException, IOException {
@@ -215,65 +239,26 @@ public class DatabaseConnection {
         return stringList;
     }
 
-    public static void saveUser(User user) throws SQLException, IOException {
-        if (user != null) {
-            if (connection == null)
-                setConnection();
-            Statement statement = connection.createStatement();
-            for (Recipe recipe: user.getAllFavorites()) {
-                if (recipe.getFavoriteStatus() == Status.added) {
-                    statement.executeUpdate("INSERT INTO FAVORITE SELECT null, '" + user.getUsername() + "', "+ recipe.getId() + " FROM DUAL\n" +
-                            "WHERE NOT EXISTS (SELECT NULL FROM FAVORITE WHERE RECIPE_ID=" +  recipe.getId() + " AND USERNAME='" + user.getUsername() + "')");
+    // GROUP
 
-                }
-                if (recipe.getFavoriteStatus() == Status.deleted){
-                        statement.executeUpdate(String.format("DELETE FROM FAVORITE WHERE RECIPE_ID = %d AND USERNAME = '%s'", recipe.getId(),  user.getUsername()));
-                    }
-                }
-
-            if (user.getNewFollowed().size() != 0) {
-                for (String username: user.getNewFollowed()) {
-                    statement.executeUpdate(String.format("insert into FOLLOWED values (null, '%s', '%s')", user.getUsername(), username));
-                }
-            }
-            if (user.getDeletedFollowed().size() != 0) {
-                for (String username: user.getDeletedFollowed()) {
-                    statement.executeUpdate(String.format("delete from FOLLOWED where FOLLOWING_USERNAME = '%s' and FOLLOWED_USERNAME = '%s'", user.getUsername(), username));
-                }
-            }
-            statement.close();
-            connection.commit();
-            updateShoppingListView(user);
-            connection.commit();
-        }
-        closeConnection();
+    public static void addGroup(String name, String username) throws IOException, SQLException {
+        // add group of the given name and add user to it
+        if (connection == null)
+            setConnection();
+        Statement statement = connection.createStatement();
+        statement.execute("begin add_group('"+username+ "', '" +name+"'); end;");
+        connection.commit();
+        statement.close();
     }
 
-    private static List<String> getGroupParticipants(String GroupID) throws SQLException {
-        // get all users which belong to a given group
+    public static void deleteGroup(int groupID) throws IOException, SQLException {
+        // delete group of a given ID
+        if (connection == null)
+            setConnection();
         Statement statement = connection.createStatement();
-        String query = "select USERNAME from BELONG where GROUP_ID = "+GroupID;
-        ResultSet resultSet = statement.executeQuery(query);
-        List<String> users = new ArrayList<>();
-        while (resultSet.next()) {
-            users.add(resultSet.getString("username"));
-        }
-        resultSet.close();
+        statement.execute("begin delete_group("+groupID+"); end;");
+        connection.commit();
         statement.close();
-        return users;
-    }
-
-    public static List<String> getGroupNames(String username) throws SQLException {
-        // get all group in which the active user belongs - just names
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT NAME FROM \"GROUP\" JOIN BELONG USING (GROUP_ID) WHERE USERNAME = '" + username + "' AND GROUP_ID != 0");
-        List<String> groups = new ArrayList<>();
-        while(resultSet.next()) {
-            groups.add(resultSet.getString("NAME"));
-        }
-        statement.close();
-        resultSet.close();
-        return groups;
     }
 
     public static List<List<String>> getGroups(User user) throws SQLException, IOException {
@@ -296,7 +281,20 @@ public class DatabaseConnection {
         return stringList;
     }
 
-    public static List<Integer> getGroupByName(String[] groupName) throws IOException, SQLException {
+    public static List<String> getGroupNames(String username) throws SQLException {
+        // get all group in which the active user belongs - just names
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("SELECT NAME FROM \"GROUP\" JOIN BELONG USING (GROUP_ID) WHERE USERNAME = '" + username + "' AND GROUP_ID != 0");
+        List<String> groups = new ArrayList<>();
+        while(resultSet.next()) {
+            groups.add(resultSet.getString("NAME"));
+        }
+        statement.close();
+        resultSet.close();
+        return groups;
+    }
+
+    public static List<Integer> getGroupIDs(String[] groupName) throws IOException, SQLException {
         // retrieve a list of IDs of groups of given names
         if (connection == null)
             setConnection();
@@ -314,22 +312,41 @@ public class DatabaseConnection {
         return groupID;
     }
 
-    public static void addGroup(String name, String username) throws IOException, SQLException {
-        // add group of the given name and add user to it
+    public static Integer getGroupID(String groupName, User activeUser) throws IOException, SQLException {
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
-        statement.execute("begin add_group('"+username+ "', '" +name+"'); end;");
-        connection.commit();
-        statement.close();
+        ResultSet resultSet = statement.executeQuery("select GROUP_ID from \"GROUP\" join BELONG using(GROUP_ID) where NAME = '" + groupName + "' and USERNAME = '" + activeUser.getUsername() +"'");
+        if (resultSet.next()) {
+            Integer groupId = resultSet.getInt("GROUP_ID");
+            resultSet.close();
+            statement.close();
+            return groupId;
+        }
+        return null;
     }
 
-    public static void deleteGroup(int groupID) throws IOException, SQLException {
-        // delete group of a given ID
+    private static List<String> getGroupParticipants(String GroupID) throws SQLException {
+        // get all users which belong to a given group
+        Statement statement = connection.createStatement();
+        String query = "select USERNAME from BELONG where GROUP_ID = "+GroupID;
+        ResultSet resultSet = statement.executeQuery(query);
+        List<String> users = new ArrayList<>();
+        while (resultSet.next()) {
+            users.add(resultSet.getString("username"));
+        }
+        resultSet.close();
+        statement.close();
+        return users;
+    }
+
+    public static void invite(String username, String groupName) throws IOException, SQLException {
+        // add given user to a given group
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
-        statement.execute("begin delete_group("+groupID+"); end;");
+        String[] temp = {groupName};
+        statement.execute("insert into BELONG values (null, "+ getGroupIDs(temp).get(0)+", '"+username+"')");
         connection.commit();
         statement.close();
     }
@@ -344,23 +361,49 @@ public class DatabaseConnection {
         statement.close();
     }
 
-    public static void deleteUser(String username) throws IOException, SQLException {
-        // delete account and all directly linked data
+    // RECIPE
+
+    public static int addRecipe(Recipe recipe, User activeUser) throws IOException, SQLException {
         if (connection == null)
             setConnection();
-        Statement statement = connection.createStatement();
-        statement.execute("begin delete_account('" +username+ "'); end;");
+        CallableStatement statement = connection.prepareCall("{ call add_recipe(?, ?, ?, ?, ?, ?, ?, ?, ?) }");
+        statement.setString(1, activeUser.getUsername());
+        statement.setString(2, recipe.getName());
+        statement.setString(3, recipe.getPrepareMethod());
+        if (recipe.getCost() == 0.0)
+            statement.setNull(4 ,  Types.NULL);
+        else
+            statement.setDouble(4, recipe.getCost());
+        statement.setDouble(5, recipe.getPortionNumber());
+        statement.setString(6, recipe.getDateAdded());
+        if (recipe.getPrepareTime() == null)
+            statement.setNull(7, Types.NULL);
+        else
+            statement.setInt(7, recipe.getPrepareTime());
+        if (recipe.getAccessibility() == null)
+            statement.setNull(8, Types.NULL);
+        else
+            statement.setInt(8, recipe.getAccessibility());
+        statement.registerOutParameter(9, Types.NUMERIC);
+        statement.execute();
+        int recipe_id = statement.getInt(9);
         connection.commit();
         statement.close();
+        Statement ingredientStatement = connection.createStatement();
+        for (Ingredient ingredient: recipe.getIngredientList()){
+            System.out.println("BEGIN add_ingredient_to_recipe('" + ingredient.getName() +  "', '" + ingredient.getUnit() +"', "+ ingredient.getQuantity() +  ", " +  recipe_id + "); END;");
+            ingredientStatement.execute("BEGIN add_ingredient_to_recipe('" + ingredient.getName() +  "', '" + ingredient.getUnit() +"', "+ ingredient.getQuantity() +  ", " +  recipe_id + "); END;");
+        }
+        connection.commit();
+        ingredientStatement.close();
+        return recipe_id;
     }
 
-    public static void invite(String username, String groupName) throws IOException, SQLException {
-        // add given user to a given group
+    public static void deleteRecipe(User activeUser, Recipe recipe) throws IOException, SQLException {
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
-        String[] temp = {groupName};
-        statement.execute("insert into BELONG values (null, "+getGroupByName(temp).get(0)+", '"+username+"')");
+        statement.execute("DELETE RECIPE WHERE OWNER_NAME='" + activeUser.getUsername() + "' AND NAME='" + recipe.getName() +"'");
         connection.commit();
         statement.close();
     }
@@ -445,6 +488,44 @@ public class DatabaseConnection {
         return new Recipe(recipeId, recipeName, ownerName, preparationMethod, accessibility, dateAdded, prepareTime, cost, portions, ingredientList);
     }
 
+    // UNIT
+
+    public static ObservableList<String> getUnits() throws IOException, SQLException {
+        // returns ObservableList of avaible units names. Does not return "piece" because it is not used in most functions.
+        ObservableList<String> unitsList = FXCollections.observableArrayList();
+        if (connection == null)
+            setConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("select NAME from UNIT where name != 'piece'" );
+        while (resultSet.next()){
+            unitsList.add(resultSet.getString("NAME"));
+        }
+        resultSet.close();
+        statement.close();
+        return unitsList;
+    }
+
+    public static String getBestUnit(String preferredSystem, String currentUnit, Double quantity) throws IOException, SQLException {
+        // returns unit from given preferredSystem that is that has te closest to 1 ratio to given currentUnit multiplied by given quantity
+        if (connection == null)
+            setConnection();
+        Statement statement = connection.createStatement();
+        String unit;
+        String bestUnit = "";
+        double error = Double.POSITIVE_INFINITY;
+        ResultSet resultSet = statement.executeQuery("select name from unit where unit_system_id = '" + preferredSystem+ "'");
+        while (resultSet.next()){
+            unit = resultSet.getString("name");
+            if(Math.abs(1-convertUnit(quantity, currentUnit, unit)) < error) {
+                error = Math.abs(1 - convertUnit((double) 1, currentUnit, unit));
+                bestUnit = unit;
+            }
+        }
+        resultSet.close();
+        statement.close();
+        return bestUnit;
+    }
+
     public static List<String> getUnitSystems() throws SQLException, IOException {
         //  returns list that contains all unit systems from the database
 
@@ -463,10 +544,37 @@ public class DatabaseConnection {
         return stringList;
     }
 
+    public static Double convertUnit(Double quantity, String firstUnit, String secondUnit) throws IOException, SQLException {
+        // returns quantity of ingredient in given unit (secondUnit)
+        if (connection == null)
+            setConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("select convert_unit('" +firstUnit+ "', '" +secondUnit+ "', " +quantity+ ") as result from dual");
+        resultSet.next();
+        Double result =  resultSet.getDouble("result");
+        resultSet.close();
+        statement.close();
+        return result;
+    }
+
+    private static Double changeToDefaultUnit(Ingredient ingredient) throws IOException, SQLException {
+        // returns quantity of given ingredient in unit saved for ingredient with this ingredient_list_id in database
+        if (connection == null)
+            setConnection();
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery("select INGREDIENT_UNIT from INGREDIENT_LIST where INGREDIENT_LIST_ID = " +ingredient.getId());
+        resultSet.next();
+        String defaultUnit = resultSet.getString("INGREDIENT_UNIT");
+        Double result = convertUnit(ingredient.getQuantity(), ingredient.getUnit(), defaultUnit);
+        resultSet.close();
+        statement.close();
+        return result;
+    }
+
+    // OPINION
+
     public static void createOpinion(Opinion opinion, Label opinionLabel, ListView<String> opinionsView) throws SQLException, IOException {
-
-        //Saves opinion. One user can add only one opinion per recipe. Sets label from OpinionPane with message with information about the success of the operation.
-
+        // Saves opinion. One user can add only one opinion per recipe. Sets label from OpinionPane with message with information about the success of the operation.
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
@@ -522,9 +630,7 @@ public class DatabaseConnection {
     }
 
     public static void reportOpinion(String username, Label label, String opinionAuthor, int recipeId) throws SQLException, IOException {
-        /*
-        Reports opinion. User can report opinion once. User cant report opinions that don't have comment in them.
-         */
+        // Reports opinion. User can report opinion once. User cant report opinions that don't have comment in them.
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
@@ -561,52 +667,59 @@ public class DatabaseConnection {
         statement.close();
     }
 
-    public static ObservableList<String> getUnits() throws IOException, SQLException {
-        // returns ObservableList of avaible units names. Does not return "piece" because it is not used in most functions.
-        ObservableList<String> unitsList = FXCollections.observableArrayList();
-        if (connection == null)
-            setConnection();
+    // SHOPPING LIST
+
+    private static ArrayList<Ingredient> getShoppingList(String username) throws SQLException {
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("select NAME from UNIT where name != 'piece'" );
-        while (resultSet.next()){
-            unitsList.add(resultSet.getString("NAME"));
+        ResultSet resultSet = statement.executeQuery("SELECT * FROM SHOPPING_LIST WHERE USERNAME = '" + username + "' AND GROUP_ID IS NULL" );
+        ArrayList<Ingredient> shoppingList = new ArrayList<>();
+        while (resultSet.next()) {
+            int ingredientId = resultSet.getInt("INGREDIENT_LIST_ID");
+            Statement ingredientStatement = connection.createStatement();
+            ResultSet ingredientResult = ingredientStatement.executeQuery("SELECT * FROM INGREDIENT_LIST WHERE INGREDIENT_LIST_ID =" + ingredientId);
+            if (ingredientResult.next()) {
+                Ingredient ingredient = new Ingredient(ingredientId, resultSet.getDouble("AMOUNT"), ingredientResult.getString("INGREDIENT_UNIT"), ingredientResult.getString("INGREDIENT_NAME"));
+                ingredient.setShoppingListStatus(Status.loaded);
+                shoppingList.add(ingredient);
+
+            }
+            ingredientResult.close();
+            ingredientStatement.close();
         }
         resultSet.close();
         statement.close();
-        return unitsList;
-    }
-    public static Double convertUnit(Double quantity, String firstUnit, String secondUnit) throws IOException, SQLException {
-        // returns quantity of ingredient in given unit (secondUnit)
-        if (connection == null)
-            setConnection();
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("select convert_unit('" +firstUnit+ "', '" +secondUnit+ "', " +quantity+ ") as result from dual");
-        resultSet.next();
-        Double result =  resultSet.getDouble("result");
-        resultSet.close();
-        statement.close();
-        return result;
+        return shoppingList;
     }
 
-    public static String getBestUnit(String preferredSystem, String currentUnit, Double quantity) throws IOException, SQLException {
-        // returns unit from given preferredSystem that is that has te closest to 1 ratio to given currentUnit multiplied by given quantity
+    public static Map<Ingredient, String> getGroupShoppingList(User activeUser, String groupName) throws IOException, SQLException {
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
-        String unit;
-        String bestUnit = "";
-        double error = Double.POSITIVE_INFINITY;
-        ResultSet resultSet = statement.executeQuery("select name from unit where unit_system_id = '" + preferredSystem+ "'");
-        while (resultSet.next()){
-            unit = resultSet.getString("name");
-            if(Math.abs(1-convertUnit(quantity, currentUnit, unit)) < error) {
-                error = Math.abs(1 - convertUnit((double) 1, currentUnit, unit));
-                bestUnit = unit;
+        ResultSet resultSet = statement.executeQuery("SELECT GROUP_ID FROM \"GROUP\" JOIN BELONG USING (GROUP_ID) WHERE NAME = '" + groupName + "' AND USERNAME = '" + activeUser.getUsername() +"'");
+        if (resultSet.next()) {
+            int groupId = resultSet.getInt("GROUP_ID");
+            Statement listStatement = connection.createStatement();
+            ResultSet listResult = listStatement.executeQuery("SELECT * FROM SHOPPING_LIST WHERE GROUP_ID = " + groupId);
+            Map<Ingredient, String> shoppingList = new HashMap<>();
+            while (listResult.next()){
+                int ingredientId = listResult.getInt("INGREDIENT_LIST_ID");
+                Statement ingredientStatement = connection.createStatement();
+                ResultSet ingredientResult = ingredientStatement.executeQuery("SELECT * FROM INGREDIENT_LIST WHERE INGREDIENT_LIST_ID =" + ingredientId);
+                if(ingredientResult.next()){
+                    shoppingList.put(new Ingredient(ingredientId, listResult.getDouble("AMOUNT"), ingredientResult.getString("INGREDIENT_UNIT"), ingredientResult.getString("INGREDIENT_NAME")), listResult.getString("USERNAME"));
+                }
+                ingredientResult.close();
+                ingredientStatement.close();
             }
+            listResult.close();
+            listStatement.close();
+            statement.close();
+            resultSet.close();
+            return shoppingList;
         }
-        resultSet.close();
         statement.close();
-        return bestUnit;
+        resultSet.close();
+        return null;
     }
 
     private static void updateShoppingListView(User activeUser) throws SQLException, IOException {
@@ -676,25 +789,11 @@ public class DatabaseConnection {
         statement.close();
     }
 
-    private static Double changeToDefaultUnit(Ingredient ingredient) throws IOException, SQLException {
-        // returns quantity of given ingredient in unit saved for ingredient with this ingredient_list_id in database
-        if (connection == null)
-            setConnection();
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("select INGREDIENT_UNIT from INGREDIENT_LIST where INGREDIENT_LIST_ID = " +ingredient.getId());
-        resultSet.next();
-        String defaultUnit = resultSet.getString("INGREDIENT_UNIT");
-        Double result = convertUnit(ingredient.getQuantity(), ingredient.getUnit(), defaultUnit);
-        resultSet.close();
-        statement.close();
-        return result;
-    }
-
     public static void shareList(User activeUser, String groupName) throws IOException, SQLException {
         if (connection == null)
             setConnection();
         updateShoppingListView(activeUser);
-        Integer groupId = getGroupIdWithName(groupName, activeUser);
+        Integer groupId = getGroupID(groupName, activeUser);
         if (groupId != null){
             Statement statement = connection.createStatement();
             statement.execute("BEGIN share_shopping_list('" + activeUser.getUsername() +  "', "+  groupId + "); END;");
@@ -703,70 +802,10 @@ public class DatabaseConnection {
         }
     }
 
-    public static Map<Ingredient, String> getGroupShoppingList(User activeUser, String groupName) throws IOException, SQLException {
-        if (connection == null)
-            setConnection();
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT GROUP_ID FROM \"GROUP\" JOIN BELONG USING (GROUP_ID) WHERE NAME = '" + groupName + "' AND USERNAME = '" + activeUser.getUsername() +"'");
-        if (resultSet.next()) {
-            int groupId = resultSet.getInt("GROUP_ID");
-            Statement listStatement = connection.createStatement();
-            ResultSet listResult = listStatement.executeQuery("SELECT * FROM SHOPPING_LIST WHERE GROUP_ID = " + groupId);
-            Map<Ingredient, String> shoppingList = new HashMap<>();
-            while (listResult.next()){
-                int ingredientId = listResult.getInt("INGREDIENT_LIST_ID");
-                Statement ingredientStatement = connection.createStatement();
-                ResultSet ingredientResult = ingredientStatement.executeQuery("SELECT * FROM INGREDIENT_LIST WHERE INGREDIENT_LIST_ID =" + ingredientId);
-                if(ingredientResult.next()){
-                    shoppingList.put(new Ingredient(ingredientId, listResult.getDouble("AMOUNT"), ingredientResult.getString("INGREDIENT_UNIT"), ingredientResult.getString("INGREDIENT_NAME")), listResult.getString("USERNAME"));
-                }
-                ingredientResult.close();
-                ingredientStatement.close();
-            }
-            listResult.close();
-            listStatement.close();
-            statement.close();
-            resultSet.close();
-            return shoppingList;
-        }
-        statement.close();
-        resultSet.close();
-        return null;
-    }
-
-    public static Integer getGroupIdWithName(String groupName, User activeUser) throws IOException, SQLException {
-        if (connection == null)
-            setConnection();
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT GROUP_ID " +
-                "FROM \"GROUP\" " +
-                "    JOIN BELONG USING (GROUP_ID) " +
-                "    WHERE NAME = '" + groupName + "' " +
-                "      AND USERNAME = '" + activeUser.getUsername() +"'");
-        if (resultSet.next()) {
-            Integer groupId = resultSet.getInt("GROUP_ID");
-            resultSet.close();
-            statement.close();
-            return groupId;
-        }
-        return null;
-    }
-
-    public static void deleteIngredientFromGroupShoppingList(User activeUser, String groupName, Ingredient ingredient) throws IOException, SQLException {
-        if (connection == null)
-            setConnection();
-        Integer groupId = getGroupIdWithName(groupName, activeUser);
-        if (groupId != null) {
-            Statement statement = connection.createStatement();
-            statement.execute("DELETE SHOPPING_LIST WHERE GROUP_ID ="+ groupId +" AND INGREDIENT_LIST_ID=" + ingredient.getId());
-            statement.close();
-        }
-    }
-
     public static void deleteGroupShoppingList(User activeUser, String groupName) throws IOException, SQLException {
         if (connection == null)
             setConnection();
-        Integer groupId = getGroupIdWithName(groupName, activeUser);
+        Integer groupId = getGroupID(groupName, activeUser);
         if (groupId != null) {
             Statement statement = connection.createStatement();
             statement.execute("DELETE SHOPPING_LIST WHERE GROUP_ID ="+ groupId);
@@ -774,48 +813,14 @@ public class DatabaseConnection {
         }
     }
 
-    public static void deleteRecipe(User activeUser, Recipe recipe) throws IOException, SQLException {
+    public static void deleteIngredientFromGroupShoppingList(User activeUser, String groupName, Ingredient ingredient) throws IOException, SQLException {
         if (connection == null)
             setConnection();
-        Statement statement = connection.createStatement();
-        statement.execute("DELETE RECIPE WHERE OWNER_NAME='" + activeUser.getUsername() + "' AND NAME='" + recipe.getName() +"'");
-        connection.commit();
-        statement.close();
-    }
-
-    public static int addRecipe(Recipe recipe, User activeUser) throws IOException, SQLException {
-        if (connection == null)
-            setConnection();
-        CallableStatement statement = connection.prepareCall("{ call add_recipe(?, ?, ?, ?, ?, ?, ?, ?, ?) }");
-        statement.setString(1, activeUser.getUsername());
-        statement.setString(2, recipe.getName());
-        statement.setString(3, recipe.getPrepareMethod());
-        if (recipe.getCost() == 0.0)
-            statement.setNull(4 ,  Types.NULL);
-        else
-            statement.setDouble(4, recipe.getCost());
-        statement.setDouble(5, recipe.getPortionNumber());
-        statement.setString(6, recipe.getDateAdded());
-        if (recipe.getPrepareTime() == null)
-            statement.setNull(7, Types.NULL);
-        else
-            statement.setInt(7, recipe.getPrepareTime());
-        if (recipe.getAccessibility() == null)
-            statement.setNull(8, Types.NULL);
-        else
-            statement.setInt(8, recipe.getAccessibility());
-        statement.registerOutParameter(9, Types.NUMERIC);
-        statement.execute();
-        int recipe_id = statement.getInt(9);
-        connection.commit();
-        statement.close();
-        Statement ingredientStatement = connection.createStatement();
-        for (Ingredient ingredient: recipe.getIngredientList()){
-            System.out.println("BEGIN add_ingredient_to_recipe('" + ingredient.getName() +  "', '" + ingredient.getUnit() +"', "+ ingredient.getQuantity() +  ", " +  recipe_id + "); END;");
-            ingredientStatement.execute("BEGIN add_ingredient_to_recipe('" + ingredient.getName() +  "', '" + ingredient.getUnit() +"', "+ ingredient.getQuantity() +  ", " +  recipe_id + "); END;");
+        Integer groupId = getGroupID(groupName, activeUser);
+        if (groupId != null) {
+            Statement statement = connection.createStatement();
+            statement.execute("DELETE SHOPPING_LIST WHERE GROUP_ID ="+ groupId +" AND INGREDIENT_LIST_ID=" + ingredient.getId());
+            statement.close();
         }
-        connection.commit();
-        ingredientStatement.close();
-        return recipe_id;
     }
 }

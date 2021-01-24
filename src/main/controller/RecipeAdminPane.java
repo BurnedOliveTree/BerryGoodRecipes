@@ -106,7 +106,7 @@ public class RecipeAdminPane extends BasicPaneActions {
         if (warning.equals("")){
             Integer publicity = null;
             if (!groupName.equals("private")){
-                publicity = DatabaseConnection.getGroupIdWithName(groupName, activeUser);
+                publicity = DatabaseConnection.getGroupID(groupName, activeUser);
             }
             Integer preparationTime = getTimePreparationInMinutes();
             Double cost = getCost();
