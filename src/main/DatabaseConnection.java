@@ -248,8 +248,8 @@ public class DatabaseConnection {
             connection.commit();
             updateShoppingListView(user);
             connection.commit();
-            closeConnection();
         }
+        closeConnection();
     }
 
     private static List<String> getGroupParticipants(String GroupID) throws SQLException {
