@@ -25,7 +25,7 @@ import java.util.Optional;
 
 public class RecipeAdminPane extends BasicPaneActions {
     private final User activeUser;
-    private List<String> accessibility = new ArrayList<String>();
+    private final List<String> accessibility = new ArrayList<>();
 
     @FXML private TableView<Recipe> myRecipesTable;
     @FXML private Button exitButton;

@@ -9,12 +9,14 @@ public class Ingredient {
     String name;
     Integer id; // id of record in ingredient_list in database
     Status shoppingListStatus = Status.none; // status of ingredient in shopping list - solution to save on database connections, all information is modified at the end of the program
+
     public Ingredient(Integer id, Double quantity, String unit, String name) {
         this.id = id;
         this.quantity = quantity;
         this.unit = unit;
         this.name = name;
     }
+
     public Ingredient(Integer id, Double quantity, String unit, String name, Status shoppingListStatus){
         this.id = id;
         this.quantity = quantity;
@@ -27,11 +29,17 @@ public class Ingredient {
         this(that.getId(), that.getQuantity(), that.getUnit(), that.getName(), that.getShoppingListStatus());
     }
 
-    public Integer getId() {return id;}
+    public Integer getId() {
+        return id;
+    }
 
-    public void setShoppingListStatus(Status status) {shoppingListStatus = status;}
+    public void setShoppingListStatus(Status status) {
+        shoppingListStatus = status;
+    }
 
-    public Status getShoppingListStatus() {return shoppingListStatus;}
+    public Status getShoppingListStatus() {
+        return shoppingListStatus;
+    }
 
     public String getName() {
         return name;
@@ -59,15 +67,15 @@ public class Ingredient {
 
     @Override
     public boolean equals(Object object) {
-        if (object == null){
+        if (object == null) {
             return false;
         }
-        else if (object.getClass() != this.getClass()){
+        else if (object.getClass() != this.getClass()) {
             return false;
         }
         else {
             Ingredient ingredient = (Ingredient) object;
-            return ingredient.getId() == this.id;
+            return ingredient.getId().equals(this.id);
         }
     }
 }

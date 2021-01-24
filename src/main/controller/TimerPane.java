@@ -23,11 +23,9 @@ public class TimerPane extends BasicPaneActions {
     @FXML private Label secondsTimer;
     @FXML private Label minutesTimer;
     @FXML private Label hoursTimer;
-    @FXML private Button cancelButton;
     @FXML private Spinner<Integer> minutesBox;
     @FXML private Spinner<Integer> secondsBox;
     @FXML private Spinner<Integer> hoursBox;
-    @FXML private Button startButton;
     @FXML private AnchorPane selectPane;
     @FXML private  AnchorPane showPane;
 

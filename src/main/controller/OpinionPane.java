@@ -17,7 +17,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class OpinionPane extends BasicPaneActions {
-    private Opinion opinion;
     private final User activeUser;
     private final Recipe recipe;
     private final BasicPaneActions returnPane;
@@ -25,23 +24,21 @@ public class OpinionPane extends BasicPaneActions {
     @FXML private Button okButton;
     @FXML private Button exitButton;
     @FXML private ImageView exitPic;
-    public Label scoreLabel;
     @FXML private TextField commentTextField;
     @FXML private Label opinionLabel;
-    @FXML private ListView opinionView;
+    @FXML private ListView<String> opinionView;
     @FXML private Button deleteButton;
     @FXML private Button reportButton;
     @FXML private Label reportLabel;
-    @FXML private ChoiceBox scoreBox;
+    @FXML private ChoiceBox<String> scoreBox;
 
     public OpinionPane(Recipe recipe, User activeUser, BasicPaneActions returnPane) {
         this.recipe = recipe;
         this.activeUser = activeUser;
         this.returnPane = returnPane;
-    };
+    }
 
-    @FXML
-    private void initialize() throws SQLException, IOException {
+    @FXML private void initialize() throws SQLException, IOException {
         if (DatabaseConnection.isThemeLight()) {
             exitPic.setImage(new Image("icons/berryExit.png"));
         }
@@ -50,14 +47,14 @@ public class OpinionPane extends BasicPaneActions {
         reportButton.setDisable(true);
         deleteButton.setDisable(true);
         DatabaseConnection.fillOpinions(recipe, opinionView);
-        reportButton.setOnAction(e->{
+        reportButton.setOnAction(e -> {
             try {
-                DatabaseConnection.reportOpinion(opinionView, activeUser.getUsername(), reportLabel, getOpinionAuthor(), recipe.getId());
+                DatabaseConnection.reportOpinion(activeUser.getUsername(), reportLabel, getOpinionAuthor(), recipe.getId());
             } catch (SQLException | IOException err) {
                 err.printStackTrace();
             }
         });
-        deleteButton.setOnAction(e->{
+        deleteButton.setOnAction(e -> {
             try {
                 DatabaseConnection.deleteOpinion(recipe, activeUser.getUsername(), opinionView);
             } catch (IOException | SQLException err) {
@@ -68,7 +65,7 @@ public class OpinionPane extends BasicPaneActions {
 
 
     private String getOpinionAuthor() {
-        String opinion = (String) opinionView.getSelectionModel().getSelectedItem();
+        String opinion = opinionView.getSelectionModel().getSelectedItem();
         String username = "";
         int i = 0;
         while (opinion.charAt(i) != ' '){
@@ -99,12 +96,8 @@ public class OpinionPane extends BasicPaneActions {
 
     @FXML private void okButtonAction() throws SQLException, IOException {
         String comment = commentTextField.getText();
-        if (comment.equals(null)) {
-            comment = " ";
-        }
-        int score = Integer.parseInt(scoreBox.getValue().toString());
-        opinion = new Opinion(comment, score, activeUser, recipe);
-        DatabaseConnection.createOpinion(opinion, opinionLabel, opinionView);
+        int score = Integer.parseInt(scoreBox.getValue());
+        DatabaseConnection.createOpinion(new Opinion(comment, score, activeUser, recipe), opinionLabel, opinionView);
     }
 
     @FXML private void exitAction() {

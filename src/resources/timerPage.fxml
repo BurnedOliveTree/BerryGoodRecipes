@@ -14,7 +14,7 @@
    <children>
       <AnchorPane id="non-transparent" fx:id="showPane" maxHeight="-Infinity" prefHeight="200.0">
          <children>
-            <GridPane id="non-transparent" fx:id="showGridPane" prefHeight="200.0" prefWidth="450.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <GridPane id="non-transparent" prefHeight="200.0" prefWidth="450.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <columnConstraints>
                   <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="176.0" />
                   <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="36.0" prefWidth="36.0" />
@@ -56,14 +56,14 @@
                         <Font size="96.0" />
                      </font>
                   </Label>
-                  <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#onCancelButton" prefHeight="25.0" prefWidth="129.0" text="Cancel" GridPane.columnSpan="5" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                  <Button mnemonicParsing="false" onAction="#onCancelButton" prefHeight="25.0" prefWidth="129.0" text="Cancel" GridPane.columnSpan="5" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                </children>
             </GridPane>
          </children>
       </AnchorPane>
       <AnchorPane id="non-transparent" fx:id="selectPane" maxHeight="-Infinity" prefHeight="200.0">
          <children>
-            <GridPane id="non-transparent" fx:id="selectGridPane" prefHeight="200.0" prefWidth="450.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <GridPane id="non-transparent" prefHeight="200.0" prefWidth="450.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -81,7 +81,7 @@
                   <Spinner fx:id="hoursBox" prefHeight="25.0" prefWidth="80.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
                   <Spinner fx:id="minutesBox" prefHeight="25.0" prefWidth="80.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
                   <Spinner fx:id="secondsBox" prefHeight="25.0" prefWidth="80.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                  <Button fx:id="startButton" mnemonicParsing="false" onAction="#startTimer" prefHeight="25.0" prefWidth="137.0" text="Start" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+                  <Button mnemonicParsing="false" onAction="#startTimer" prefHeight="25.0" prefWidth="137.0" text="Start" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
                </children>
             </GridPane>
          </children>
