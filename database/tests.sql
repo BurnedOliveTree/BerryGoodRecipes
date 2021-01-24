@@ -15,12 +15,12 @@ declare
 begin
     select count(*) into before_share from shopping_list where username = 'Rokarolka' and GROUP_ID is null;
     share_shopping_list('Rokarolka', 1);
+    commit;
     select count(*) into after_share_user from shopping_list where username = 'Rokarolka' and GROUP_ID=1;
     select count(*) into after_share_group from shopping_list where username = 'Rokarolka' and GROUP_ID=null;
     DBMS_OUTPUT.PUT_LINE('If some ingredient already in group shopping list, then dont add them to group shopping list');
     DBMS_OUTPUT.PUT_LINE('Before: ' || before_share || ', after in user shopping list ' || after_share_user || ', after in group shopping list ' || after_share_group);
 end;
-commit;
 /
 -- TEST PROCEDURE add_new_ingredient_to_shopping_list
 -- adding ingredient to shopping list which isn't in ingredient list
@@ -32,9 +32,9 @@ begin
     select count(*) into before_adding from ingredient_list;
     add_ingredient_to_ingredient_list('ketchup', 'tablespoon', ing_list_id);
     select count(*) into after_adding from ingredient_list;
+    commit;
     DBMS_OUTPUT.PUT_LINE('Before: ' || before_adding || ', after: ' || after_adding || ', new id in ingredient_list: ' || ing_list_id);
 end;
-commit;
 -- add ingredient which doesn't exist in past
 /
 declare
