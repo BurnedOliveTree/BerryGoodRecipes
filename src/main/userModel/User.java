@@ -34,8 +34,8 @@ public class User {
         this.userRecipes = new ArrayList<>();
         this.favorites = new LinkedList<>();
         this.followed = new LinkedList<>();
-        this.userGroups = new LinkedList<String>();
-        this.shoppingList = new ArrayList<Ingredient>();
+        this.userGroups = new LinkedList<>();
+        this.shoppingList = new ArrayList<>();
     }
 
     public ObservableList<String> getUnits() {
@@ -114,6 +114,14 @@ public class User {
         delIngredient.setShoppingListStatus(Status.deleted);
     }
 
+    public void removeSameNamedFromSL(String name){
+        for (Ingredient ing : shoppingList){
+            if (ing.getName().equals(name)){
+                ing.setShoppingListStatus(Status.deleted);
+            }
+        }
+    }
+
     public void removeShoppingList() {
         for (Ingredient ingredient: shoppingList)
             ingredient.setShoppingListStatus(Status.deleted);
@@ -124,7 +132,6 @@ public class User {
             if (ing.getName().equals(name)){
                 Double newQ = DatabaseConnection.convertUnit(q, "gram", ing.getUnit());
                 ing.setQuantity(ing.getQuantity() + newQ);
-                System.out.println(ing.getQuantity());
                 ing.setShoppingListStatus(Status.edited);
                 return;
             }
@@ -166,18 +173,18 @@ public class User {
 
     public void setDefaultUnitSystem(String unitSystem) { defaultUnitSystem = unitSystem; System.out.println(unitSystem); }
 
-    public Map<String, Ingredient> showShoppingList() {
+    public Map<String, Ingredient> showShoppingList() throws IOException, SQLException {
         Map<String, Ingredient> showMap = new HashMap<>();
         for (Ingredient ingredient: shoppingList) {
-            //@TODO MARIANKA zamiana składników na jednostke domyślną podczas dodawania
             if (ingredient.getShoppingListStatus() != Status.deleted) {
                 Ingredient shopIngredient = showMap.get(ingredient.getName());
-                if (shopIngredient != null && shopIngredient.getUnit().equals(ingredient.getUnit()) ){
-                    double quantity =  ingredient.getQuantity() + shopIngredient.getQuantity();
+                if (shopIngredient != null){
+                    double quantity =  DatabaseConnection.convertUnit(ingredient.getQuantity(),ingredient.getUnit(),"gram") + DatabaseConnection.convertUnit(shopIngredient.getQuantity(), shopIngredient.getUnit(),"gram");
                     shopIngredient.setQuantity(quantity);
+                    shopIngredient.setUnit("gram");
                 }
                 else {
-                    showMap.put(ingredient.getName(), ingredient);
+                    showMap.put(ingredient.getName(), new Ingredient(ingredient.getId(), ingredient.getQuantity(), ingredient.getUnit(), ingredient.getName()));
                 }
             }
         }
