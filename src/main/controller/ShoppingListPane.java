@@ -102,7 +102,7 @@ public class ShoppingListPane extends BasicPaneActions {
                     err.printStackTrace();
                 }
                 ingredient.setShoppingListStatus(Status.added);
-                if (activeUser.isNameInShoppingList(ingredient.getName())){
+                if (activeUser.qualifiesToAdd(ingredient.getName())){
                     try {
                         activeUser.editQuantityInShopping(ingredient.getName(), ingredient.getQuantity());
                     } catch (IOException | SQLException err) {
@@ -206,7 +206,7 @@ public class ShoppingListPane extends BasicPaneActions {
         MenuItem delete = new MenuItem("Delete");
         delete.setOnAction(actionEvent -> {
             if (otherListsMenu.getValue().equals("User")) {
-                activeUser.removeSameNamedFromSL(ingredientList.get(shoppingList.getSelectionModel().getSelectedIndex()).getName());
+                activeUser.removeSameNamedFromSL(ingredientList.get(shoppingList.getSelectionModel().getSelectedIndex()).getName(), ingredientList.get(shoppingList.getSelectionModel().getSelectedIndex()).getUnit());
             } else {
                 try {
                     DatabaseConnection.deleteIngredientFromGroupShoppingList(activeUser, otherListsMenu.getValue(), ingredientList.get(shoppingList.getSelectionModel().getSelectedIndex()));
