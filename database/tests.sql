@@ -133,6 +133,7 @@ declare
     user_after_count number(4);
     belong_after_count number(4);
 begin
+    delete_account('testing4');
     insert into "USER" values ('testing4', '1111', null);
     commit;
     select count(*) into user_before_count from "USER" where USERNAME = 'testing4';
@@ -164,6 +165,30 @@ begin
     DBMS_OUTPUT.PUT_LINE('Before: ' || belong_before_count || ', after: ' || belong_after_count);
 end;
 /
-
--- function convert_unit
--- trigger add_favourites_tg
+-- TEST FUNCTION convert_unit
+declare
+    new_q number(11,5);
+begin
+    select convert_unit('drop', 'gallon', 1) into new_q from DUAL;
+    DBMS_OUTPUT.PUT_LINE('Before: 1 mililiter, after: ' || new_q || ' gallon');
+    select convert_unit('gallon', 'drop', 10) into new_q from DUAL;
+    DBMS_OUTPUT.PUT_LINE('Before: 10 gallon, after: ' || new_q || ' drop');
+end;
+/   
+-- TEST TRIGGER add_favourites_tg
+declare 
+    before_fav number(4);
+    after_fav number(4);
+    followed_recipes number(4);
+begin
+    
+    insert into "USER" values ('testingM', '1111', null);
+    select count(*) into before_fav from FAVORITE where USERNAME = 'testingM';
+    insert into FOLLOWED values(null, 'testingM', 'BurnedOliveTree');
+    select count(*) into after_fav from FAVORITE where USERNAME = 'testingM';
+    select count(*) into followed_recipes from RECIPE where OWNER_NAME = 'BurnedOliveTree';
+    DBMS_OUTPUT.PUT_LINE('Before: ' || before_fav || ' favourite recipes, after following othe user who has ' || followed_recipes || ' recipes, following has ' || after_fav || ' favourite recipes');
+    delete_account('testingM');
+end;
+/
+    
