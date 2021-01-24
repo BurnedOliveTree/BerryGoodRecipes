@@ -446,7 +446,8 @@ public class DatabaseConnection {
     }
 
     public static List<String> getUnitSystems() throws SQLException, IOException {
-        // get all unit systems from the database
+        //  returns list that contains all unit systems from the database
+
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
@@ -463,6 +464,9 @@ public class DatabaseConnection {
     }
 
     public static void createOpinion(Opinion opinion, Label opinionLabel, ListView<String> opinionsView) throws SQLException, IOException {
+
+        //Saves opinion. One user can add only one opinion per recipe. Sets label from OpinionPane with message with information about the success of the operation.
+
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
@@ -484,6 +488,7 @@ public class DatabaseConnection {
     }
 
     public static void fillOpinions(Recipe recipe, ListView<String> opinionsView) throws SQLException, IOException {
+        // loads recipes opinions into ListView from OpinionPane
         if (connection == null)
             setConnection();
         opinionsView.getItems().clear();
@@ -505,7 +510,7 @@ public class DatabaseConnection {
     }
 
     public static void deleteOpinion(Recipe recipe, String userName, ListView<String> opinionsView) throws IOException, SQLException {
-
+        // deletes opinion selected by user (user can only select his/hers own opinion).
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
@@ -517,6 +522,9 @@ public class DatabaseConnection {
     }
 
     public static void reportOpinion(String username, Label label, String opinionAuthor, int recipeId) throws SQLException, IOException {
+        /*
+        Reports opinion. User can report opinion once. User cant report opinions that don't have comment in them.
+         */
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
@@ -554,6 +562,7 @@ public class DatabaseConnection {
     }
 
     public static ObservableList<String> getUnits() throws IOException, SQLException {
+        // returns ObservableList of avaible units names. Does not return "piece" because it is not used in most functions.
         ObservableList<String> unitsList = FXCollections.observableArrayList();
         if (connection == null)
             setConnection();
@@ -566,11 +575,12 @@ public class DatabaseConnection {
         statement.close();
         return unitsList;
     }
-    public static Double convertUnit(Double quantity, String first_unit, String second_unit) throws IOException, SQLException {
+    public static Double convertUnit(Double quantity, String firstUnit, String secondUnit) throws IOException, SQLException {
+        // returns quantity of ingredient in given unit (secondUnit)
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("select convert_unit('" +first_unit+ "', '" +second_unit+ "', " +quantity+ ") as result from dual");
+        ResultSet resultSet = statement.executeQuery("select convert_unit('" +firstUnit+ "', '" +secondUnit+ "', " +quantity+ ") as result from dual");
         resultSet.next();
         Double result =  resultSet.getDouble("result");
         resultSet.close();
@@ -579,6 +589,7 @@ public class DatabaseConnection {
     }
 
     public static String getBestUnit(String preferredSystem, String currentUnit, Double quantity) throws IOException, SQLException {
+        // returns unit from given preferredSystem that is that has te closest to 1 ratio to given currentUnit multiplied by given quantity
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
@@ -625,7 +636,7 @@ public class DatabaseConnection {
             if (ingredient.getShoppingListStatus() == Status.added && ingredient.getId() != null) {
                 Double quantity = ingredient.getQuantity();
                 if (!ingredient.getUnit().equals("piece")) {
-                    quantity = changeToDefaultUnit(ingredient);
+                    quantity = changeToDefaultUnit(ingredient); // quantity has to be in unit that is already saved in database for give ingredient_list_id
                 }
                 ingStatement.execute("INSERT INTO SHOPPING_LIST values(null, "
                                                                 + quantity + ", '"
@@ -648,7 +659,7 @@ public class DatabaseConnection {
                 else{
                     Double quantity = ingredient.getQuantity();
                     if (!ingredient.getUnit().equals("piece")) {
-                        quantity = changeToDefaultUnit(ingredient);
+                        quantity = changeToDefaultUnit(ingredient); // quantity has to be in unit that is already saved in database for give ingredient_list_id
                     }
                     ingStatement.execute("INSERT INTO SHOPPING_LIST values(null, "
                             + quantity + ", '"
@@ -666,6 +677,7 @@ public class DatabaseConnection {
     }
 
     private static Double changeToDefaultUnit(Ingredient ingredient) throws IOException, SQLException {
+        // returns quantity of given ingredient in unit saved for ingredient with this ingredient_list_id in database
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
