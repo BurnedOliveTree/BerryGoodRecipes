@@ -15,6 +15,17 @@ public class Ingredient {
         this.unit = unit;
         this.name = name;
     }
+    public Ingredient(Integer id, Double quantity, String unit, String name, Status shoppingListStatus){
+        this.id = id;
+        this.quantity = quantity;
+        this.unit = unit;
+        this.name = name;
+        this.shoppingListStatus = shoppingListStatus;
+    }
+
+    public Ingredient(Ingredient that) {
+        this(that.getId(), that.getQuantity(), that.getUnit(), that.getName(), that.getShoppingListStatus());
+    }
 
     public Integer getId() {return id;}
 
