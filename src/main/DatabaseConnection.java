@@ -24,6 +24,7 @@ public class DatabaseConnection {
     public static String theme;
 
     public DatabaseConnection() throws IOException {
+        // constructor, user's property is read in it - like theme
         Properties prop = new Properties();
         String fileName = "src/resources/app.config";
         InputStream is = new FileInputStream(fileName);
@@ -32,10 +33,12 @@ public class DatabaseConnection {
     }
 
     public static boolean isThemeLight() {
+        // check what theme is selected
         return DatabaseConnection.theme.equals("light") || DatabaseConnection.theme.equals("winter");
     }
 
     public static void setConnection() throws SQLException, IOException {
+        // set connection of database, read property for it
         Properties prop = new Properties();
         String fileName = "src/resources/app.config";
         InputStream is = new FileInputStream(fileName);
@@ -51,46 +54,13 @@ public class DatabaseConnection {
     }
 
     private static void closeConnection() throws SQLException {
+        // close connection and set it to null
         connection.close();
         connection = null;
         System.out.println("Connection with database closed.");
     }
 
     // USER
-
-    public static void saveUser(User user) throws SQLException, IOException {
-        if (user != null) {
-            if (connection == null)
-                setConnection();
-            Statement statement = connection.createStatement();
-            for (Recipe recipe: user.getAllFavorites()) {
-                if (recipe.getFavoriteStatus() == Status.added) {
-                    statement.executeUpdate("INSERT INTO FAVORITE SELECT null, '" + user.getUsername() + "', "+ recipe.getId() + " FROM DUAL\n" +
-                            "WHERE NOT EXISTS (SELECT NULL FROM FAVORITE WHERE RECIPE_ID=" +  recipe.getId() + " AND USERNAME='" + user.getUsername() + "')");
-
-                }
-                if (recipe.getFavoriteStatus() == Status.deleted){
-                    statement.executeUpdate(String.format("DELETE FROM FAVORITE WHERE RECIPE_ID = %d AND USERNAME = '%s'", recipe.getId(),  user.getUsername()));
-                }
-            }
-
-            if (user.getNewFollowed().size() != 0) {
-                for (String username: user.getNewFollowed()) {
-                    statement.executeUpdate(String.format("insert into FOLLOWED values (null, '%s', '%s')", user.getUsername(), username));
-                }
-            }
-            if (user.getDeletedFollowed().size() != 0) {
-                for (String username: user.getDeletedFollowed()) {
-                    statement.executeUpdate(String.format("delete from FOLLOWED where FOLLOWING_USERNAME = '%s' and FOLLOWED_USERNAME = '%s'", user.getUsername(), username));
-                }
-            }
-            statement.close();
-            connection.commit();
-            updateShoppingListView(user);
-            connection.commit();
-        }
-        closeConnection();
-    }
 
     public static User login(String username, String password, Label errMess) throws SQLException, IOException {
         // sign into users account and set him as the active user
@@ -189,7 +159,75 @@ public class DatabaseConnection {
         return status;
     }
 
+    private static List<Recipe> getUserRecipes(String username) throws SQLException, IOException {
+        // get user recipe and accessibility
+        if (connection == null)
+            setConnection();
+        Statement statement = connection.createStatement();
+        ResultSet result = statement.executeQuery(String.format("SELECT RECIPE_ID, NAME, DATE_ADDED FROM RECIPE WHERE UPPER(OWNER_NAME) = '%s'", username.toUpperCase()));
+        List<Recipe> userRecipes = new ArrayList<>();
+        while (result.next()) {
+            int id = result.getInt("RECIPE_ID");
+            Recipe recipe = getRecipe(id);
+            recipe.setId(id);
+            getRecipeAccessibility(recipe);
+            userRecipes.add(recipe);
+        }
+        result.close();
+        statement.close();
+        return userRecipes;
+    }
+
+    private static void getRecipeAccessibility(Recipe recipe) throws IOException, SQLException {
+        // get from publicity table information about recipe accessibility
+        if (connection == null)
+            setConnection();
+        Statement stat = connection.createStatement();
+        ResultSet resPublicity = stat.executeQuery(String.format("SELECT G.NAME FROM \"GROUP\" G WHERE G.GROUP_ID = (SELECT P.GROUP_ID FROM PUBLICITY P WHERE P.RECIPE_ID = %d)", recipe.getId()));
+        resPublicity.next();
+        String groupName = resPublicity.getString("NAME");
+        recipe.setGroupName(groupName);
+        resPublicity.close();
+        stat.close();
+    }
+
+    private static List<String> getUserFollowed(String username) throws SQLException, IOException {
+        // get all users which are followed by a given user
+        if (connection == null)
+            setConnection();
+        Statement statement = connection.createStatement();
+        String query = "select FOLLOWING_USERNAME, FOLLOWED_USERNAME from FOLLOWED where lower(FOLLOWING_USERNAME) = '"+username.toLowerCase()+"'";
+        ResultSet resultSet = statement.executeQuery(query);
+        List<String> stringList = new LinkedList<>();
+        while (resultSet.next()) {
+            stringList.add(resultSet.getString("FOLLOWED_USERNAME"));
+        }
+        resultSet.close();
+        statement.close();
+        return stringList;
+    }
+
+    private static void saveFollowed(User user) throws IOException, SQLException {
+        // saved followed changes to database
+        if (connection == null)
+            setConnection();
+        Statement statement = connection.createStatement();
+        if (user.getNewFollowed().size() != 0) {
+            for (String username: user.getNewFollowed()) {
+                statement.executeUpdate(String.format("insert into FOLLOWED values (null, '%s', '%s')", user.getUsername(), username));
+            }
+        }
+        if (user.getDeletedFollowed().size() != 0) {
+            for (String username: user.getDeletedFollowed()) {
+                statement.executeUpdate(String.format("delete from FOLLOWED where FOLLOWING_USERNAME = '%s' and FOLLOWED_USERNAME = '%s'", user.getUsername(), username));
+            }
+        }
+        statement.close();
+        connection.commit();
+    }
+
     private static List<Recipe> getUserFavorites(String username) throws SQLException {
+        // get user's favorites recipes from database
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery(String.format("SELECT RECIPE_ID FROM FAVORITE WHERE UPPER(USERNAME) = '%s'", username.toUpperCase()));
         LinkedList<Recipe> favorites = new LinkedList<>();
@@ -204,39 +242,34 @@ public class DatabaseConnection {
         return favorites;
     }
 
-    private static List<Recipe> getUserRecipes(String username) throws SQLException {
+    private static void saveFavorites(User user) throws IOException, SQLException {
+        // saved changes in user favorites to database
+        if (connection == null)
+            setConnection();
         Statement statement = connection.createStatement();
-        ResultSet result = statement.executeQuery(String.format("SELECT RECIPE_ID, NAME, DATE_ADDED FROM RECIPE WHERE UPPER(OWNER_NAME) = '%s'", username.toUpperCase()));
-        List<Recipe> userRecipes = new ArrayList<>();
-        while (result.next()) {
-            int id = result.getInt("RECIPE_ID");
-            Recipe recipe = getRecipe(id);
-            Statement stat = connection.createStatement();
-            ResultSet resPublicity = stat.executeQuery(String.format("SELECT G.NAME FROM \"GROUP\" G WHERE G.GROUP_ID = (SELECT P.GROUP_ID FROM PUBLICITY P WHERE P.RECIPE_ID = %d)", id));
-            resPublicity.next();
-            String groupName = resPublicity.getString("NAME");
-            recipe.setGroupName(groupName);
-            resPublicity.close();
-            stat.close();
-            userRecipes.add(recipe);
+        for (Recipe recipe: user.getAllFavorites()) {
+            if (recipe.getFavoriteStatus() == Status.added) {
+                statement.executeUpdate("INSERT INTO FAVORITE SELECT null, '" + user.getUsername() + "', "+ recipe.getId() + " FROM DUAL\n" +
+                        "WHERE NOT EXISTS (SELECT NULL FROM FAVORITE WHERE RECIPE_ID=" +  recipe.getId() + " AND USERNAME='" + user.getUsername() + "')");
+
+            }
+            if (recipe.getFavoriteStatus() == Status.deleted){
+                statement.executeUpdate(String.format("DELETE FROM FAVORITE WHERE RECIPE_ID = %d AND USERNAME = '%s'", recipe.getId(),  user.getUsername()));
+            }
         }
-        result.close();
         statement.close();
-        return userRecipes;
+        connection.commit();
     }
 
-    private static List<String> getUserFollowed(String username) throws SQLException {
-        // get all users which are followed by a given user
-        Statement statement = connection.createStatement();
-        String query = "select FOLLOWING_USERNAME, FOLLOWED_USERNAME from FOLLOWED where lower(FOLLOWING_USERNAME) = '"+username.toLowerCase()+"'";
-        ResultSet resultSet = statement.executeQuery(query);
-        List<String> stringList = new LinkedList<>();
-        while (resultSet.next()) {
-            stringList.add(resultSet.getString("FOLLOWED_USERNAME"));
+    public static void saveUser(User user) throws SQLException, IOException {
+        // called when the application is closed, save information created in the session to the database
+        if (user != null) {
+            saveFavorites(user);
+            saveFollowed(user);
+            updateShoppingListView(user);
         }
-        resultSet.close();
-        statement.close();
-        return stringList;
+        if (connection != null)
+            closeConnection();
     }
 
     // GROUP
@@ -313,6 +346,7 @@ public class DatabaseConnection {
     }
 
     public static Integer getGroupID(String groupName, User activeUser) throws IOException, SQLException {
+        // get id of group to share shopping list with them
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
@@ -326,8 +360,10 @@ public class DatabaseConnection {
         return null;
     }
 
-    private static List<String> getGroupParticipants(String GroupID) throws SQLException {
+    private static List<String> getGroupParticipants(String GroupID) throws SQLException, IOException {
         // get all users which belong to a given group
+        if (connection == null)
+            setConnection();
         Statement statement = connection.createStatement();
         String query = "select USERNAME from BELONG where GROUP_ID = "+GroupID;
         ResultSet resultSet = statement.executeQuery(query);
@@ -347,8 +383,8 @@ public class DatabaseConnection {
         Statement statement = connection.createStatement();
         String[] temp = {groupName};
         statement.execute("insert into BELONG values (null, "+ getGroupIDs(temp).get(0)+", '"+username+"')");
-        connection.commit();
         statement.close();
+        connection.commit();
     }
 
     public static void kickUser(String username, int groupID) throws IOException, SQLException {
@@ -357,13 +393,14 @@ public class DatabaseConnection {
             setConnection();
         Statement statement = connection.createStatement();
         statement.executeUpdate("delete from BELONG where GROUP_ID = "+groupID+ " and USERNAME = '" +username+ "'");
-        connection.commit();
         statement.close();
+        connection.commit();
     }
 
     // RECIPE
 
     public static int addRecipe(Recipe recipe, User activeUser) throws IOException, SQLException {
+        // save new recipe in database
         if (connection == null)
             setConnection();
         CallableStatement statement = connection.prepareCall("{ call add_recipe(?, ?, ?, ?, ?, ?, ?, ?, ?) }");
@@ -400,6 +437,7 @@ public class DatabaseConnection {
     }
 
     public static void deleteRecipe(User activeUser, Recipe recipe) throws IOException, SQLException {
+        // delete user recipe from database
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
@@ -462,6 +500,7 @@ public class DatabaseConnection {
     }
 
     private static Recipe getRecipe(int recipeId) throws SQLException {
+        // get all information about recipe from database, and set them to recipe class
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery(String.format("SELECT * FROM RECIPE JOIN PUBLICITY USING(RECIPE_ID) WHERE RECIPE_ID = %s", recipeId));
         result.next();
@@ -491,7 +530,7 @@ public class DatabaseConnection {
     // UNIT
 
     public static ObservableList<String> getUnits() throws IOException, SQLException {
-        // returns ObservableList of avaible units names. Does not return "piece" because it is not used in most functions.
+        // returns ObservableList of available units names. Does not return "piece" because it is not used in most functions.
         ObservableList<String> unitsList = FXCollections.observableArrayList();
         if (connection == null)
             setConnection();
@@ -670,6 +709,7 @@ public class DatabaseConnection {
     // SHOPPING LIST
 
     private static ArrayList<Ingredient> getShoppingList(String username) throws SQLException {
+        // get user shopping list saved in database
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM SHOPPING_LIST WHERE USERNAME = '" + username + "' AND GROUP_ID IS NULL" );
         ArrayList<Ingredient> shoppingList = new ArrayList<>();
@@ -692,16 +732,20 @@ public class DatabaseConnection {
     }
 
     public static Map<Ingredient, String> getGroupShoppingList(User activeUser, String groupName) throws IOException, SQLException {
+        // get saved group shopping list
         if (connection == null)
             setConnection();
+        // get group id with group name and username
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT GROUP_ID FROM \"GROUP\" JOIN BELONG USING (GROUP_ID) WHERE NAME = '" + groupName + "' AND USERNAME = '" + activeUser.getUsername() +"'");
         if (resultSet.next()) {
             int groupId = resultSet.getInt("GROUP_ID");
+            // get all ingredient_list id from shopping list
             Statement listStatement = connection.createStatement();
             ResultSet listResult = listStatement.executeQuery("SELECT * FROM SHOPPING_LIST WHERE GROUP_ID = " + groupId);
             Map<Ingredient, String> shoppingList = new HashMap<>();
             while (listResult.next()){
+                // change id to name
                 int ingredientId = listResult.getInt("INGREDIENT_LIST_ID");
                 Statement ingredientStatement = connection.createStatement();
                 ResultSet ingredientResult = ingredientStatement.executeQuery("SELECT * FROM INGREDIENT_LIST WHERE INGREDIENT_LIST_ID =" + ingredientId);
@@ -723,6 +767,9 @@ public class DatabaseConnection {
     }
 
     private static void updateShoppingListView(User activeUser) throws SQLException, IOException {
+        // save shopping list to database after changes in session
+        if (connection == null)
+            setConnection();
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM SHOPPING_LIST " +
                                                             "WHERE UPPER(USERNAME) = '" + activeUser.getUsername().toUpperCase() +
@@ -790,6 +837,7 @@ public class DatabaseConnection {
     }
 
     public static void shareList(User activeUser, String groupName) throws IOException, SQLException {
+        // share shopping list with group
         if (connection == null)
             setConnection();
         updateShoppingListView(activeUser);
@@ -803,6 +851,7 @@ public class DatabaseConnection {
     }
 
     public static void deleteGroupShoppingList(User activeUser, String groupName) throws IOException, SQLException {
+        // delete group shopping list in database (change in current session)
         if (connection == null)
             setConnection();
         Integer groupId = getGroupID(groupName, activeUser);
@@ -814,6 +863,7 @@ public class DatabaseConnection {
     }
 
     public static void deleteIngredientFromGroupShoppingList(User activeUser, String groupName, Ingredient ingredient) throws IOException, SQLException {
+        // delete ingredient from group shopping list changed in current session
         if (connection == null)
             setConnection();
         Integer groupId = getGroupID(groupName, activeUser);
