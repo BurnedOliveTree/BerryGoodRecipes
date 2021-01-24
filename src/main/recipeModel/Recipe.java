@@ -44,7 +44,12 @@ public class Recipe {
     }
 
     public Recipe(Recipe that) {
-        this(that.getId(), that.getName(), that.getAuthor(), that.getPrepareMethod(), that.getAccessibility(), that.getDateAdded(), that.getPrepareTime(), that.getPortionNumber(), that.getPortionNumber(), that.getIngredientList());
+        this(that.getId(), that.getName(), that.getAuthor(), that.getPrepareMethod(), that.getAccessibility(), that.getDateAdded(), that.getPrepareTime(), that.getPortionNumber(), that.getPortionNumber(),null);
+        ArrayList<Ingredient> ingredients = new ArrayList<>();
+        for (Ingredient ingredient: that.getIngredientList()) {
+            ingredients.add(new Ingredient(ingredient));
+        }
+        this.ingredientList = ingredients;
     }
 
     public void setCost(Double cost) {

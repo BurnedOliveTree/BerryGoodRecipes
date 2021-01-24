@@ -33,6 +33,8 @@ public class ShoppingListPane extends BasicPaneActions {
 
     @FXML private Button exitButton;
     @FXML private ImageView exitPic;
+    @FXML private ImageView sharePic;
+    @FXML private ImageView clearPic;
     @FXML private ListView<String> shoppingList;
     @FXML private MenuButton shareMenu;
     @FXML private ChoiceBox<String> otherListsMenu;
@@ -60,6 +62,8 @@ public class ShoppingListPane extends BasicPaneActions {
     void initialize() throws IOException, SQLException {
         if (DatabaseConnection.isThemeLight()) {
             exitPic.setImage(new Image("icons/berryExit.png"));
+            sharePic.setImage(new Image("icons/berryShare.png"));
+            clearPic.setImage(new Image("icons/berryClear.png"));
         }
         showShoppingList(showFirst);
         Platform.runLater(()->{
