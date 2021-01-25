@@ -1,6 +1,7 @@
 package main.controller;
 
 import main.DatabaseConnection;
+import main.userModel.Group;
 import main.userModel.User;
 
 import javafx.application.Platform;
@@ -47,33 +48,6 @@ public class UserAdminPane extends BasicPaneActions {
                 err.printStackTrace();
             }
         });
-        MenuItem unfollowMenuItem = new MenuItem("Unfollow");
-        unfollowMenuItem.setOnAction(actionEvent -> {
-            String username = followedList.getSelectionModel().getSelectedItem();
-            if (username != null) {
-                activeUser.unfollowUser(username);
-                refreshFollowedList();
-            }
-        });
-        Menu menu = new Menu("Invite");
-        List<MenuItem> menuItemList = new ArrayList<>();
-        for (String groupName: activeUser.getUserGroups()) {
-            MenuItem tempMenuItem = new MenuItem(groupName);
-            tempMenuItem.setOnAction(actionEvent -> {
-                String username = followedList.getSelectionModel().getSelectedItem();
-                if (username != null) {
-                    try {
-                        DatabaseConnection.invite(username, groupName);
-                        refreshWindow();
-                    } catch (IOException | SQLException err) {
-                        err.printStackTrace();
-                    }
-                }
-            });
-            menuItemList.add(tempMenuItem);
-        }
-        menu.getItems().addAll(menuItemList);
-        setContextMenu(followedList, unfollowMenuItem, menu);
     }
 
     @FXML private void onRefreshButtonClick() throws IOException, SQLException {
@@ -81,19 +55,21 @@ public class UserAdminPane extends BasicPaneActions {
     }
 
     public void refreshWindow() throws IOException, SQLException {
-        // refresh window to check for new groups of followed users
-        setGroupTiles(DatabaseConnection.getGroups(activeUser));
-        refreshFollowedList();
+        // refresh window to check for new groups or followed users
+        activeUser.setUserGroups(DatabaseConnection.getGroups(activeUser.getUsername()));
+        Platform.runLater(() -> {
+            setGroupTiles();
+            refreshFollowedList();
+        });
     }
 
-    private void setGroupTiles(List<List<String>> listOfLists) {
+    private void setGroupTiles() {
         // create group tiles from a list of raw group data
         List<MenuButton> panelist = new ArrayList<>();
-        for (List<String> listOfList : listOfLists) {
-            int groupID = Integer.parseInt(listOfList.get(0));
-            String groupName = listOfList.get(1);
-            listOfList.remove(0);
-            listOfList.remove(0);
+        for (Group group : activeUser.getUserGroups()) {
+            int groupID = group.getID();
+            String groupName = group.getName();
+            List<String> participants = group.getParticipants();
 
             MenuButton tempButton = new MenuButton(groupName);
             tempButton.setWrapText(true);
@@ -103,7 +79,7 @@ public class UserAdminPane extends BasicPaneActions {
 
             MenuItem menuItem = new MenuItem("Show shopping list");
             menuItem.setOnAction(e -> {
-                FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, this, groupName), "/resources/shoppingListPage.fxml");
+                FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, this, group), "/resources/shoppingListPage.fxml");
                 changeScene(exitButton, loader);
             });
             tempButton.getItems().add(menuItem);
@@ -113,8 +89,7 @@ public class UserAdminPane extends BasicPaneActions {
             tempButton.getItems().add(menuItem);
 
             Menu followMenu = new Menu("Follow user");
-            listOfList.remove(activeUser.getUsername());
-            for (String s : listOfList) {
+            for (String s : participants) {
                 menuItem = new MenuItem(s);
                 if (activeUser.getFollowed().contains(s))
                     menuItem.setDisable(true);
@@ -131,7 +106,7 @@ public class UserAdminPane extends BasicPaneActions {
             tempButton.getItems().add(new SeparatorMenuItem());
 
             Menu kickMenu = new Menu("Kick user");
-            for (String s : listOfList) {
+            for (String s : participants) {
                 menuItem = new MenuItem(s);
                 menuItem.setOnAction(e -> {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -210,10 +185,41 @@ public class UserAdminPane extends BasicPaneActions {
         }
     }
 
+    private void setContextMenu() {
+        MenuItem unfollowMenuItem = new MenuItem("Unfollow");
+        unfollowMenuItem.setOnAction(actionEvent -> {
+            String username = followedList.getSelectionModel().getSelectedItem();
+            if (username != null) {
+                activeUser.unfollowUser(username);
+                refreshFollowedList();
+            }
+        });
+        Menu menu = new Menu("Invite");
+        List<MenuItem> menuItemList = new ArrayList<>();
+        for (Group group: activeUser.getUserGroups()) {
+            MenuItem tempMenuItem = new MenuItem(group.getName());
+            tempMenuItem.setOnAction(actionEvent -> {
+                String username = followedList.getSelectionModel().getSelectedItem();
+                if (username != null) {
+                    try {
+                        DatabaseConnection.invite(username, group.getID());
+                        refreshWindow();
+                    } catch (IOException | SQLException err) {
+                        err.printStackTrace();
+                    }
+                }
+            });
+            menuItemList.add(tempMenuItem);
+        }
+        menu.getItems().addAll(menuItemList);
+        super.setContextMenu(followedList, unfollowMenuItem, menu);
+    }
+
     public void refreshFollowedList() {
         // refresh list of followed users
         followedList.getItems().clear();
         followedList.getItems().addAll(activeUser.getFollowed());
+        setContextMenu();
     }
 
     @FXML private void onExitButtonAction() {

@@ -17,7 +17,7 @@ public class User {
     private final List<Recipe> userRecipes;
     private final List<Recipe> favorites;
     private final List<String> followed;
-    private final List<String> userGroups;
+    private List<Group> userGroups;
     private final List<String> newFollowed = new LinkedList<>();
     private final List<String> deletedFollowed = new LinkedList<>();
     private List<Ingredient> shoppingList;
@@ -33,7 +33,7 @@ public class User {
         this.shoppingList = new ArrayList<>();
     }
 
-    public User(String argUsername, List<Recipe> userRecipes, List<Recipe> favorites, List<String> followed, ArrayList<Ingredient> shoppingList, List<String> userGroups, ObservableList<String> units) {
+    public User(String argUsername, List<Recipe> userRecipes, List<Recipe> favorites, List<String> followed, ArrayList<Ingredient> shoppingList, List<Group> userGroups, ObservableList<String> units) {
         username = argUsername;
         this.userRecipes = userRecipes;
         this.favorites = favorites;
@@ -57,8 +57,12 @@ public class User {
     public ObservableList<String> getUnits() {
         return units;
     }
-    public List<String> getUserGroups() {
+
+    public List<Group> getUserGroups() {
         return userGroups;
+    }
+    public void setUserGroups(List<Group> groups) {
+        this.userGroups = groups;
     }
 
     public String getDefaultUnitSystem() {

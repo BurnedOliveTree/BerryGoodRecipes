@@ -15,6 +15,7 @@ import javafx.scene.layout.VBox;
 
 import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
+import main.userModel.Group;
 import main.userModel.User;
 
 import java.io.IOException;
@@ -27,9 +28,10 @@ import java.util.regex.Pattern;
 public class ShoppingListPane extends BasicPaneActions {
     private final User activeUser;
     private final BasicPaneActions returnPane;
-    private final List<String> groups;
+    private final List<Group> groups;
     private List<Ingredient> ingredientList = new ArrayList<>();
-    private final String showFirst;
+    private final Group showFirst;
+    private final Group privateGroup = new Group(-1, "User");
 
     @FXML private Button exitButton;
     @FXML private ImageView exitPic;
@@ -37,24 +39,25 @@ public class ShoppingListPane extends BasicPaneActions {
     @FXML private ImageView clearPic;
     @FXML private ListView<String> shoppingList;
     @FXML private MenuButton shareMenu;
-    @FXML private ChoiceBox<String> otherListsMenu;
+    @FXML private ChoiceBox<Group> otherListsMenu;
     @FXML private MenuButton addIngredient;
 
-    public ShoppingListPane(User activeUser, BasicPaneActions returnPane, String showFirst) {
+    public ShoppingListPane(User activeUser, BasicPaneActions returnPane, Group showFirst) {
         this.activeUser = activeUser;
         this.returnPane = returnPane;
         this.groups =  activeUser.getUserGroups();
-        if (!this.groups.contains("User"))
-            this.groups.add("User");
+        if (!this.groups.contains(privateGroup))
+            this.groups.add(privateGroup);
         this.showFirst = showFirst;
     }
+
     public ShoppingListPane(User activeUser, BasicPaneActions returnPane) {
         this.activeUser = activeUser;
         this.returnPane = returnPane;
         this.groups =  activeUser.getUserGroups();
-        if (!this.groups.contains("User"))
-            this.groups.add("User");
-        this.showFirst = "User";
+        if (!this.groups.contains(privateGroup))
+            this.groups.add(privateGroup);
+        this.showFirst = privateGroup;
     }
 
 
@@ -110,7 +113,7 @@ public class ShoppingListPane extends BasicPaneActions {
                     }
                     quantity.clear();
                     name.clear();
-                    showShoppingList("User");
+                    showShoppingList(privateGroup);
                 } catch (IOException | SQLException err) {
                     err.printStackTrace();
                 }
@@ -124,18 +127,18 @@ public class ShoppingListPane extends BasicPaneActions {
         addIngredient.getItems().add(customMenuItem);
     }
 
-    private void setShareMenu(String currentList) {
+    private void setShareMenu(Group currentList) {
         shareMenu.getItems().clear();
-        if (currentList.equals("User")) {
+        if (currentList == privateGroup) {
             // only in user shopping list user can share list
             shareMenu.setVisible(true);
             addIngredient.setVisible(true);
-            for (String groupName : groups) {
-                if (!groupName.equals("User")) {
-                    MenuItem menuItem = new MenuItem(groupName);
+            for (Group group : groups) {
+                if (group.getID() != -1) {
+                    MenuItem menuItem = new MenuItem(group.getName());
                     menuItem.setOnAction(e -> {
                         try {
-                            DatabaseConnection.shareList(activeUser, groupName);
+                            DatabaseConnection.shareList(activeUser, group.getID());
                             activeUser.getShoppingList().clear();
                             shoppingList.getItems().clear();
                             shoppingList.refresh();
@@ -167,11 +170,11 @@ public class ShoppingListPane extends BasicPaneActions {
         });
     }
 
-    private void showShoppingList(String currentList) throws IOException, SQLException {
+    private void showShoppingList(Group currentList) throws IOException, SQLException {
         shoppingList.getItems().clear();
         ingredientList.clear();
 
-        if (currentList.equals("User")) {
+        if (currentList == privateGroup) {
             for (Ingredient ingredient : activeUser.showShoppingList().values()) {
                 ingredientList.add(ingredient);
                 if (ingredient.getUnit().equals("piece")) {
@@ -182,7 +185,8 @@ public class ShoppingListPane extends BasicPaneActions {
                 }
             }
         } else {
-            Map<Ingredient, String> ShoppingList = DatabaseConnection.getGroupShoppingList(activeUser, currentList);
+            // TODO change name to ID
+            Map<Ingredient, String> ShoppingList = DatabaseConnection.getGroupShoppingList(activeUser, currentList.getName());
             assert ShoppingList != null;
             for (Map.Entry<Ingredient, String> entry : ShoppingList.entrySet()) {
                 String author = entry.getValue();
@@ -202,13 +206,13 @@ public class ShoppingListPane extends BasicPaneActions {
     private MenuItem createDeleteIngredientItem(){
         MenuItem delete = new MenuItem("Delete");
         delete.setOnAction(actionEvent -> {
-            if (otherListsMenu.getValue().equals("User")) {
+            if (otherListsMenu.getValue() == privateGroup) {
                 activeUser.removeSameNamedFromSL(ingredientList.get(shoppingList.getSelectionModel().getSelectedIndex()).getName(), ingredientList.get(shoppingList.getSelectionModel().getSelectedIndex()).getUnit());
             } else {
                 try {
-                    DatabaseConnection.deleteIngredientFromGroupShoppingList(activeUser, otherListsMenu.getValue(), ingredientList.get(shoppingList.getSelectionModel().getSelectedIndex()));
-                } catch (IOException | SQLException e) {
-                    e.printStackTrace();
+                    DatabaseConnection.deleteIngredientFromGroupShoppingList(otherListsMenu.getValue().getID(), ingredientList.get(shoppingList.getSelectionModel().getSelectedIndex()));
+                } catch (IOException | SQLException err) {
+                    err.printStackTrace();
                 }
             }
             ingredientList.remove(shoppingList.getSelectionModel().getSelectedIndex());
@@ -220,10 +224,10 @@ public class ShoppingListPane extends BasicPaneActions {
 
     @FXML
     public void clearShoppingList() throws IOException, SQLException {
-        if (otherListsMenu.getValue().equals("User")) {
+        if (otherListsMenu.getValue() == privateGroup) {
             activeUser.removeShoppingList();
         } else {
-            DatabaseConnection.deleteGroupShoppingList(activeUser, otherListsMenu.getValue());
+            DatabaseConnection.deleteGroupShoppingList(otherListsMenu.getValue().getID());
         }
         ingredientList.clear();
         shoppingList.getItems().clear();

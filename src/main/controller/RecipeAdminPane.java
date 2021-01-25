@@ -13,6 +13,7 @@ import javafx.collections.ObservableList;
 import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
+import main.userModel.Group;
 import main.userModel.User;
 
 import java.io.IOException;
@@ -25,7 +26,7 @@ import java.util.Optional;
 
 public class RecipeAdminPane extends BasicPaneActions {
     private final User activeUser;
-    private final List<String> accessibility = new ArrayList<>();
+    private final List<Group> accessibility = new ArrayList<>();
 
     @FXML private TableView<Recipe> myRecipesTable;
     @FXML private Button exitButton;
@@ -38,13 +39,16 @@ public class RecipeAdminPane extends BasicPaneActions {
     @FXML private TextField hrsField;
     @FXML private TextField minsField;
     @FXML private TextArea descriptionArea;
-    @FXML private ChoiceBox<String> accessibilityBox;
+    @FXML private ChoiceBox<Group> accessibilityBox;
 
 
-    public RecipeAdminPane( User activeUser) {
+    public RecipeAdminPane(User activeUser) {
         this.activeUser = activeUser;
-        accessibility.add("public");
-        accessibility.add("private");
+        try {
+            this.activeUser.setUserGroups(DatabaseConnection.getGroups(activeUser.getUsername()));
+        } catch (SQLException | IOException err) { err.printStackTrace(); }
+        accessibility.add(new Group(0, "public"));
+        accessibility.add(new Group(-1, "private"));
         accessibility.addAll(activeUser.getUserGroups());
     }
 
@@ -100,17 +104,18 @@ public class RecipeAdminPane extends BasicPaneActions {
 
     @FXML
     private void saveRecipe() throws IOException, SQLException {
-        String groupName = accessibilityBox.getSelectionModel().getSelectedItem();
+        Group group = accessibilityBox.getSelectionModel().getSelectedItem();
         ArrayList<Ingredient> ingredientList = getIngredientList();
         String warning = checkCorrectness(getIngredientList());
         if (warning.equals("")){
             Integer publicity = null;
-            if (!groupName.equals("private")){
-                publicity = DatabaseConnection.getGroupID(groupName, activeUser);
+            if (!group.getName().equals("private")){
+                publicity = group.getID();
             }
             Integer preparationTime = getTimePreparationInMinutes();
             Double cost = getCost();
             Double portions = getPortions();
+            System.out.println(publicity);
             Recipe recipe = new Recipe(null, titleField.getText(), activeUser.getUsername(), descriptionArea.getText(), publicity, getDateAdded(), preparationTime, cost, portions, ingredientList);
             int recipeId  = DatabaseConnection.addRecipe(recipe, activeUser);
             recipe.setId(recipeId);
