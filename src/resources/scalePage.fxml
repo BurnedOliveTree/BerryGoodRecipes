@@ -29,9 +29,6 @@
       <Label layoutX="406.0" layoutY="389.0" text="I have:" />
       <Label layoutX="406.0" layoutY="424.0" text="Shape:" />
       <Label layoutX="59.0" layoutY="45.0" prefHeight="31.0" prefWidth="136.0" text="Unit converter">
-         <font>
-            <Font size="18.0" />
-         </font>
       </Label>
       <ChoiceBox fx:id="inRecipeBox" layoutX="109.0" layoutY="420.0" prefWidth="150.0" />
       <ChoiceBox fx:id="IHaveBox" layoutX="456.0" layoutY="420.0" prefWidth="150.0" />

@@ -1,3 +1,7 @@
+@font-face {
+    -fx-font-family: 'Mali';
+    src: url('Mali.ttf') format('truetype');
+}
 .root {
     -fx-base: #ddd;
     -fx-control-inner-background: #bbb;
@@ -6,6 +10,7 @@
     -fx-focus-color: -fx-accent;
     -fx-default-button: -fx-control-inner-background;
 
+    -fx-font-family: 'Mali';
     -fx-light-text-color: #444;
     -fx-mid-text-color: -fx-light-text-color;
     -fx-dark-text-color: -fx-light-text-color;
@@ -24,10 +29,15 @@
     -fx-padding: 0;
 }
 .berry-text {
+    -fx-font-family: 'Mali';
     -fx-fill: -fx-light-text-color;
     -fx-font-smoothing-type: lcd;
 }
+#titleLabel {
+    -fx-font-size: 18;
+}
 Text {
+    -fx-font-family: 'Mali';
     -fx-fill: -fx-light-text-color;
 }
 #shoppingList .list-cell {
@@ -35,6 +45,9 @@ Text {
 }
 #non-transparent {
     -fx-background-color: linear-gradient(from 25% 25% to 100% 100%, -fx-base, -fx-accent);
+}
+#small .button {
+    -fx-padding: 0;
 }
 #authorLabel {
     -fx-underline: true;
