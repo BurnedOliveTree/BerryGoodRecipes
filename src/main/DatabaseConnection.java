@@ -185,9 +185,13 @@ public class DatabaseConnection {
             setConnection();
         Statement stat = connection.createStatement();
         ResultSet resPublicity = stat.executeQuery(String.format("SELECT G.NAME FROM \"GROUP\" G WHERE G.GROUP_ID = (SELECT P.GROUP_ID FROM PUBLICITY P WHERE P.RECIPE_ID = %d)", recipe.getId()));
-        resPublicity.next();
-        String groupName = resPublicity.getString("NAME");
-        recipe.setGroupName(groupName);
+        if (resPublicity.next()) {
+            String groupName = resPublicity.getString("NAME");
+            recipe.setGroupName(groupName);
+        } else {
+            recipe.setGroupName("private");
+        }
+
         resPublicity.close();
         stat.close();
     }
