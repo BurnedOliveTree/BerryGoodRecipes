@@ -128,6 +128,8 @@ public class RecipePane  extends BasicPaneActions {
         Platform.runLater(() -> commentButton.setPrefWidth(propertyBox.getWidth()));
     }
 
+    // context menu bind with author label
+
     private MenuItem createFollowMenuItem() {
         // after right pressing on mouse button on author label. Create opportunity to follow author of recipe
         MenuItem followMenuItem = new MenuItem("Follow");
@@ -159,6 +161,8 @@ public class RecipePane  extends BasicPaneActions {
         menu.getItems().addAll(menuItemList);
         return menu;
     }
+
+    // ingredient list view
 
     static class ButtonCell extends ListCell<Ingredient> {
         // inner class which extends ListCell with additional button - for adding ingredient to shopping list - option for logged users
@@ -292,6 +296,8 @@ public class RecipePane  extends BasicPaneActions {
         return add;
     }
 
+    // changing unit in ingredient list
+
     public Menu createChangeUnit() {
         // give opportunity for changing unit more convenient for the user
         Menu change = new Menu("Change unit");
@@ -327,6 +333,8 @@ public class RecipePane  extends BasicPaneActions {
         }
         setIngredListView(newList, Boolean.TRUE);
     }
+
+    // changing portion in ingredient list
 
     private void setPortionAreaProperty(){
         // set spinner for changing portion field
@@ -371,6 +379,8 @@ public class RecipePane  extends BasicPaneActions {
         recipe.scaleIngredientList(numPortions);
         setIngredListView(this.recipe.getIngredientList(), Boolean.FALSE);
     }
+
+    // menu box options
 
     @FXML
     private void onLikeButtonAction() {
