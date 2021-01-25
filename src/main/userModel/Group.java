@@ -4,17 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Group {
-    private final int ID;
+    private final Integer ID;
     private final String name;
     private List<String> participants;
 
-    public Group(int ID, String name) {
+    public Group(Integer ID, String name) {
         this.ID = ID;
         this.name = name;
         this.participants = new ArrayList<>();
     }
 
-    public int getID() {
+    public Integer getID() {
         return ID;
     }
 
@@ -30,6 +30,20 @@ public class Group {
         // all group participants without active user
         this.participants = participants;
         this.participants.remove(activeUsername);
+    }
+
+    @Override
+    public boolean equals(Object r) {
+        // overload of the base method comparing objects by ID
+        if (r == this) {
+            return true;
+        } else if (!(r instanceof Group)) {
+            return false;
+        } else if (this.ID == null) {
+            return ((Group) r).getID() == null;
+        } else  {
+            return this.ID.equals(((Group) r).getID());
+        }
     }
 
     @Override

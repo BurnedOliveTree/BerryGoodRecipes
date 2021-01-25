@@ -134,7 +134,7 @@ public class ShoppingListPane extends BasicPaneActions {
             shareMenu.setVisible(true);
             addIngredient.setVisible(true);
             for (Group group : groups) {
-                if (group.getID() != -1) {
+                if (group.getID() != null) {
                     MenuItem menuItem = new MenuItem(group.getName());
                     menuItem.setOnAction(e -> {
                         try {
@@ -185,9 +185,7 @@ public class ShoppingListPane extends BasicPaneActions {
                 }
             }
         } else {
-            // TODO change name to ID
-            Map<Ingredient, String> ShoppingList = DatabaseConnection.getGroupShoppingList(activeUser, currentList.getName());
-            assert ShoppingList != null;
+            Map<Ingredient, String> ShoppingList = DatabaseConnection.getGroupShoppingList(currentList.getID());
             for (Map.Entry<Ingredient, String> entry : ShoppingList.entrySet()) {
                 String author = entry.getValue();
                 Ingredient ingredient = entry.getKey();

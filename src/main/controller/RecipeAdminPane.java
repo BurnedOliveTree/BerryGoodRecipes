@@ -48,7 +48,7 @@ public class RecipeAdminPane extends BasicPaneActions {
             this.activeUser.setUserGroups(DatabaseConnection.getGroups(activeUser.getUsername()));
         } catch (SQLException | IOException err) { err.printStackTrace(); }
         accessibility.add(new Group(0, "public"));
-        accessibility.add(new Group(-1, "private"));
+        accessibility.add(new Group(null, "private"));
         accessibility.addAll(activeUser.getUserGroups());
     }
 

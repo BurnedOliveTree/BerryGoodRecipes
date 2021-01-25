@@ -285,7 +285,7 @@ public class DatabaseConnection {
         statement.close();
     }
 
-    public static void deleteGroup(int groupID) throws IOException, SQLException {
+    public static void deleteGroup(Integer groupID) throws IOException, SQLException {
         // delete group of a given ID
         if (connection == null)
             setConnection();
@@ -347,7 +347,7 @@ public class DatabaseConnection {
         return users;
     }
 
-    public static void invite(String username, int groupID) throws IOException, SQLException {
+    public static void invite(String username, Integer groupID) throws IOException, SQLException {
         // add given user to a given group
         if (connection == null)
             setConnection();
@@ -357,7 +357,7 @@ public class DatabaseConnection {
         connection.commit();
     }
 
-    public static void kickUser(String username, int groupID) throws IOException, SQLException {
+    public static void kickUser(String username, Integer groupID) throws IOException, SQLException {
         // kick a user from a specified group
         if (connection == null)
             setConnection();
@@ -701,39 +701,27 @@ public class DatabaseConnection {
         return shoppingList;
     }
 
-    public static Map<Ingredient, String> getGroupShoppingList(User activeUser, String groupName) throws IOException, SQLException {
+    public static Map<Ingredient, String> getGroupShoppingList(Integer groupID) throws IOException, SQLException {
         // get saved group shopping list
         if (connection == null)
             setConnection();
-        // get group id with group name and username
+        // get all ingredient_list id from shopping list
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT GROUP_ID FROM \"GROUP\" JOIN BELONG USING (GROUP_ID) WHERE NAME = '" + groupName + "' AND USERNAME = '" + activeUser.getUsername() +"'");
-        if (resultSet.next()) {
-            int groupId = resultSet.getInt("GROUP_ID");
-            // get all ingredient_list id from shopping list
-            Statement listStatement = connection.createStatement();
-            ResultSet listResult = listStatement.executeQuery("SELECT * FROM SHOPPING_LIST WHERE GROUP_ID = " + groupId);
-            Map<Ingredient, String> shoppingList = new HashMap<>();
-            while (listResult.next()){
-                // change id to name
-                int ingredientId = listResult.getInt("INGREDIENT_LIST_ID");
-                Statement ingredientStatement = connection.createStatement();
-                ResultSet ingredientResult = ingredientStatement.executeQuery("SELECT * FROM INGREDIENT_LIST WHERE INGREDIENT_LIST_ID =" + ingredientId);
-                if(ingredientResult.next()){
-                    shoppingList.put(new Ingredient(ingredientId, listResult.getDouble("AMOUNT"), ingredientResult.getString("INGREDIENT_UNIT"), ingredientResult.getString("INGREDIENT_NAME")), listResult.getString("USERNAME"));
-                }
-                ingredientResult.close();
-                ingredientStatement.close();
+        ResultSet resultSet = statement.executeQuery("SELECT * FROM SHOPPING_LIST WHERE GROUP_ID = " + groupID);
+        Map<Ingredient, String> shoppingList = new HashMap<>();
+        while (resultSet.next()){
+            int ingredientId = resultSet.getInt("INGREDIENT_LIST_ID");
+            Statement ingredientStatement = connection.createStatement();
+            ResultSet ingredientResult = ingredientStatement.executeQuery("SELECT * FROM INGREDIENT_LIST WHERE INGREDIENT_LIST_ID =" + ingredientId);
+            if(ingredientResult.next()){
+                shoppingList.put(new Ingredient(ingredientId, resultSet.getDouble("AMOUNT"), ingredientResult.getString("INGREDIENT_UNIT"), ingredientResult.getString("INGREDIENT_NAME")), resultSet.getString("USERNAME"));
             }
-            listResult.close();
-            listStatement.close();
-            statement.close();
-            resultSet.close();
-            return shoppingList;
+            ingredientResult.close();
+            ingredientStatement.close();
         }
-        statement.close();
         resultSet.close();
-        return null;
+        statement.close();
+        return shoppingList;
     }
 
     private static void updateShoppingListView(User activeUser) throws SQLException, IOException {
@@ -806,12 +794,12 @@ public class DatabaseConnection {
         statement.close();
     }
 
-    public static void shareList(User activeUser, int groupID) throws IOException, SQLException {
+    public static void shareList(User activeUser, Integer groupID) throws IOException, SQLException {
         // share shopping list with group
         if (connection == null)
             setConnection();
         updateShoppingListView(activeUser);
-        if (groupID != -1) {
+        if (groupID != null) {
             Statement statement = connection.createStatement();
             statement.execute("BEGIN share_shopping_list('" + activeUser.getUsername() +  "', "+  groupID + "); END;");
             connection.commit();
@@ -819,22 +807,22 @@ public class DatabaseConnection {
         }
     }
 
-    public static void deleteGroupShoppingList(int groupID) throws IOException, SQLException {
+    public static void deleteGroupShoppingList(Integer groupID) throws IOException, SQLException {
         // delete group shopping list in database (change in current session)
         if (connection == null)
             setConnection();
-        if (groupID != -1) {
+        if (groupID != null) {
             Statement statement = connection.createStatement();
             statement.execute("DELETE SHOPPING_LIST WHERE GROUP_ID ="+ groupID);
             statement.close();
         }
     }
 
-    public static void deleteIngredientFromGroupShoppingList(int groupID, Ingredient ingredient) throws IOException, SQLException {
+    public static void deleteIngredientFromGroupShoppingList(Integer groupID, Ingredient ingredient) throws IOException, SQLException {
         // delete ingredient from group shopping list changed in current session
         if (connection == null)
             setConnection();
-        if (groupID != -1) {
+        if (groupID != null) {
             Statement statement = connection.createStatement();
             statement.execute("DELETE SHOPPING_LIST WHERE GROUP_ID ="+ groupID +" AND INGREDIENT_LIST_ID=" + ingredient.getId());
             statement.close();
