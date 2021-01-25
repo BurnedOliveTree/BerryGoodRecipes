@@ -138,7 +138,7 @@ public class RecipePane  extends BasicPaneActions {
                 menuItemList.add(tempMenuItem);
             }
             menu.getItems().addAll(menuItemList);
-            super.setContextMenu(propertyBox, followMenuItem, menu);
+            super.setContextMenu(authorLabel, followMenuItem, menu);
         }
 
         Platform.runLater(() -> commentButton.setPrefWidth(propertyBox.getWidth()));
