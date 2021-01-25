@@ -84,8 +84,9 @@ public class Recipe {
         // @TODO MARIANKA calculate method from unit
     }
 
-    // scale ingredient taking into account the changed number of portions
-    public void scaleIngredientList(double scale) {
+    public void scaleIngredientList(Double newNumPortions) {
+        // scale ingredient taking into account the changed number of portions
+        double scale = newNumPortions / portionNumber;
         for (Ingredient ingredient : this.ingredientList) {
             if (scale > 0) {
                 ingredient.setQuantity(ingredient.getQuantity()*scale);
@@ -93,6 +94,7 @@ public class Recipe {
             else
                 throw new IllegalArgumentException("Value must be greater than 0");
         }
+        portionNumber = newNumPortions;
     }
 
     @Override   // overload of the base method comparing objects by ID

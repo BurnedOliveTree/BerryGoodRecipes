@@ -72,20 +72,23 @@ public class RecipePane  extends BasicPaneActions {
             TimePic.setImage(new Image("icons/berryStoper.png"));
             ExitPic.setImage(new Image("icons/berryExit.png"));
         }
-
+        // description
         Text text = new Text(this.recipe.getPrepareMethod());
         descText.getChildren().add(text);
+
+        // ingredient list
         ingredientListView = new ListView<>();
         setIngredListView(this.recipe.getIngredientList(), Boolean.FALSE);
         ingredientPane.getChildren().add(ingredientListView);
         ingredientListView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        // title
         titleLabel.setText(this.recipe.getName());
         titleLabel.setWrapText(true);
         titleLabel.setTextAlignment(TextAlignment.CENTER);
-        authorLabel.setText(this.recipe.getAuthor());
-        if (activeUser == null)
-            authorLabel.setStyle("-fx-underline: false;");
 
+        // additional information
+        authorLabel.setText(this.recipe.getAuthor());
         dateAddedLabel.setText("Date added: " + this.recipe.getDateAdded());
         setPortionAreaProperty();
         if (this.recipe.getCost() == 0) {
@@ -93,12 +96,13 @@ public class RecipePane  extends BasicPaneActions {
         } else {
             costLabel.setText("Cost: " + this.recipe.getCost());
         }
-
         if (this.recipe.getPrepareTime() == 0) {
             timePrepLabel.setText("Preparation time: Unknown");
         } else {
             timePrepLabel.setText("Preparation time: " + this.recipe.getPrepareTime());
         }
+
+        // save/saved button
         Files.createDirectories(Paths.get("./savedRecipes/"));
         if(Files.exists(Paths.get(getRecipeFileDirectory()))) {
             setSavedRecipe();
@@ -108,61 +112,75 @@ public class RecipePane  extends BasicPaneActions {
 
         // options for logged in users
         if (activeUser == null) {
+            ingredientListView.setPrefHeight(this.recipe.getIngredientList().size() * 27);
             likeButton.setDisable(true);
             shoppingListButton.setDisable(true);
-            ingredientListView.setPrefHeight(this.recipe.getIngredientList().size() * 27);
+            authorLabel.setStyle("-fx-underline: false;");
         } else {
             ingredientListView.setPrefHeight(this.recipe.getIngredientList().size() * 30);
             if (activeUser.checkIfRecipeFavorite(this.recipe)) {
                 LikePic.setImage(new Image("icons/favoriteClicked.png"));
             }
-            setContextMenu(ingredientListView, createDeleteFromShoppingListItem(), createAddToShoppingListItem(), createChangeUnit());
-
-            MenuItem followMenuItem = new MenuItem("Follow");
-            if (activeUser.getFollowed().contains(recipe.getAuthor()))
-                followMenuItem.setDisable(true);
-            followMenuItem.setOnAction(actionEvent -> {
-                activeUser.followUser(recipe.getAuthor());
-                followMenuItem.setDisable(true);
-            });
-            Menu menu = new Menu("Invite");
-            List<MenuItem> menuItemList = new ArrayList<>();
-            for (Group group: activeUser.getUserGroups()) {
-                MenuItem tempMenuItem = new MenuItem(group.getName());
-                if (group.getParticipants().contains(recipe.getAuthor()))
-                    tempMenuItem.setDisable(true);
-                tempMenuItem.setOnAction(actionEvent -> {
-                    try {
-                        DatabaseConnection.invite(recipe.getAuthor(), group.getID());
-                        tempMenuItem.setDisable(true);
-                    } catch (IOException | SQLException err) { err.printStackTrace(); }
-                });
-                menuItemList.add(tempMenuItem);
-            }
-            menu.getItems().addAll(menuItemList);
-            super.setContextMenu(authorLabel, followMenuItem, menu);
+            super.setContextMenu(ingredientListView, createDeleteFromShoppingListItem(), createAddToShoppingListItem(), createChangeUnit());
+            super.setContextMenu(authorLabel, createFollowMenuItem(), createInviteMenu());
         }
 
         Platform.runLater(() -> commentButton.setPrefWidth(propertyBox.getWidth()));
     }
 
-    // inner class which extends ListCell with additional button - for adding ingredient to shopping list - option for logged users
+    private MenuItem createFollowMenuItem() {
+        // after right pressing on mouse button on author label. Create opportunity to follow author of recipe
+        MenuItem followMenuItem = new MenuItem("Follow");
+        if (activeUser.getFollowed().contains(recipe.getAuthor()))
+            followMenuItem.setDisable(true);
+        followMenuItem.setOnAction(actionEvent -> {
+            activeUser.followUser(recipe.getAuthor());
+            followMenuItem.setDisable(true);
+        });
+        return followMenuItem;
+    }
+
+    private Menu createInviteMenu(){
+        // after right pressing on mouse button on author label. Create opportunity to invite author to one of user group
+        Menu menu = new Menu("Invite");
+        List<MenuItem> menuItemList = new ArrayList<>();
+        for (Group group: activeUser.getUserGroups()) {
+            MenuItem tempMenuItem = new MenuItem(group.getName());
+            if (group.getParticipants().contains(recipe.getAuthor()))
+                tempMenuItem.setDisable(true);
+            tempMenuItem.setOnAction(actionEvent -> {
+                try {
+                    DatabaseConnection.invite(recipe.getAuthor(), group.getID());
+                    tempMenuItem.setDisable(true);
+                } catch (IOException | SQLException err) { err.printStackTrace(); }
+            });
+            menuItemList.add(tempMenuItem);
+        }
+        menu.getItems().addAll(menuItemList);
+        return menu;
+    }
+
     static class ButtonCell extends ListCell<Ingredient> {
+        // inner class which extends ListCell with additional button - for adding ingredient to shopping list - option for logged users
         private final HBox box = new HBox();
         private final Label label = new Label("(empty)");
         public Ingredient selectedIngredient;
         private final User activeUser;
-        private final ImageView view;
+        private ImageView view;
 
         public ButtonCell(User activeUser) {
             super();
+            this.activeUser = activeUser;
+            Pane pane = new Pane();
+            HBox.setHgrow(pane, Priority.ALWAYS);
+            setView();
+            box.getChildren().addAll(view, label, pane);
+        }
+
+        private void setView() {
             view = new ImageView(new Image("icons/plus.png"));
             view.setFitHeight(20);
             view.setFitWidth(20);
-            Pane pane = new Pane();
-            box.getChildren().addAll(view, label, pane);
-            HBox.setHgrow(pane, Priority.ALWAYS);
-            this.activeUser = activeUser;
             view.setOnMouseClicked(mouseEvent -> {
                 if (activeUser.checkIfIngredientInShoppingList(selectedIngredient)) {
                     Ingredient ingredient = activeUser.getIngredientFromShoppingList(selectedIngredient);
@@ -181,10 +199,9 @@ public class RecipePane  extends BasicPaneActions {
                 }
             });
         }
-
-
         @Override
         protected void updateItem(Ingredient ingredient, boolean empty) {
+            // change image +/- taking into account the content of shopping list
             super.updateItem(ingredient, empty);
             if (empty) {
                 selectedIngredient = null;
@@ -205,16 +222,16 @@ public class RecipePane  extends BasicPaneActions {
         }
     }
 
-    // format properly listView - with button or without
     private void setIngredListView(ArrayList<Ingredient> ingredientsList, Boolean changedSingleUnit) throws IOException, SQLException {
+        // format properly listView - with button (for logged user) or without
         ingredientListView.getItems().clear();
-
         if (activeUser != null){
             if (activeUser.getDefaultUnitSystem() == null || activeUser.getDefaultUnitSystem().equals("Default") || changedSingleUnit) {
                 ingredientListView.getItems().addAll(ingredientsList);
                 ingredientListView.setCellFactory(ingredientListView -> new ButtonCell(activeUser));
                 return;
             }
+            // with conversion
             String bestUnit;
             for (Ingredient ing : ingredientsList) {
                 if (ing.getUnit().equals("piece")) {
@@ -233,8 +250,8 @@ public class RecipePane  extends BasicPaneActions {
         }
     }
 
-    // return Item for MenuContext which delete selected item in ingredient List, User can delete several ingredients at once
     public MenuItem createDeleteFromShoppingListItem() {
+        // return Item for MenuContext which delete selected item in ingredient List, User can delete several ingredients at once
         MenuItem delete = new MenuItem("Delete");
         delete.setOnAction(actionEvent -> {
             ObservableList<Ingredient> ingredients = ingredientListView.getSelectionModel().getSelectedItems();
@@ -252,8 +269,8 @@ public class RecipePane  extends BasicPaneActions {
         return delete;
     }
 
-    // return Item for MenuContext which delete selected item in ingredient List, User can add several ingredients at once
     public MenuItem createAddToShoppingListItem() {
+        // return Item for MenuContext which delete selected item in ingredient List, User can add several ingredients at once
         MenuItem add = new MenuItem("Add");
         add.setOnAction(actionEvent -> {
             ObservableList<Integer> ingredients = ingredientListView.getSelectionModel().getSelectedIndices();
@@ -276,6 +293,7 @@ public class RecipePane  extends BasicPaneActions {
     }
 
     public Menu createChangeUnit() {
+        // give opportunity for changing unit more convenient for the user
         Menu change = new Menu("Change unit");
         change.getItems().clear();
         for (String item : activeUser.getUnits()){
@@ -294,6 +312,7 @@ public class RecipePane  extends BasicPaneActions {
     }
 
     private void changeUnit(String newUnit, ObservableList<Ingredient> selIngredients, ObservableList<Ingredient> allIngredients) throws IOException, SQLException {
+        // convert unit
         ArrayList<Ingredient> newList = new ArrayList<>();
         for (Ingredient ingredient : allIngredients){
             if (selIngredients.contains(ingredient) && !ingredient.getUnit().equals("piece")){
@@ -302,17 +321,15 @@ public class RecipePane  extends BasicPaneActions {
                 Double newQuantity = DatabaseConnection.convertUnit(oldQuantity, oldUnit, newUnit);
                 Ingredient tempIn = new Ingredient(ingredient.getId(), newQuantity, newUnit, ingredient.getName());
                 newList.add(tempIn);
-            }
-
-            else {
+            } else {
                 newList.add(ingredient);
             }
         }
         setIngredListView(newList, Boolean.TRUE);
-
     }
 
     private void setPortionAreaProperty(){
+        // set spinner for changing portion field
         portionArea.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000));
         portionArea.getEditor().textProperty().set(String.format((recipe.getPortionNumber() % 1 == 0)?"%1.0f":"%1.2f", recipe.getPortionNumber()));
         portionArea.setEditable(true);
@@ -334,16 +351,16 @@ public class RecipePane  extends BasicPaneActions {
                 }
             }
         });
-
         portionArea.valueProperty().addListener(this::handleSpin);
     }
 
-    // for Listener in portionArea, change portions using button
     private void handleSpin(ObservableValue<?> observableValue, Number oldValue, Number currNumPortions) {
+        // for Listener in portionArea, change portions using button
         try {
             if (currNumPortions.intValue() > 0)
                 changeIngredListViewScale((double)currNumPortions.intValue());
             else
+                // if an invalid value is entered
                 portionArea.getEditor().textProperty().set("1");
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -351,17 +368,13 @@ public class RecipePane  extends BasicPaneActions {
     }
 
     private void changeIngredListViewScale(Double numPortions) throws IOException, SQLException {
-        double currNumPortions = this.recipe.getPortionNumber();
-        if (!numPortions.equals(currNumPortions)) {
-            double scale = numPortions / currNumPortions;
-            this.recipe.setPortionNumber(numPortions);
-            this.recipe.scaleIngredientList(scale);
-            setIngredListView(this.recipe.getIngredientList(), Boolean.FALSE);
-        }
+        recipe.scaleIngredientList(numPortions);
+        setIngredListView(this.recipe.getIngredientList(), Boolean.FALSE);
     }
 
     @FXML
     private void onLikeButtonAction() {
+        // add/delete from user favorites, change image
         if (activeUser.checkIfRecipeFavorite(recipe)) {
             LikePic.setImage(new Image("icons/favoriteUnclicked.png"));
             activeUser.removeFavorite(recipe);
@@ -371,11 +384,10 @@ public class RecipePane  extends BasicPaneActions {
             activeUser.addFavorite(recipe);
         }
     }
-
     @FXML
     private void saveRecipe() {
         setSavedRecipe();
-        recipe.saveToFile( getRecipeFileDirectory());
+        recipe.saveToFile(getRecipeFileDirectory());
     }
 
     private void setSavedRecipe(){
@@ -388,6 +400,12 @@ public class RecipePane  extends BasicPaneActions {
         saveButton.setText("Saved");
     }
 
+    @FXML
+    private void deleteRecipe() {
+        setSaveRecipe();
+        recipe.deleteFile( getRecipeFileDirectory());
+    }
+
     private void setSaveRecipe(){
         saveButton.setStyle("-fx-background-radius: 50;");
         saveButton.setText("");
@@ -396,12 +414,6 @@ public class RecipePane  extends BasicPaneActions {
         deleteButton.setStyle("-fx-background-color: transparent;");
         saveDeleteBox.setStyle("-fx-background-color: transparent;-fx-background-radius: 50;-fx-border-radius: 50; -fx-border-width: 0.2;-fx-border-color: grey;");
         deleteButton.setText("Save");
-    }
-
-    @FXML
-    private void deleteRecipe() {
-        setSaveRecipe();
-        recipe.deleteFile( getRecipeFileDirectory());
     }
 
     private String getRecipeFileDirectory() {
@@ -427,14 +439,12 @@ public class RecipePane  extends BasicPaneActions {
             exitButton.getScene().getWindow().hide();
         }
     }
-
     @FXML
     private void onShoppingListButtonAction() {
 
         FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, new RecipePane(new Recipe(this.recipe), this.activeUser, this.returnPane)), "/resources/shoppingListPage.fxml");
         changeScene(shoppingListButton, loader);
     }
-
     @FXML
     private void onTimeButtonAction() {
         FXMLLoader loader = loadFXML(new TimerPane(), "/resources/timerPage.fxml");
