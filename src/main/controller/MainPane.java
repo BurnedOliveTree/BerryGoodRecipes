@@ -38,6 +38,7 @@ public class MainPane extends BasicPaneActions {
     @FXML private Button myRecipesButton;
     @FXML private Button socialButton;
     @FXML private Button basketButton;
+    @FXML private ImageView signInPic;
     @FXML private ImageView recipePic;
     @FXML private ImageView socialPic;
     @FXML private ImageView basketPic;
@@ -68,6 +69,7 @@ public class MainPane extends BasicPaneActions {
             settingsPic.setImage(new Image("icons/berryCog.png"));
             helpPic.setImage(new Image("icons/berryHelp.png"));
             searchPic.setImage(new Image("icons/berrySearch.png"));
+            signInPic.setImage(new Image("icons/berrySignIn.png"));
         }
         setButtonActivity();
         Platform.runLater(() -> loginButton.requestFocus());
@@ -84,7 +86,10 @@ public class MainPane extends BasicPaneActions {
     public void setButtonActivity() {
         // disable and hide buttons that should not be available to a anonymous user
         if (activeUser != null) {
-            loginButton.setText("Sign out");
+            if (DatabaseConnection.isThemeLight())
+                signInPic.setImage(new Image("icons/berrySignOut.png"));
+            else
+                signInPic.setImage(new Image("icons/raspSignOut.png"));
             settingsButton.getItems().get(0).setVisible(true);
             settingsButton.getItems().get(1).setVisible(true);
             settingsButton.getItems().get(3).setVisible(true);
@@ -93,7 +98,10 @@ public class MainPane extends BasicPaneActions {
             basketButton.setDisable(false);
         }
         else {
-            loginButton.setText("Sign in");
+            if (DatabaseConnection.isThemeLight())
+                signInPic.setImage(new Image("icons/berrySignIn.png"));
+            else
+                signInPic.setImage(new Image("icons/raspSignIn.png"));
             settingsButton.getItems().get(0).setVisible(false);
             settingsButton.getItems().get(1).setVisible(false);
             settingsButton.getItems().get(3).setVisible(false);
@@ -135,8 +143,7 @@ public class MainPane extends BasicPaneActions {
         return result;
     }
 
-    @FXML
-    public void search() throws SQLException, IOException {
+    @FXML public void search() throws SQLException, IOException {
         // our search engine for the app
         query = search.getText();
         String args = "";
@@ -259,27 +266,23 @@ public class MainPane extends BasicPaneActions {
         unitSystemMenu.getItems().addAll(itemList);
     }
 
-    @FXML
-    private void onMyRecipesAction(MouseEvent mouseEvent) {
+    @FXML private void onMyRecipesAction(MouseEvent mouseEvent) {
         mouseEvent.consume();
         changeScene(myRecipesButton, loadFXML(new RecipeAdminPane(activeUser), "/recipeAdminPage.fxml"));
     }
 
-    @FXML
-    private void onSocialButtonClick(MouseEvent mouseEvent) {
+    @FXML private void onSocialButtonClick(MouseEvent mouseEvent) {
         mouseEvent.consume();
         changeScene(myRecipesButton, loadFXML(new UserAdminPane(activeUser), "/userAdminPage.fxml"));
     }
 
-    @FXML
-    private void onBasketButtonClick(MouseEvent mouseEvent) {
+    @FXML private void onBasketButtonClick(MouseEvent mouseEvent) {
         mouseEvent.consume();
         FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, new MainPane(activeUser)), "/shoppingListPage.fxml");
         changeScene(basketButton, loader);
     }
 
-    @FXML
-    private void onSignInButtonClick(MouseEvent mouseEvent) throws IOException, SQLException {
+    @FXML private void onSignInButtonClick(MouseEvent mouseEvent) throws IOException, SQLException {
         // create a new Window with sign in
         mouseEvent.consume();
         if (activeUser != null) {
@@ -295,8 +298,7 @@ public class MainPane extends BasicPaneActions {
         }
     }
 
-    @FXML
-    private void onHelpButtonClick(MouseEvent mouseEvent) {
+    @FXML private void onHelpButtonClick(MouseEvent mouseEvent) {
         mouseEvent.consume();
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Help");
@@ -308,19 +310,16 @@ public class MainPane extends BasicPaneActions {
         alert.showAndWait();
     }
 
-    @FXML
-    private void onSearchButtonClick(MouseEvent mouseEvent) throws IOException, SQLException {
+    @FXML private void onSearchButtonClick(MouseEvent mouseEvent) throws IOException, SQLException {
         mouseEvent.consume();
         search();
     }
 
-    @FXML
-    private void onPasswordChangeClick() throws IOException, SQLException {
+    @FXML private void onPasswordChangeClick() throws IOException, SQLException {
         passwordError.setText(DatabaseConnection.setPassword(activeUser.getUsername(), newPasswordField.getText(), oldPasswordField.getText()));
     }
 
-    @FXML
-    private void onDeleteAccountRequest() throws IOException, SQLException {
+    @FXML private void onDeleteAccountRequest() throws IOException, SQLException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Delete account");
         alert.setHeaderText(null);
@@ -336,50 +335,36 @@ public class MainPane extends BasicPaneActions {
         }
     }
 
-    @FXML
-    private void onThemeLightSelection() {
+    @FXML private void onThemeLightSelection() {
         DatabaseConnection.theme = "light";
         resetTheme();
     }
-
-    @FXML
-    private void onThemeDarkSelection() {
+    @FXML private void onThemeDarkSelection() {
         DatabaseConnection.theme = "dark";
         resetTheme();
     }
-
-    @FXML
-    private void onThemeWinterSelection() {
+    @FXML private void onThemeWinterSelection() {
         DatabaseConnection.theme = "winter";
         resetTheme();
     }
-
-    @FXML
-    private void onThemeSpringSelection() {
+    @FXML private void onThemeSpringSelection() {
         DatabaseConnection.theme = "spring";
         resetTheme();
     }
 
-    @FXML
-    private void onNameOrderSelection() throws IOException, SQLException {
+    @FXML private void onNameOrderSelection() throws IOException, SQLException {
         orderBy = "rcp.name";
         search();
     }
-
-    @FXML
-    private void onCostOrderSelection() throws IOException, SQLException {
+    @FXML private void onCostOrderSelection() throws IOException, SQLException {
         orderBy = "rcp.cost";
         search();
     }
-
-    @FXML
-    private void onTimeOrderSelection() throws IOException, SQLException {
+    @FXML private void onTimeOrderSelection() throws IOException, SQLException {
         orderBy = "rcp.preparation_time";
         search();
     }
-
-    @FXML
-    private void onRatingOrderSelection() throws IOException, SQLException {
+    @FXML private void onRatingOrderSelection() throws IOException, SQLException {
         orderBy = "rating desc";
         search();
     }
@@ -407,6 +392,10 @@ public class MainPane extends BasicPaneActions {
             settingsPic.setImage(new Image("icons/berryCog.png"));
             helpPic.setImage(new Image("icons/berryHelp.png"));
             searchPic.setImage(new Image("icons/berrySearch.png"));
+            if (activeUser != null)
+                signInPic.setImage(new Image("icons/berrySignOut.png"));
+            else
+                signInPic.setImage(new Image("icons/berrySignIn.png"));
         }
         else {
             logo.setImage(new Image("icons/raspLogo.png"));
@@ -416,6 +405,10 @@ public class MainPane extends BasicPaneActions {
             settingsPic.setImage(new Image("icons/raspCog.png"));
             helpPic.setImage(new Image("icons/raspHelp.png"));
             searchPic.setImage(new Image("icons/raspSearch.png"));
+            if (activeUser != null)
+                signInPic.setImage(new Image("icons/raspSignOut.png"));
+            else
+                signInPic.setImage(new Image("icons/raspSignIn.png"));
         }
         ((Stage) logo.getScene().getWindow()).getIcons().add(logo.getImage());
     }

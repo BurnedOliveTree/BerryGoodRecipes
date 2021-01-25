@@ -74,7 +74,6 @@ public class RecipePane  extends BasicPaneActions {
         }
 
         Text text = new Text(this.recipe.getPrepareMethod());
-        text.setFont(Font.font("System", FontPosture.REGULAR, 13));
         descText.getChildren().add(text);
         ingredientListView = new ListView<>();
         setIngredListView(this.recipe.getIngredientList(), Boolean.FALSE);
@@ -383,7 +382,7 @@ public class RecipePane  extends BasicPaneActions {
         deleteButton.setStyle("-fx-background-radius: 50;");
         deleteButton.setText("");
         saveButton.setStyle("-fx-background-color: transparent;");
-        saveButton.setPrefWidth(60);
+        saveButton.setPrefWidth(70);
         deleteButton.setPrefWidth(40);
         saveDeleteBox.setStyle("-fx-background-color: -fx-accent;-fx-background-radius: 50;");
         saveButton.setText("Saved");
@@ -393,7 +392,7 @@ public class RecipePane  extends BasicPaneActions {
         saveButton.setStyle("-fx-background-radius: 50;");
         saveButton.setText("");
         saveButton.setPrefWidth(40);
-        deleteButton.setPrefWidth(60);
+        deleteButton.setPrefWidth(70);
         deleteButton.setStyle("-fx-background-color: transparent;");
         saveDeleteBox.setStyle("-fx-background-color: transparent;-fx-background-radius: 50;-fx-border-radius: 50; -fx-border-width: 0.2;-fx-border-color: grey;");
         deleteButton.setText("Save");

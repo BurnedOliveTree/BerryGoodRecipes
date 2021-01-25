@@ -1,10 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.TextFlow?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.RecipePane">
     <center>
@@ -62,10 +72,10 @@
                     </graphic>
                 </Button>
             <Label minWidth="30.0" />
-            <HBox fx:id="saveDeleteBox" alignment="CENTER_RIGHT" maxHeight="12.0" prefHeight="12.0" prefWidth="85.0">
+            <HBox fx:id="saveDeleteBox" alignment="CENTER_RIGHT" maxHeight="12.0" prefWidth="85.0">
                <children>
-                  <ToggleButton fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteRecipe" prefHeight="25.0" prefWidth="35.0" />
-                  <ToggleButton fx:id="saveButton" mnemonicParsing="false" onAction="#saveRecipe" prefHeight="25.0" prefWidth="35.0" />
+                  <ToggleButton fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteRecipe" prefWidth="35.0" />
+                  <ToggleButton fx:id="saveButton" mnemonicParsing="false" onAction="#saveRecipe" prefWidth="35.0" />
                </children>
             </HBox>
             </items>
@@ -82,9 +92,6 @@
                       <AnchorPane prefHeight="83.0" prefWidth="200.0">
                           <children>
                               <Label fx:id="titleLabel" alignment="CENTER" layoutX="115.0" layoutY="42.0" text="Title" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                  <font>
-                                      <Font size="17.0" />
-                                  </font>
                         </Label>
                           </children>
                       </AnchorPane>
@@ -111,7 +118,7 @@
                               </Label>
                               <HBox prefHeight="15.0" prefWidth="195.0">
                                  <children>
-                                              <Label prefHeight="27.0" prefWidth="53.0" text="Author:">
+                                              <Label prefHeight="27.0" prefWidth="60.0" text="Author:">
                                        <padding>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                        </padding>

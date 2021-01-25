@@ -401,7 +401,6 @@ public class DatabaseConnection {
         connection.commit();
         statement.close();
         Statement ingredientStatement = connection.createStatement();
-        // TODO if private then don't add to publicity
         for (Ingredient ingredient: recipe.getIngredientList()){
             ingredientStatement.execute("BEGIN add_ingredient_to_recipe('" + ingredient.getName() +  "', '" + ingredient.getUnit() +"', "+ ingredient.getQuantity() +  ", " +  recipe_id + "); END;");
         }

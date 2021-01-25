@@ -110,7 +110,7 @@
                   <Image url="@icons/raspLogo.png" />
                </image>
             </ImageView>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="berry-text" text="BerryGood Recipes" wrappingWidth="406.21630859375" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="berry-text" text="BerryGood Recipes" textAlignment="CENTER" wrappingWidth="480.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                <font>
                   <Font size="48.0" />
                </font>
@@ -131,10 +131,17 @@
             <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="80.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Button fx:id="loginButton" mnemonicParsing="false" onMouseClicked="#onSignInButtonClick" prefHeight="64.0" prefWidth="64.0" text="Sign in" GridPane.halignment="CENTER">
+            <Button fx:id="loginButton" mnemonicParsing="false" onMouseClicked="#onSignInButtonClick" prefHeight="64.0" prefWidth="64.0" GridPane.halignment="CENTER">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
+               <graphic>
+                  <ImageView fx:id="signInPic" fitHeight="46.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icons/raspSignIn.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
             </Button>
             <MenuButton fx:id="settingsButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" popupSide="RIGHT" prefHeight="64.0" prefWidth="64.0" GridPane.halignment="CENTER" GridPane.rowIndex="4">
                <items>
