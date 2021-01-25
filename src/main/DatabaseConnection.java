@@ -449,7 +449,6 @@ public class DatabaseConnection {
         if (whereStatement != null) {
             query = query + " AND " + whereStatement;
         }
-        System.out.println(query);
         ResultSet resultSet = statement.executeQuery(query);
         List<Recipe> resultList = new ArrayList<>();
         while (resultSet.next()) {
