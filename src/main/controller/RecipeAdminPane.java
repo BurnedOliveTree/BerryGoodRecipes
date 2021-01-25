@@ -314,12 +314,16 @@ public class RecipeAdminPane extends BasicPaneActions {
                 if (result.isPresent() && result.get() == ButtonType.OK){
                     try {
                         DatabaseConnection.deleteRecipe(activeUser, recipe);
-                        activeUser.getUserRecipes().remove(recipe);
+                        activeUser.deleteUserRecipe(recipe);
                         myRecipesTable.getItems().remove(recipe);
+                        myRecipesTable.refresh();
+                        if (favTable.getItems().contains(recipe)) {
+                            favTable.getItems().remove(recipe);
+                            favTable.refresh();
+                        }
                     } catch (IOException | SQLException e) {
                         e.printStackTrace();
                     }
-                    myRecipesTable.refresh();
                 }
             }
         });

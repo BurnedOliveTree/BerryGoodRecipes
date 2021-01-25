@@ -215,4 +215,10 @@ public class User {
     public List<Ingredient> getShoppingList() {
         return shoppingList;
     }
+
+    public void deleteUserRecipe(Recipe recipe) {
+        if (userRecipes.contains(recipe)) {
+            userRecipes.remove(recipe);
+        }
+    }
 }
