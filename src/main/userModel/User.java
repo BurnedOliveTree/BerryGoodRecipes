@@ -57,6 +57,9 @@ public class User {
     public ObservableList<String> getUnits() {
         return units;
     }
+    public List<String> getUserGroups() {
+        return userGroups;
+    }
 
     public String getDefaultUnitSystem() {
         return defaultUnitSystem;
@@ -111,9 +114,6 @@ public class User {
         followed.remove(oldFollowedUser);
         newFollowed.remove(oldFollowedUser);
         deletedFollowed.add(oldFollowedUser);
-    }
-    public List<String> getUserGroups() {
-        return userGroups;
     }
     public List<String> getNewFollowed() {
         return newFollowed;

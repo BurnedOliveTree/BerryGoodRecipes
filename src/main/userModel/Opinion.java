@@ -1,13 +1,12 @@
 package main.userModel;
 
-
 import main.recipeModel.Recipe;
 
 public class Opinion {
-    User user;
-    int score;
-    Recipe recipe;
-    String opinionText;
+    private final User user;
+    private final Recipe recipe;
+    private int score;
+    private String opinionText;
 
     public Opinion(String comment, int score, User user, Recipe recipe){
         this.opinionText = comment;
@@ -32,8 +31,12 @@ public class Opinion {
         return recipe;
     }
 
-    private void setOpinionText(String text)  {this.opinionText = text;} // do edytowania komentarzy
+    public void setOpinionText(String text) {
+        this.opinionText = text;
+    } // for editing opinion
 
-    private void setScore(int score) {this.score = score;} // do edytowania oceny
+    public void setScore(int score) {
+        this.score = score;
+    } // for editing score
 
 }

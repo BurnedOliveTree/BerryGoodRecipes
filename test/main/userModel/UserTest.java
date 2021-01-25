@@ -8,6 +8,10 @@ public class UserTest {
         return new User("test");
     }
 
+    public User createUser(String username) {
+        return new User(username);
+    }
+
     @Test
     public void constructor() {
         String username = "test";
@@ -16,7 +20,7 @@ public class UserTest {
     }
 
     @Test
-    public void recipe() {
+    public void addUserRecipe() {
         User testUser = createUser();
         Recipe testRecipe = new Recipe();
         testUser.addUserRecipe(testRecipe);
@@ -24,7 +28,7 @@ public class UserTest {
     }
 
     @Test
-    public void unitSystem() {
+    public void setDefaultUnitSystem() {
         User testUser = createUser();
         String unitSystem = "metric";
         testUser.setDefaultUnitSystem(unitSystem);
@@ -32,15 +36,26 @@ public class UserTest {
     }
 
     @Test
-    public void favorite() {
-        // TODO
-        assert true;
+    public void addAndRemoveFavorite() {
+        User testUser = createUser();
+        Recipe testRecipe = new Recipe(3, "Przepis", testUser.getUsername());
+        testUser.addFavorite(testRecipe);
+        assert testUser.checkIfRecipeFavorite(testRecipe);
+        testUser.removeFavorite(testRecipe);
+        assert !testUser.checkIfRecipeFavorite(testRecipe);
     }
 
     @Test
-    public void followed() {
-        // TODO
-        assert true;
+    public void followAndUnfollowUser() {
+        User testUser = createUser();
+        String followedUsername = "followed";
+        User followedUser = createUser(followedUsername);
+        testUser.followUser(followedUser.getUsername());
+        assert testUser.getFollowed().contains(followedUsername);
+        assert testUser.getNewFollowed().contains(followedUsername);
+        testUser.unfollowUser(followedUser.getUsername());
+        assert !testUser.getFollowed().contains(followedUsername);
+        assert testUser.getDeletedFollowed().contains(followedUsername);
     }
 
     @Test
