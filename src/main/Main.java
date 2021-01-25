@@ -25,8 +25,8 @@ public class Main extends Application {
         try {
             DatabaseConnection.setConnection();
         } catch (IOException | SQLException e) {
-            e.printStackTrace();
-            LoadingPane.statusLabel.setText("Something went wrong, please try again");
+//            e.printStackTrace();
+            Platform.exit();
         }
     }
 
