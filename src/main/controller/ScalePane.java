@@ -9,7 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import main.DatabaseConnection;
-import main.converterModel.Converter;
+import main.recipeModel.Converter;
 
 import java.io.IOException;
 import java.sql.SQLException;

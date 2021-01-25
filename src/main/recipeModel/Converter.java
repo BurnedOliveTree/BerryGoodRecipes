@@ -1,4 +1,4 @@
-package main.converterModel;
+package main.recipeModel;
 
 public class Converter {
 
