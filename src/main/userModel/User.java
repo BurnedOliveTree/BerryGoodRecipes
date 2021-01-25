@@ -110,9 +110,11 @@ public class User {
         return followed;
     }
     public void followUser(String newFollowedUser) {
-        followed.add(newFollowedUser);
-        newFollowed.add(newFollowedUser);
-        deletedFollowed.remove(newFollowedUser);
+        if (!followed.contains(newFollowedUser)) {
+            followed.add(newFollowedUser);
+            newFollowed.add(newFollowedUser);
+            deletedFollowed.remove(newFollowedUser);
+        }
     }
     public void unfollowUser(String oldFollowedUser) {
         followed.remove(oldFollowedUser);

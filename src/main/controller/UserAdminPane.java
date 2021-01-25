@@ -201,11 +201,14 @@ public class UserAdminPane extends BasicPaneActions {
             tempMenuItem.setOnAction(actionEvent -> {
                 String username = followedList.getSelectionModel().getSelectedItem();
                 if (username != null) {
-                    try {
-                        DatabaseConnection.invite(username, group.getID());
-                        refreshWindow();
-                    } catch (IOException | SQLException err) {
-                        err.printStackTrace();
+                    if (group.getParticipants().contains(username))
+                        tempMenuItem.setDisable(true);
+                    else {
+                        try {
+                            DatabaseConnection.invite(username, group.getID());
+                            tempMenuItem.setDisable(true);
+                            refreshWindow();
+                        } catch (IOException | SQLException err) { err.printStackTrace(); }
                     }
                 }
             });
