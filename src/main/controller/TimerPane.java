@@ -45,6 +45,7 @@ public class TimerPane extends BasicPaneActions {
     }
 
     public void setSpinnerProperty(Spinner<Integer> spinner) {
+        // for hours, minutes and seconds spinner
         spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10000));
         spinner.getEditor().textProperty().set("0");
         spinner.setEditable(true);
@@ -59,8 +60,8 @@ public class TimerPane extends BasicPaneActions {
         });
     }
 
-    // method for setting the media to handle the alarm
     private void setMedia(){
+        // method for setting the media to handle the alarm
         media = new Media(new File("src/resources/dingdong.mp3").toURI().toString());
         mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setVolume(0.5);
@@ -68,6 +69,7 @@ public class TimerPane extends BasicPaneActions {
 
     @FXML
     public void startTimer() {
+        // show timer and start counting
         scrollUp();
         timer = new DownTimer(hoursBox.getValue(), minutesBox.getValue(), secondsBox.getValue());
         setMedia();
@@ -75,6 +77,7 @@ public class TimerPane extends BasicPaneActions {
 
     @FXML
     public void onCancelButton() {
+        // return to selecting time
         if (timer != null)
             timer.stopTimer();
         mediaPlayer.pause();
@@ -82,6 +85,7 @@ public class TimerPane extends BasicPaneActions {
     }
 
     void scrollUp() {
+        // animation
         TranslateTransition selectPaneUp = new TranslateTransition();
         selectPaneUp.setDuration(Duration.millis(100));
         selectPaneUp.setToX(0);
@@ -97,7 +101,9 @@ public class TimerPane extends BasicPaneActions {
         ParallelTransition pt = new ParallelTransition(selectPaneUp, showPaneUp);
         pt.play();
     }
+    
     void scrollDown() {
+        // animation
         TranslateTransition showPaneDown = new TranslateTransition();
         showPaneDown.setDuration(Duration.millis(100));
         showPaneDown.setToX(0);
@@ -114,8 +120,8 @@ public class TimerPane extends BasicPaneActions {
         pt.play();
     }
 
-    // inner class forming a countdown timer
     public class DownTimer {
+        // inner class forming a countdown timer with inner class extending TimerTask
         DownTimerTask task;
         Timer timer;
         DownTimer(int hours, int minutes, int seconds) {
@@ -131,22 +137,23 @@ public class TimerPane extends BasicPaneActions {
             mediaPlayer.pause();
         }
 
-        // change hours and minutes to seconds
         private int toSec(int hours, int minutes, int seconds) {
+            // change hours and minutes to seconds
             minutes += hours * 60;
             seconds += minutes * 60;
             return seconds;
         }
-        // change timer counting by overriding the run method
+
         public class DownTimerTask extends TimerTask {
+            // change timer counting by overriding the run method
             private long time;
 
             DownTimerTask(long seconds) {
                 this.time = seconds;
             }
 
-            // add 0 in the beginning to show properly timer
             private String formatTime(long time) {
+                // add 0 in the beginning to show properly timer
                 String strTime = String.valueOf(time);
                 if (time < 10)
                     strTime = "0" + strTime;
@@ -155,6 +162,7 @@ public class TimerPane extends BasicPaneActions {
 
             @Override
             public void run() {
+                // count down
                 if (time !=  0){
                     time -= 1;
 
@@ -163,6 +171,7 @@ public class TimerPane extends BasicPaneActions {
                         minutesTimer.setText(formatTime((time % 3600) / 60));
                         secondsTimer.setText(formatTime(time % 60));
                         if (time==0)
+                            // play alarm
                             mediaPlayer.play();
                     });
                 }
