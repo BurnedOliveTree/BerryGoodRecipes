@@ -106,7 +106,7 @@ public class RecipeAdminPane extends BasicPaneActions {
         if (warning.equals("")){
             Integer publicity = null;
             if (!groupName.equals("private")){
-                publicity = DatabaseConnection.getGroupIdWithName(groupName, activeUser);
+                publicity = DatabaseConnection.getGroupID(groupName, activeUser);
             }
             Integer preparationTime = getTimePreparationInMinutes();
             Double cost = getCost();
@@ -131,19 +131,19 @@ public class RecipeAdminPane extends BasicPaneActions {
             warning += "Please enter description.\n";
         if (ingredientList.size() == 0)
             warning += "Please add 1 or more ingredient\n";
-        if (!checkIfDouble(costField.getText()) && !costField.getText().equals("")) {
+        if (checkIfNotDouble(costField.getText()) && !costField.getText().equals("")) {
             warning += "Please enter correct cost value\n";
             costField.clear();
         }
-        if (!checkIfDouble(portionField.getText()) && !portionField.getText().equals("")){
+        if (checkIfNotDouble(portionField.getText()) && !portionField.getText().equals("")){
             warning += "Please enter correct number of portions value\n";
             portionField.clear();
         }
-        if (!checkIfInteger(hrsField.getText()) && !hrsField.getText().equals("")) {
+        if (checkIfNotInteger(hrsField.getText()) && !hrsField.getText().equals("")) {
             warning += "Please enter correct hours value\n";
             hrsField.clear();
         }
-        if (!checkIfInteger(minsField.getText()) && !minsField.getText().equals("")) {
+        if (checkIfNotInteger(minsField.getText()) && !minsField.getText().equals("")) {
             warning += "Please enter correct hours value\n";
             minsField.clear();
         }
@@ -224,12 +224,12 @@ public class RecipeAdminPane extends BasicPaneActions {
         return date.format(dateTimeFormatter);
     }
 
-    private boolean checkIfDouble(String match){
-        return match.matches("\\d+(\\.\\d+)?");
+    private boolean checkIfNotDouble(String match){
+        return !match.matches("\\d+(\\.\\d+)?");
     }
 
-    private boolean checkIfInteger(String match) {
-        return match.matches("\\d+");
+    private boolean checkIfNotInteger(String match) {
+        return !match.matches("\\d+");
     }
 
     private void setMyRecipesTable() {
@@ -306,7 +306,7 @@ public class RecipeAdminPane extends BasicPaneActions {
                 alert.setContentText("You are now deleting your recipe.\n Are you sure?");
 
                 Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.OK){
+                if (result.isPresent() && result.get() == ButtonType.OK){
                     try {
                         DatabaseConnection.deleteRecipe(activeUser, recipe);
                         activeUser.getUserRecipes().remove(recipe);

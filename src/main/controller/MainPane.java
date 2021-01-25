@@ -122,7 +122,7 @@ public class MainPane extends BasicPaneActions {
         // another helping method for search
         String result = "";
         if (isNumber) {
-            result = result + " and (" + query+" " + args[args.length - 1];
+            result = result + " and (" + query +" " + args[args.length - 1];
             for (int i = args.length - 2; i >= 0; i--)
                 result = result + "or " + query + " " + args[i];
         }
@@ -144,7 +144,17 @@ public class MainPane extends BasicPaneActions {
         if (query.contains(":")) {
             if (query.contains("with:")) {
                 String[] tempList = split_search("with:");
-                args = args + multiple_search(tempList, "ing.ingredient_name", false);
+                String result = " and rcp.RECIPE_ID in (select distinct ing0.RECIPE_ID from INGREDIENT_LIST ing0";
+                int j;
+                for (int i = 1; i < tempList.length; i++) {
+                    j = i-1;
+                    result = result+" join INGREDIENT_LIST ing"+i+" on ing"+j+".RECIPE_ID = ing"+i+".RECIPE_ID";
+                }
+                result = result + " where lower(ing0.ingredient_name) like lower('%"+tempList[0]+"%')";
+                for (int i = 1; i < tempList.length; i++)
+                    result = result+" and lower(ing"+i+".ingredient_name) like lower('%"+tempList[i]+"%')";
+                result = result + ")";
+                args = args + result;
             }
             if (query.contains("user:")) {
                 String[] tempList = split_search("user:");
@@ -176,7 +186,7 @@ public class MainPane extends BasicPaneActions {
             }
             if (query.contains("group:")) {
                 String[] tempList = split_search("group:");
-                groupID = DatabaseConnection.getGroupByName(tempList);
+                groupID = DatabaseConnection.getGroupIDs(tempList);
             }
         }
         query = "lower(rcp.name) like lower('%" + query + "%')" + args + " order by " + orderBy;

@@ -89,11 +89,11 @@ public class UserAdminPane extends BasicPaneActions {
     private void setGroupTiles(List<List<String>> listOfLists) {
         // create group tiles from a list of raw group data
         List<MenuButton> panelist = new ArrayList<>();
-        for (int i=0; i<listOfLists.size(); i++) {
-            int groupID = Integer.parseInt((listOfLists.get(i)).get(0));
-            String groupName = listOfLists.get(i).get(1);
-            listOfLists.get(i).remove(0);
-            listOfLists.get(i).remove(0);
+        for (List<String> listOfList : listOfLists) {
+            int groupID = Integer.parseInt(listOfList.get(0));
+            String groupName = listOfList.get(1);
+            listOfList.remove(0);
+            listOfList.remove(0);
 
             MenuButton tempButton = new MenuButton(groupName);
             tempButton.setWrapText(true);
@@ -113,8 +113,8 @@ public class UserAdminPane extends BasicPaneActions {
             tempButton.getItems().add(menuItem);
 
             Menu followMenu = new Menu("Follow user");
-            listOfLists.get(i).remove(activeUser.getUsername());
-            for (String s: listOfLists.get(i)) {
+            listOfList.remove(activeUser.getUsername());
+            for (String s : listOfList) {
                 menuItem = new MenuItem(s);
                 if (activeUser.getFollowed().contains(s))
                     menuItem.setDisable(true);
@@ -131,16 +131,16 @@ public class UserAdminPane extends BasicPaneActions {
             tempButton.getItems().add(new SeparatorMenuItem());
 
             Menu kickMenu = new Menu("Kick user");
-            for (String s: listOfLists.get(i)) {
+            for (String s : listOfList) {
                 menuItem = new MenuItem(s);
                 menuItem.setOnAction(e -> {
                     Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert.setTitle("Kick "+s+" from "+groupName);
+                    alert.setTitle("Kick " + s + " from " + groupName);
                     alert.setHeaderText(null);
                     alert.setGraphic(null);
                     alert.setContentText("Are you sure?");
                     Optional<ButtonType> result = alert.showAndWait();
-                    if (result.get() == ButtonType.OK) {
+                    if (result.isPresent() && result.get() == ButtonType.OK) {
                         try {
                             DatabaseConnection.kickUser(s, groupID);
                             refreshWindow();
@@ -155,12 +155,12 @@ public class UserAdminPane extends BasicPaneActions {
             menuItem = new MenuItem("Delete group");
             menuItem.setOnAction(e -> {
                 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Delete "+groupName);
+                alert.setTitle("Delete " + groupName);
                 alert.setHeaderText(null);
                 alert.setGraphic(null);
                 alert.setContentText("Are you sure?\nYou will not be able to recover your group");
                 Optional<ButtonType> result = alert.showAndWait();
-                if (result.get() == ButtonType.OK) {
+                if (result.isPresent() && result.get() == ButtonType.OK) {
                     try {
                         DatabaseConnection.deleteGroup(groupID);
                         refreshWindow();

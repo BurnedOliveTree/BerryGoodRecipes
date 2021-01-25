@@ -28,7 +28,7 @@ public class ShoppingListPane extends BasicPaneActions {
     private final User activeUser;
     private final BasicPaneActions returnPane;
     private final List<String> groups;
-    private final List<Ingredient> ingredientList = new ArrayList<>();
+    private List<Ingredient> ingredientList = new ArrayList<>();
     private final String showFirst;
 
     @FXML private Button exitButton;
