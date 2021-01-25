@@ -31,4 +31,9 @@ public class Group {
         this.participants = participants;
         this.participants.remove(activeUsername);
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
