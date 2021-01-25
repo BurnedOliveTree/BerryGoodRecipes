@@ -81,14 +81,14 @@ public class BasicPaneActions {
     }
 
     // used in RecipeAdminPane, RecipePane, ShoppingListPane, UserAdminPane
-    public void setContextMenu(Control control, MenuItem...  menuItems) {
+    public void setContextMenu(Node node, MenuItem...  menuItems) {
         ContextMenu menu = new ContextMenu();
         for (MenuItem menuItem: menuItems) {
             menu.getItems().add(menuItem);
         }
-        control.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+        node.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
             if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-                menu.show(control, mouseEvent.getScreenX(), mouseEvent.getScreenY());
+                menu.show(node, mouseEvent.getScreenX(), mouseEvent.getScreenY());
             }
         });
     }

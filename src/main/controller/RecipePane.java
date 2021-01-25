@@ -19,6 +19,7 @@ import javafx.scene.text.*;
 import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
+import main.userModel.Group;
 import main.userModel.User;
 
 import java.io.IOException;
@@ -26,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class RecipePane  extends BasicPaneActions {
     private final Recipe recipe;
@@ -113,6 +115,30 @@ public class RecipePane  extends BasicPaneActions {
                 LikePic.setImage(new Image("icons/favoriteClicked.png"));
             }
             setContextMenu(ingredientListView, createDeleteFromShoppingListItem(), createAddToShoppingListItem(), createChangeUnit());
+
+            MenuItem followMenuItem = new MenuItem("Follow");
+            if (activeUser.getFollowed().contains(recipe.getAuthor()))
+                followMenuItem.setDisable(true);
+            followMenuItem.setOnAction(actionEvent -> {
+                activeUser.followUser(recipe.getAuthor());
+                followMenuItem.setDisable(true);
+            });
+            Menu menu = new Menu("Invite");
+            List<MenuItem> menuItemList = new ArrayList<>();
+            for (Group group: activeUser.getUserGroups()) {
+                MenuItem tempMenuItem = new MenuItem(group.getName());
+                if (group.getParticipants().contains(recipe.getAuthor()))
+                    tempMenuItem.setDisable(true);
+                tempMenuItem.setOnAction(actionEvent -> {
+                    try {
+                        DatabaseConnection.invite(recipe.getAuthor(), group.getID());
+                        tempMenuItem.setDisable(true);
+                    } catch (IOException | SQLException err) { err.printStackTrace(); }
+                });
+                menuItemList.add(tempMenuItem);
+            }
+            menu.getItems().addAll(menuItemList);
+            super.setContextMenu(propertyBox, followMenuItem, menu);
         }
 
         Platform.runLater(() -> commentButton.setPrefWidth(propertyBox.getWidth()));
@@ -331,6 +357,7 @@ public class RecipePane  extends BasicPaneActions {
             setIngredListView(this.recipe.getIngredientList(), Boolean.FALSE);
         }
     }
+
     @FXML
     private void onLikeButtonAction() {
         if (activeUser.checkIfRecipeFavorite(recipe)) {
