@@ -432,6 +432,7 @@ public class DatabaseConnection {
             setConnection();
         Statement statement = connection.createStatement();
         StringBuilder insideQuery;
+        String additionalQuery = "";
         if (activeUser != null) {
             insideQuery = new StringBuilder("select distinct pub.RECIPE_ID from PUBLICITY pub join BELONG blg on blg.GROUP_ID = pub.GROUP_ID where lower(blg.USERNAME) = '" + activeUser.getUsername().toLowerCase() + "'");
             if (groupID != null) {
@@ -440,13 +441,15 @@ public class DatabaseConnection {
                     insideQuery.append(", ").append(i);
                 insideQuery.append(")");
             }
+            additionalQuery = "lower(rcp.OWNER_NAME) = '"+activeUser.getUsername().toLowerCase()+"' or ";
         }
         else
             insideQuery = new StringBuilder("select distinct RECIPE_ID from PUBLICITY where GROUP_ID = 0");
-        String query = "select distinct rcp.RECIPE_ID, rcp.NAME, rcp.OWNER_NAME, rcp.PREPARATION_TIME, rcp.COST, CALC_RATING(rcp.RECIPE_ID) as RATING from RECIPE rcp where rcp.RECIPE_ID in ("+insideQuery+")";
+        String query = "select distinct rcp.RECIPE_ID, rcp.NAME, rcp.OWNER_NAME, rcp.PREPARATION_TIME, rcp.COST, CALC_RATING(rcp.RECIPE_ID) as RATING from RECIPE rcp where ("+additionalQuery+"rcp.RECIPE_ID in ("+insideQuery+"))";
         if (whereStatement != null) {
             query = query + " AND " + whereStatement;
         }
+        System.out.println(query);
         ResultSet resultSet = statement.executeQuery(query);
         List<Recipe> resultList = new ArrayList<>();
         while (resultSet.next()) {
