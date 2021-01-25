@@ -99,7 +99,7 @@
                         <Pane fx:id="ingredientPane" />
                               <VBox fx:id="propertyBox">
                                   <children>
-                                        <Label fx:id="costLabel" prefHeight="4.0" prefWidth="199.0" styleClass="InfoPane" text="Cost:">
+                                        <Label fx:id="costLabel" prefHeight="4.0" prefWidth="200.0" styleClass="InfoPane" text="Cost:">
                                  <padding>
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </padding>
@@ -109,11 +109,16 @@
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </padding>
                               </Label>
-                                        <Label fx:id="authorLabel" prefHeight="15.0" prefWidth="199.0" text="Author:">
-                                 <padding>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                 </padding>
-                              </Label>
+                              <HBox prefHeight="15.0" prefWidth="195.0">
+                                 <children>
+                                              <Label prefHeight="27.0" prefWidth="53.0" text="Author:">
+                                       <padding>
+                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                       </padding>
+                                    </Label>
+                                    <Label fx:id="authorLabel" prefHeight="38.0" prefWidth="152.0" />
+                                 </children>
+                              </HBox>
                                         <Label fx:id="dateAddedLabel" text="Date added:">
                                  <padding>
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />

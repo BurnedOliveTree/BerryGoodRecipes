@@ -83,7 +83,10 @@ public class RecipePane  extends BasicPaneActions {
         titleLabel.setText(this.recipe.getName());
         titleLabel.setWrapText(true);
         titleLabel.setTextAlignment(TextAlignment.CENTER);
-        authorLabel.setText("Author: " + this.recipe.getAuthor());
+        authorLabel.setText(this.recipe.getAuthor());
+        if (activeUser == null)
+            authorLabel.setStyle("-fx-underline: false;");
+
         dateAddedLabel.setText("Date added: " + this.recipe.getDateAdded());
         setPortionAreaProperty();
         if (this.recipe.getCost() == 0) {

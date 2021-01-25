@@ -36,3 +36,6 @@ Text {
 #non-transparent {
     -fx-background-color: linear-gradient(from 25% 25% to 100% 100%, -fx-base, -fx-accent);
 }
+#authorLabel {
+    -fx-underline: true;
+}

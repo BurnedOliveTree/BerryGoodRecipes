@@ -39,3 +39,6 @@ Text {
 #small .button {
     -fx-padding: 0;
 }
+#authorLabel {
+    -fx-underline: true;
+}
