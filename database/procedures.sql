@@ -138,12 +138,11 @@ begin
     INSERT INTO PUBLICITY VALUES(null, p_group_id, r_recipe_id);
 end;
 /
-create or replace procedure add_ingredient_to_recipe(p_name varchar2, p_unit varchar2, p_amount number, p_recipe_id number)
+create or replace procedure add_ingredient_to_recipe(p_name IN varchar2, p_unit IN varchar2, p_amount IN number, p_recipe_id IN number, r_ing_list_id OUT number)
 as
-    v_ing_list_id NUMBER;
 begin
     begin
-        add_ingredient_to_ingredient_list(p_name, p_unit, v_ing_list_id);
+        add_ingredient_to_ingredient_list(p_name, p_unit, r_ing_list_id);
     end;
-    UPDATE INGREDIENT_LIST SET RECIPE_ID = p_recipe_id, AMOUNT = p_amount WHERE INGREDIENT_LIST_ID = v_ing_list_id;
+    UPDATE INGREDIENT_LIST SET RECIPE_ID = p_recipe_id, AMOUNT = p_amount WHERE INGREDIENT_LIST_ID = r_ing_list_id;
 end;

@@ -1,6 +1,7 @@
 package main.recipeModel;
 
 import main.controller.Status;
+import main.userModel.Group;
 
 public class Ingredient {
     // class which is necessary for the correct implementation of the converter and the recipe
@@ -9,6 +10,8 @@ public class Ingredient {
     String name;
     Integer id; // id of record in ingredient_list in database
     Status shoppingListStatus = Status.none; // status of ingredient in shopping list - solution to save on database connections, all information is modified at the end of the program
+
+    // constructors
 
     public Ingredient(Integer id, Double quantity, String unit, String name) {
         this.id = id;
@@ -29,12 +32,10 @@ public class Ingredient {
         this(that.getId(), that.getQuantity(), that.getUnit(), that.getName(), that.getShoppingListStatus());
     }
 
+    // getter
+
     public Integer getId() {
         return id;
-    }
-
-    public void setShoppingListStatus(Status status) {
-        shoppingListStatus = status;
     }
 
     public Status getShoppingListStatus() {
@@ -53,6 +54,12 @@ public class Ingredient {
         return unit;
     }
 
+    // setter
+
+    public void setShoppingListStatus(Status status) {
+        shoppingListStatus = status;
+    }
+
     public void setQuantity(Double quantity) {
         this.quantity = quantity;
     }
@@ -64,6 +71,8 @@ public class Ingredient {
     public void setName(String name) {
         this.name = name;
     }
+
+    public void setId(int ingredientId) { id = ingredientId; }
 
     @Override
     public boolean equals(Object object) {
@@ -83,4 +92,5 @@ public class Ingredient {
     public String toString() {
         return String.format((this.getQuantity() % 1 == 0)?"%1.0f %s %s":"%1.2f %s %s", this.getQuantity(), this.getUnit(), this.getName());
     }
+
 }

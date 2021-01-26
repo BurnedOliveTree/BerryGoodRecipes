@@ -22,6 +22,7 @@ public class Recipe {
     private String avgRate;
     private Status favoriteStatus = Status.none;
 
+    // constructors
     public Recipe() {}
 
     public Recipe(int id, String name, String author) {
@@ -52,37 +53,7 @@ public class Recipe {
         this.ingredientList = ingredients;
     }
 
-    public void setCost(Double cost) {
-        this.cost = cost;
-    }
-
-    public void setPrepareTime(Integer prepareTime) {
-        this.prepareTime = prepareTime;
-    }
-
-    private Ingredient findInIngredientList(String ingredientName)
-    {
-        for (Ingredient ingredient : this.ingredientList) {
-            if (ingredientName.equals(ingredient.getName()))
-                return ingredient;
-        }
-        return null;
-    }
-
-    public void editIngredientQuantity(Double quantity, String ingredientName)
-    {
-        Ingredient ingredient = findInIngredientList(ingredientName);
-        if (quantity > 0 && ingredient != null)
-            ingredient.setQuantity(quantity);
-        else
-            throw new IllegalArgumentException("Value must be greater than 0");
-    }
-
-    public void editIngredientUnit(String unit, String ingredientName)
-    {
-        Ingredient ingredient = findInIngredientList(ingredientName);
-        // @TODO MARIANKA calculate method from unit
-    }
+    // operations on attributes
 
     public void scaleIngredientList(Double newNumPortions) {
         // scale ingredient taking into account the changed number of portions
@@ -97,16 +68,7 @@ public class Recipe {
         portionNumber = newNumPortions;
     }
 
-    @Override   // overload of the base method comparing objects by ID
-    public boolean equals(Object r){
-        if (r == this) {
-            return true;
-        } else if (!(r instanceof Recipe)) {
-            return false;
-        } else  {
-            return id.equals(((Recipe) r).getId());
-        }
-    }
+    // file operations
 
     public void saveToFile(String filename) {
         try {
@@ -127,33 +89,32 @@ public class Recipe {
         }
     }
 
+    public void saveToFile() {
+        saveToFile(this.name);
+    }
+
     public void deleteFile(String filename) {
         File file = new File(filename);
         file.delete();
     }
 
-    public void saveToFile() {
-        saveToFile(this.name);
-    }
+
+    // getter
 
     public String getAuthor() {
         return author;
     }
 
-    public double getCost() {
-        return cost;
-    }
+    public double getCost() { return cost; }
 
     public String getName() {
         return name;
     }
 
+    public Integer getId() {return id;}
+
     public Integer getAccessibility() {
         return accessibility;
-    }
-
-    public void setPortionNumber(double portionNumber) {
-         this.portionNumber = portionNumber;
     }
 
     public double getPortionNumber() {
@@ -176,11 +137,29 @@ public class Recipe {
         return avgRate;
     }
 
-    public void setAvgRate(String avgRate) { this.avgRate = avgRate; }
-
     public String getDateAdded() {return dateAdded;}
 
-    public Integer getId() {return id;}
+    public Status getFavoriteStatus() {
+        return favoriteStatus;
+    }
+
+    public String getGroupName() { return this.groupName; }
+
+    // setter
+
+    public void setCost(Double cost) {
+        this.cost = cost;
+    }
+
+    public void setPrepareTime(Integer prepareTime) {
+        this.prepareTime = prepareTime;
+    }
+
+    public void setPortionNumber(double portionNumber) {
+         this.portionNumber = portionNumber;
+    }
+
+    public void setAvgRate(String avgRate) { this.avgRate = avgRate; }
 
     public void setId(int recipeId) { this.id = recipeId; }
 
@@ -188,10 +167,18 @@ public class Recipe {
         this.favoriteStatus = status;
     }
 
-    public Status getFavoriteStatus() {
-        return favoriteStatus;
+    public void setGroupName(String groupName) { this.groupName = groupName; }
+
+    @Override
+    public boolean equals(Object r){
+        // overload of the base method comparing objects by ID
+        if (r == this) {
+            return true;
+        } else if (!(r instanceof Recipe)) {
+            return false;
+        } else  {
+            return id.equals(((Recipe) r).getId());
+        }
     }
 
-    public void setGroupName(String groupName) { this.groupName = groupName; }
-    public String getGroupName() { return this.groupName; }
 }

@@ -101,7 +101,7 @@ public class TimerPane extends BasicPaneActions {
         ParallelTransition pt = new ParallelTransition(selectPaneUp, showPaneUp);
         pt.play();
     }
-    
+
     void scrollDown() {
         // animation
         TranslateTransition showPaneDown = new TranslateTransition();

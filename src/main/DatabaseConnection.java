@@ -397,16 +397,24 @@ public class DatabaseConnection {
             statement.setInt(8, recipe.getAccessibility());
         statement.registerOutParameter(9, Types.NUMERIC);
         statement.execute();
-        int recipe_id = statement.getInt(9);
+        int recipeId = statement.getInt(9);
         connection.commit();
         statement.close();
-        Statement ingredientStatement = connection.createStatement();
         for (Ingredient ingredient: recipe.getIngredientList()){
-            ingredientStatement.execute("BEGIN add_ingredient_to_recipe('" + ingredient.getName() +  "', '" + ingredient.getUnit() +"', "+ ingredient.getQuantity() +  ", " +  recipe_id + "); END;");
+            CallableStatement ingredientStatement = connection.prepareCall("{ call add_ingredient_to_recipe(?, ?, ?, ?, ?) }");
+            ingredientStatement.setString(1, ingredient.getName());
+            ingredientStatement.setString(2, ingredient.getUnit());
+            ingredientStatement.setDouble(3, ingredient.getQuantity());
+            ingredientStatement.setInt(4, recipeId);
+            ingredientStatement.registerOutParameter(5, Types.NUMERIC);
+            ingredientStatement.execute();
+            int ingredientId = ingredientStatement.getInt(5);
+            ingredient.setId(ingredientId);
+            connection.commit();
+            ingredientStatement.close();
         }
         connection.commit();
-        ingredientStatement.close();
-        return recipe_id;
+        return recipeId;
     }
 
     public static void deleteRecipe(User activeUser, Recipe recipe) throws IOException, SQLException {
