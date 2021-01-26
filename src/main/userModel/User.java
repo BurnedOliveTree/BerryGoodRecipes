@@ -118,20 +118,22 @@ public class User {
     public Map<String, Ingredient> showShoppingList() throws IOException, SQLException {
         // prepare ingredient from shopping list to show
         Map<String, Ingredient> showMap = new HashMap<>();
+        int i = 0;
         for (Ingredient ingredient: shoppingList) {
             if (ingredient.getShoppingListStatus() != Status.deleted) {
+                i++;
                 Ingredient shopIngredient = showMap.get(ingredient.getName());
                 if (shopIngredient != null){
-                    if (ingredient.getUnit().equals("piece") && shopIngredient.getUnit().equals("piece")){
+                    if (ingredient.getUnit().equals("piece") && shopIngredient.getUnit().equals("piece")){ // seperate sum for piece
                         shopIngredient.setQuantity(ingredient.getQuantity() + shopIngredient.getQuantity());
                     }
-                    else if (ingredient.getUnit().equals("piece") && !shopIngredient.getUnit().equals("piece")){
-                        showMap.put(ingredient.getName() + "'", new Ingredient(ingredient.getId(), ingredient.getQuantity(), ingredient.getUnit(), ingredient.getName()));
+                    else if (ingredient.getUnit().equals("piece") && !shopIngredient.getUnit().equals("piece")){ //seperate case when there is already that ingredient in shopping list, and we want to add another in unit piece
+                        showMap.put(ingredient.getName() + Integer.toString(i), new Ingredient(ingredient.getId(), ingredient.getQuantity(), ingredient.getUnit(), ingredient.getName()));
                     }
-                    else if (!ingredient.getUnit().equals("piece") && shopIngredient.getUnit().equals("piece")){
-                        showMap.put(ingredient.getName() + "'", new Ingredient(ingredient.getId(), ingredient.getQuantity(), ingredient.getUnit(), ingredient.getName()));
+                    else if (!ingredient.getUnit().equals("piece") && shopIngredient.getUnit().equals("piece")){ // separate case when there is already that ingredient in shopping list in unit piece and user wants to ad another i diffrent unit
+                        showMap.put(ingredient.getName() + Integer.toString(i), new Ingredient(ingredient.getId(), ingredient.getQuantity(), ingredient.getUnit(), ingredient.getName()));
                     }
-                    else {
+                    else { // when ingredient is in shoppping list already, an both are not in unit piece
                         double quantity = DatabaseConnection.convertUnit(ingredient.getQuantity(), ingredient.getUnit(), "gram") + DatabaseConnection.convertUnit(shopIngredient.getQuantity(), shopIngredient.getUnit(), "gram");
                         shopIngredient.setQuantity(quantity);
                         shopIngredient.setUnit("gram");
