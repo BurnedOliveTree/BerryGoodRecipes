@@ -202,6 +202,7 @@ public class RecipeAdminPane extends BasicPaneActions {
         ChoiceBox<String> unit = new ChoiceBox<>();
         unit.setPrefWidth(ingredientPane.getColumnConstraints().get(1).getPrefWidth());
         unit.setItems(FXCollections.observableArrayList(units));
+        unit.getItems().add("piece");
         TextField name = new TextField();
         quantity.setPromptText("Qty");
         name.setPromptText("Name");
