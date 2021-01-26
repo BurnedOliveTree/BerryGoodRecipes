@@ -198,7 +198,7 @@ public class RecipeAdminPane extends BasicPaneActions {
         // supports the button located in 'add recipe' tab
         // which dynamically adds a new field where the recipe ingredient can be entered
         TextField quantity = new TextField();
-        ObservableList<String> units = activeUser.getUnits();
+        ObservableList<String> units = FXCollections.observableArrayList(activeUser.getUnits());
         ChoiceBox<String> unit = new ChoiceBox<>();
         unit.setPrefWidth(ingredientPane.getColumnConstraints().get(1).getPrefWidth());
         unit.setItems(FXCollections.observableArrayList(units));

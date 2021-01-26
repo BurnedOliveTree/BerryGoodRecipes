@@ -7,8 +7,6 @@ import main.userModel.User;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.*;
 
 import oracle.jdbc.pool.OracleDataSource;
@@ -512,9 +510,9 @@ public class DatabaseConnection {
 
     // UNIT
 
-    public static ObservableList<String> getUnits() throws IOException, SQLException {
+    public static ArrayList<String> getUnits() throws IOException, SQLException {
         // returns ObservableList of available units names. Does not return "piece" because it is not used in most functions.
-        ObservableList<String> unitsList = FXCollections.observableArrayList();
+        ArrayList<String> unitsList = new ArrayList<>();
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
