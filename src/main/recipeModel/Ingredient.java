@@ -81,8 +81,6 @@ public class Ingredient {
         }
         else if (object.getClass() != this.getClass()) {
             return false;
-        } else if (((Ingredient) object).id == null) {
-            return false;
         }
         else {
             Ingredient ingredient = (Ingredient) object;
