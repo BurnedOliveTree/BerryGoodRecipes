@@ -10,7 +10,6 @@ import javafx.scene.image.ImageView;
 
 import main.DatabaseConnection;
 import main.recipeModel.Recipe;
-import main.userModel.Opinion;
 import main.userModel.User;
 
 import java.io.IOException;
@@ -76,16 +75,18 @@ public class OpinionPane extends BasicPaneActions {
     }
 
     @FXML private void opinionViewOnAction() {
-        reportLabel.setText("");
-        if (activeUser != null){
-            if (getOpinionAuthor().equals(activeUser.getUsername())){
-                deleteButton.setDisable(false);
-                reportButton.setDisable(true);
+        try {
+            reportLabel.setText("");
+            if (activeUser != null) {
+                if (getOpinionAuthor().equals(activeUser.getUsername())) {
+                    deleteButton.setDisable(false);
+                    reportButton.setDisable(true);
+                } else {
+                    deleteButton.setDisable(true);
+                    reportButton.setDisable(false);
+                }
             }
-            else {
-                deleteButton.setDisable(true);
-                reportButton.setDisable(false); }
-        }
+        }catch (RuntimeException e){};
     }
 
     @FXML private void okButtonActivity() {
@@ -97,7 +98,7 @@ public class OpinionPane extends BasicPaneActions {
     @FXML private void okButtonAction() throws SQLException, IOException {
         String comment = commentTextField.getText();
         int score = Integer.parseInt(scoreBox.getValue());
-        DatabaseConnection.createOpinion(new Opinion(comment, score, activeUser, recipe), opinionLabel, opinionView);
+        DatabaseConnection.createOpinion(activeUser.getUsername(), recipe.getId(),score, comment ,opinionLabel, opinionView);
     }
 
     @FXML private void exitAction() {

@@ -2,7 +2,6 @@ package main;
 
 import main.controller.Status;
 import main.userModel.Group;
-import main.userModel.Opinion;
 import main.userModel.User;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
@@ -593,22 +592,20 @@ public class DatabaseConnection {
 
     // OPINION
 
-    public static void createOpinion(Opinion opinion, Label opinionLabel, ListView<String> opinionsView) throws SQLException, IOException {
+    public static void createOpinion(String username, int recipeId, int score, String comment, Label opinionLabel, ListView<String> opinionsView) throws SQLException, IOException {
         // Saves opinion. One user can add only one opinion per recipe. Sets label from OpinionPane with message with information about the success of the operation.
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("select * from OPINION where USERNAME = '"+opinion.getUsername()+ "' and RECIPE_ID = " + opinion.getRecipe().getId() );
+        ResultSet resultSet = statement.executeQuery("select * from OPINION where USERNAME = '"+username+ "' and RECIPE_ID = " + recipeId );
         if (resultSet.next()) {
             opinionLabel.setText("You have already added your opinion!");
         }
         else {
-            statement.execute("insert into OPINION values(null,'" + opinion.getUsername() + "','" + opinion.getRecipe().getId() + "', '" + opinion.getScore() + "', '" + opinion.getOpinionText() + "')");
+            statement.execute("insert into OPINION values(null,'" + username + "','" + recipeId + "', '" + score + "', '" + comment + "')");
             opinionLabel.setText("Opinion saved!");
-            String username = opinion.getUsername();
-            String score = String.valueOf(opinion.getScore());
-            String comment = username + "    Score: " +score + "\n" + opinion.getOpinionText() + "\n";
-            opinionsView.getItems().add(comment);
+            String opinion = username + "    Score: " +score + "\n" + comment + "\n";
+            opinionsView.getItems().add(opinion);
 
         }
         resultSet.close();
