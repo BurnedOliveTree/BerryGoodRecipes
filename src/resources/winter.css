@@ -1,6 +1,6 @@
 @font-face {
-    -fx-font-family: 'Mali';
-    src: url('Mali.ttf') format('truetype');
+    -fx-font-family: 'Mali Medium';
+    src: url("Mali.ttf");
 }
 .root {
     -fx-base: #ddd;
@@ -10,7 +10,7 @@
     -fx-focus-color: -fx-accent;
     -fx-default-button: -fx-control-inner-background;
 
-    -fx-font-family: 'Mali';
+    -fx-font-family: 'Mali Medium';
     -fx-light-text-color: #444;
     -fx-mid-text-color: -fx-light-text-color;
     -fx-dark-text-color: -fx-light-text-color;
@@ -29,7 +29,7 @@
     -fx-padding: 0;
 }
 .berry-text {
-    -fx-font-family: 'Mali';
+    -fx-font-family: 'Mali Medium';
     -fx-fill: -fx-light-text-color;
     -fx-font-smoothing-type: lcd;
 }
@@ -37,7 +37,7 @@
     -fx-font-size: 18;
 }
 Text {
-    -fx-font-family: 'Mali';
+    -fx-font-family: 'Mali Medium';
     -fx-fill: -fx-light-text-color;
 }
 #shoppingList .list-cell {
