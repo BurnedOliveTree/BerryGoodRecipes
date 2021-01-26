@@ -254,7 +254,7 @@ public class ShoppingListPane extends BasicPaneActions {
     @FXML
     public void clearShoppingList() throws IOException, SQLException {
         // remove all ingredient from shopping list
-        if (otherListsMenu.getValue() == privateGroup) {
+        if (otherListsMenu.getValue().getName().equals(privateGroup.getName())) {
             activeUser.removeShoppingList();
         } else {
             DatabaseConnection.deleteGroupShoppingList(otherListsMenu.getValue().getID());
