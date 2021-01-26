@@ -84,7 +84,10 @@ public class Ingredient {
         }
         else {
             Ingredient ingredient = (Ingredient) object;
-            return ingredient.getId().equals(this.id);
+            if (ingredient.getId() != null)
+                return ingredient.getId().equals(this.id);
+            else
+                return false;
         }
     }
 

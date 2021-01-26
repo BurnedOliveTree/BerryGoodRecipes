@@ -58,6 +58,7 @@ public class TimerPane extends BasicPaneActions {
                 }
             }
         });
+        
     }
 
     private void setMedia(){
@@ -101,7 +102,6 @@ public class TimerPane extends BasicPaneActions {
         ParallelTransition pt = new ParallelTransition(selectPaneUp, showPaneUp);
         pt.play();
     }
-
     void scrollDown() {
         // animation
         TranslateTransition showPaneDown = new TranslateTransition();
@@ -137,23 +137,22 @@ public class TimerPane extends BasicPaneActions {
             mediaPlayer.pause();
         }
 
+        // change hours and minutes to seconds
         private int toSec(int hours, int minutes, int seconds) {
-            // change hours and minutes to seconds
             minutes += hours * 60;
             seconds += minutes * 60;
             return seconds;
         }
-
+        // change timer counting by overriding the run method
         public class DownTimerTask extends TimerTask {
-            // change timer counting by overriding the run method
             private long time;
 
             DownTimerTask(long seconds) {
                 this.time = seconds;
             }
 
+            // add 0 in the beginning to show properly timer
             private String formatTime(long time) {
-                // add 0 in the beginning to show properly timer
                 String strTime = String.valueOf(time);
                 if (time < 10)
                     strTime = "0" + strTime;
@@ -162,7 +161,6 @@ public class TimerPane extends BasicPaneActions {
 
             @Override
             public void run() {
-                // count down
                 if (time !=  0){
                     time -= 1;
 
@@ -171,7 +169,6 @@ public class TimerPane extends BasicPaneActions {
                         minutesTimer.setText(formatTime((time % 3600) / 60));
                         secondsTimer.setText(formatTime(time % 60));
                         if (time==0)
-                            // play alarm
                             mediaPlayer.play();
                     });
                 }
