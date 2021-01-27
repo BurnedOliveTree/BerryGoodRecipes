@@ -128,6 +128,7 @@ public class ShoppingListPane extends BasicPaneActions {
                 }
             } else {
                 quantity.clear();
+                name.clear();
             }
         });
         newIngredient.getChildren().addAll(quantity,unit, name, addButton);
