@@ -100,9 +100,7 @@ public class BasicPaneActions {
         alert.setHeaderText(headerText);
         alert.setGraphic(null);
         alert.setContentText(contextText);
-        DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
-        dialogPane.getStyleClass().add("myDialog");
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
         return alert.showAndWait();
     }
 }
