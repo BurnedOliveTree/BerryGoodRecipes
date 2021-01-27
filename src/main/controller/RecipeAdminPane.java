@@ -208,7 +208,7 @@ public class RecipeAdminPane extends BasicPaneActions {
         Group group = accessibilityBox.getSelectionModel().getSelectedItem();
         ArrayList<Ingredient> ingredientList = getIngredientList();
         String warning = checkCorrectness(getIngredientList());
-        if (warning.equals("")){
+        if (warning.equals("") && ingredientList != null){
             Integer publicity = null;
             if (!group.getName().equals("private")){
                 publicity = group.getID();
@@ -216,20 +216,30 @@ public class RecipeAdminPane extends BasicPaneActions {
             Integer preparationTime = getTimePreparationInMinutes();
             Double cost = getCost();
             Double portions = getPortions();
-            System.out.println(publicity);
-            Recipe recipe = new Recipe(null, titleField.getText(), activeUser.getUsername(), descriptionArea.getText(), publicity, preparationTime, cost, portions, ingredientList);
-            int recipeId  = DatabaseConnection.addRecipe(recipe, activeUser);
-            recipe.setId(recipeId);
-            clearRecipe();
-            activeUser.addUserRecipe(recipe);
-            myRecipesTable.getItems().add(recipe);
-            myRecipesTable.refresh();
-        } else {
+            if (preparationTime != null && cost != null && portions != null){
+                Recipe recipe = new Recipe(null, titleField.getText(), activeUser.getUsername(), descriptionArea.getText(), publicity, preparationTime, cost, portions, ingredientList);
+                int recipeId  = DatabaseConnection.addRecipe(recipe, activeUser);
+                recipe.setId(recipeId);
+                clearRecipe();
+                activeUser.addUserRecipe(recipe);
+                myRecipesTable.getItems().add(recipe);
+                myRecipesTable.refresh();
+            } else {
+                if (preparationTime == null)
+                    warning += "Preparation time is too long";
+                if (cost == null)
+                    warning += "Cost is too big";
+                if (portions == null)
+                    warning += "Number of portions is too big";
+                showWarning(warning);
+            }
+        } else if (ingredientList != null){
             showWarning(warning);
         }
     }
 
     private ArrayList<Ingredient> getIngredientList() {
+        String warning = "";
         // create ingredient object after 'save' button clicked from correctly filled in fields
         ArrayList<Ingredient> ingredientList = new ArrayList<>();
         for (int i = 0; i < ingredientPane.getRowCount(); i++){
@@ -240,12 +250,22 @@ public class RecipeAdminPane extends BasicPaneActions {
             String unit = units.getSelectionModel().getSelectedItem();
             String name = nameField.getText();
             if (quantityStr != null && unit != null && name != null){
-                if (!quantityStr.equals("") && quantityStr.matches("\\d+(\\.\\d+)?") && !unit.equals("") && !name.equals("") && name.length() != DatabaseConnection.shortTextFieldLength){
+                if (!quantityStr.equals("") && quantityStr.matches("\\d+(\\.\\d+)?") && !unit.equals("") && !name.equals("") && name.length() < DatabaseConnection.shortTextFieldLength){
                     Double quantity = Double.parseDouble(quantityStr);
                     Ingredient ingredient = new Ingredient(null, quantity, unit, name);
                     ingredientList.add(ingredient);
                 }
+                else {
+                    if (name.length() > DatabaseConnection.shortTextFieldLength) {
+                        nameField.clear();
+                        warning += "Name of ingredient is too long.";
+                    }
+                }
             }
+        }
+        if (warning.length() != 0) {
+            showWarning(warning);
+            ingredientList = null;
         }
         return ingredientList;
     }
@@ -262,8 +282,9 @@ public class RecipeAdminPane extends BasicPaneActions {
         // get number of portions from field, and parse it
         if (portionField.getText().equals(""))
             return 1.0;
-        else
+        else{
             return Double.parseDouble(portionField.getText());
+        }
     }
 
     private Integer getTimePreparationInMinutes() {
@@ -272,13 +293,25 @@ public class RecipeAdminPane extends BasicPaneActions {
             return 0;
         else {
             int mins = 0;
-            if (!minsField.getText().equals(""))
+            if (!minsField.getText().equals("")) {
+                try {
                     mins += Integer.parseInt(minsField.getText());
-            if (!hrsField.getText().equals(""))
-                mins += 60 * Integer.parseInt(hrsField.getText());
+                } catch (NumberFormatException e) {
+                    return null;
+                }
+            }
+            if (!hrsField.getText().equals("")) {
+                try {
+                    mins += 60 * Integer.parseInt(hrsField.getText());
+                } catch (NumberFormatException e) {
+                    return null;
+                }
+            }
             return mins;
         }
     }
+
+
 
     @FXML
     private void clearRecipe() {

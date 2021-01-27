@@ -98,8 +98,10 @@ public class Recipe {
         try {
             FileWriter file = new FileWriter(filename);
             file.write(this.name + "\n\nIngredients:\n");
-            for (Ingredient ingredient: this.ingredientList){
-                file.write(ingredient.getQuantity() + " " + ingredient.getUnit() + " "  + ingredient.getName() + "\n" );
+            if (ingredientList != null) {
+                for (Ingredient ingredient: this.ingredientList){
+                    file.write(ingredient.getQuantity() + " " + ingredient.getUnit() + " "  + ingredient.getName() + "\n" );
+                }
             }
             file.write("\nPreparation method:\n" + this.prepareMethod);
             file.write("\nAdditional information: \n");

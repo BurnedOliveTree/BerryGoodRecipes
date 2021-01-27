@@ -55,7 +55,7 @@ create table BELONG
 create table INGREDIENT
 (
     NAME varchar2(40 BYTE) constraint INGREDIENT_PK primary key,
-    DENSITY number(4, 2),
+    DENSITY number(8, 2),
     STANDARD_UNIT constraint STANDARD_UNIT_FK references UNIT(NAME)
 );
 
@@ -68,7 +68,7 @@ create table RECIPE
   COST number(8, 2),
   DATE_ADDED date default sysdate not null,
   PREPARATION_TIME number(8),
-  PORTIONS number(4, 2) default 0 not null CHECK (PORTIONS >= 0.0)
+  PORTIONS number(8, 2) default 0 not null CHECK (PORTIONS >= 0.0)
 
 );
 
