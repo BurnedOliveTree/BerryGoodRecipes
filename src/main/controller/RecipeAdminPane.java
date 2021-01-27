@@ -374,11 +374,6 @@ public class RecipeAdminPane extends BasicPaneActions {
         return !match.matches("\\d+");
     }
 
-    private void showWarning(String warning) {
-        // show warning if wrong or not enough recipe
-        showAlert(Alert.AlertType.WARNING, "Not enough information!", null, warning);
-    }
-
     @FXML
     private void onExitButtonAction() {
         // return to home page

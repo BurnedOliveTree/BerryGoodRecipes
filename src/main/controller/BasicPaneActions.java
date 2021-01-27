@@ -36,6 +36,11 @@ public class BasicPaneActions {
     public void changeScene(FXMLLoader loader, int maxWidth, int maxHeight) {
         changeScene(null, loader, "BerryGood Recipes", maxWidth, maxHeight);
     }
+
+    public void showWarning(String warning) {
+        // show warning if wrong or not enough recipe
+        showAlert(Alert.AlertType.WARNING, "Not enough information!", null, warning);
+    }
     
     // used in MainPane
     public void changeScene(FXMLLoader loader, String title, int maxWidth, int maxHeight) {
