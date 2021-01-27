@@ -101,10 +101,14 @@ public class BasicPaneActions {
         alert.setTitle(title);
         alert.setHeaderText(headerText);
         ImageView imageView;
-        if (DatabaseConnection.isThemeLight())
+        if (DatabaseConnection.isThemeLight()) {
             imageView = new ImageView(new Image("icons/berryLogo.png"));
-        else
+            ((Stage)(alert.getDialogPane().getScene().getWindow())).getIcons().add(new Image("icons/berryLogo.png"));
+        }
+        else {
             imageView = new ImageView(new Image("icons/raspLogo.png"));
+            ((Stage)(alert.getDialogPane().getScene().getWindow())).getIcons().add(new Image("icons/raspLogo.png"));
+        }
         imageView.setFitHeight(64);
         imageView.setFitWidth(64);
         alert.setGraphic(imageView);
