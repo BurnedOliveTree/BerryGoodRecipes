@@ -42,8 +42,16 @@ public class DatabaseConnection {
     }
 
     public static boolean checkDoubleDatabaseReduction(String text) {
+
         String[] splitedString = text.split("[\\.\\,]");
         if (splitedString.length == 2 && splitedString[0].length() + splitedString[1].length() <= DoublePrecisionValue &&  splitedString[1].length() <= DoubleScaleValue)
+            return true;
+        else return splitedString.length == 1 && splitedString[0].length() <= DoublePrecisionValue;
+    }
+
+    public static boolean checkDoubleDatabaseReduction(String text, int precision, int scale){
+        String[] splitedString = text.split("[\\.\\,]");
+        if (splitedString.length == 2 && splitedString[0].length() + splitedString[1].length() <= precision &&  splitedString[1].length() <= scale)
             return true;
         else return splitedString.length == 1 && splitedString[0].length() <= DoublePrecisionValue;
     }
