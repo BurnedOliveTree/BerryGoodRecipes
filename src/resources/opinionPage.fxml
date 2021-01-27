@@ -40,7 +40,7 @@
       <ListView fx:id="opinionView" onMousePressed="#opinionViewOnAction" prefHeight="322.0" prefWidth="584.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <ChoiceBox fx:id="scoreBox" onAction="#okButtonActivity" prefHeight="25.0" prefWidth="46.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
       <TextField fx:id="commentTextField" alignment="TOP_LEFT" prefHeight="144.0" prefWidth="537.0" promptText="Comment" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <Label prefHeight="33.0" prefWidth="104.0" text="Opinions:" GridPane.columnIndex="1">
+      <Label prefHeight="33.0" prefWidth="104.0" text="Opinions:" styleClass="berry-text" GridPane.columnIndex="1">
          <font>
             <Font size="19.0" />
          </font>
@@ -75,7 +75,7 @@
             <Button fx:id="okButton" mnemonicParsing="false" onAction="#okButtonAction" prefHeight="25.0" prefWidth="54.0" text="OK" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
       </GridPane>
-      <Label prefHeight="24.0" prefWidth="70.0" text="Score:" GridPane.columnIndex="1" GridPane.rowIndex="2">
+      <Label prefHeight="24.0" prefWidth="70.0" text="Score:" styleClass="berry-text" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <font>
             <Font size="15.0" />
          </font>
