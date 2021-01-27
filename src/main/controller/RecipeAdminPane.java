@@ -39,7 +39,6 @@ public class RecipeAdminPane extends BasicPaneActions {
     @FXML private TextArea descriptionArea;
     @FXML private ChoiceBox<Group> accessibilityBox;
 
-    // @TODO maxlenght of field
     public RecipeAdminPane(User activeUser) {
         this.activeUser = activeUser;
         try {
@@ -151,7 +150,7 @@ public class RecipeAdminPane extends BasicPaneActions {
                 ShowRecipe(recipe);
             }
         });
-        // set context menu which provides the ability to remove recipe from fravorites
+        // set context menu which provides the ability to remove recipe from favorites
         setContextMenu(favTable, createDeleteFavItem());
     }
 
@@ -302,8 +301,12 @@ public class RecipeAdminPane extends BasicPaneActions {
         String warning = "";
         if (titleField.getText().equals(""))
             warning += "Please enter title\n";
+        if (titleField.getText().length() > DatabaseConnection.mediumTextFieldLength)
+            warning += "Please enter shorter title\n";
         if (descriptionArea.getText().equals(""))
             warning += "Please enter description.\n";
+        if (descriptionArea.getText().length() > DatabaseConnection.longTextFieldLength)
+            warning += "Please enter shorter description.\n";
         if (ingredientList.size() == 0)
             warning += "Please add 1 or more ingredient\n";
         if (checkIfNotDouble(costField.getText()) && !costField.getText().equals("")) {
