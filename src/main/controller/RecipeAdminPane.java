@@ -18,8 +18,6 @@ import main.userModel.User;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -88,8 +86,7 @@ public class RecipeAdminPane extends BasicPaneActions {
         groupNameColumn.setCellValueFactory(new PropertyValueFactory<>("groupName"));
         TableColumn<Recipe, String> dateAddedColumn = new TableColumn<>("Date added");
         dateAddedColumn.setCellValueFactory(new PropertyValueFactory<>("dateAdded"));
-        ObservableList<Recipe> RecipeList = FXCollections.observableArrayList(activeUser.getUserRecipes());
-        myRecipesTable.setItems(RecipeList);
+        myRecipesTable.setItems(FXCollections.observableArrayList(activeUser.getUserRecipes()));
         myRecipesTable.getColumns().addAll(nameColumn, groupNameColumn, dateAddedColumn);
         // for double click show recipe
         myRecipesTable.setOnMousePressed(mouseEvent -> {

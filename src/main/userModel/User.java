@@ -76,7 +76,7 @@ public class User {
         delIngredient.setShoppingListStatus(Status.deleted);
     }
 
-    public void removeSameNamedFromSL(String name, String unit){
+    public void removeSameNamedFromShoppingList(String name, String unit){
         for (Ingredient ing : shoppingList){
             if (ing.getName().equals(name) && ing.getUnit().equals(unit)){
                 ing.setShoppingListStatus(Status.deleted);
@@ -97,7 +97,7 @@ public class User {
 
     // check
 
-    public boolean checkIfIngredientInShoppingList(Ingredient ingredient) {
+    public boolean checkIfIngredientExistedInShoppingList(Ingredient ingredient) {
         return shoppingList.contains(ingredient);
     }
 
@@ -130,10 +130,10 @@ public class User {
                     else if (ingredient.getUnit().equals("piece") && !shopIngredient.getUnit().equals("piece")){ //seperate case when there is already that ingredient in shopping list, and we want to add another in unit piece
                         showMap.put(ingredient.getName() + Integer.toString(i), new Ingredient(ingredient.getId(), ingredient.getQuantity(), ingredient.getUnit(), ingredient.getName()));
                     }
-                    else if (!ingredient.getUnit().equals("piece") && shopIngredient.getUnit().equals("piece")){ // separate case when there is already that ingredient in shopping list in unit piece and user wants to ad another i diffrent unit
+                    else if (!ingredient.getUnit().equals("piece") && shopIngredient.getUnit().equals("piece")){ // separate case when there is already that ingredient in shopping list in unit piece and user wants to ad another in different unit
                         showMap.put(ingredient.getName() + Integer.toString(i), new Ingredient(ingredient.getId(), ingredient.getQuantity(), ingredient.getUnit(), ingredient.getName()));
                     }
-                    else { // when ingredient is in shoppping list already, an both are not in unit piece
+                    else { // when ingredient is in shopping list already, an both are not in unit piece
                         double quantity = DatabaseConnection.convertUnit(ingredient.getQuantity(), ingredient.getUnit(), "gram") + DatabaseConnection.convertUnit(shopIngredient.getQuantity(), shopIngredient.getUnit(), "gram");
                         shopIngredient.setQuantity(quantity);
                         shopIngredient.setUnit("gram");
