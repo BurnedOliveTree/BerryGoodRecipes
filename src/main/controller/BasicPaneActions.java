@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import main.DatabaseConnection;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class BasicPaneActions {
     // class with methods used by children class
@@ -93,4 +94,15 @@ public class BasicPaneActions {
         });
     }
 
+    public Optional<ButtonType> showAlert(Alert.AlertType alertType, String title, String headerText, String contextText) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        alert.setGraphic(null);
+        alert.setContentText(contextText);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
+        dialogPane.getStyleClass().add("myDialog");
+        return alert.showAndWait();
+    }
 }

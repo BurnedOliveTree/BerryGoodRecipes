@@ -300,14 +300,10 @@ public class MainPane extends BasicPaneActions {
 
     @FXML private void onHelpButtonClick(MouseEvent mouseEvent) {
         mouseEvent.consume();
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Help");
-        alert.setHeaderText("How to use search");
-        alert.setGraphic(null);
-        alert.setContentText("Typing normal text in the search field will search for any title that contains these" +
-                "words.\nYou can also use a function to filter the search result.\nSyntax for such is:\n[function1]:" +
+        showAlert(Alert.AlertType.INFORMATION, "Help", "How to use search", "Typing normal " +
+                "text in the search field will search for any title that contains these words.\nYou can also use a " +
+                "function to filter the search result.\nSyntax for such is:\n[function1]:" +
                 "[arg1],[arg2],[arg3] [function2]:[arg1]\nfor example: \"ciasto with:masło,mleko maxcost:100\"");
-        alert.showAndWait();
     }
 
     @FXML private void onSearchButtonClick(MouseEvent mouseEvent) throws IOException, SQLException {
@@ -320,13 +316,8 @@ public class MainPane extends BasicPaneActions {
     }
 
     @FXML private void onDeleteAccountRequest() throws IOException, SQLException {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Delete account");
-        alert.setHeaderText(null);
-        alert.setGraphic(null);
-        alert.setContentText("Are you sure?\nYou will not be able to recover your account");
-
-        Optional<ButtonType> result = alert.showAndWait();
+        Optional<ButtonType> result = showAlert(Alert.AlertType.CONFIRMATION, "Delete account", null,
+                "Are you sure?\nYou will not be able to recover your account");
         if (result.get() == ButtonType.OK) {
             DatabaseConnection.deleteUser(activeUser.getUsername());
             activeUser = null;
