@@ -41,10 +41,10 @@ public class OpinionPane extends BasicPaneActions {
         if (DatabaseConnection.isThemeLight()) {
             exitPic.setImage(new Image("icons/berryExit.png"));
         }
-        scoreBox.setItems(scoreList);
-        okButton.setDisable(true);
-        reportButton.setDisable(true);
-        deleteButton.setDisable(true);
+        scoreBox.setItems(scoreList); // available scores
+        okButton.setDisable(true);  // ok button available only when user is logged in, not an author of recipe and had selected score
+        reportButton.setDisable(true); // available when user selected different user opinion
+        deleteButton.setDisable(true); // available when user selected their own opinion
         DatabaseConnection.fillOpinions(recipe, opinionView);
         reportButton.setOnAction(e -> {
             try {
@@ -64,6 +64,7 @@ public class OpinionPane extends BasicPaneActions {
 
 
     private String getOpinionAuthor() {
+        // Gets opinion author from opinion string,
         String opinion = opinionView.getSelectionModel().getSelectedItem();
         String username = "";
         int i = 0;
@@ -75,6 +76,7 @@ public class OpinionPane extends BasicPaneActions {
     }
 
     @FXML private void opinionViewOnAction() {
+        // sets delete and report buttons activity, catches error when sb selects empty space
         try {
             reportLabel.setText("");
             if (activeUser != null) {
@@ -86,16 +88,18 @@ public class OpinionPane extends BasicPaneActions {
                     reportButton.setDisable(false);
                 }
             }
-        }catch (RuntimeException e){};
+        } catch (RuntimeException err) {}
     }
 
     @FXML private void okButtonActivity() {
+        // if user is logged in, and is not an author of recipe ok button is able
         if (activeUser != null && !activeUser.getUsername().equals(recipe.getAuthor())){
             okButton.setDisable(false);
         }
     }
 
     @FXML private void okButtonAction() throws SQLException, IOException {
+        // saves and displays added opinion
         String comment = commentTextField.getText();
         int score = Integer.parseInt(scoreBox.getValue());
         DatabaseConnection.createOpinion(activeUser.getUsername(), recipe.getId(),score, comment ,opinionLabel, opinionView);

@@ -108,13 +108,8 @@ public class RecipeAdminPane extends BasicPaneActions {
         delete.setOnAction(actionEvent -> {
             Recipe recipe = myRecipesTable.getSelectionModel().getSelectedItem();
             if (recipe != null) {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Delete Recipe");
-                alert.setHeaderText(null);
-                alert.setGraphic(null);
-                alert.setContentText("You are now deleting your recipe.\n Are you sure?");
-
-                Optional<ButtonType> result = alert.showAndWait();
+                Optional<ButtonType> result = showAlert(Alert.AlertType.CONFIRMATION, "Delete recipe", null,
+                        "You are now deleting your recipe.\n Are you sure?");
                 if (result.isPresent() && result.get() == ButtonType.OK){
                     try {
                         DatabaseConnection.deleteRecipe(activeUser, recipe);
@@ -348,10 +343,7 @@ public class RecipeAdminPane extends BasicPaneActions {
 
     private void showWarning(String warning) {
         // show warning if wrong or not enough recipe
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle("Not enough information!");
-        alert.setContentText(warning);
-        alert.showAndWait();
+        showAlert(Alert.AlertType.WARNING, "Not enough information!", null, warning);
     }
 
     @FXML

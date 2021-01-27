@@ -77,13 +77,14 @@ public class ScalePane extends BasicPaneActions {
 
     public void okUnitAction() throws IOException, SQLException {
         unitLabel.setText("");
-        String unitArea1Text = unitArea1.getText();
+        unitLabel.setWrapText(true);
+        String unitArea1Text = unitArea1.getText(); // quantity of ingredient in first unit
         double quantity = 0.0;
         String firstChoice;
         String secondChoice;
         try {
-            firstChoice = unitChoiceBox1.getValue();
-            secondChoice = unitChoiceBox2.getValue();
+            firstChoice = unitChoiceBox1.getValue(); // converter converts from that unit
+            secondChoice = unitChoiceBox2.getValue(); // to this one
         }
         catch(NullPointerException e){
             unitLabel.setText("Not enough info");
@@ -99,7 +100,7 @@ public class ScalePane extends BasicPaneActions {
 
     private void sizeBoxAction(ChoiceBox<String> box) {
         if (box.getId().equals("inRecipeBox")) {
-            if (inRecipeBox.getValue().equals("Rectangular")) {
+            if (inRecipeBox.getValue().equals("Rectangular")) { // both areas are set visibe bc we need two sides of rectangle
                 inRecipeArea1.setVisible(false);
                 inRecipeArea2.setVisible(false);
                 cm1.setText("");
@@ -120,7 +121,7 @@ public class ScalePane extends BasicPaneActions {
             }
         }
         else {
-            if (IHaveBox.getValue().equals("Rectangular")) {
+            if (IHaveBox.getValue().equals("Rectangular")) { // one area is set visible bc we only need a diameter of circle
                 IHaveArea1.setVisible(false);
                 IHaveArea2.setVisible(false);
                 cm2.setText("");
@@ -143,6 +144,7 @@ public class ScalePane extends BasicPaneActions {
     }
 
     private void okMoldAction(){
+        // converts mold sizes, displays how much of ingredient user need to use
         String a1 = IHaveArea1.getText();
         String b1 = IHaveArea2.getText();
         String h1 = Height1.getText();
@@ -151,20 +153,21 @@ public class ScalePane extends BasicPaneActions {
         String h2 = Height2.getText();
         double IHaveVolume;
         double inRecipeVolume;
+        moldLabel.setWrapText(true);
         if (a1.equals("") || h1.equals("") || a2.equals("")|| h2.equals("")){
             moldLabel.setText("Too little information");
             return;
         }
         try {
             if (b1.equals("")) {
-                IHaveVolume = converter.getRoundMoldVolume(Double.parseDouble(a1), Double.parseDouble(h1));
+                IHaveVolume = converter.getRoundMoldVolume(Double.parseDouble(a1), Double.parseDouble(h1)); // volume of round mold user has
             } else {
-                IHaveVolume = converter.getRectangularMoldVolume(Double.parseDouble(a1), Double.parseDouble(b1), Double.parseDouble(h1));
+                IHaveVolume = converter.getRectangularMoldVolume(Double.parseDouble(a1), Double.parseDouble(b1), Double.parseDouble(h1)); // volume of rectangular mold user has
             }
             if (b2.equals("")) {
-                inRecipeVolume = converter.getRoundMoldVolume(Double.parseDouble(a2), Double.parseDouble(h2));
+                inRecipeVolume = converter.getRoundMoldVolume(Double.parseDouble(a2), Double.parseDouble(h2)); // volume of round mold used in recipe
             } else {
-                inRecipeVolume = converter.getRectangularMoldVolume(Double.parseDouble(a2), Double.parseDouble(b2), Double.parseDouble(h2));
+                inRecipeVolume = converter.getRectangularMoldVolume(Double.parseDouble(a2), Double.parseDouble(b2), Double.parseDouble(h2)); // volume of rectangular mold used in recipe
             }
             double result = inRecipeVolume / IHaveVolume;
             moldLabel.setWrapText(true);

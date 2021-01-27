@@ -109,12 +109,8 @@ public class UserAdminPane extends BasicPaneActions {
             for (String s : participants) {
                 menuItem = new MenuItem(s);
                 menuItem.setOnAction(e -> {
-                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert.setTitle("Kick " + s + " from " + groupName);
-                    alert.setHeaderText(null);
-                    alert.setGraphic(null);
-                    alert.setContentText("Are you sure?");
-                    Optional<ButtonType> result = alert.showAndWait();
+                    Optional<ButtonType> result = showAlert(Alert.AlertType.CONFIRMATION, "Kick " + s + " from " + groupName, null,
+                            "Are you sure?");
                     if (result.isPresent() && result.get() == ButtonType.OK) {
                         try {
                             DatabaseConnection.kickUser(s, groupID);
@@ -129,12 +125,8 @@ public class UserAdminPane extends BasicPaneActions {
             tempButton.getItems().add(kickMenu);
             menuItem = new MenuItem("Delete group");
             menuItem.setOnAction(e -> {
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Delete " + groupName);
-                alert.setHeaderText(null);
-                alert.setGraphic(null);
-                alert.setContentText("Are you sure?\nYou will not be able to recover your group");
-                Optional<ButtonType> result = alert.showAndWait();
+                Optional<ButtonType> result = showAlert(Alert.AlertType.CONFIRMATION, "Delete " + groupName, null,
+                        "Are you sure?\nYou will not be able to recover your group");
                 if (result.isPresent() && result.get() == ButtonType.OK) {
                     try {
                         DatabaseConnection.deleteGroup(groupID);

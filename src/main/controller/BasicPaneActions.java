@@ -5,6 +5,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -12,6 +13,7 @@ import javafx.stage.Stage;
 import main.DatabaseConnection;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class BasicPaneActions {
     // class with methods used by children class
@@ -93,4 +95,21 @@ public class BasicPaneActions {
         });
     }
 
+    // used in MainPane, RecipeAdminPane, UserAdminPane
+    public Optional<ButtonType> showAlert(Alert.AlertType alertType, String title, String headerText, String contextText) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(headerText);
+        ImageView imageView;
+        if (DatabaseConnection.isThemeLight())
+            imageView = new ImageView(new Image("icons/berryLogo.png"));
+        else
+            imageView = new ImageView(new Image("icons/raspLogo.png"));
+        imageView.setFitHeight(64);
+        imageView.setFitWidth(64);
+        alert.setGraphic(imageView);
+        alert.setContentText(contextText);
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
+        return alert.showAndWait();
+    }
 }

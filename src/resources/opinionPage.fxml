@@ -7,35 +7,80 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.OpinionPane">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.OpinionPane">
+  <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="80.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="80.0" />
+      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="68.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="60.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="1.7976931348623157E308" minHeight="90.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="60.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+  </rowConstraints>
    <children>
-      <Button fx:id="okButton" onAction="#okButtonAction" layoutX="350.0" layoutY="541.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="74.0" text="OK" />
-      <Label layoutX="173.0" layoutY="376.0" prefHeight="25.0" prefWidth="39.0" text="Score:">
-         <font>
-            <Font size="14.0" />
-         </font></Label>
-      <TextField fx:id="commentTextField" alignment="TOP_LEFT" layoutX="173.0" layoutY="416.0" prefHeight="106.0" prefWidth="428.0" promptText="Comment" />
-      <ChoiceBox fx:id="scoreBox" onAction="#okButtonActivity" layoutX="220.0" layoutY="376.0" prefHeight="25.0" prefWidth="46.0" />
-      <Button fx:id="exitButton" onAction="#exitAction" layoutX="736.0" layoutY="14.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="22.0">
+      <Button fx:id="exitButton" mnemonicParsing="false" onAction="#exitAction" prefHeight="25.0" prefWidth="22.0" GridPane.columnIndex="3">
          <graphic>
             <ImageView fx:id="exitPic" fitHeight="30.0" fitWidth="30.0">
                <image>
                   <Image url="@icons/raspExit.png" />
                </image>
             </ImageView>
-         </graphic></Button>
-      <Label fx:id="opinionLabel" layoutX="450.0" layoutY="545.0" prefHeight="17.0" prefWidth="303.0" />
-      <Label layoutX="93.0" layoutY="65.0" prefHeight="33.0" prefWidth="104.0" text="Opinions:">
+         </graphic>
+      </Button>
+      <ListView fx:id="opinionView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMousePressed="#opinionViewOnAction" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
+      <ChoiceBox fx:id="scoreBox" onAction="#okButtonActivity" prefHeight="25.0" prefWidth="46.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <TextField fx:id="commentTextField" alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="210.0" promptText="Comment" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" GridPane.vgrow="ALWAYS" />
+      <Label prefHeight="33.0" prefWidth="104.0" styleClass="berry-text" text="Opinions:" GridPane.columnIndex="1">
          <font>
             <Font size="19.0" />
          </font>
       </Label>
-      <ListView fx:id="opinionView" onMousePressed="#opinionViewOnAction" layoutX="83.0" layoutY="111.0" prefHeight="223.0" prefWidth="524.0" />
-      <Button fx:id="reportButton" layoutX="621.0" layoutY="173.0" mnemonicParsing="false" text="Report" />
-      <Button fx:id="deleteButton" layoutX="621.0" layoutY="222.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="52.0" text="Delete" />
-      <Label fx:id="reportLabel" layoutX="677.0" layoutY="177.0" prefHeight="57.0" prefWidth="117.0" />
+      <GridPane GridPane.columnIndex="2" GridPane.rowIndex="1">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="37.0" minWidth="9.0" prefWidth="9.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="79.0" minWidth="10.0" prefWidth="79.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="114.0" minHeight="10.0" prefHeight="114.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="163.0" minHeight="10.0" prefHeight="57.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="163.0" minHeight="10.0" prefHeight="49.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="133.0" minHeight="10.0" prefHeight="124.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Button fx:id="reportButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="58.0" text="Report" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Button fx:id="deleteButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="59.0" text="Delete" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+         </children>
+      </GridPane>
+      <GridPane GridPane.columnIndex="2" GridPane.rowIndex="4">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="39.0" minWidth="10.0" prefWidth="12.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="77.0" minWidth="10.0" prefWidth="76.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Button fx:id="okButton" mnemonicParsing="false" onAction="#okButtonAction" prefHeight="25.0" prefWidth="54.0" text="OK" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+         </children>
+      </GridPane>
+      <Label prefHeight="24.0" prefWidth="70.0" styleClass="berry-text" text="Score:" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="reportLabel" prefHeight="126.0" prefWidth="67.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+      <Label fx:id="opinionLabel" prefHeight="129.0" prefWidth="58.0" GridPane.columnIndex="3" GridPane.rowIndex="4" />
    </children>
-</Pane>
+</GridPane>
