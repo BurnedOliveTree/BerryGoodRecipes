@@ -94,6 +94,7 @@ public class BasicPaneActions {
         });
     }
 
+    // used in MainPane, RecipeAdminPane, UserAdminPane
     public Optional<ButtonType> showAlert(Alert.AlertType alertType, String title, String headerText, String contextText) {
         Alert alert = new Alert(alertType);
         alert.setTitle(title);
