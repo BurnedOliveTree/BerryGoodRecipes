@@ -1,11 +1,15 @@
 package main.userModel;
 
 import main.recipeModel.Recipe;
+import org.junit.Before;
 import org.junit.Test;
 
 public class UserTest {
-    public User createUser() {
-        return new User("test");
+    private User user;
+
+    @Before
+    public void createRecipe()  {
+        this.user =  new User("test");
     }
 
     public User createUser(String username) {
@@ -21,46 +25,41 @@ public class UserTest {
 
     @Test
     public void addUserRecipe() {
-        User testUser = createUser();
         Recipe testRecipe = new Recipe();
-        testUser.addUserRecipe(testRecipe);
-        assert testUser.getUserRecipes().size() == 1;
+        user.addUserRecipe(testRecipe);
+        assert user.getUserRecipes().size() == 1;
     }
 
     @Test
     public void setDefaultUnitSystem() {
-        User testUser = createUser();
         String unitSystem = "metric";
-        testUser.setDefaultUnitSystem(unitSystem);
-        assert testUser.getDefaultUnitSystem().equals(unitSystem);
+        user.setDefaultUnitSystem(unitSystem);
+        assert user.getDefaultUnitSystem().equals(unitSystem);
     }
 
     @Test
     public void addAndRemoveFavorite() {
-        User testUser = createUser();
-        Recipe testRecipe = new Recipe(3, "Przepis", testUser.getUsername());
-        testUser.addFavorite(testRecipe);
-        assert testUser.checkIfRecipeFavorite(testRecipe);
-        testUser.removeFavorite(testRecipe);
-        assert !testUser.checkIfRecipeFavorite(testRecipe);
+        Recipe testRecipe = new Recipe(3, "Przepis", user.getUsername());
+        user.addFavorite(testRecipe);
+        assert user.checkIfRecipeFavorite(testRecipe);
+        user.removeFavorite(testRecipe);
+        assert !user.checkIfRecipeFavorite(testRecipe);
     }
 
     @Test
     public void followAndUnfollowUser() {
-        User testUser = createUser();
         String followedUsername = "followed";
         User followedUser = createUser(followedUsername);
-        testUser.followUser(followedUser.getUsername());
-        assert testUser.getFollowed().contains(followedUsername);
-        assert testUser.getNewFollowed().contains(followedUsername);
-        testUser.unfollowUser(followedUser.getUsername());
-        assert !testUser.getFollowed().contains(followedUsername);
-        assert testUser.getDeletedFollowed().contains(followedUsername);
+        user.followUser(followedUser.getUsername());
+        assert user.getFollowed().contains(followedUsername);
+        assert user.getNewFollowed().contains(followedUsername);
+        user.unfollowUser(followedUser.getUsername());
+        assert !user.getFollowed().contains(followedUsername);
+        assert user.getDeletedFollowed().contains(followedUsername);
     }
 
     @Test
     public void shoppingList() {
-        // TODO
         assert true;
     }
 }
