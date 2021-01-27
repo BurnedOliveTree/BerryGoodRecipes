@@ -158,7 +158,7 @@ public class Recipe {
     }
 
     public String getAvgRate() {
-        return Objects.requireNonNullElse(this.avgRate, "");
+        return this.avgRate;
     }
 
     public String getDateAdded() {return dateAdded;}
@@ -201,8 +201,11 @@ public class Recipe {
     }
 
     public void setIngredientList(ArrayList<Ingredient> ingredients) {
-        for (Ingredient ingredient: ingredients) {
-            addIngredient(ingredient);
+        this.ingredientList = new ArrayList<>();
+        if (ingredients != null) {
+            for (Ingredient ingredient: ingredients) {
+                addIngredient(ingredient);
+            }
         }
     }
 

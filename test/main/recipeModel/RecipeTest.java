@@ -26,7 +26,7 @@ public class RecipeTest {
 
     @Test
     public void equalsTest() {
-        assert recipe.equals(new Recipe(1, "Placki", "Rokarolka"));
+        assert recipe.equals(new Recipe(recipe));
         assert !recipe.equals(new Recipe(2, "Placki", "Rokarolka"));
     }
 
