@@ -41,10 +41,10 @@ public class OpinionPane extends BasicPaneActions {
         if (DatabaseConnection.isThemeLight()) {
             exitPic.setImage(new Image("icons/berryExit.png"));
         }
-        scoreBox.setItems(scoreList); // avaible scores
-        okButton.setDisable(true);  // ok button avaible only when user is logged in, not an author of recipe and had selected score
-        reportButton.setDisable(true); // avaible when user selected diffrent user opinion
-        deleteButton.setDisable(true); // avaible when user selected their own opinion
+        scoreBox.setItems(scoreList); // available scores
+        okButton.setDisable(true);  // ok button available only when user is logged in, not an author of recipe and had selected score
+        reportButton.setDisable(true); // available when user selected different user opinion
+        deleteButton.setDisable(true); // available when user selected their own opinion
         DatabaseConnection.fillOpinions(recipe, opinionView);
         reportButton.setOnAction(e -> {
             try {
@@ -88,7 +88,7 @@ public class OpinionPane extends BasicPaneActions {
                     reportButton.setDisable(false);
                 }
             }
-        }catch (RuntimeException e){};
+        } catch (RuntimeException err) {}
     }
 
     @FXML private void okButtonActivity() {
