@@ -36,6 +36,8 @@ public class TimerPane extends BasicPaneActions {
 
         Platform.runLater(() -> {
         Stage stage = (Stage) hoursBox.getScene().getWindow();
+        stage.setMinWidth(460);
+        stage.setMinHeight(200);
         stage.setOnCloseRequest(event -> {
             if (mediaPlayer != null)
                 mediaPlayer.pause();

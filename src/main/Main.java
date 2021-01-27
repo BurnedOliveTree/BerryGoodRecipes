@@ -60,8 +60,8 @@ public class Main extends Application {
             Platform.exit();
             System.exit(0);
         });
-        primaryStage.setMinWidth(800);
-        primaryStage.setMinHeight(600);
+        primaryStage.setMinWidth(810);
+        primaryStage.setMinHeight(605);
     }
 
     public static void main(String[] args) throws IOException {

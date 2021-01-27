@@ -25,7 +25,11 @@ public class SignInPane extends BasicPaneActions {
 
     @FXML void initialize() {
         errMess.setText("");
-        Platform.runLater(() -> usernameField.requestFocus());
+        Platform.runLater(() -> {
+            usernameField.requestFocus();
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            stage.setMinHeight(200);
+            stage.setMinWidth(200);});
     }
 
     @FXML private void onLoginEnter() {

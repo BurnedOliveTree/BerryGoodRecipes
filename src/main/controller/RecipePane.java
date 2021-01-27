@@ -16,6 +16,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.*;
 
+import javafx.stage.Stage;
 import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
@@ -74,7 +75,6 @@ public class RecipePane  extends BasicPaneActions {
         }
         // description
         Text text = new Text(this.recipe.getPrepareMethod());
-        descText.getChildren().add(text);
 
         // ingredient list
         ingredientListView = new ListView<>();
@@ -125,7 +125,13 @@ public class RecipePane  extends BasicPaneActions {
             super.setContextMenu(authorLabel, createFollowMenuItem(), createInviteMenu());
         }
 
-        Platform.runLater(() -> commentButton.setPrefWidth(propertyBox.getWidth()));
+        Platform.runLater(() -> {
+            commentButton.setPrefWidth(propertyBox.getWidth());
+            descText.getChildren().add(text);
+            Stage stage = (Stage) descText.getScene().getWindow();
+            stage.setMinHeight(610);
+            stage.setMinWidth(810);
+        });
     }
 
     // context menu bind with author label

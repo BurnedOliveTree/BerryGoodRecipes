@@ -294,7 +294,7 @@ public class MainPane extends BasicPaneActions {
         }
         else {
             FXMLLoader loader = loadFXML(new SignInPane(this), "/signInPage.fxml");
-            changeScene(loader, "Sign in", 180, 200);
+            changeScene(loader, "Sign in", 200, 200);
         }
     }
 
