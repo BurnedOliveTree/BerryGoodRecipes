@@ -144,8 +144,10 @@ public class UserAdminPane extends BasicPaneActions {
     }
 
     @FXML private void onAddGroupButtonClick() throws IOException, SQLException {
-        DatabaseConnection.addGroup(newGroupName.getText(), activeUser.getUsername());
-        refreshWindow();
+        if (!(newGroupName.getText().length() > DatabaseConnection.shortTextFieldLength)) {
+            DatabaseConnection.addGroup(newGroupName.getText(), activeUser.getUsername());
+            refreshWindow();
+        }
     }
 
     @FXML void onUserPressed(MouseEvent mouseEvent) throws SQLException, IOException {

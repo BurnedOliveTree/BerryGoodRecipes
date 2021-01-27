@@ -45,14 +45,30 @@ public class SignInPane extends BasicPaneActions {
     @FXML private void getDataRegister(MouseEvent event) throws SQLException, IOException {
         // sign up
         event.consume();
-        mainPane.activeUser = DatabaseConnection.register(usernameField.getText(), passwordField.getText(), errMess);
-        checkLoginStatus();
+        if (checkCredentialsLength()) {
+            mainPane.activeUser = DatabaseConnection.register(usernameField.getText(), passwordField.getText(), errMess);
+            checkLoginStatus();
+        }
     }
 
     private void login(String username, String password) throws SQLException, IOException {
         // call log-in in database
-        mainPane.activeUser = DatabaseConnection.login(username, password, errMess);
-        checkLoginStatus();
+        if (checkCredentialsLength()) {
+            mainPane.activeUser = DatabaseConnection.login(username, password, errMess);
+            checkLoginStatus();
+        }
+    }
+
+    private boolean checkCredentialsLength() {
+        if (usernameField.getText().length() > DatabaseConnection.shortTextFieldLength) {
+            errMess.setText("Username too long!");
+            return false;
+        }
+        if (passwordField.getText().length() > DatabaseConnection.shortTextFieldLength) {
+            errMess.setText("Password too long!");
+            return false;
+        }
+        return true;
     }
 
     private void checkLoginStatus() {

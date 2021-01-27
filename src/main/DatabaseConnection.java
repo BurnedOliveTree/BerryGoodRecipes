@@ -20,6 +20,9 @@ import java.util.*;
 public class DatabaseConnection {
     static Connection connection;
     public static String theme;
+    public final static int shortTextFieldLength = 40;
+    public final static int mediumTextFieldLength = 1000;
+    public final static int longTextFieldLength = 4000;
 
     public DatabaseConnection() throws IOException {
         // constructor, user's property is read in it - like theme
