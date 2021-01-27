@@ -14,18 +14,18 @@
 
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.OpinionPane">
   <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="565.3333129882812" minWidth="10.0" prefWidth="96.0" />
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="656.0" minWidth="10.0" prefWidth="547.0" />
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="293.33331298828125" minWidth="10.0" prefWidth="80.0" />
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="293.33331298828125" minWidth="10.0" prefWidth="76.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="80.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="80.0" />
+      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="68.0" />
   </columnConstraints>
   <rowConstraints>
-    <RowConstraints maxHeight="129.33334350585938" minHeight="10.0" prefHeight="61.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="389.0" minHeight="10.0" prefHeight="309.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="341.0" minHeight="10.0" prefHeight="29.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="341.0" minHeight="10.0" prefHeight="26.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="341.0" minHeight="10.0" prefHeight="157.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="341.0" minHeight="10.0" prefHeight="22.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="60.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="1.7976931348623157E308" minHeight="90.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="1.7976931348623157E308" minHeight="60.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
       <Button fx:id="exitButton" mnemonicParsing="false" onAction="#exitAction" prefHeight="25.0" prefWidth="22.0" GridPane.columnIndex="3">
@@ -37,10 +37,10 @@
             </ImageView>
          </graphic>
       </Button>
-      <ListView fx:id="opinionView" onMousePressed="#opinionViewOnAction" prefHeight="322.0" prefWidth="584.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+      <ListView fx:id="opinionView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" onMousePressed="#opinionViewOnAction" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
       <ChoiceBox fx:id="scoreBox" onAction="#okButtonActivity" prefHeight="25.0" prefWidth="46.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      <TextField fx:id="commentTextField" alignment="TOP_LEFT" prefHeight="144.0" prefWidth="537.0" promptText="Comment" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <Label prefHeight="33.0" prefWidth="104.0" text="Opinions:" styleClass="berry-text" GridPane.columnIndex="1">
+      <TextField fx:id="commentTextField" alignment="TOP_LEFT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="210.0" promptText="Comment" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="4" GridPane.vgrow="ALWAYS" />
+      <Label prefHeight="33.0" prefWidth="104.0" styleClass="berry-text" text="Opinions:" GridPane.columnIndex="1">
          <font>
             <Font size="19.0" />
          </font>
@@ -75,7 +75,7 @@
             <Button fx:id="okButton" mnemonicParsing="false" onAction="#okButtonAction" prefHeight="25.0" prefWidth="54.0" text="OK" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          </children>
       </GridPane>
-      <Label prefHeight="24.0" prefWidth="70.0" text="Score:" styleClass="berry-text" GridPane.columnIndex="1" GridPane.rowIndex="2">
+      <Label prefHeight="24.0" prefWidth="70.0" styleClass="berry-text" text="Score:" GridPane.columnIndex="1" GridPane.rowIndex="2">
          <font>
             <Font size="15.0" />
          </font>
