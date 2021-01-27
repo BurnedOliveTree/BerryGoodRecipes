@@ -13,7 +13,7 @@ public class UserTest {
     public void createRecipe()  {
         this.user =  new User("test");
     }
-    
+
     @Test
     public void addUserRecipe() {
         Recipe testRecipe = new Recipe();
