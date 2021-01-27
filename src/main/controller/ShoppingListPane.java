@@ -146,7 +146,7 @@ public class ShoppingListPane extends BasicPaneActions {
             shareMenu.setVisible(true);
             addIngredient.setVisible(true);
             for (Group group : groups) {
-                if (group.getID() != null) {
+                if (group.getID() != null && !group.equals(privateGroup)) {
                     MenuItem menuItem = new MenuItem(group.getName());
                     menuItem.setOnAction(e -> {
                         try {
@@ -155,9 +155,8 @@ public class ShoppingListPane extends BasicPaneActions {
                             activeUser.getShoppingList().clear();
                             shoppingList.getItems().clear();
                             shoppingList.refresh();
-
-                        } catch (IOException | SQLException ioException) {
-                            ioException.printStackTrace();
+                        } catch (IOException | SQLException err) {
+                            err.printStackTrace();
                         }
                     });
                     shareMenu.getItems().add(menuItem);
