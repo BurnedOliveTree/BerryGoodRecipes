@@ -170,15 +170,17 @@ public class User {
         return false;
     }
 
-    public void editQuantityInShopping(String name, Double q) throws IOException, SQLException {
+    public boolean editQuantityInShopping(String name, Double q) throws IOException, SQLException {
         for (Ingredient ing : shoppingList){
             if (ing.getName().equals(name)  && !ing.getUnit().equals("piece")){
                 Double newQ = DatabaseConnection.convertUnit(q, "gram", ing.getUnit());
+                if (!DatabaseConnection.checkDoubleDatabaseReduction(Double.toString(ing.getQuantity() + newQ))) return false;
                 ing.setQuantity(ing.getQuantity() + newQ);
                 ing.setShoppingListStatus(Status.edited);
-                return;
+                return true;
             }
         }
+        return false;
     }
 
     // getters

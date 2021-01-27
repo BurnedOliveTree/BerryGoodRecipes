@@ -115,7 +115,7 @@ public class ShoppingListPane extends BasicPaneActions {
                     Ingredient ingredient = new Ingredient(null, DatabaseConnection.convertUnit(Double.parseDouble(quantity.getText()), unit.getSelectionModel().getSelectedItem(), "gram"),"gram", name.getText());
                     ingredient.setShoppingListStatus(Status.added);
                     if (activeUser.qualifiesToAdd(ingredient.getName())){
-                        activeUser.editQuantityInShopping(ingredient.getName(), ingredient.getQuantity());
+                        if(!activeUser.editQuantityInShopping(ingredient.getName(), ingredient.getQuantity())) showWarning("Too large quantity!");
                     }
                     else {
                         activeUser.addToShoppingList(ingredient);
