@@ -240,7 +240,7 @@ public class RecipeAdminPane extends BasicPaneActions {
             String unit = units.getSelectionModel().getSelectedItem();
             String name = nameField.getText();
             if (quantityStr != null && unit != null && name != null){
-                if (!quantityStr.equals("") && quantityStr.matches("\\d+(\\.\\d+)?") && !unit.equals("") && !name.equals("")){
+                if (!quantityStr.equals("") && quantityStr.matches("\\d+(\\.\\d+)?") && !unit.equals("") && !name.equals("") && name.length() != DatabaseConnection.shortTextFieldLength){
                     Double quantity = Double.parseDouble(quantityStr);
                     Ingredient ingredient = new Ingredient(null, quantity, unit, name);
                     ingredientList.add(ingredient);
