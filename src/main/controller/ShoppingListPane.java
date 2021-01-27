@@ -236,7 +236,7 @@ public class ShoppingListPane extends BasicPaneActions {
         delete.setOnAction(actionEvent -> {
             // if option selected in user shopping list
             if (otherListsMenu.getValue() == privateGroup) {
-                activeUser.removeSameNamedFromSL(ingredientList.get(shoppingList.getSelectionModel().getSelectedIndex()).getName(), ingredientList.get(shoppingList.getSelectionModel().getSelectedIndex()).getUnit());
+                activeUser.removeSameNamedFromShoppingList(ingredientList.get(shoppingList.getSelectionModel().getSelectedIndex()).getName(), ingredientList.get(shoppingList.getSelectionModel().getSelectedIndex()).getUnit());
             } else {
                 // if option selected in group shopping list
                 try {

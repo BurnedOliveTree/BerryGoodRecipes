@@ -1,5 +1,7 @@
 package main.userModel;
 
+import main.controller.Status;
+import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,18 +13,7 @@ public class UserTest {
     public void createRecipe()  {
         this.user =  new User("test");
     }
-
-    public User createUser(String username) {
-        return new User(username);
-    }
-
-    @Test
-    public void constructor() {
-        String username = "test";
-        User testUser = new User(username);
-        assert testUser.getUsername().equals(username);
-    }
-
+    
     @Test
     public void addUserRecipe() {
         Recipe testRecipe = new Recipe();
@@ -49,7 +40,7 @@ public class UserTest {
     @Test
     public void followAndUnfollowUser() {
         String followedUsername = "followed";
-        User followedUser = createUser(followedUsername);
+        User followedUser = new User(followedUsername);
         user.followUser(followedUser.getUsername());
         assert user.getFollowed().contains(followedUsername);
         assert user.getNewFollowed().contains(followedUsername);
@@ -59,7 +50,23 @@ public class UserTest {
     }
 
     @Test
-    public void shoppingList() {
-        assert true;
+    public void addToShoppingListTest() {
+        Ingredient ingredient = new Ingredient(1, 5.0, "gram", "mąka");
+        user.addToShoppingList(ingredient);
+        assert user.getShoppingList().size() == 1;
+        assert ingredient.getShoppingListStatus() == Status.added;
     }
+
+    @Test
+    public void removeFromShoppingListTest() {
+        Ingredient ingredient = new Ingredient(1, 5.0, "gram", "mąka");
+        user.addToShoppingList(ingredient);
+        assert user.getShoppingList().size() == 1;
+        assert user.checkIfIngredientExistedInShoppingList(ingredient);
+        user.removeFromShoppingList(ingredient);
+        assert user.getShoppingList().size() == 1;
+        assert user.checkIfIngredientExistedInShoppingList(ingredient);
+        assert ingredient.getShoppingListStatus() == Status.deleted;
+    }
+
 }

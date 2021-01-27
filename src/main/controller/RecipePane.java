@@ -186,7 +186,7 @@ public class RecipePane  extends BasicPaneActions {
             view.setFitHeight(20);
             view.setFitWidth(20);
             view.setOnMouseClicked(mouseEvent -> {
-                if (activeUser.checkIfIngredientInShoppingList(selectedIngredient)) {
+                if (activeUser.checkIfIngredientExistedInShoppingList(selectedIngredient)) {
                     Ingredient ingredient = activeUser.getIngredientFromShoppingList(selectedIngredient);
                     Status status = ingredient.getShoppingListStatus();
                     if (status == Status.deleted) {
@@ -259,7 +259,7 @@ public class RecipePane  extends BasicPaneActions {
         delete.setOnAction(actionEvent -> {
             ObservableList<Ingredient> ingredients = ingredientListView.getSelectionModel().getSelectedItems();
             for (Ingredient selectedIngredient :ingredients){
-                if (activeUser.checkIfIngredientInShoppingList(selectedIngredient)) {
+                if (activeUser.checkIfIngredientExistedInShoppingList(selectedIngredient)) {
                     Ingredient ingredient = activeUser.getIngredientFromShoppingList(selectedIngredient);
                     Status status = ingredient.getShoppingListStatus();
                     if (status == Status.added || status == Status.loaded) {
@@ -278,7 +278,7 @@ public class RecipePane  extends BasicPaneActions {
         add.setOnAction(actionEvent -> {
             ObservableList<Integer> ingredients = ingredientListView.getSelectionModel().getSelectedIndices();
             for (Integer selectedIngredient :ingredients){
-                if (activeUser.checkIfIngredientInShoppingList(this.recipe.getIngredientList().get(selectedIngredient))) {
+                if (activeUser.checkIfIngredientExistedInShoppingList(this.recipe.getIngredientList().get(selectedIngredient))) {
                     Ingredient ingredient = activeUser.getIngredientFromShoppingList(this.recipe.getIngredientList().get(selectedIngredient));
                     Status status = ingredient.getShoppingListStatus();
                     if (status == Status.deleted) {
