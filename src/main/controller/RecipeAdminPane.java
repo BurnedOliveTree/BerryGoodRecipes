@@ -226,11 +226,11 @@ public class RecipeAdminPane extends BasicPaneActions {
                 myRecipesTable.refresh();
             } else {
                 if (preparationTime == null)
-                    warning += "Preparation time is too long";
+                    warning += "Preparation time is too long\n";
                 if (cost == null)
-                    warning += "Cost is too big";
+                    warning += "Cost is too big\n";
                 if (portions == null)
-                    warning += "Number of portions is too big";
+                    warning += "Number of portions is too big\n";
                 showWarning(warning);
             }
         } else if (ingredientList != null){
@@ -249,7 +249,7 @@ public class RecipeAdminPane extends BasicPaneActions {
             String quantityStr = quantityField.getText();
             String unit = units.getSelectionModel().getSelectedItem();
             String name = nameField.getText();
-            if (quantityStr != null && unit != null && name != null && DatabaseConnection.checkDatabaseReduction(quantityStr)){
+            if (quantityStr != null && unit != null && name != null && DatabaseConnection.checkDoubleDatabaseReduction(quantityStr)){
                 if (!quantityStr.equals("") && quantityStr.matches("\\d+(\\.\\d+)?") && !unit.equals("") && !name.equals("") && name.length() < DatabaseConnection.shortTextFieldLength){
                     Double quantity = Double.parseDouble(quantityStr);
                     Ingredient ingredient = new Ingredient(null, quantity, unit, name);
@@ -258,9 +258,9 @@ public class RecipeAdminPane extends BasicPaneActions {
                 else {
                     if (name.length() > DatabaseConnection.shortTextFieldLength) {
                         nameField.clear();
-                        warning += "Name of ingredient is too long.";
-                    } else if (!DatabaseConnection.checkDatabaseReduction(quantityStr)){
-                        warning += "Ingredient quantity is too big";
+                        warning += "Name of ingredient is too long.\n";
+                    } else if (!DatabaseConnection.checkDoubleDatabaseReduction(quantityStr)){
+                        warning += "Ingredient quantity is too big\n";
                     }
                 }
             }
@@ -277,7 +277,7 @@ public class RecipeAdminPane extends BasicPaneActions {
         if (costField.getText().equals(""))
             return 0.0;
         else {
-            if (!DatabaseConnection.checkDatabaseReduction(costField.getText()))
+            if (!DatabaseConnection.checkDoubleDatabaseReduction(costField.getText()))
                 return null;
             return Double.parseDouble(costField.getText());
         }
@@ -288,7 +288,7 @@ public class RecipeAdminPane extends BasicPaneActions {
         if (portionField.getText().equals(""))
             return 1.0;
         else{
-            if (!DatabaseConnection.checkDatabaseReduction(portionField.getText()))
+            if (!DatabaseConnection.checkDoubleDatabaseReduction(portionField.getText()))
                 return null;
             return Double.parseDouble(portionField.getText());
         }
@@ -302,6 +302,8 @@ public class RecipeAdminPane extends BasicPaneActions {
             int mins = 0;
             if (!minsField.getText().equals("")) {
                 try {
+                    if (!DatabaseConnection.checkIntegerDatabaseReduction(minsField.getText()))
+                        return null;
                     mins += Integer.parseInt(minsField.getText());
                 } catch (NumberFormatException e) {
                     return null;
@@ -309,6 +311,8 @@ public class RecipeAdminPane extends BasicPaneActions {
             }
             if (!hrsField.getText().equals("")) {
                 try {
+                    if (!DatabaseConnection.checkIntegerDatabaseReduction(hrsField.getText()))
+                        return null;
                     mins += 60 * Integer.parseInt(hrsField.getText());
                 } catch (NumberFormatException e) {
                     return null;

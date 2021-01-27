@@ -110,7 +110,7 @@ public class ShoppingListPane extends BasicPaneActions {
         addButton.setText("Add Ingredient");
         addButton.setPrefWidth(newIngredient.getPrefWidth());
         addButton.setOnAction(actionEvent -> {
-            if (!quantity.getText().equals("") && DatabaseConnection.checkDatabaseReduction(quantity.getText()) && quantity.getText().matches("\\d+(\\.\\d+)?") && !name.getText().equals("") && !(name.getText().length() > DatabaseConnection.shortTextFieldLength)) {
+            if (!quantity.getText().equals("") && DatabaseConnection.checkDoubleDatabaseReduction(quantity.getText()) && quantity.getText().matches("\\d+(\\.\\d+)?") && !name.getText().equals("") && !(name.getText().length() > DatabaseConnection.shortTextFieldLength)) {
                 try {
                     Ingredient ingredient = new Ingredient(null, DatabaseConnection.convertUnit(Double.parseDouble(quantity.getText()), unit.getSelectionModel().getSelectedItem(), "gram"),"gram", name.getText());
                     ingredient.setShoppingListStatus(Status.added);

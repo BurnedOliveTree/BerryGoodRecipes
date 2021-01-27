@@ -25,6 +25,8 @@ public class DatabaseConnection {
     public final static int longTextFieldLength = 4000;
     public final static int DoublePrecisionValue = 8;
     public final static int DoubleScaleValue = 2;
+    public final static int IntegerPrecisionValue = 4;
+
     public DatabaseConnection() throws IOException {
         // constructor, user's property is read in it - like theme
         Properties prop = new Properties();
@@ -39,13 +41,15 @@ public class DatabaseConnection {
         return DatabaseConnection.theme.equals("light") || DatabaseConnection.theme.equals("winter");
     }
 
-    public static boolean checkDatabaseReduction(String text) {
+    public static boolean checkDoubleDatabaseReduction(String text) {
         String[] splitedString = text.split("[\\.\\,]");
         if (splitedString.length == 2 && splitedString[0].length() + splitedString[1].length() <= DoublePrecisionValue &&  splitedString[1].length() <= DoubleScaleValue)
             return true;
-        else if (splitedString.length == 1 && splitedString[0].length() <= DoublePrecisionValue)
-            return true;
-        return false;
+        else return splitedString.length == 1 && splitedString[0].length() <= DoublePrecisionValue;
+    }
+
+    public static boolean checkIntegerDatabaseReduction(String text) {
+        return text.length() <= IntegerPrecisionValue;
     }
 
     public static void setConnection() throws SQLException, IOException {
