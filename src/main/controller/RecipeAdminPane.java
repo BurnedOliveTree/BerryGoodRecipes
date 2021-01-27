@@ -41,7 +41,7 @@ public class RecipeAdminPane extends BasicPaneActions {
     @FXML private TextArea descriptionArea;
     @FXML private ChoiceBox<Group> accessibilityBox;
 
-
+    // @TODO maxlenght of field
     public RecipeAdminPane(User activeUser) {
         this.activeUser = activeUser;
         try {
@@ -221,7 +221,7 @@ public class RecipeAdminPane extends BasicPaneActions {
             Double cost = getCost();
             Double portions = getPortions();
             System.out.println(publicity);
-            Recipe recipe = new Recipe(null, titleField.getText(), activeUser.getUsername(), descriptionArea.getText(), publicity, getDateAdded(), preparationTime, cost, portions, ingredientList);
+            Recipe recipe = new Recipe(null, titleField.getText(), activeUser.getUsername(), descriptionArea.getText(), publicity, preparationTime, cost, portions, ingredientList);
             int recipeId  = DatabaseConnection.addRecipe(recipe, activeUser);
             recipe.setId(recipeId);
             clearRecipe();
@@ -282,13 +282,6 @@ public class RecipeAdminPane extends BasicPaneActions {
                 mins += 60 * Integer.parseInt(hrsField.getText());
             return mins;
         }
-    }
-
-    private String getDateAdded() {
-        // gets the date when the recipe was created
-        LocalDateTime date = LocalDateTime.now();
-        DateTimeFormatter dateTimeFormatter =  DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        return date.format(dateTimeFormatter);
     }
 
     @FXML

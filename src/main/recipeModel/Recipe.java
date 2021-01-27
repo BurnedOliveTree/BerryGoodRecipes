@@ -5,9 +5,13 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Recipe {
+    private String dateAdded;
     private String author;
     private Integer id;
     private Double cost;
@@ -15,7 +19,6 @@ public class Recipe {
     private Integer accessibility;
     private String groupName;
     private Double portionNumber;
-    private String dateAdded;
     private String prepareMethod;
     private Integer prepareTime; // in minutes
     private ArrayList<Ingredient> ingredientList;
@@ -25,23 +28,40 @@ public class Recipe {
     // constructors
     public Recipe() {}
 
-    public Recipe(int id, String name, String author) {
+    public Recipe(Integer id, String name, String author) {
         this.id = id;
         this.name = name;
         this.author = author;
+        this.ingredientList = new ArrayList<>();
+        this.groupName = "private";
+        this.portionNumber = 1.0;
+        setDateAdded();
     }
 
-    public Recipe(Integer id, String name, String author, String prepareMethod, Integer accessibility, String dateAdded, Integer prepareTime, Double cost, Double portion_number, ArrayList<Ingredient> ingredientList) {
+    public Recipe(Integer id, String name, String author, String prepareMethod, Integer accessibility, String newDateAdded, Integer prepareTime, Double cost, Double portion_number, ArrayList<Ingredient> ingredientList) {
         this.name = name;
         this.author = author;
         this.accessibility = accessibility;
         this.prepareMethod = prepareMethod;
-        this.ingredientList = ingredientList;
-        this.dateAdded = dateAdded;
         this.portionNumber = portion_number;
         this.cost = cost;
         this.prepareTime = prepareTime;
         this.id = id;
+        this.dateAdded = newDateAdded;
+        this.setIngredientList(ingredientList);
+    }
+
+    public Recipe(Integer id, String name, String author, String prepareMethod, Integer accessibility, Integer prepareTime, Double cost, Double portion_number, ArrayList<Ingredient> ingredientList) {
+        this.name = name;
+        this.author = author;
+        this.accessibility = accessibility;
+        this.prepareMethod = prepareMethod;
+        this.portionNumber = portion_number;
+        this.cost = cost;
+        this.prepareTime = prepareTime;
+        this.id = id;
+        setDateAdded();
+        this.setIngredientList(ingredientList);
     }
 
     public Recipe(Recipe that) {
@@ -55,17 +75,21 @@ public class Recipe {
 
     // operations on attributes
 
-    public void scaleIngredientList(Double newNumPortions) {
+    public double scaleIngredientList(Double newNumPortions) {
         // scale ingredient taking into account the changed number of portions
-        double scale = newNumPortions / portionNumber;
-        for (Ingredient ingredient : this.ingredientList) {
-            if (scale > 0) {
-                ingredient.setQuantity(ingredient.getQuantity()*scale);
+        if (portionNumber != null) {
+            double scale = newNumPortions / portionNumber;
+            for (Ingredient ingredient : this.ingredientList) {
+                if (scale > 0) {
+                    ingredient.setQuantity(ingredient.getQuantity()*scale);
+                }
+                else
+                    throw new IllegalArgumentException("Value must be greater than 0");
             }
-            else
-                throw new IllegalArgumentException("Value must be greater than 0");
+            portionNumber = newNumPortions;
+            return scale;
         }
-        portionNumber = newNumPortions;
+        return 0.0;
     }
 
     // file operations
@@ -80,7 +104,7 @@ public class Recipe {
             file.write("\nPreparation method:\n" + this.prepareMethod);
             file.write("\nAdditional information: \n");
             file.write("Cost: " + this.cost + "\n");
-            file.write("Preparation time: " + this.prepareTime + "\n");
+            file.write("Preparation time: " + this.getPrepareTime() + "\n");
             file.write("Number of portions: " + this.portionNumber + "\n");
             file.close();
         } catch (IOException err) {
@@ -93,9 +117,9 @@ public class Recipe {
         saveToFile(this.name);
     }
 
-    public void deleteFile(String filename) {
+    public boolean deleteFile(String filename) {
         File file = new File(filename);
-        file.delete();
+        return file.delete();
     }
 
 
@@ -114,19 +138,19 @@ public class Recipe {
     public Integer getId() {return id;}
 
     public Integer getAccessibility() {
-        return accessibility;
+        return Objects.requireNonNullElse(this.accessibility, 0);
     }
 
     public double getPortionNumber() {
-        return portionNumber;
+        return Objects.requireNonNullElse(this.portionNumber, 1.0);
     }
 
     public String getPrepareMethod() {
-        return prepareMethod;
+        return Objects.requireNonNullElse(this.prepareMethod, "");
     }
 
     public Integer getPrepareTime() {
-        return prepareTime;
+        return Objects.requireNonNullElse(this.prepareTime, 0);
     }
 
     public ArrayList<Ingredient> getIngredientList() {
@@ -134,7 +158,7 @@ public class Recipe {
     }
 
     public String getAvgRate() {
-        return avgRate;
+        return Objects.requireNonNullElse(this.avgRate, "");
     }
 
     public String getDateAdded() {return dateAdded;}
@@ -143,7 +167,7 @@ public class Recipe {
         return favoriteStatus;
     }
 
-    public String getGroupName() { return this.groupName; }
+    public String getGroupName() {  return this.groupName; }
 
     // setter
 
@@ -168,6 +192,27 @@ public class Recipe {
     }
 
     public void setGroupName(String groupName) { this.groupName = groupName; }
+
+    public void setDateAdded() {
+        // gets the date when the recipe was created
+        LocalDateTime date = LocalDateTime.now();
+        DateTimeFormatter dateTimeFormatter =  DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        this.dateAdded = date.format(dateTimeFormatter);
+    }
+
+    public void setIngredientList(ArrayList<Ingredient> ingredients) {
+        for (Ingredient ingredient: ingredients) {
+            addIngredient(ingredient);
+        }
+    }
+
+    public boolean addIngredient(Ingredient ingredient) {
+        if (!ingredientList.contains(ingredient)) {
+            ingredientList.add(ingredient);
+            return true;
+        }
+        return false;
+    }
 
     @Override
     public boolean equals(Object r){

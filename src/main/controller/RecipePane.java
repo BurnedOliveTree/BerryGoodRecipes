@@ -220,7 +220,6 @@ public class RecipePane  extends BasicPaneActions {
                 else{
                     view.setImage(new Image("icons/minus.png"));
                 }
-
                 setGraphic(box);
             }
         }
