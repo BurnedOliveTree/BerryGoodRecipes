@@ -230,7 +230,7 @@ public class MainPane extends BasicPaneActions {
                     FXMLLoader loader = loadFXML(new RecipePane(DatabaseConnection.getSelectedRecipe(tempInt), activeUser, null), "/resources/recipePage.fxml");
                     changeScene(null, loader);
                 }
-        });
+            });
             tempPane.add(tempButton, 0, 0, 6, 2);
             String tempString = recipe.getAvgRate();
             if (tempString == null)
