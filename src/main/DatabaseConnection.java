@@ -23,7 +23,8 @@ public class DatabaseConnection {
     public final static int shortTextFieldLength = 40;
     public final static int mediumTextFieldLength = 1000;
     public final static int longTextFieldLength = 4000;
-
+    public final static int DoublePrecisionValue = 8;
+    public final static int DoubleScaleValue = 2;
     public DatabaseConnection() throws IOException {
         // constructor, user's property is read in it - like theme
         Properties prop = new Properties();
@@ -36,6 +37,15 @@ public class DatabaseConnection {
     public static boolean isThemeLight() {
         // check what theme is selected
         return DatabaseConnection.theme.equals("light") || DatabaseConnection.theme.equals("winter");
+    }
+
+    public static boolean checkDatabaseReduction(String text) {
+        String[] splitedString = text.split("[\\.\\,]");
+        if (splitedString.length == 2 && splitedString[0].length() + splitedString[1].length() <= DoublePrecisionValue &&  splitedString[1].length() <= DoubleScaleValue)
+            return true;
+        else if (splitedString.length == 1 && splitedString[0].length() <= DoublePrecisionValue)
+            return true;
+        return false;
     }
 
     public static void setConnection() throws SQLException, IOException {

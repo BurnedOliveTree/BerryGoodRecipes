@@ -249,7 +249,7 @@ public class RecipeAdminPane extends BasicPaneActions {
             String quantityStr = quantityField.getText();
             String unit = units.getSelectionModel().getSelectedItem();
             String name = nameField.getText();
-            if (quantityStr != null && unit != null && name != null){
+            if (quantityStr != null && unit != null && name != null && DatabaseConnection.checkDatabaseReduction(quantityStr)){
                 if (!quantityStr.equals("") && quantityStr.matches("\\d+(\\.\\d+)?") && !unit.equals("") && !name.equals("") && name.length() < DatabaseConnection.shortTextFieldLength){
                     Double quantity = Double.parseDouble(quantityStr);
                     Ingredient ingredient = new Ingredient(null, quantity, unit, name);
@@ -259,6 +259,8 @@ public class RecipeAdminPane extends BasicPaneActions {
                     if (name.length() > DatabaseConnection.shortTextFieldLength) {
                         nameField.clear();
                         warning += "Name of ingredient is too long.";
+                    } else if (!DatabaseConnection.checkDatabaseReduction(quantityStr)){
+                        warning += "Ingredient quantity is too big";
                     }
                 }
             }
@@ -274,8 +276,11 @@ public class RecipeAdminPane extends BasicPaneActions {
         // get cost from field, and parse it
         if (costField.getText().equals(""))
             return 0.0;
-        else
+        else {
+            if (!DatabaseConnection.checkDatabaseReduction(costField.getText()))
+                return null;
             return Double.parseDouble(costField.getText());
+        }
     }
 
     private Double getPortions() {
@@ -283,6 +288,8 @@ public class RecipeAdminPane extends BasicPaneActions {
         if (portionField.getText().equals(""))
             return 1.0;
         else{
+            if (!DatabaseConnection.checkDatabaseReduction(portionField.getText()))
+                return null;
             return Double.parseDouble(portionField.getText());
         }
     }
