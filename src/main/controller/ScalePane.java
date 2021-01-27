@@ -77,6 +77,7 @@ public class ScalePane extends BasicPaneActions {
 
     public void okUnitAction() throws IOException, SQLException {
         unitLabel.setText("");
+        unitLabel.setWrapText(true);
         String unitArea1Text = unitArea1.getText(); // quantity of ingredient in first unit
         double quantity = 0.0;
         String firstChoice;
@@ -152,6 +153,7 @@ public class ScalePane extends BasicPaneActions {
         String h2 = Height2.getText();
         double IHaveVolume;
         double inRecipeVolume;
+        moldLabel.setWrapText(true);
         if (a1.equals("") || h1.equals("") || a2.equals("")|| h2.equals("")){
             moldLabel.setText("Too little information");
             return;

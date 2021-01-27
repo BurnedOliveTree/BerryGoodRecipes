@@ -598,6 +598,7 @@ public class DatabaseConnection {
             setConnection();
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("select * from OPINION where USERNAME = '"+username+ "' and RECIPE_ID = " + recipeId );
+        opinionLabel.setWrapText(true);
         if (resultSet.next()) {
             opinionLabel.setText("You have already added your opinion!");
         }
