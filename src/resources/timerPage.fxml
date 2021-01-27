@@ -31,27 +31,27 @@
                   <Label alignment="CENTER" text="Hours" GridPane.halignment="CENTER" />
                   <Label alignment="CENTER" text="Minutes" GridPane.columnIndex="2" GridPane.halignment="CENTER" />
                   <Label alignment="CENTER" text="Seconds" GridPane.columnIndex="4" GridPane.halignment="CENTER" />
-                  <Label fx:id="hoursTimer" alignment="CENTER" contentDisplay="CENTER" text="00" GridPane.rowIndex="1">
+                  <Label fx:id="hoursTimer" styleClass="berry-text" alignment="CENTER" contentDisplay="CENTER" text="00" GridPane.rowIndex="1">
                      <font>
                         <Font size="96.0" />
                      </font>
                   </Label>
-                  <Label alignment="CENTER" contentDisplay="CENTER" text=":" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <Label alignment="CENTER" styleClass="berry-text" contentDisplay="CENTER" text=":" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <font>
                         <Font size="96.0" />
                      </font>
                   </Label>
-                  <Label fx:id="minutesTimer" alignment="CENTER" contentDisplay="CENTER" text="00" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                  <Label fx:id="minutesTimer" styleClass="berry-text" alignment="CENTER" contentDisplay="CENTER" text="00" GridPane.columnIndex="2" GridPane.rowIndex="1">
                      <font>
                         <Font size="96.0" />
                      </font>
                   </Label>
-                  <Label alignment="CENTER" text=":" textAlignment="JUSTIFY" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                  <Label alignment="CENTER" styleClass="berry-text" text=":" textAlignment="JUSTIFY" GridPane.columnIndex="3" GridPane.rowIndex="1">
                      <font>
                         <Font size="96.0" />
                      </font>
                   </Label>
-                  <Label fx:id="secondsTimer" alignment="CENTER" contentDisplay="CENTER" text="00" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                  <Label fx:id="secondsTimer" styleClass="berry-text" alignment="CENTER" contentDisplay="CENTER" text="00" GridPane.columnIndex="4" GridPane.rowIndex="1">
                      <font>
                         <Font size="96.0" />
                      </font>
