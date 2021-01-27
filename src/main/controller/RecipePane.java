@@ -2,7 +2,6 @@ package main.controller;
 
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -46,7 +45,7 @@ public class RecipePane  extends BasicPaneActions {
     @FXML private Label authorLabel;
     @FXML private Label dateAddedLabel;
     @FXML private Label timePrepLabel;
-    @FXML private Spinner<Integer> portionArea;
+    @FXML private Spinner<Double> portionArea;
     @FXML private Pane ingredientPane;
     @FXML private ListView<Ingredient> ingredientListView;
     @FXML private Button exitButton;
@@ -339,7 +338,7 @@ public class RecipePane  extends BasicPaneActions {
 
     private void setPortionAreaProperty(){
         // set spinner for changing portion field
-        portionArea.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000));
+        portionArea.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(1.0, 1000.0));
         portionArea.getEditor().textProperty().set(String.format((recipe.getPortionNumber() % 1 == 0)?"%1.0f":"%1.2f", recipe.getPortionNumber()));
         portionArea.setEditable(true);
         // change portions using input value from keyboard

@@ -23,9 +23,9 @@ public class TimerPane extends BasicPaneActions {
     @FXML private Label secondsTimer;
     @FXML private Label minutesTimer;
     @FXML private Label hoursTimer;
-    @FXML private Spinner<Integer> minutesBox;
-    @FXML private Spinner<Integer> secondsBox;
-    @FXML private Spinner<Integer> hoursBox;
+    @FXML private Spinner<Double> minutesBox;
+    @FXML private Spinner<Double> secondsBox;
+    @FXML private Spinner<Double> hoursBox;
     @FXML private AnchorPane selectPane;
     @FXML private  AnchorPane showPane;
 
@@ -44,9 +44,9 @@ public class TimerPane extends BasicPaneActions {
         });});
     }
 
-    public void setSpinnerProperty(Spinner<Integer> spinner) {
+    public void setSpinnerProperty(Spinner<Double> spinner) {
         // for hours, minutes and seconds spinner
-        spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 10000));
+        spinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, 10000));
         spinner.getEditor().textProperty().set("0");
         spinner.setEditable(true);
         spinner.getEditor().addEventHandler(KeyEvent.KEY_PRESSED, keyEvent -> {
@@ -72,7 +72,7 @@ public class TimerPane extends BasicPaneActions {
     public void startTimer() {
         // show timer and start counting
         scrollUp();
-        timer = new DownTimer(hoursBox.getValue(), minutesBox.getValue(), secondsBox.getValue());
+        timer = new DownTimer((hoursBox.getValue() == null)?0:hoursBox.getValue().intValue(), (minutesBox.getValue() == null)?0:minutesBox.getValue().intValue(), (secondsBox.getValue() == null)?0:secondsBox.getValue().intValue());
         setMedia();
     }
 
