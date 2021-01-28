@@ -79,7 +79,7 @@ public class DatabaseConnection {
 
     public static User login(String username, String password, Label errMess) throws SQLException, IOException {
         // sign into users account and set him as the active user
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         User activeUser = null;
         Statement statement = connection.createStatement();
@@ -114,7 +114,7 @@ public class DatabaseConnection {
 
     public static User register(String username, String password, Label errMess) throws SQLException, IOException {
         // register a new account
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
 
         User activeUser = null;
@@ -143,7 +143,7 @@ public class DatabaseConnection {
 
     public static void deleteUser(String username) throws IOException, SQLException {
         // delete account and all directly linked data
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
         statement.execute("begin delete_account('" +username+ "'); end;");
@@ -154,7 +154,7 @@ public class DatabaseConnection {
     public static String setPassword(String username, String newPassword, String oldPassword) throws SQLException, IOException {
         // change password of a given user
         String status;
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("select * from \"USER\" where USERNAME = '"+username+"'");
@@ -176,7 +176,7 @@ public class DatabaseConnection {
 
     private static List<Recipe> getUserRecipes(String username) throws SQLException, IOException {
         // get user recipe and accessibility
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
         ResultSet result = statement.executeQuery(String.format("SELECT RECIPE_ID, NAME, DATE_ADDED FROM RECIPE WHERE UPPER(OWNER_NAME) = '%s'", username.toUpperCase()));
@@ -195,7 +195,7 @@ public class DatabaseConnection {
 
     private static void getRecipeAccessibility(Recipe recipe) throws IOException, SQLException {
         // get from publicity table information about recipe accessibility
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         Statement stat = connection.createStatement();
         ResultSet resPublicity = stat.executeQuery(String.format("SELECT G.NAME FROM \"GROUP\" G WHERE G.GROUP_ID = (SELECT P.GROUP_ID FROM PUBLICITY P WHERE P.RECIPE_ID = %d)", recipe.getId()));
@@ -212,7 +212,7 @@ public class DatabaseConnection {
 
     private static List<String> getUserFollowed(String username) throws SQLException, IOException {
         // get all users which are followed by a given user
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
         String query = "select FOLLOWING_USERNAME, FOLLOWED_USERNAME from FOLLOWED where lower(FOLLOWING_USERNAME) = '"+username.toLowerCase()+"'";
@@ -228,7 +228,7 @@ public class DatabaseConnection {
 
     private static void saveFollowed(User user) throws IOException, SQLException {
         // saved followed changes to database
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
         if (user.getNewFollowed().size() != 0) {
@@ -263,7 +263,7 @@ public class DatabaseConnection {
 
     private static void saveFavorites(User user) throws IOException, SQLException {
         // saved changes in user favorites to database
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
         for (Recipe recipe: user.getAllFavorites()) {
@@ -295,7 +295,7 @@ public class DatabaseConnection {
 
     public static void addGroup(String name, String username) throws IOException, SQLException {
         // add group of the given name and add user to it
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
         statement.execute("begin add_group('"+username+ "', '" +name+"'); end;");
@@ -305,7 +305,7 @@ public class DatabaseConnection {
 
     public static void deleteGroup(Integer groupID) throws IOException, SQLException {
         // delete group of a given ID
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
         statement.execute("begin delete_group("+groupID+"); end;");
@@ -315,7 +315,7 @@ public class DatabaseConnection {
 
     public static List<Group> getGroups(String username) throws SQLException, IOException {
         // get all groups in which the active user belongs
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
         String query = "select g.GROUP_ID as ID, g.NAME as group_name from \"GROUP\" g join BELONG b on g.GROUP_ID = b.GROUP_ID where b.GROUP_ID != 0 and lower(b.USERNAME) = '"+username.toLowerCase()+"'";
@@ -333,7 +333,7 @@ public class DatabaseConnection {
 
     public static List<Integer> getGroupIDs(String[] groupName) throws IOException, SQLException {
         // retrieve a list of IDs of groups of given names
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
         String query = "select GROUP_ID from \"GROUP\" where lower(NAME) in ('" + groupName[0].toLowerCase() + "'";
@@ -351,7 +351,7 @@ public class DatabaseConnection {
 
     private static List<String> getGroupParticipants(String GroupID) throws SQLException, IOException {
         // get all users which belong to a given group
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
         String query = "select USERNAME from BELONG where GROUP_ID = "+GroupID;
@@ -367,7 +367,7 @@ public class DatabaseConnection {
 
     public static void invite(String username, Integer groupID) throws IOException, SQLException {
         // add given user to a given group
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
         statement.execute("insert into BELONG values (null, "+groupID+", '"+username+"')");
@@ -377,7 +377,7 @@ public class DatabaseConnection {
 
     public static void kickUser(String username, Integer groupID) throws IOException, SQLException {
         // kick a user from a specified group
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
         statement.executeUpdate("delete from BELONG where GROUP_ID = "+groupID+ " and USERNAME = '" +username+ "'");
@@ -389,7 +389,7 @@ public class DatabaseConnection {
 
     public static int addRecipe(Recipe recipe, User activeUser) throws IOException, SQLException {
         // save new recipe in database
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         CallableStatement statement = connection.prepareCall("{ call add_recipe(?, ?, ?, ?, ?, ?, ?, ?, ?) }");
         statement.setString(1, activeUser.getUsername());
@@ -433,7 +433,7 @@ public class DatabaseConnection {
 
     public static void deleteRecipe(User activeUser, Recipe recipe) throws IOException, SQLException {
         // delete user recipe from database
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
         statement.execute("DELETE RECIPE WHERE OWNER_NAME='" + activeUser.getUsername() + "' AND NAME='" + recipe.getName() +"'");
@@ -449,7 +449,7 @@ public class DatabaseConnection {
         // the search engine of our app, queries all available recipes with given conditions
         if (activeUser == null && groupID != null)
             return null;
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
         StringBuilder insideQuery;
@@ -487,7 +487,7 @@ public class DatabaseConnection {
     public static Recipe getSelectedRecipe(int recipeId) {
         // get data of a selected recipe
         try {
-            if (connection == null)
+            if (connection == null || connection.isClosed())
                 setConnection();
             return getRecipe(recipeId);
         } catch (SQLException | IOException err) {
@@ -529,7 +529,7 @@ public class DatabaseConnection {
     public static ArrayList<String> getUnits() throws IOException, SQLException {
         // returns ObservableList of available units names. Does not return "piece" because it is not used in most functions.
         ArrayList<String> unitsList = new ArrayList<>();
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("select NAME from UNIT where name != 'piece'" );
@@ -543,7 +543,7 @@ public class DatabaseConnection {
 
     public static String getBestUnit(String preferredSystem, String currentUnit, Double quantity) throws IOException, SQLException {
         // returns unit from given preferredSystem that is that has te closest to 1 ratio to given currentUnit multiplied by given quantity
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
         String unit;
@@ -565,7 +565,7 @@ public class DatabaseConnection {
     public static List<String> getUnitSystems() throws SQLException, IOException {
         //  returns list that contains all unit systems from the database
 
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
         String query = "select NAME from UNIT_SYSTEM where not NAME like 'N%A'";
@@ -582,7 +582,7 @@ public class DatabaseConnection {
 
     public static Double convertUnit(Double quantity, String firstUnit, String secondUnit) throws IOException, SQLException {
         // returns quantity of ingredient in given unit (secondUnit)
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("select convert_unit('" +firstUnit+ "', '" +secondUnit+ "', " +quantity+ ") as result from dual");
@@ -595,7 +595,7 @@ public class DatabaseConnection {
 
     private static Double changeToDefaultUnit(Ingredient ingredient) throws IOException, SQLException {
         // returns quantity of given ingredient in unit saved for ingredient with this ingredient_list_id in database
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("select INGREDIENT_UNIT from INGREDIENT_LIST where INGREDIENT_LIST_ID = " +ingredient.getId());
@@ -611,7 +611,7 @@ public class DatabaseConnection {
 
     public static void createOpinion(String username, int recipeId, int score, String comment, Label opinionLabel, ListView<String> opinionsView) throws SQLException, IOException {
         // Saves opinion. One user can add only one opinion per recipe. Sets label from OpinionPane with message with information about the success of the operation.
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("select * from OPINION where USERNAME = '"+username+ "' and RECIPE_ID = " + recipeId );
@@ -632,7 +632,7 @@ public class DatabaseConnection {
 
     public static void fillOpinions(Recipe recipe, ListView<String> opinionsView) throws SQLException, IOException {
         // loads recipes opinions into ListView from OpinionPane
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         opinionsView.getItems().clear();
         Statement statement = connection.createStatement();
@@ -654,7 +654,7 @@ public class DatabaseConnection {
 
     public static void deleteOpinion(Recipe recipe, String userName, ListView<String> opinionsView) throws IOException, SQLException {
         // deletes opinion selected by user (user can only select his/hers own opinion).
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("delete from OPINION where USERNAME = '" +userName+ "' and RECIPE_ID = " +recipe.getId());
@@ -666,7 +666,7 @@ public class DatabaseConnection {
 
     public static void reportOpinion(String username, Label label, String opinionAuthor, int recipeId) throws SQLException, IOException {
         // Reports opinion. User can report opinion once. User cant report opinions that don't have comment in them.
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("select * from OPINION where USERNAME = '" +opinionAuthor+ "' and recipe_id = " +recipeId);
@@ -729,7 +729,7 @@ public class DatabaseConnection {
 
     public static Map<Ingredient, String> getGroupShoppingList(Integer groupID) throws IOException, SQLException {
         // get saved group shopping list
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         // get all ingredient_list id from shopping list
         Statement statement = connection.createStatement();
@@ -752,7 +752,7 @@ public class DatabaseConnection {
 
     private static void updateShoppingListView(User activeUser) throws SQLException, IOException {
         // save shopping list to database after changes in session
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery("SELECT * FROM SHOPPING_LIST " +
@@ -822,7 +822,7 @@ public class DatabaseConnection {
 
     public static void shareList(User activeUser, Integer groupID) throws IOException, SQLException {
         // share shopping list with group
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         updateShoppingListView(activeUser);
         if (groupID != null) {
@@ -835,7 +835,7 @@ public class DatabaseConnection {
 
     public static void deleteGroupShoppingList(Integer groupID) throws IOException, SQLException {
         // delete group shopping list in database (change in current session)
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         if (groupID != null) {
             Statement statement = connection.createStatement();
@@ -846,7 +846,7 @@ public class DatabaseConnection {
 
     public static void deleteIngredientFromGroupShoppingList(Integer groupID, Ingredient ingredient) throws IOException, SQLException {
         // delete ingredient from group shopping list changed in current session
-        if (connection == null)
+        if (connection == null || connection.isClosed())
             setConnection();
         if (groupID != null) {
             Statement statement = connection.createStatement();
