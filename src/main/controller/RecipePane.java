@@ -352,15 +352,19 @@ public class RecipePane  extends BasicPaneActions {
                 try {
                     double currNumPortions = Double.parseDouble(portionArea.getEditor().textProperty().get());
                     if (currNumPortions > 0){
-                        changeIngredListViewScale(currNumPortions);
                         recipe.setPortionNumber(currNumPortions);
+                        changeIngredListViewScale(currNumPortions);
+
                     }
-                    else
-                        portionArea.getEditor().textProperty().set(String.format((recipe.getPortionNumber() % 1 == 0)?"%1.0f":"%1.2f", recipe.getPortionNumber()));
+                    else {
+                        portionArea.getEditor().textProperty().set(String.format((recipe.getPortionNumber() % 1 == 0) ? "%1.0f" : "%1.2f", recipe.getPortionNumber()));
+                    }
                 } catch (NumberFormatException e) {
                     portionArea.getEditor().textProperty().set(String.format((recipe.getPortionNumber() % 1 == 0)?"%1.0f":"%1.2f", recipe.getPortionNumber()));
-                } catch (SQLException | IOException err) {
-                    err.printStackTrace();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -372,6 +376,7 @@ public class RecipePane  extends BasicPaneActions {
         try {
             if (currNumPortions.intValue() > 0)
                 changeIngredListViewScale((double)currNumPortions.intValue());
+
             else
                 // if an invalid value is entered
                 portionArea.getEditor().textProperty().set("1");
@@ -382,7 +387,7 @@ public class RecipePane  extends BasicPaneActions {
 
     private void changeIngredListViewScale(Double numPortions) throws IOException, SQLException {
         recipe.scaleIngredientList(numPortions);
-        setIngredListView(this.recipe.getIngredientList(), Boolean.FALSE);
+        setIngredListView(this.recipe.getIngredientList(), Boolean.TRUE);
     }
 
     // menu box options
