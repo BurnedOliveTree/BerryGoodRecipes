@@ -10,21 +10,28 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.TextFlow?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.RecipePane">
-    <center>
-        <TextFlow fx:id="descText" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-            <BorderPane.margin>
-                <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
-            </BorderPane.margin></TextFlow>
-    </center>
-    <top>
-        <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+
+<GridPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.RecipePane">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="260.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="80.0" minWidth="10.0" prefWidth="50.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="50.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="80.0" minWidth="10.0" prefWidth="50.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" prefHeight="48.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+   </rowConstraints>
+   <children>
+        <ToolBar minWidth="200.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="40.0" prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.vgrow="ALWAYS">
             <items>
                 <Button fx:id="exitButton" minHeight="40.0" minWidth="40.0" mnemonicParsing="false" onAction="#onExitButtonAction">
                <graphic>
@@ -33,7 +40,8 @@
                         <Image url="@icons/raspExit.png" />
                      </image>
                   </ImageView>
-               </graphic></Button>
+               </graphic>
+            </Button>
                 <Label minWidth="30.0" />
                 <Button fx:id="scaleButton" minWidth="30.0" mnemonicParsing="false" onAction="#onScaleButtonAction">
                     <graphic>
@@ -80,22 +88,17 @@
             </HBox>
             </items>
         </ToolBar>
-    </top>
-    <left>
-      <ScrollPane hbarPolicy="NEVER" BorderPane.alignment="TOP_RIGHT">
-         <BorderPane.margin>
-            <Insets bottom="10.0" left="20.0" />
-         </BorderPane.margin>
+      <ScrollPane hbarPolicy="NEVER" GridPane.rowIndex="1">
          <content>
             <VBox>
                <children>
-                      <AnchorPane prefHeight="83.0" prefWidth="200.0">
+                      <AnchorPane maxWidth="-Infinity" minWidth="-Infinity" prefHeight="83.0" prefWidth="240.0">
                           <children>
                               <Label fx:id="titleLabel" alignment="CENTER" layoutX="115.0" layoutY="42.0" text="Title" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                         </Label>
                           </children>
                       </AnchorPane>
-                  <VBox fx:id="propertyPane" alignment="TOP_RIGHT">
+                  <VBox fx:id="propertyPane" alignment="TOP_RIGHT" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="240.0">
                      <children>
                               <HBox fx:id="portionPane" alignment="CENTER_RIGHT">
                                   <children>
@@ -103,7 +106,11 @@
                               <Spinner fx:id="portionArea" prefHeight="27.0" prefWidth="87.0" HBox.hgrow="NEVER" />
                                   </children>
                               </HBox>
-                        <Pane fx:id="ingredientPane" />
+                        <Pane fx:id="ingredientPane" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="240.0">
+                           <VBox.margin>
+                              <Insets left="15.0" />
+                           </VBox.margin>
+                        </Pane>
                               <VBox fx:id="propertyBox">
                                   <children>
                                         <Label fx:id="costLabel" prefHeight="4.0" prefWidth="200.0" styleClass="InfoPane" text="Cost:">
@@ -118,7 +125,7 @@
                               </Label>
                               <HBox prefHeight="15.0" prefWidth="195.0">
                                  <children>
-                                              <Label prefHeight="27.0" prefWidth="60.0" text="Author:">
+                                              <Label prefHeight="27.0" prefWidth="65.0" text="Author:">
                                        <padding>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                        </padding>
@@ -126,7 +133,7 @@
                                     <Label fx:id="authorLabel" prefHeight="38.0" prefWidth="152.0" />
                                  </children>
                               </HBox>
-                                        <Label fx:id="dateAddedLabel" text="Date added:">
+                                        <Label fx:id="dateAddedLabel" prefWidth="85.0" text="Date added:">
                                  <padding>
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </padding>
@@ -137,11 +144,16 @@
                   </VBox>
                       <Button fx:id="commentButton" alignment="CENTER" mnemonicParsing="false" onAction="#onCommentButtonAction" text="Comment" />
                </children>
-               <padding>
-                  <Insets right="15.0" />
-               </padding>
             </VBox>
          </content>
+         <GridPane.margin>
+            <Insets bottom="10.0" left="15.0" />
+         </GridPane.margin>
       </ScrollPane>
-    </left>
-</BorderPane>
+        <TextFlow fx:id="descText" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets bottom="50.0" top="50.0" />
+         </GridPane.margin>
+      </TextFlow>
+   </children>
+</GridPane>

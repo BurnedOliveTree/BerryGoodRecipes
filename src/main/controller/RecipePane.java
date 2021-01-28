@@ -128,9 +128,6 @@ public class RecipePane  extends BasicPaneActions {
         Platform.runLater(() -> {
             commentButton.setPrefWidth(propertyBox.getWidth());
             descText.getChildren().add(text);
-            Stage stage = (Stage) descText.getScene().getWindow();
-            stage.setMinHeight(610);
-            stage.setMinWidth(810);
         });
     }
 
