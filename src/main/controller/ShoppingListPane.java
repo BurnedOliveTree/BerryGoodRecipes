@@ -270,11 +270,11 @@ public class ShoppingListPane extends BasicPaneActions {
         // return to proper window
         String path = "";
         if (Pattern.compile("MainPane").matcher(returnPane.getClass().getName()).find())
-            path = "/resources/mainPage.fxml";
+            path = "/mainPage.fxml";
         else if (Pattern.compile("RecipePane").matcher(returnPane.getClass().getName()).find())
-            path = "/resources/recipePage.fxml";
+            path = "/recipePage.fxml";
         else if (Pattern.compile("UserAdminPane").matcher(returnPane.getClass().getName()).find())
-            path = "/resources/userAdminPage.fxml";
+            path = "/userAdminPage.fxml";
         if (!path.equals("")) {
             FXMLLoader loader = loadFXML(returnPane, path);
             changeScene(exitButton, loader);

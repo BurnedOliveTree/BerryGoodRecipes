@@ -30,8 +30,7 @@ public class DatabaseConnection {
     public DatabaseConnection() throws IOException {
         // constructor, user's property is read in it - like theme
         Properties prop = new Properties();
-        String fileName = "src/resources/app.config";
-        InputStream is = new FileInputStream(fileName);
+        InputStream is = getClass().getResourceAsStream("/app.config");
         prop.load(is);
         theme = prop.getProperty("app.theme");
     }
@@ -63,8 +62,7 @@ public class DatabaseConnection {
     public static void setConnection() throws SQLException, IOException {
         // set connection of database, read property for it
         Properties prop = new Properties();
-        String fileName = "src/resources/app.config";
-        InputStream is = new FileInputStream(fileName);
+        InputStream is = DatabaseConnection.class.getResourceAsStream("/app.config");
         prop.load(is);
         String connectionURL = String.format(
                 "jdbc:oracle:thin:%s/%s@//%s:%s/%s",

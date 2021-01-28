@@ -171,7 +171,7 @@ public class RecipeAdminPane extends BasicPaneActions {
 
     private void ShowRecipe(Recipe recipe) {
         // show recipe after double click on user recipe table or favorite table
-        FXMLLoader loader = loadFXML(new RecipePane(recipe, activeUser, null), "/resources/recipePage.fxml");
+        FXMLLoader loader = loadFXML(new RecipePane(recipe, activeUser, null), "/recipePage.fxml");
         changeScene(loader);
         if (activeUser.checkIfFavContainsRecipe(recipe)) {
             if (!activeUser.checkIfRecipeFavorite(recipe)) {
@@ -381,7 +381,7 @@ public class RecipeAdminPane extends BasicPaneActions {
     @FXML
     private void onExitButtonAction() {
         // return to home page
-        FXMLLoader loader = loadFXML(new MainPane(activeUser), "/resources/mainPage.fxml");
+        FXMLLoader loader = loadFXML(new MainPane(activeUser), "/mainPage.fxml");
         changeScene(exitButton, loader);
     }
 

@@ -6,7 +6,6 @@ import main.controller.LoadingPane;
 import main.controller.MainPane;
 import main.userModel.User;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -25,7 +24,6 @@ public class Main extends Application {
         try {
             DatabaseConnection.setConnection();
         } catch (IOException | SQLException e) {
-//            e.printStackTrace();
             Platform.exit();
         }
     }
@@ -34,11 +32,11 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws IOException {
         primaryStage.setTitle("BerryGood Recipes");
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(this.getClass().getResource("/resources/mainPage.fxml"));
+        loader.setLocation(this.getClass().getResource("/mainPage.fxml"));
         MainPane controller = new MainPane(activeUser);
         loader.setControllerFactory(param -> controller);
         Scene scene = new Scene(loader.load());
-        scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/"+DatabaseConnection.theme+".css").toExternalForm());
         if (DatabaseConnection.isThemeLight())
             primaryStage.getIcons().add(new Image("icons/berryLogo.png"));
         else
@@ -51,7 +49,7 @@ public class Main extends Application {
             try {
                 DatabaseConnection.saveUser(activeUser);
                 Properties prop = new Properties();
-                prop.load(new FileInputStream("src/resources/app.config"));
+                prop.load(getClass().getResourceAsStream("/app.config"));
                 prop.setProperty("app.theme", DatabaseConnection.theme);
                 prop.store(new FileOutputStream("src/resources/app.config"), null);
             } catch (SQLException | IOException err) {
@@ -60,8 +58,8 @@ public class Main extends Application {
             Platform.exit();
             System.exit(0);
         });
-        primaryStage.setMinWidth(810);
-        primaryStage.setMinHeight(605);
+        primaryStage.setMinWidth(480);
+        primaryStage.setMinHeight(520);
     }
 
     public static void main(String[] args) throws IOException {
