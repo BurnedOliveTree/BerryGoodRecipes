@@ -114,8 +114,8 @@ public class ScalePane extends BasicPaneActions {
                 inRecipeSize.setText("Size:");
                 inRecipeArea1.setVisible(true);
                 inRecipeArea2.setVisible(true);
-                x1.setText("x");
-                cm1.setText("cm");
+                x1.setText("   x");
+                cm1.setText("  cm");
             } else {
                 cm1.setText("");
                 inRecipeArea1.setVisible(false);
@@ -124,7 +124,7 @@ public class ScalePane extends BasicPaneActions {
                 inRecipeArea2.setText("");
                 inRecipeSize.setText("Diameter:");
                 inRecipeArea1.setVisible(true);
-                x1.setText("cm");
+                x1.setText("  cm");
             }
         }
         else {
@@ -135,8 +135,8 @@ public class ScalePane extends BasicPaneActions {
                 IHaveSize.setText("Size:");
                 IHaveArea1.setVisible(true);
                 IHaveArea2.setVisible(true);
-                x2.setText("x");
-                cm2.setText("cm");
+                x2.setText("   x");
+                cm2.setText("  cm");
             } else {
                 cm2.setText("");
                 IHaveArea1.setVisible(false);
@@ -145,7 +145,7 @@ public class ScalePane extends BasicPaneActions {
                 IHaveArea2.setText("");
                 IHaveSize.setText("Diameter:");
                 IHaveArea1.setVisible(true);
-                x2.setText("cm");
+                x2.setText("  cm");
             }
         }
     }
