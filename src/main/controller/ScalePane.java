@@ -106,8 +106,9 @@ public class ScalePane extends BasicPaneActions {
     }
 
     private void sizeBoxAction(ChoiceBox<String> box) {
+        // shows one or to additional textAreas, depending on which shape is chosen
         if (box.getId().equals("inRecipeBox")) {
-            if (inRecipeBox.getValue().equals("Rectangular")) { // both areas are set visibe bc we need two sides of rectangle
+            if (inRecipeBox.getValue().equals("Rectangular")) { // both areas are set visible bc we need two sides of rectangle
                 inRecipeArea1.setVisible(false);
                 inRecipeArea2.setVisible(false);
                 cm1.setText("");
