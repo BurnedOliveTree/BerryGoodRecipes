@@ -12,6 +12,7 @@ import main.DatabaseConnection;
 import main.recipeModel.Converter;
 
 import java.io.IOException;
+import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 
@@ -91,9 +92,15 @@ public class ScalePane extends BasicPaneActions {
             return;
         }
         try{
+
+            if (!DatabaseConnection.checkDoubleDatabaseReduction(unitArea1Text,11,5)){
+                unitLabel.setText("Quantity is too large");
+                return;
+            }
             quantity = Double.parseDouble(unitArea1Text);
         }catch(NumberFormatException e){
             unitLabel.setText("Wrong quantity");
+            return;
         }
         unitArea2.setText(Double.toString(DatabaseConnection.convertUnit(quantity,firstChoice,secondChoice)));
     }
@@ -169,10 +176,13 @@ public class ScalePane extends BasicPaneActions {
             } else {
                 inRecipeVolume = converter.getRectangularMoldVolume(Double.parseDouble(a2), Double.parseDouble(b2), Double.parseDouble(h2)); // volume of rectangular mold used in recipe
             }
+            if (IHaveVolume == 0){
+                moldLabel.setText("Wrong values were given");
+                return;
+            }
             double result = inRecipeVolume / IHaveVolume;
             moldLabel.setWrapText(true);
             DecimalFormat df = new DecimalFormat("###.###");
-
             moldLabel.setText("You need to use " + df.format(result) + "x ingredients in recipe");
         }
         catch(NumberFormatException e){
