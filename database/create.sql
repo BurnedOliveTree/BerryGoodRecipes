@@ -29,7 +29,7 @@ create table "USER"
 (
     USERNAME varchar2(40 byte) not null constraint USER_PK primary key,
     PASSWORD varchar2(40 byte) not null,
-    UNIT_SYSTEM_ID VARCHAR2(40 byte) constraint USER_UNIT_SYSTEM_FK references UNIT_SYSTEM (NAME)
+    UNIT_SYSTEM_ID VARCHAR2(40 byte) default 'Default' not null constraint USER_UNIT_SYSTEM_FK references UNIT_SYSTEM (NAME)
 );
 
 create table FOLLOWED

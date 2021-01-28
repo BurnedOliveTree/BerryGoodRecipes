@@ -100,9 +100,10 @@ public class DatabaseConnection {
                 List<Recipe> userRecipes = getUserRecipes(username);
                 List<Recipe> favorites = getUserFavorites(username);
                 List<String> followed = getUserFollowed(username);
+                String unitSystem = getUserPreferredUnitSystem(username);
                 List<Group> groups = getGroups(username);
                 ArrayList<Ingredient> shoppingList = getShoppingList(username);
-                activeUser = new User(username, userRecipes, favorites, followed, shoppingList, groups, DatabaseConnection.getUnits());
+                activeUser = new User(username, userRecipes, favorites, followed, unitSystem, shoppingList, groups, DatabaseConnection.getUnits());
                 errMess.setText("Successfully logged in!");
             } else {
                 errMess.setText("Incorrect password!");
@@ -132,7 +133,7 @@ public class DatabaseConnection {
             errMess.setText("Username already exists!");
         }
         else {
-            if (!statement.execute("insert into \"USER\" values('"+username+"', '"+password+"', null)")) {
+            if (!statement.execute("insert into \"USER\" values('"+username+"', '"+password+"', 'Default')")) {
                 activeUser = new User(username);
                 errMess.setText("Successfully created an account!");
             }
@@ -286,12 +287,37 @@ public class DatabaseConnection {
         connection.commit();
     }
 
+    private static String getUserPreferredUnitSystem(String username) throws SQLException {
+        // get user's preferred unit system
+        Statement statement = connection.createStatement();
+        ResultSet result = statement.executeQuery("select UNIT_SYSTEM_ID from \"USER\" where lower(USERNAME) = '"+username.toLowerCase()+"'");
+        String unitSystem = "Default";
+        if (result.next()) {
+            unitSystem = result.getString("UNIT_SYSTEM_ID");
+        }
+        result.close();
+        statement.close();
+        return unitSystem;
+    }
+
+    private static void savePreferredUnitSystem(User user) throws IOException, SQLException {
+        // saves default unit system of user
+        if (connection == null)
+            setConnection();
+        Statement statement = connection.createStatement();
+        System.out.println("update \"USER\" set UNIT_SYSTEM_ID = "+user.getDefaultUnitSystem()+" where lower(USERNAME) = "+user.getUsername().toLowerCase());
+        statement.executeUpdate("update \"USER\" set UNIT_SYSTEM_ID = '"+user.getDefaultUnitSystem()+"' where lower(USERNAME) = '"+user.getUsername().toLowerCase()+"'");
+        statement.close();
+        connection.commit();
+    }
+
     public static void saveUser(User user) throws SQLException, IOException {
         // called when the application is closed, save information created in the session to the database
         if (user != null) {
             saveFavorites(user);
             saveFollowed(user);
             updateShoppingListView(user);
+            savePreferredUnitSystem(user);
         }
         if (connection != null)
             closeConnection();

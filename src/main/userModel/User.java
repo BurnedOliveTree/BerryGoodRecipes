@@ -18,7 +18,7 @@ public class User {
     private final List<String> deletedFollowed = new LinkedList<>();
     private List<Group> userGroups;
     private List<Ingredient> shoppingList;
-    private String defaultUnitSystem = null;
+    private String defaultUnitSystem = "Default";
     public ArrayList<String> units = new ArrayList<>();
 
     // constructor
@@ -32,11 +32,12 @@ public class User {
         this.shoppingList = new ArrayList<>();
     }
 
-    public User(String argUsername, List<Recipe> userRecipes, List<Recipe> favorites, List<String> followed, ArrayList<Ingredient> shoppingList, List<Group> userGroups, ArrayList<String> units) {
+    public User(String argUsername, List<Recipe> userRecipes, List<Recipe> favorites, List<String> followed, String unitSystem, ArrayList<Ingredient> shoppingList, List<Group> userGroups, ArrayList<String> units) {
         username = argUsername;
         this.userRecipes = userRecipes;
         this.favorites = favorites;
         this.followed = followed;
+        this.defaultUnitSystem = unitSystem;
         this.shoppingList = shoppingList;
         this.userGroups = userGroups;
         this.units = units;
