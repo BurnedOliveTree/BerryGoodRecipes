@@ -106,7 +106,7 @@ public class OpinionPane extends BasicPaneActions {
     }
 
     @FXML private void exitAction() {
-        FXMLLoader loader = loadFXML(returnPane, "/resources/recipePage.fxml");
+        FXMLLoader loader = loadFXML(returnPane, "/recipePage.fxml");
         changeScene(exitButton, loader);
     }
 }

@@ -434,18 +434,18 @@ public class RecipePane  extends BasicPaneActions {
 
     @FXML
     private void onCommentButtonAction() {
-        FXMLLoader loader = loadFXML(new OpinionPane(this.recipe, activeUser, this), "/resources/opinionPage.fxml");
+        FXMLLoader loader = loadFXML(new OpinionPane(this.recipe, activeUser, this), "/opinionPage.fxml");
         changeScene(commentButton, loader);
     }
     @FXML
     private void onScaleButtonAction() {
-        FXMLLoader loader = loadFXML(new ScalePane(this), "/resources/scalePage.fxml");
+        FXMLLoader loader = loadFXML(new ScalePane(this), "/scalePage.fxml");
         changeScene(scaleButton, loader);
     }
     @FXML
     private void onExitButtonAction() {
         if (returnPane != null) {
-            FXMLLoader loader = loadFXML(returnPane, "/resources/mainPage.fxml");
+            FXMLLoader loader = loadFXML(returnPane, "/mainPage.fxml");
             changeScene(exitButton, loader);
         } else {
             exitButton.getScene().getWindow().hide();
@@ -454,12 +454,12 @@ public class RecipePane  extends BasicPaneActions {
     @FXML
     private void onShoppingListButtonAction() {
 
-        FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, new RecipePane(new Recipe(this.recipe), this.activeUser, this.returnPane)), "/resources/shoppingListPage.fxml");
+        FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, new RecipePane(new Recipe(this.recipe), this.activeUser, this.returnPane)), "/shoppingListPage.fxml");
         changeScene(shoppingListButton, loader);
     }
     @FXML
     private void onTimeButtonAction() {
-        FXMLLoader loader = loadFXML(new TimerPane(), "/resources/timerPage.fxml");
+        FXMLLoader loader = loadFXML(new TimerPane(), "/timerPage.fxml");
         changeScene(loader, 0, 200);
     }
 

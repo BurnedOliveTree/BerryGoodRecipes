@@ -66,7 +66,7 @@ public class BasicPaneActions {
                 stage = new Stage();
             else
                 stage = (Stage) node.getScene().getWindow();
-            scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
+            scene.getStylesheets().add(getClass().getResource("/"+DatabaseConnection.theme+".css").toExternalForm());
             if (DatabaseConnection.isThemeLight())
                 stage.getIcons().add(new Image("icons/berryLogo.png"));
             else
@@ -118,7 +118,7 @@ public class BasicPaneActions {
         imageView.setFitWidth(64);
         alert.setGraphic(imageView);
         alert.setContentText(contextText);
-        alert.getDialogPane().getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
+        alert.getDialogPane().getStylesheets().add(getClass().getResource("/"+DatabaseConnection.theme+".css").toExternalForm());
         return alert.showAndWait();
     }
 }

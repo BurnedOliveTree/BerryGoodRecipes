@@ -79,7 +79,7 @@ public class UserAdminPane extends BasicPaneActions {
 
             MenuItem menuItem = new MenuItem("Show shopping list");
             menuItem.setOnAction(e -> {
-                FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, this, group), "/resources/shoppingListPage.fxml");
+                FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, this, group), "/shoppingListPage.fxml");
                 changeScene(exitButton, loader);
             });
             tempButton.getItems().add(menuItem);
@@ -154,7 +154,7 @@ public class UserAdminPane extends BasicPaneActions {
         if (mouseEvent.isPrimaryButtonDown() && mouseEvent.getClickCount() == 2) {
             String username = followedList.getSelectionModel().getSelectedItem();
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/mainPage.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/mainPage.fxml"));
             MainPane controller = new MainPane(activeUser);
             loader.setControllerFactory(param -> controller);
             changeScene(exitButton, loader);
@@ -167,7 +167,7 @@ public class UserAdminPane extends BasicPaneActions {
     public void getGroupRecipes(String groupName) {
         // show recipes of a given group
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/resources/mainPage.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/mainPage.fxml"));
             MainPane controller = new MainPane(activeUser);
             loader.setControllerFactory(param -> controller);
             changeScene(exitButton, loader);
@@ -220,7 +220,7 @@ public class UserAdminPane extends BasicPaneActions {
     }
 
     @FXML private void onExitButtonAction() {
-        FXMLLoader loader = loadFXML(new MainPane(activeUser), "/resources/mainPage.fxml");
+        FXMLLoader loader = loadFXML(new MainPane(activeUser), "/mainPage.fxml");
         changeScene(exitButton, loader);
     }
 }

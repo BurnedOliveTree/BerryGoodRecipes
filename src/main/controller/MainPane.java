@@ -224,10 +224,10 @@ public class MainPane extends BasicPaneActions {
             int tempInt = recipe.getId();
             tempButton.setOnMouseClicked(mouseEvent -> {
                 if(mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
-                    FXMLLoader loader = loadFXML(new RecipePane(DatabaseConnection.getSelectedRecipe(tempInt), activeUser, new MainPane(activeUser)), "/resources/recipePage.fxml");
+                    FXMLLoader loader = loadFXML(new RecipePane(DatabaseConnection.getSelectedRecipe(tempInt), activeUser, new MainPane(activeUser)), "/recipePage.fxml");
                     changeScene(basketButton, loader);
                 } else if (mouseEvent.getButton().equals(MouseButton.SECONDARY)) {
-                    FXMLLoader loader = loadFXML(new RecipePane(DatabaseConnection.getSelectedRecipe(tempInt), activeUser, null), "/resources/recipePage.fxml");
+                    FXMLLoader loader = loadFXML(new RecipePane(DatabaseConnection.getSelectedRecipe(tempInt), activeUser, null), "/recipePage.fxml");
                     changeScene(null, loader);
                 }
             });
@@ -374,7 +374,7 @@ public class MainPane extends BasicPaneActions {
         // resets theme, useful for setting preferred theme
         logo.getScene().getStylesheets().remove(0);
         ((Stage) logo.getScene().getWindow()).getIcons().remove(0);
-        logo.getScene().getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
+        logo.getScene().getStylesheets().add(getClass().getResource("/"+DatabaseConnection.theme+".css").toExternalForm());
         if (DatabaseConnection.isThemeLight()) {
             logo.setImage(new Image("icons/berryLogo.png"));
             recipePic.setImage(new Image("icons/berryRecipe.png"));
