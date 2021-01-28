@@ -128,9 +128,6 @@ public class RecipePane  extends BasicPaneActions {
         Platform.runLater(() -> {
             commentButton.setPrefWidth(propertyBox.getWidth());
             descText.getChildren().add(text);
-            Stage stage = (Stage) descText.getScene().getWindow();
-            stage.setMinHeight(610);
-            stage.setMinWidth(810);
         });
     }
 
@@ -352,15 +349,19 @@ public class RecipePane  extends BasicPaneActions {
                 try {
                     double currNumPortions = Double.parseDouble(portionArea.getEditor().textProperty().get());
                     if (currNumPortions > 0){
-                        changeIngredListViewScale(currNumPortions);
                         recipe.setPortionNumber(currNumPortions);
+                        changeIngredListViewScale(currNumPortions);
+
                     }
-                    else
-                        portionArea.getEditor().textProperty().set(String.format((recipe.getPortionNumber() % 1 == 0)?"%1.0f":"%1.2f", recipe.getPortionNumber()));
+                    else {
+                        portionArea.getEditor().textProperty().set(String.format((recipe.getPortionNumber() % 1 == 0) ? "%1.0f" : "%1.2f", recipe.getPortionNumber()));
+                    }
                 } catch (NumberFormatException e) {
                     portionArea.getEditor().textProperty().set(String.format((recipe.getPortionNumber() % 1 == 0)?"%1.0f":"%1.2f", recipe.getPortionNumber()));
-                } catch (SQLException | IOException err) {
-                    err.printStackTrace();
+                } catch (SQLException throwables) {
+                    throwables.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         });
@@ -372,6 +373,7 @@ public class RecipePane  extends BasicPaneActions {
         try {
             if (currNumPortions.intValue() > 0)
                 changeIngredListViewScale((double)currNumPortions.intValue());
+
             else
                 // if an invalid value is entered
                 portionArea.getEditor().textProperty().set("1");
@@ -382,7 +384,7 @@ public class RecipePane  extends BasicPaneActions {
 
     private void changeIngredListViewScale(Double numPortions) throws IOException, SQLException {
         recipe.scaleIngredientList(numPortions);
-        setIngredListView(this.recipe.getIngredientList(), Boolean.FALSE);
+        setIngredListView(this.recipe.getIngredientList(), Boolean.TRUE);
     }
 
     // menu box options
@@ -437,18 +439,18 @@ public class RecipePane  extends BasicPaneActions {
 
     @FXML
     private void onCommentButtonAction() {
-        FXMLLoader loader = loadFXML(new OpinionPane(this.recipe, activeUser, this), "/resources/opinionPage.fxml");
+        FXMLLoader loader = loadFXML(new OpinionPane(this.recipe, activeUser, this), "/opinionPage.fxml");
         changeScene(commentButton, loader);
     }
     @FXML
     private void onScaleButtonAction() {
-        FXMLLoader loader = loadFXML(new ScalePane(this), "/resources/scalePage.fxml");
+        FXMLLoader loader = loadFXML(new ScalePane(this), "/scalePage.fxml");
         changeScene(scaleButton, loader);
     }
     @FXML
     private void onExitButtonAction() {
         if (returnPane != null) {
-            FXMLLoader loader = loadFXML(returnPane, "/resources/mainPage.fxml");
+            FXMLLoader loader = loadFXML(returnPane, "/mainPage.fxml");
             changeScene(exitButton, loader);
         } else {
             exitButton.getScene().getWindow().hide();
@@ -457,12 +459,12 @@ public class RecipePane  extends BasicPaneActions {
     @FXML
     private void onShoppingListButtonAction() {
 
-        FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, new RecipePane(new Recipe(this.recipe), this.activeUser, this.returnPane)), "/resources/shoppingListPage.fxml");
+        FXMLLoader loader = loadFXML(new ShoppingListPane(activeUser, new RecipePane(new Recipe(this.recipe), this.activeUser, this.returnPane)), "/shoppingListPage.fxml");
         changeScene(shoppingListButton, loader);
     }
     @FXML
     private void onTimeButtonAction() {
-        FXMLLoader loader = loadFXML(new TimerPane(), "/resources/timerPage.fxml");
+        FXMLLoader loader = loadFXML(new TimerPane(), "/timerPage.fxml");
         changeScene(loader, 0, 200);
     }
 

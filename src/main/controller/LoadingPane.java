@@ -21,14 +21,14 @@ public class LoadingPane extends Preloader {
         FXMLLoader loader;
         if (DatabaseConnection.isThemeLight()) {
             stage.getIcons().add(new Image("icons/berryLogo.png"));
-            loader = new FXMLLoader(this.getClass().getResource("/resources/berryLoadingPage.fxml"));
+            loader = new FXMLLoader(this.getClass().getResource("/berryLoadingPage.fxml"));
         }
         else {
             stage.getIcons().add(new Image("icons/raspLogo.png"));
-            loader = new FXMLLoader(this.getClass().getResource("/resources/raspLoadingPage.fxml"));
+            loader = new FXMLLoader(this.getClass().getResource("/raspLoadingPage.fxml"));
         }
         Scene scene = new Scene(loader.load());
-        scene.getStylesheets().add(getClass().getResource("/resources/"+DatabaseConnection.theme+".css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/"+DatabaseConnection.theme+".css").toExternalForm());
         stage.setScene(scene);
         stage.show();
     }

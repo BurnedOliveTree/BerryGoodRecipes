@@ -30,8 +30,7 @@ public class DatabaseConnection {
     public DatabaseConnection() throws IOException {
         // constructor, user's property is read in it - like theme
         Properties prop = new Properties();
-        String fileName = "src/resources/app.config";
-        InputStream is = new FileInputStream(fileName);
+        InputStream is = getClass().getResourceAsStream("/app.config");
         prop.load(is);
         theme = prop.getProperty("app.theme");
     }
@@ -42,8 +41,16 @@ public class DatabaseConnection {
     }
 
     public static boolean checkDoubleDatabaseReduction(String text) {
+
         String[] splitedString = text.split("[\\.\\,]");
         if (splitedString.length == 2 && splitedString[0].length() + splitedString[1].length() <= DoublePrecisionValue &&  splitedString[1].length() <= DoubleScaleValue)
+            return true;
+        else return splitedString.length == 1 && splitedString[0].length() <= DoublePrecisionValue;
+    }
+
+    public static boolean checkDoubleDatabaseReduction(String text, int precision, int scale){
+        String[] splitedString = text.split("[\\.\\,]");
+        if (splitedString.length == 2 && splitedString[0].length() + splitedString[1].length() <= precision &&  splitedString[1].length() <= scale)
             return true;
         else return splitedString.length == 1 && splitedString[0].length() <= DoublePrecisionValue;
     }
@@ -55,8 +62,7 @@ public class DatabaseConnection {
     public static void setConnection() throws SQLException, IOException {
         // set connection of database, read property for it
         Properties prop = new Properties();
-        String fileName = "src/resources/app.config";
-        InputStream is = new FileInputStream(fileName);
+        InputStream is = DatabaseConnection.class.getResourceAsStream("/app.config");
         prop.load(is);
         String connectionURL = String.format(
                 "jdbc:oracle:thin:%s/%s@//%s:%s/%s",

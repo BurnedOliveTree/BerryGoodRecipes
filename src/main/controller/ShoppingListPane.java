@@ -115,7 +115,7 @@ public class ShoppingListPane extends BasicPaneActions {
                     Ingredient ingredient = new Ingredient(null, DatabaseConnection.convertUnit(Double.parseDouble(quantity.getText()), unit.getSelectionModel().getSelectedItem(), "gram"),"gram", name.getText());
                     ingredient.setShoppingListStatus(Status.added);
                     if (activeUser.qualifiesToAdd(ingredient.getName())){
-                        activeUser.editQuantityInShopping(ingredient.getName(), ingredient.getQuantity());
+                        if(!activeUser.editQuantityInShopping(ingredient.getName(), ingredient.getQuantity())) showWarning("Too large quantity!");
                     }
                     else {
                         activeUser.addToShoppingList(ingredient);
@@ -270,11 +270,11 @@ public class ShoppingListPane extends BasicPaneActions {
         // return to proper window
         String path = "";
         if (Pattern.compile("MainPane").matcher(returnPane.getClass().getName()).find())
-            path = "/resources/mainPage.fxml";
+            path = "/mainPage.fxml";
         else if (Pattern.compile("RecipePane").matcher(returnPane.getClass().getName()).find())
-            path = "/resources/recipePage.fxml";
+            path = "/recipePage.fxml";
         else if (Pattern.compile("UserAdminPane").matcher(returnPane.getClass().getName()).find())
-            path = "/resources/userAdminPage.fxml";
+            path = "/userAdminPage.fxml";
         if (!path.equals("")) {
             FXMLLoader loader = loadFXML(returnPane, path);
             changeScene(exitButton, loader);

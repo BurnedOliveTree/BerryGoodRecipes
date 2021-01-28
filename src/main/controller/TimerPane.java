@@ -1,4 +1,5 @@
 package main.controller;
+
 import javafx.animation.ParallelTransition;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
@@ -12,7 +13,6 @@ import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -65,7 +65,7 @@ public class TimerPane extends BasicPaneActions {
 
     private void setMedia(){
         // method for setting the media to handle the alarm
-        media = new Media(new File("src/resources/dingdong.mp3").toURI().toString());
+        media = new Media(getClass().getResource("/dingdong.mp3").toExternalForm());
         mediaPlayer = new MediaPlayer(media);
         mediaPlayer.setVolume(0.5);
     }
