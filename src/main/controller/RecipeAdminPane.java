@@ -113,6 +113,7 @@ public class RecipeAdminPane extends BasicPaneActions {
                         myRecipesTable.getItems().remove(recipe);
                         myRecipesTable.refresh();
                         if (favTable.getItems().contains(recipe)) {
+                            activeUser.removeFavorite(recipe);
                             favTable.getItems().remove(recipe);
                             favTable.refresh();
                         }
@@ -161,6 +162,7 @@ public class RecipeAdminPane extends BasicPaneActions {
             Recipe recipe = favTable.getSelectionModel().getSelectedItem();
             if (recipe != null) {
                 activeUser.removeFavorite(recipe);
+                favTable.getItems().remove(recipe);
                 favTable.refresh();
             }
         });
@@ -220,6 +222,7 @@ public class RecipeAdminPane extends BasicPaneActions {
                 Recipe recipe = new Recipe(null, titleField.getText(), activeUser.getUsername(), descriptionArea.getText(), publicity, preparationTime, cost, portions, ingredientList);
                 int recipeId  = DatabaseConnection.addRecipe(recipe, activeUser);
                 recipe.setId(recipeId);
+                recipe.setGroupName(group.getName());
                 clearRecipe();
                 activeUser.addUserRecipe(recipe);
                 myRecipesTable.getItems().add(recipe);

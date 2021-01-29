@@ -58,7 +58,7 @@ public class Main extends Application {
             Platform.exit();
             System.exit(0);
         });
-        primaryStage.setMinWidth(480);
+        primaryStage.setMinWidth(520);
         primaryStage.setMinHeight(520);
     }
 

@@ -5,6 +5,7 @@
 .root {
     -fx-focus-color: -fx-accent;
     -fx-default-button: -fx-control-inner-background;
+    -fx-faint-focus-color: -fx-accent;
 
     -fx-font-family: 'Mali Medium';
     -fx-mid-text-color: -fx-light-text-color;
@@ -22,6 +23,13 @@
 }
 .menu-button > .arrow-button > .arrow {
     -fx-padding: 0;
+}
+.list-cell:filled:selected {
+    -fx-background: -fx-accent;
+    -fx-background-color: -fx-accent;
+}
+.table-view {
+    -fx-selection-bar-non-focused: -fx-accent;
 }
 .berry-text {
     -fx-font-family: 'Mali Medium';

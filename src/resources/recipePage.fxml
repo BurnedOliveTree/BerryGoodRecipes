@@ -18,7 +18,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.TextFlow?>
 
-
 <GridPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.controller.RecipePane">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="260.0" />
@@ -113,19 +112,19 @@
                         </Pane>
                               <VBox fx:id="propertyBox">
                                   <children>
-                                        <Label fx:id="costLabel" prefHeight="4.0" prefWidth="200.0" styleClass="InfoPane" text="Cost:">
+                                        <Label fx:id="costLabel" prefHeight="27.0" prefWidth="259.0" styleClass="InfoPane" text="Cost:">
                                  <padding>
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </padding>
                               </Label>
-                                        <Label fx:id="timePrepLabel" prefHeight="27.0" prefWidth="200.0" text="Time preparation:">
+                                        <Label fx:id="timePrepLabel" prefHeight="27.0" prefWidth="244.0" text="Time preparation:">
                                  <padding>
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </padding>
                               </Label>
                               <HBox prefHeight="15.0" prefWidth="195.0">
                                  <children>
-                                              <Label prefHeight="27.0" prefWidth="65.0" text="Author:">
+                                              <Label prefHeight="27.0" prefWidth="60.0" text="Author:">
                                        <padding>
                                           <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                        </padding>
@@ -133,7 +132,7 @@
                                     <Label fx:id="authorLabel" prefHeight="38.0" prefWidth="152.0" />
                                  </children>
                               </HBox>
-                                        <Label fx:id="dateAddedLabel" prefWidth="85.0" text="Date added:">
+                                        <Label fx:id="dateAddedLabel" prefHeight="27.0" prefWidth="245.0" text="Date added:">
                                  <padding>
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </padding>

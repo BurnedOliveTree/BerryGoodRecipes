@@ -16,7 +16,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.*;
 
-import javafx.stage.Stage;
 import main.DatabaseConnection;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
@@ -117,7 +116,7 @@ public class RecipePane  extends BasicPaneActions {
             shoppingListButton.setDisable(true);
             authorLabel.setStyle("-fx-underline: false;");
         } else {
-            ingredientListView.setPrefHeight(this.recipe.getIngredientList().size() * 30);
+            ingredientListView.setPrefHeight(this.recipe.getIngredientList().size() * 32);
             if (activeUser.checkIfRecipeFavorite(this.recipe)) {
                 LikePic.setImage(new Image("icons/favoriteClicked.png"));
             }
@@ -358,10 +357,8 @@ public class RecipePane  extends BasicPaneActions {
                     }
                 } catch (NumberFormatException e) {
                     portionArea.getEditor().textProperty().set(String.format((recipe.getPortionNumber() % 1 == 0)?"%1.0f":"%1.2f", recipe.getPortionNumber()));
-                } catch (SQLException throwables) {
-                    throwables.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (SQLException | IOException err) {
+                    err.printStackTrace();
                 }
             }
         });
@@ -378,7 +375,7 @@ public class RecipePane  extends BasicPaneActions {
                 // if an invalid value is entered
                 portionArea.getEditor().textProperty().set("1");
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            portionArea.getEditor().textProperty().set(oldValue.toString());
         }
     }
 
