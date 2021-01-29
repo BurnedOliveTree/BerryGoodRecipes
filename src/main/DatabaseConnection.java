@@ -652,11 +652,14 @@ public class DatabaseConnection {
             opinionLabel.setText("You have already added your opinion!");
         }
         else {
-            statement.execute("insert into OPINION values(null,'" + username + "','" + recipeId + "', '" + score + "', '" + comment + "')");
-            opinionLabel.setText("Opinion saved!");
-            String opinion = username + "    Score: " +score + "\n" + comment + "\n";
-            opinionsView.getItems().add(opinion);
-
+            try {
+                statement.execute("insert into OPINION values(null,'" + username + "','" + recipeId + "', '" + score + "', '" + comment + "')");
+                opinionLabel.setText("Opinion saved!");
+                String opinion = username + "    Score: " + score + "\n" + comment + "\n";
+                opinionsView.getItems().add(opinion);
+            }catch(java.sql.SQLException e){
+                opinionLabel.setText("Comment is too long");
+            }
         }
         resultSet.close();
         statement.close();
