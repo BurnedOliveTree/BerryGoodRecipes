@@ -305,7 +305,6 @@ public class DatabaseConnection {
         if (connection == null)
             setConnection();
         Statement statement = connection.createStatement();
-        System.out.println("update \"USER\" set UNIT_SYSTEM_ID = "+user.getDefaultUnitSystem()+" where lower(USERNAME) = "+user.getUsername().toLowerCase());
         statement.executeUpdate("update \"USER\" set UNIT_SYSTEM_ID = '"+user.getDefaultUnitSystem()+"' where lower(USERNAME) = '"+user.getUsername().toLowerCase()+"'");
         statement.close();
         connection.commit();
