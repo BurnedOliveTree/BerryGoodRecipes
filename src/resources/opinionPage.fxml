@@ -16,7 +16,7 @@
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="80.0" />
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="100.0" />
-      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="80.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="100.0" />
       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="68.0" />
   </columnConstraints>
   <rowConstraints>
@@ -47,8 +47,7 @@
       </Label>
       <GridPane GridPane.columnIndex="2" GridPane.rowIndex="1">
         <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="37.0" minWidth="9.0" prefWidth="9.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="79.0" minWidth="10.0" prefWidth="79.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="100.0" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints maxHeight="114.0" minHeight="10.0" prefHeight="114.0" vgrow="SOMETIMES" />
@@ -57,14 +56,13 @@
           <RowConstraints maxHeight="133.0" minHeight="10.0" prefHeight="124.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="reportButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="58.0" text="Report" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <Button fx:id="deleteButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="59.0" text="Delete" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Button fx:id="reportButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Report" GridPane.rowIndex="1" />
+            <Button fx:id="deleteButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Delete" GridPane.rowIndex="2" />
          </children>
       </GridPane>
       <GridPane GridPane.columnIndex="2" GridPane.rowIndex="4">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="39.0" minWidth="10.0" prefWidth="12.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="77.0" minWidth="10.0" prefWidth="76.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="100.0" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -72,7 +70,7 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="okButton" mnemonicParsing="false" onAction="#okButtonAction" prefHeight="25.0" prefWidth="54.0" text="OK" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Button fx:id="okButton" mnemonicParsing="false" onAction="#okButtonAction" prefHeight="25.0" prefWidth="80.0" text="OK" GridPane.rowIndex="1" />
          </children>
       </GridPane>
       <Label prefHeight="24.0" prefWidth="70.0" styleClass="berry-text" text="Score:" GridPane.columnIndex="1" GridPane.rowIndex="2">
