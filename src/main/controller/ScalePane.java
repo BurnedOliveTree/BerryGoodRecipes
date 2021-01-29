@@ -106,16 +106,17 @@ public class ScalePane extends BasicPaneActions {
     }
 
     private void sizeBoxAction(ChoiceBox<String> box) {
+        // shows one or to additional textAreas, depending on which shape is chosen
         if (box.getId().equals("inRecipeBox")) {
-            if (inRecipeBox.getValue().equals("Rectangular")) { // both areas are set visibe bc we need two sides of rectangle
+            if (inRecipeBox.getValue().equals("Rectangular")) { // both areas are set visible bc we need two sides of rectangle
                 inRecipeArea1.setVisible(false);
                 inRecipeArea2.setVisible(false);
                 cm1.setText("");
                 inRecipeSize.setText("Size:");
                 inRecipeArea1.setVisible(true);
                 inRecipeArea2.setVisible(true);
-                x1.setText("x");
-                cm1.setText("cm");
+                x1.setText("   x");
+                cm1.setText("  cm");
             } else {
                 cm1.setText("");
                 inRecipeArea1.setVisible(false);
@@ -124,7 +125,7 @@ public class ScalePane extends BasicPaneActions {
                 inRecipeArea2.setText("");
                 inRecipeSize.setText("Diameter:");
                 inRecipeArea1.setVisible(true);
-                x1.setText("cm");
+                x1.setText("  cm");
             }
         }
         else {
@@ -135,8 +136,8 @@ public class ScalePane extends BasicPaneActions {
                 IHaveSize.setText("Size:");
                 IHaveArea1.setVisible(true);
                 IHaveArea2.setVisible(true);
-                x2.setText("x");
-                cm2.setText("cm");
+                x2.setText("   x");
+                cm2.setText("  cm");
             } else {
                 cm2.setText("");
                 IHaveArea1.setVisible(false);
@@ -145,7 +146,7 @@ public class ScalePane extends BasicPaneActions {
                 IHaveArea2.setText("");
                 IHaveSize.setText("Diameter:");
                 IHaveArea1.setVisible(true);
-                x2.setText("cm");
+                x2.setText("  cm");
             }
         }
     }
