@@ -114,14 +114,14 @@ public class RecipePane  extends BasicPaneActions {
             ingredientListView.setPrefHeight(this.recipe.getIngredientList().size() * 27);
             likeButton.setDisable(true);
             shoppingListButton.setDisable(true);
-            authorLabel.setStyle("-fx-underline: false;");
+            super.setContextMenu(authorLabel, createShowRecipesMenuItem());
         } else {
             ingredientListView.setPrefHeight(this.recipe.getIngredientList().size() * 32);
             if (activeUser.checkIfRecipeFavorite(this.recipe)) {
                 LikePic.setImage(new Image("icons/favoriteClicked.png"));
             }
             super.setContextMenu(ingredientListView, createDeleteFromShoppingListItem(), createAddToShoppingListItem(), createChangeUnit());
-            super.setContextMenu(authorLabel, createFollowMenuItem(), createInviteMenu());
+            super.setContextMenu(authorLabel, createShowRecipesMenuItem(), createFollowMenuItem(), createInviteMenu());
         }
 
         Platform.runLater(() -> {
@@ -131,6 +131,25 @@ public class RecipePane  extends BasicPaneActions {
     }
 
     // context menu bind with author label
+
+    private MenuItem createShowRecipesMenuItem() {
+        // after right pressing on mouse button on author label. Create opportunity to show all user recipes
+        MenuItem menuItem = new MenuItem("Show recipes");
+        menuItem.setOnAction(e -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/mainPage.fxml"));
+                MainPane controller = new MainPane(activeUser);
+                loader.setControllerFactory(param -> controller);
+                changeScene(exitButton, loader);
+
+                controller.search.setText("user:" + recipe.getAuthor());
+                controller.search();
+            } catch (SQLException | IOException err) {
+                err.printStackTrace();
+            }
+        });
+        return menuItem;
+    }
 
     private MenuItem createFollowMenuItem() {
         // after right pressing on mouse button on author label. Create opportunity to follow author of recipe
