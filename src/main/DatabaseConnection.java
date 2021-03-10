@@ -6,11 +6,9 @@ import main.userModel.User;
 import main.recipeModel.Ingredient;
 import main.recipeModel.Recipe;
 
+import javafx.application.Platform;
 import javafx.scene.control.*;
 
-import oracle.jdbc.pool.OracleDataSource;
-
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.*;
@@ -61,15 +59,18 @@ public class DatabaseConnection {
 
     public static void setConnection() throws SQLException, IOException {
         // set connection of database, read property for it
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            System.err.println("The driver for the postgres database was not found!");
+            Platform.exit();
+        }
         Properties prop = new Properties();
         InputStream is = DatabaseConnection.class.getResourceAsStream("/app.config");
         prop.load(is);
-        String connectionURL = String.format(
-                "jdbc:oracle:thin:%s/%s@//%s:%s/%s",
-                prop.getProperty("app.login"), prop.getProperty("app.password"), prop.getProperty("app.host"), prop.getProperty("app.port"), prop.getProperty("app.service.name"));
-        OracleDataSource ods = new OracleDataSource();
-        ods.setURL(connectionURL);
-        connection = ods.getConnection();
+        String connectionURL = String.format("jdbc:postgresql://%s:%s/%s",
+                prop.getProperty("app.host"), prop.getProperty("app.port"), prop.getProperty("app.database"));
+        connection = DriverManager.getConnection(connectionURL, prop.getProperty("app.login"), prop.getProperty("app.password"));
         System.out.println("Connection with database opened.");
         connection.setAutoCommit(false);
     }
