@@ -38,19 +38,15 @@ public class DatabaseConnection {
         return DatabaseConnection.theme.equals("light") || DatabaseConnection.theme.equals("winter");
     }
 
-    public static boolean checkDoubleDatabaseReduction(String text) {
-
-        String[] splitedString = text.split("[\\.\\,]");
-        if (splitedString.length == 2 && splitedString[0].length() + splitedString[1].length() <= DoublePrecisionValue &&  splitedString[1].length() <= DoubleScaleValue)
+    public static boolean checkDoubleDatabaseReduction(String text, int precision, int scale){
+        String[] splitString = text.split("[\\.\\,]");
+        if (splitString.length == 2 && splitString[0].length() + splitString[1].length() <= precision &&  splitString[1].length() <= scale)
             return true;
-        else return splitedString.length == 1 && splitedString[0].length() <= DoublePrecisionValue;
+        else return splitString.length == 1 && splitString[0].length() <= DoublePrecisionValue;
     }
 
-    public static boolean checkDoubleDatabaseReduction(String text, int precision, int scale){
-        String[] splitedString = text.split("[\\.\\,]");
-        if (splitedString.length == 2 && splitedString[0].length() + splitedString[1].length() <= precision &&  splitedString[1].length() <= scale)
-            return true;
-        else return splitedString.length == 1 && splitedString[0].length() <= DoublePrecisionValue;
+    public static boolean checkDoubleDatabaseReduction(String text) {
+        return checkDoubleDatabaseReduction(text, DoublePrecisionValue, DoubleScaleValue);
     }
 
     public static boolean checkIntegerDatabaseReduction(String text) {
