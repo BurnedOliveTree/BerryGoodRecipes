@@ -25,7 +25,7 @@ create trigger tg_add_to_public
     after insert on "USER"
     for each row
     execute function add_to_public();
-create or replace function convert_unit(first_unit varchar, second_unit varchar, quantity integer)
+create or replace function convert_unit(first_unit varchar, second_unit varchar, quantity numeric)
     returns numeric
     language plpgsql
 as
@@ -96,13 +96,15 @@ begin
     delete from "GROUP" where GROUP_ID = g_id;
 end;
 $$;
-create or replace procedure add_ingredient_to_ingredient_list(p_name in varchar, p_unit in varchar, r_ing_list_id inout integer)
+create or replace function add_ingredient_to_ingredient_list(p_name in varchar, p_unit in varchar)
+    returns integer
     language plpgsql
 as
 $$
 declare
     v_exist integer;
     v_ing varchar(40);
+    r_ing_list_id integer;
 begin
     select count(*) into v_exist from INGREDIENT where NAME = p_name;
     if v_exist = 0 then
@@ -115,9 +117,10 @@ begin
     else
         select INGREDIENT_LIST_ID into r_ing_list_id from INGREDIENT_LIST where RECIPE_ID is null and INGREDIENT_NAME = p_name;
     end if;
+    return r_ing_list_id;
 end;
 $$;
-create or replace procedure add_new_ingredient_to_shopping_list(p_name varchar, p_unit varchar, p_amount integer, p_username varchar)
+create or replace procedure add_new_ingredient_to_shopping_list(p_name varchar, p_unit varchar, p_amount numeric, p_username varchar)
     language plpgsql
 as
 $$
@@ -125,10 +128,10 @@ declare
     v_exist integer;
     v_ing_list_id integer;
 begin
-    execute add_ingredient_to_ingredient_list(p_name, p_unit, v_ing_list_id);
+    select add_ingredient_to_ingredient_list(p_name, p_unit) into v_ing_list_id;
     select count(*) into v_exist from SHOPPING_LIST where USERNAME = p_username and GROUP_ID is null and INGREDIENT_LIST_ID = v_ing_list_id;
     if v_exist = 0 then
-        insert into SHOPPING_LIST(AMOUNT, INGREDIENT_LIST_ID, USERNAME) values (p_amount,v_ing_list_id, p_username);
+        insert into SHOPPING_LIST(AMOUNT, INGREDIENT_LIST_ID, USERNAME) values (p_amount, v_ing_list_id, p_username);
     end if;
 end;
 $$;
@@ -168,23 +171,29 @@ create trigger add_favourites_tg
     after insert on FOLLOWED
     for each row
     execute procedure add_favourites();
-create or replace procedure add_recipe(p_username in varchar, p_name in varchar, p_description in varchar,  p_cost in numeric, p_portion in numeric, p_date in varchar, p_prepare_time in numeric, p_group_id in integer, r_recipe_id inout integer)
+create or replace function add_recipe(p_username varchar, p_name varchar, p_description varchar,  p_cost double precision, p_portion double precision, p_date varchar, p_prepare_time integer, p_group_id integer)
+    returns numeric
     language plpgsql
 as
 $$
 declare
+    r_recipe_id numeric;
 begin
     insert into RECIPE values(default, p_username, p_name, p_description, p_cost, TO_DATE(p_date, 'yyyy-mm-dd hh24:mi:ss'), p_prepare_time, p_portion) returning RECIPE_ID into r_recipe_id;
     insert into PUBLICITY values(default, p_group_id, r_recipe_id);
+    return r_recipe_id;
 end;
 $$;
-create or replace procedure add_ingredient_to_recipe(p_name in varchar, p_unit in varchar, p_amount in integer, p_recipe_id in integer, r_ing_list_id inout integer)
+create or replace function add_ingredient_to_recipe(p_name varchar, p_unit varchar, p_amount double precision, p_recipe_id integer)
+    returns numeric
     language plpgsql
 as
 $$
 declare
+    r_ing_list_id numeric;
 begin
-    execute add_ingredient_to_ingredient_list(p_name, p_unit, r_ing_list_id);
+    select add_ingredient_to_ingredient_list(p_name, p_unit) into r_ing_list_id;
     update INGREDIENT_LIST set RECIPE_ID = p_recipe_id, AMOUNT = p_amount where INGREDIENT_LIST_ID = r_ing_list_id;
+    return r_ing_list_id;
 end;
 $$;

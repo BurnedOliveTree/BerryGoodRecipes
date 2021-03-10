@@ -150,7 +150,7 @@ public class DatabaseConnection {
         if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
-        statement.execute("begin delete_account('" +username+ "'); end;");
+        statement.execute("call delete_account('" +username+ "')");
         connection.commit();
         statement.close();
     }
@@ -183,7 +183,7 @@ public class DatabaseConnection {
         if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
-        ResultSet result = statement.executeQuery(String.format("SELECT RECIPE_ID, NAME, DATE_ADDED FROM RECIPE WHERE UPPER(OWNER_NAME) = '%s'", username.toUpperCase()));
+        ResultSet result = statement.executeQuery("select RECIPE_ID, NAME, DATE_ADDED from RECIPE where UPPER(OWNER_NAME) = '"+username.toUpperCase()+"'");
         List<Recipe> userRecipes = new ArrayList<>();
         while (result.next()) {
             int id = result.getInt("RECIPE_ID");
@@ -202,14 +202,13 @@ public class DatabaseConnection {
         if (connection == null || connection.isClosed())
             setConnection();
         Statement stat = connection.createStatement();
-        ResultSet resPublicity = stat.executeQuery(String.format("SELECT G.NAME FROM \"GROUP\" G WHERE G.GROUP_ID = (SELECT P.GROUP_ID FROM PUBLICITY P WHERE P.RECIPE_ID = %d)", recipe.getId()));
+        ResultSet resPublicity = stat.executeQuery("select G.NAME from \"GROUP\" G where G.GROUP_ID = (select P.GROUP_ID from PUBLICITY P where P.RECIPE_ID = "+recipe.getId()+")");
         if (resPublicity.next()) {
             String groupName = resPublicity.getString("NAME");
             recipe.setGroupName(groupName);
         } else {
             recipe.setGroupName("private");
         }
-
         resPublicity.close();
         stat.close();
     }
@@ -272,12 +271,10 @@ public class DatabaseConnection {
         Statement statement = connection.createStatement();
         for (Recipe recipe: user.getAllFavorites()) {
             if (recipe.getFavoriteStatus() == Status.added) {
-                statement.executeUpdate("INSERT INTO FAVORITE SELECT default, '" + user.getUsername() + "', "+ recipe.getId() + " FROM DUAL\n" +
-                        "WHERE NOT EXISTS (SELECT NULL FROM FAVORITE WHERE RECIPE_ID=" +  recipe.getId() + " AND USERNAME='" + user.getUsername() + "')");
-
+                statement.executeUpdate("insert into FAVORITE values (default, '"+user.getUsername()+"', "+recipe.getId()+")");
             }
-            if (recipe.getFavoriteStatus() == Status.deleted){
-                statement.executeUpdate(String.format("DELETE FROM FAVORITE WHERE RECIPE_ID = %d AND USERNAME = '%s'", recipe.getId(),  user.getUsername()));
+            if (recipe.getFavoriteStatus() == Status.deleted) {
+                statement.executeUpdate("delete from FAVORITE where RECIPE_ID = "+recipe.getId()+" and USERNAME = '"+user.getUsername()+"'");
             }
         }
         statement.close();
@@ -326,7 +323,7 @@ public class DatabaseConnection {
         if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
-        statement.execute("begin add_group('"+username+ "', '" +name+"'); end;");
+        statement.execute("call add_group('"+username+ "', '" +name+"')");
         connection.commit();
         statement.close();
     }
@@ -336,7 +333,7 @@ public class DatabaseConnection {
         if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
-        statement.execute("begin delete_group("+groupID+"); end;");
+        statement.execute("call delete_group("+groupID+")");
         connection.commit();
         statement.close();
     }
@@ -398,7 +395,7 @@ public class DatabaseConnection {
         if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
-        statement.execute("insert into BELONG values (default, "+groupID+", '"+username+"')");
+        statement.executeUpdate("insert into BELONG values (default, "+groupID+", '"+username+"')");
         statement.close();
         connection.commit();
     }
@@ -419,12 +416,12 @@ public class DatabaseConnection {
         // save new recipe in database
         if (connection == null || connection.isClosed())
             setConnection();
-        CallableStatement statement = connection.prepareCall("{ call add_recipe(?, ?, ?, ?, ?, ?, ?, ?, ?) }");
+        CallableStatement statement = connection.prepareCall("{ call add_recipe(?, ?, ?, ?, ?, ?, ?, ?) }");
         statement.setString(1, activeUser.getUsername());
         statement.setString(2, recipe.getName());
         statement.setString(3, recipe.getPrepareMethod());
         if (recipe.getCost() == 0.0)
-            statement.setNull(4 ,  Types.NULL);
+            statement.setDouble(4 ,  Types.NULL);
         else
             statement.setDouble(4, recipe.getCost());
         statement.setDouble(5, recipe.getPortionNumber());
@@ -437,20 +434,20 @@ public class DatabaseConnection {
             statement.setNull(8, Types.NULL);
         else
             statement.setInt(8, recipe.getAccessibility());
-        statement.registerOutParameter(9, Types.NUMERIC);
         statement.execute();
-        int recipeId = statement.getInt(9);
+        statement.getResultSet().next();
+        int recipeId = statement.getResultSet().getInt(1);
         connection.commit();
         statement.close();
         for (Ingredient ingredient: recipe.getIngredientList()){
-            CallableStatement ingredientStatement = connection.prepareCall("{ call add_ingredient_to_recipe(?, ?, ?, ?, ?) }");
+            CallableStatement ingredientStatement = connection.prepareCall("{ call add_ingredient_to_recipe(?, ?, ?, ?) }");
             ingredientStatement.setString(1, ingredient.getName());
             ingredientStatement.setString(2, ingredient.getUnit());
             ingredientStatement.setDouble(3, ingredient.getQuantity());
             ingredientStatement.setInt(4, recipeId);
-            ingredientStatement.registerOutParameter(5, Types.NUMERIC);
             ingredientStatement.execute();
-            int ingredientId = ingredientStatement.getInt(5);
+            ingredientStatement.getResultSet().next();
+            int ingredientId = ingredientStatement.getResultSet().getInt(1);
             ingredient.setId(ingredientId);
             connection.commit();
             ingredientStatement.close();
@@ -464,7 +461,7 @@ public class DatabaseConnection {
         if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
-        statement.execute("DELETE RECIPE WHERE OWNER_NAME='" + activeUser.getUsername() + "' AND NAME='" + recipe.getName() +"'");
+        statement.execute("delete from RECIPE where OWNER_NAME='" + activeUser.getUsername() + "' and NAME='" + recipe.getName() +"'");
         connection.commit();
         statement.close();
     }
@@ -613,7 +610,7 @@ public class DatabaseConnection {
         if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("select convert_unit('" +firstUnit+ "', '" +secondUnit+ "', " +quantity+ ") as result from dual");
+        ResultSet resultSet = statement.executeQuery("select convert_unit('" +firstUnit+ "', '" +secondUnit+ "', " +quantity+ ") as result");
         resultSet.next();
         Double result =  resultSet.getDouble("result");
         resultSet.close();
@@ -688,10 +685,9 @@ public class DatabaseConnection {
         if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("delete from OPINION where USERNAME = '" +userName+ "' and RECIPE_ID = " +recipe.getId());
+        statement.executeUpdate("delete from OPINION where USERNAME = '" +userName+ "' and RECIPE_ID = " +recipe.getId());
         connection.commit();
         fillOpinions(recipe, opinionsView);
-        resultSet.close();
         statement.close();
     }
 
@@ -819,11 +815,11 @@ public class DatabaseConnection {
                                                                 + activeUser.getUsername() + "', NULL)");
                 ingredient.setShoppingListStatus(Status.loaded);
             } else if (ingredient.getShoppingListStatus() == Status.added && ingredient.getId() == null) {
-                ingStatement.execute("BEGIN add_new_ingredient_to_shopping_list('"
+                ingStatement.execute("add_new_ingredient_to_shopping_list('"
                                                                     + ingredient.getName() + "', '"
                                                                     + ingredient.getUnit() + "', "
                                                                     + ingredient.getQuantity() + ", '"
-                                                                    + activeUser.getUsername() +"'); END;");
+                                                                    + activeUser.getUsername() +"');");
                 ingredient.setShoppingListStatus(Status.loaded);
             }
             else if (ingredient.getShoppingListStatus() == Status.edited){
@@ -858,7 +854,7 @@ public class DatabaseConnection {
         updateShoppingListView(activeUser);
         if (groupID != null) {
             Statement statement = connection.createStatement();
-            statement.execute("BEGIN share_shopping_list('" + activeUser.getUsername() +  "', "+  groupID + "); END;");
+            statement.execute("share_shopping_list('" + activeUser.getUsername() +  "', "+  groupID + ");");
             connection.commit();
             statement.close();
         }
