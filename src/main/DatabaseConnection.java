@@ -241,7 +241,7 @@ public class DatabaseConnection {
         Statement statement = connection.createStatement();
         if (user.getNewFollowed().size() != 0) {
             for (String username: user.getNewFollowed()) {
-                statement.executeUpdate(String.format("insert into FOLLOWED values (null, '%s', '%s')", user.getUsername(), username));
+                statement.executeUpdate(String.format("insert into FOLLOWED values (default, '%s', '%s')", user.getUsername(), username));
             }
         }
         if (user.getDeletedFollowed().size() != 0) {
@@ -276,7 +276,7 @@ public class DatabaseConnection {
         Statement statement = connection.createStatement();
         for (Recipe recipe: user.getAllFavorites()) {
             if (recipe.getFavoriteStatus() == Status.added) {
-                statement.executeUpdate("INSERT INTO FAVORITE SELECT null, '" + user.getUsername() + "', "+ recipe.getId() + " FROM DUAL\n" +
+                statement.executeUpdate("INSERT INTO FAVORITE SELECT default, '" + user.getUsername() + "', "+ recipe.getId() + " FROM DUAL\n" +
                         "WHERE NOT EXISTS (SELECT NULL FROM FAVORITE WHERE RECIPE_ID=" +  recipe.getId() + " AND USERNAME='" + user.getUsername() + "')");
 
             }
@@ -402,7 +402,7 @@ public class DatabaseConnection {
         if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
-        statement.execute("insert into BELONG values (null, "+groupID+", '"+username+"')");
+        statement.execute("insert into BELONG values (default, "+groupID+", '"+username+"')");
         statement.close();
         connection.commit();
     }
@@ -653,7 +653,7 @@ public class DatabaseConnection {
         }
         else {
             try {
-                statement.execute("insert into OPINION values(null,'" + username + "','" + recipeId + "', '" + score + "', '" + comment + "')");
+                statement.execute("insert into OPINION values(default,'" + username + "','" + recipeId + "', '" + score + "', '" + comment + "')");
                 opinionLabel.setText("Opinion saved!");
                 String opinion = username + "    Score: " + score + "\n" + comment + "\n";
                 opinionsView.getItems().add(opinion);
@@ -728,7 +728,7 @@ public class DatabaseConnection {
                 label.setText("Done!!");
             }
             else {
-                statement.execute("insert into REPORTED values (null,'" + username + "', '" + opinionId + "')");
+                statement.execute("insert into REPORTED values (default,'" + username + "', '" + opinionId + "')");
                 label.setText("Done!");
             }
         }
@@ -817,7 +817,7 @@ public class DatabaseConnection {
                 if (!ingredient.getUnit().equals("piece")) {
                     quantity = changeToDefaultUnit(ingredient); // quantity has to be in unit that is already saved in database for give ingredient_list_id
                 }
-                ingStatement.execute("INSERT INTO SHOPPING_LIST values(null, "
+                ingStatement.execute("INSERT INTO SHOPPING_LIST values(default, "
                                                                 + quantity + ", '"
                                                                 + ingredient.getId()  + "', '"
                                                                 + activeUser.getUsername() + "', NULL)");
@@ -840,7 +840,7 @@ public class DatabaseConnection {
                     if (!ingredient.getUnit().equals("piece")) {
                         quantity = changeToDefaultUnit(ingredient); // quantity has to be in unit that is already saved in database for give ingredient_list_id
                     }
-                    ingStatement.execute("INSERT INTO SHOPPING_LIST values(null, "
+                    ingStatement.execute("INSERT INTO SHOPPING_LIST values(default, "
                             + quantity + ", '"
                             + ingredient.getId()  + "', '"
                             + activeUser.getUsername() + "', NULL)");
