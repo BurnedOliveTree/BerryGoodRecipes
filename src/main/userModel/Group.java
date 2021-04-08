@@ -7,11 +7,13 @@ public class Group {
     private final Integer ID;
     private final String name;
     private List<String> participants;
+    private List<String> superParticipants;
 
     public Group(Integer ID, String name) {
         this.ID = ID;
         this.name = name;
         this.participants = new ArrayList<>();
+        this.superParticipants = new ArrayList<>();
     }
 
     public Integer getID() {
@@ -26,10 +28,17 @@ public class Group {
         return participants;
     }
 
+    public List<String> getSuperParticipants() {
+        return superParticipants;
+    }
+
     public void setParticipants(List<String> participants, String activeUsername) {
         // all group participants without active user
         this.participants = participants;
         this.participants.remove(activeUsername);
+    }
+    public void setSuperParticipants(List<String> superParticipants) {
+        this.superParticipants = superParticipants;
     }
 
     @Override

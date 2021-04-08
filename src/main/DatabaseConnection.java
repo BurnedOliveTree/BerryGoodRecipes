@@ -31,6 +31,7 @@ public class DatabaseConnection {
         InputStream is = getClass().getResourceAsStream("/app.config");
         prop.load(is);
         theme = prop.getProperty("app.theme");
+        is.close();
     }
 
     public static boolean isThemeLight() {
@@ -67,6 +68,7 @@ public class DatabaseConnection {
         String connectionURL = String.format("jdbc:postgresql://%s:%s/%s",
                 prop.getProperty("app.host"), prop.getProperty("app.port"), prop.getProperty("app.database"));
         connection = DriverManager.getConnection(connectionURL, prop.getProperty("app.login"), prop.getProperty("app.password"));
+        is.close();
         System.out.println("Connection with database opened.");
         connection.setAutoCommit(false);
     }
@@ -349,6 +351,7 @@ public class DatabaseConnection {
         while (resultSet.next()) {
             Group group = new Group(resultSet.getInt("ID"), resultSet.getString("group_name"));
             group.setParticipants(getGroupParticipants(resultSet.getString("ID")), username);
+            group.setSuperParticipants(getSuperParticipants(resultSet.getInt("ID")));
             groupList.add(group);
         }
         resultSet.close();
@@ -372,6 +375,21 @@ public class DatabaseConnection {
         resultSet.close();
         statement.close();
         return groupID;
+    }
+
+    public static List<String> getSuperParticipants(Integer groupID) throws SQLException, IOException {
+        // get all group IDs in which the active user is a superuser
+        if (connection == null || connection.isClosed())
+            setConnection();
+        Statement statement = connection.createStatement();
+        String query = "select USERNAME from BELONG where SUPERUSER = true and GROUP_ID = " + groupID;
+        ResultSet resultSet = statement.executeQuery(query);
+        List<String> groupList = new ArrayList<>();
+        while (resultSet.next())
+            groupList.add(resultSet.getString("USERNAME"));
+        resultSet.close();
+        statement.close();
+        return groupList;
     }
 
     private static List<String> getGroupParticipants(String GroupID) throws SQLException, IOException {
@@ -405,7 +423,27 @@ public class DatabaseConnection {
         if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
-        statement.executeUpdate("delete from BELONG where GROUP_ID = "+groupID+ " and USERNAME = '" +username+ "'");
+        statement.executeUpdate("delete from BELONG where GROUP_ID = "+groupID+ " and lower(USERNAME) = '" +username.toLowerCase()+ "'");
+        statement.close();
+        connection.commit();
+    }
+
+    public static void grantSuperuser(String username, Integer groupID) throws IOException, SQLException {
+        // grant superuser status to a user from a specified group
+        if (connection == null || connection.isClosed())
+            setConnection();
+        Statement statement = connection.createStatement();
+        statement.executeUpdate("update BELONG set SUPERUSER = true where GROUP_ID = "+groupID+ " and lower(USERNAME) = '" +username.toLowerCase()+ "'");
+        statement.close();
+        connection.commit();
+    }
+
+    public static void revokeSuperuser(String username, Integer groupID) throws IOException, SQLException {
+        // revoke superuser status from a user from a specified group
+        if (connection == null || connection.isClosed())
+            setConnection();
+        Statement statement = connection.createStatement();
+        statement.executeUpdate("update BELONG set SUPERUSER = false where GROUP_ID = "+groupID+ " and lower(USERNAME) = '" +username.toLowerCase()+ "'");
         statement.close();
         connection.commit();
     }

@@ -64,17 +64,17 @@ insert into FOLLOWED values (default, 'BurnedOliveTree', 'Rokarolka');
 insert into FOLLOWED values (default, 'BurnedOliveTree', 'Marianka');
 commit;
 
-insert into BELONG values (default, 1, 'BurnedOliveTree');
-insert into BELONG values (default, 1, 'Rokarolka');
-insert into BELONG values (default, 1, 'Marianka');
+insert into BELONG values (default, 1, 'BurnedOliveTree', true);
+insert into BELONG values (default, 1, 'Rokarolka', true);
+insert into BELONG values (default, 1, 'Marianka', true);
 
 insert into BELONG values (default, 2, 'Marianka');
 insert into BELONG values (default, 2, 'Rokarolka');
 insert into BELONG values (default, 2, 'Ardiego');
 insert into BELONG values (default, 2, 'Mrkhrova');
-insert into BELONG values (default, 2, 'BurnedOliveTree');
+insert into BELONG values (default, 2, 'BurnedOliveTree', true);
 
-insert into BELONG values (default, 3, 'Rokarolka');
+insert into BELONG values (default, 3, 'Rokarolka', true);
 insert into BELONG values (default, 3, 'Madzik');
 insert into BELONG values (default, 3, 'KD');
 commit;

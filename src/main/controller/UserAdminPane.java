@@ -103,40 +103,78 @@ public class UserAdminPane extends BasicPaneActions {
             }
             tempButton.getItems().add(followMenu);
 
-            tempButton.getItems().add(new SeparatorMenuItem());
+            if (group.getSuperParticipants().contains(activeUser.getUsername())) {
+                tempButton.getItems().add(new SeparatorMenuItem());
 
-            Menu kickMenu = new Menu("Kick user");
-            for (String s : participants) {
-                menuItem = new MenuItem(s);
+                Menu kickMenu = new Menu("Kick user");
+                for (String s : participants) {
+                    menuItem = new MenuItem(s);
+                    menuItem.setOnAction(e -> {
+                        Optional<ButtonType> result = showAlert(Alert.AlertType.CONFIRMATION, "Kick " + s + " from " + groupName, null,
+                                "Are you sure?");
+                        if (result.isPresent() && result.get() == ButtonType.OK) {
+                            try {
+                                DatabaseConnection.kickUser(s, groupID);
+                                refreshWindow();
+                            } catch (IOException | SQLException err) {
+                                err.printStackTrace();
+                            }
+                        }
+                    });
+                    kickMenu.getItems().add(menuItem);
+                }
+                tempButton.getItems().add(kickMenu);
+                Menu superMenu = new Menu("Grant superuser");
+                for (String s : participants) {
+                    menuItem = new MenuItem(s);
+                    if (group.getSuperParticipants().contains(s))
+                        menuItem.setDisable(true);
+                    menuItem.setOnAction(e -> {
+                        try {
+                            DatabaseConnection.grantSuperuser(s, groupID);
+                            refreshWindow();
+                        } catch (IOException | SQLException err) {
+                            err.printStackTrace();
+                        }
+                    });
+                    superMenu.getItems().add(menuItem);
+                }
+                tempButton.getItems().add(superMenu);
+                Menu notSuperMenu = new Menu("Revoke superuser");
+                for (String s : participants) {
+                    menuItem = new MenuItem(s);
+                    if (!group.getSuperParticipants().contains(s))
+                        menuItem.setDisable(true);
+                    menuItem.setOnAction(e -> {
+                        Optional<ButtonType> result = showAlert(Alert.AlertType.CONFIRMATION, "Revoke from " + s + " superuser status in " + groupName, null,
+                                "Are you sure?");
+                        if (result.isPresent() && result.get() == ButtonType.OK) {
+                            try {
+                                DatabaseConnection.revokeSuperuser(s, groupID);
+                                refreshWindow();
+                            } catch (IOException | SQLException err) {
+                                err.printStackTrace();
+                            }
+                        }
+                    });
+                    notSuperMenu.getItems().add(menuItem);
+                }
+                tempButton.getItems().add(notSuperMenu);
+                menuItem = new MenuItem("Delete group");
                 menuItem.setOnAction(e -> {
-                    Optional<ButtonType> result = showAlert(Alert.AlertType.CONFIRMATION, "Kick " + s + " from " + groupName, null,
-                            "Are you sure?");
+                    Optional<ButtonType> result = showAlert(Alert.AlertType.CONFIRMATION, "Delete " + groupName, null,
+                            "Are you sure?\nYou will not be able to recover your group");
                     if (result.isPresent() && result.get() == ButtonType.OK) {
                         try {
-                            DatabaseConnection.kickUser(s, groupID);
+                            DatabaseConnection.deleteGroup(groupID);
                             refreshWindow();
                         } catch (IOException | SQLException err) {
                             err.printStackTrace();
                         }
                     }
                 });
-                kickMenu.getItems().add(menuItem);
+                tempButton.getItems().add(menuItem);
             }
-            tempButton.getItems().add(kickMenu);
-            menuItem = new MenuItem("Delete group");
-            menuItem.setOnAction(e -> {
-                Optional<ButtonType> result = showAlert(Alert.AlertType.CONFIRMATION, "Delete " + groupName, null,
-                        "Are you sure?\nYou will not be able to recover your group");
-                if (result.isPresent() && result.get() == ButtonType.OK) {
-                    try {
-                        DatabaseConnection.deleteGroup(groupID);
-                        refreshWindow();
-                    } catch (IOException | SQLException err) {
-                        err.printStackTrace();
-                    }
-                }
-            });
-            tempButton.getItems().add(menuItem);
             panelist.add(tempButton);
         }
         tilePane.getChildren().clear();

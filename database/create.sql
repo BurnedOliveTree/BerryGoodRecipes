@@ -49,7 +49,8 @@ create table BELONG
 (
     BELONG_ID serial constraint BELONG_PK primary key,
     GROUP_ID integer not null constraint BELONG_GROUP_FK references "GROUP" (GROUP_ID),
-    USERNAME varchar(40) not null constraint BELONG_USER_FK references "USER" (USERNAME)
+    USERNAME varchar(40) not null constraint BELONG_USER_FK references "USER" (USERNAME),
+    SUPERUSER bool not null default false
 );
 
 create table INGREDIENT

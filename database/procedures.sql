@@ -52,7 +52,7 @@ declare
 begin
     insert into "GROUP" values (default, g_name, null)
     returning GROUP_ID into new_id;
-    insert into BELONG values (default, new_id, u_id);
+    insert into BELONG values (default, new_id, u_id, true);
 end;
 $$;
 create or replace procedure delete_account(u_id varchar)
@@ -61,6 +61,7 @@ as
 $$
 declare
     member_count integer;
+    super_member_count integer;
     cr cursor is (select GROUP_ID from BELONG where USERNAME = u_id);
     grp_id integer;
 begin
@@ -78,11 +79,23 @@ begin
         fetch cr into grp_id;
         exit when not found;
         select count(*) into member_count from BELONG where GROUP_ID = grp_id;
+        select count(*) into super_member_count from BELONG where GROUP_ID = grp_id and SUPERUSER = true;
         if member_count = 0 then
             execute delete_group(grp_id);
         end if;
+        if super_member_count = 0 then
+            execute make_all_superuser(grp_id);
+        end if;
     end loop;
     close cr;
+end;
+$$;
+create or replace procedure make_all_superuser(g_id integer)
+    language plpgsql
+as
+$$
+begin
+    update BELONG set SUPERUSER = true where GROUP_ID = g_id;
 end;
 $$;
 create or replace procedure delete_group(g_id integer)
