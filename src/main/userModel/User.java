@@ -19,7 +19,6 @@ public class User {
     private List<Group> userGroups;
     private List<Ingredient> shoppingList;
     private String defaultUnitSystem = "Default";
-    public ArrayList<String> units = new ArrayList<>();
 
     // constructor
 
@@ -32,7 +31,7 @@ public class User {
         this.shoppingList = new ArrayList<>();
     }
 
-    public User(String argUsername, List<Recipe> userRecipes, List<Recipe> favorites, List<String> followed, String unitSystem, ArrayList<Ingredient> shoppingList, List<Group> userGroups, ArrayList<String> units) {
+    public User(String argUsername, List<Recipe> userRecipes, List<Recipe> favorites, List<String> followed, String unitSystem, ArrayList<Ingredient> shoppingList, List<Group> userGroups) {
         username = argUsername;
         this.userRecipes = userRecipes;
         this.favorites = favorites;
@@ -40,7 +39,6 @@ public class User {
         this.defaultUnitSystem = unitSystem;
         this.shoppingList = shoppingList;
         this.userGroups = userGroups;
-        this.units = units;
     }
 
     // operations on attributes
@@ -135,7 +133,7 @@ public class User {
                         showMap.put(ingredient.getName() + Integer.toString(i), new Ingredient(ingredient.getId(), ingredient.getQuantity(), ingredient.getUnit(), ingredient.getName()));
                     }
                     else { // when ingredient is in shopping list already, an both are not in unit piece
-                        double quantity = DatabaseConnection.convertUnit(ingredient.getQuantity(), ingredient.getUnit(), "gram") + DatabaseConnection.convertUnit(shopIngredient.getQuantity(), shopIngredient.getUnit(), "gram");
+                        double quantity = DatabaseConnection.units.convertUnit(ingredient.getUnit(), "gram", ingredient.getQuantity()) + DatabaseConnection.units.convertUnit(shopIngredient.getUnit(), "gram", shopIngredient.getQuantity());
                         shopIngredient.setQuantity(quantity);
                         shopIngredient.setUnit("gram");
                     }
@@ -174,7 +172,7 @@ public class User {
     public boolean editQuantityInShopping(String name, Double q) throws IOException, SQLException {
         for (Ingredient ing : shoppingList){
             if (ing.getName().equals(name)  && !ing.getUnit().equals("piece")){
-                Double newQ = DatabaseConnection.convertUnit(q, "gram", ing.getUnit());
+                Double newQ = DatabaseConnection.units.convertUnit("gram", ing.getUnit(), q);
                 if (!DatabaseConnection.checkDoubleDatabaseReduction(Double.toString(ing.getQuantity() + newQ))) return false;
                 ing.setQuantity(ing.getQuantity() + newQ);
                 ing.setShoppingListStatus(Status.edited);
@@ -196,10 +194,6 @@ public class User {
 
     public List<Recipe> getUserRecipes() {
         return userRecipes;
-    }
-
-    public ArrayList<String> getUnits() {
-        return units;
     }
 
     public List<Group> getUserGroups() {

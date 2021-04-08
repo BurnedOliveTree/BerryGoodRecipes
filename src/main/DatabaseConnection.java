@@ -1,6 +1,7 @@
 package main;
 
 import main.controller.Status;
+import main.recipeModel.Units;
 import main.userModel.Group;
 import main.userModel.User;
 import main.recipeModel.Ingredient;
@@ -18,6 +19,7 @@ import java.util.*;
 public class DatabaseConnection {
     static Connection connection;
     public static String theme;
+    public static Units units;
     public final static int shortTextFieldLength = 40;
     public final static int mediumTextFieldLength = 1000;
     public final static int longTextFieldLength = 4000;
@@ -25,12 +27,13 @@ public class DatabaseConnection {
     public final static int DoubleScaleValue = 2;
     public final static int IntegerPrecisionValue = 4;
 
-    public DatabaseConnection() throws IOException {
+    public DatabaseConnection() throws IOException, SQLException {
         // constructor, user's property is read in it - like theme
         Properties prop = new Properties();
         InputStream is = getClass().getResourceAsStream("/app.config");
         prop.load(is);
         theme = prop.getProperty("app.theme");
+        units = new Units(DatabaseConnection.getUnits());
         is.close();
     }
 
@@ -102,7 +105,7 @@ public class DatabaseConnection {
                 String unitSystem = getUserPreferredUnitSystem(username);
                 List<Group> groups = getGroups(username);
                 ArrayList<Ingredient> shoppingList = getShoppingList(username);
-                activeUser = new User(username, userRecipes, favorites, followed, unitSystem, shoppingList, groups, DatabaseConnection.getUnits());
+                activeUser = new User(username, userRecipes, favorites, followed, unitSystem, shoppingList, groups);
                 errMess.setText("Successfully logged in!");
             } else {
                 errMess.setText("Incorrect password!");
@@ -589,19 +592,19 @@ public class DatabaseConnection {
 
     // UNIT
 
-    public static ArrayList<String> getUnits() throws IOException, SQLException {
-        // returns ObservableList of available units names. Does not return "piece" because it is not used in most functions.
-        ArrayList<String> unitsList = new ArrayList<>();
+    public static HashMap<String, Double> getUnits() throws IOException, SQLException {
+        // returns Map of available units names and their conversion ratios.
+        HashMap<String, Double> unitList = new HashMap<>();
         if (connection == null || connection.isClosed())
             setConnection();
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("select NAME from UNIT where name != 'piece'" );
+        ResultSet resultSet = statement.executeQuery("select NAME, LITER_PER_UNIT_RATIO from UNIT where LITER_PER_UNIT_RATIO != 0");
         while (resultSet.next()){
-            unitsList.add(resultSet.getString("NAME"));
+            unitList.put(resultSet.getString("NAME"), resultSet.getDouble("LITER_PER_UNIT_RATIO"));
         }
         resultSet.close();
         statement.close();
-        return unitsList;
+        return unitList;
     }
 
     public static String getBestUnit(String preferredSystem, String currentUnit, Double quantity) throws IOException, SQLException {
@@ -615,8 +618,8 @@ public class DatabaseConnection {
         ResultSet resultSet = statement.executeQuery("select name from unit where unit_system_id = '" + preferredSystem+ "'");
         while (resultSet.next()){
             unit = resultSet.getString("name");
-            if(Math.abs(1-convertUnit(quantity, currentUnit, unit)) < error) {
-                error = Math.abs(1 - convertUnit((double) 1, currentUnit, unit));
+            if (Math.abs(1 - units.convertUnit(currentUnit, unit, quantity)) < error) {
+                error = Math.abs(1 - units.convertUnit(currentUnit, unit, 1.0));
                 bestUnit = unit;
             }
         }
@@ -643,19 +646,6 @@ public class DatabaseConnection {
         return stringList;
     }
 
-    public static Double convertUnit(Double quantity, String firstUnit, String secondUnit) throws IOException, SQLException {
-        // returns quantity of ingredient in given unit (secondUnit)
-        if (connection == null || connection.isClosed())
-            setConnection();
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("select convert_unit('" +firstUnit+ "', '" +secondUnit+ "', " +quantity+ ") as result");
-        resultSet.next();
-        Double result =  resultSet.getDouble("result");
-        resultSet.close();
-        statement.close();
-        return result;
-    }
-
     private static Double changeToDefaultUnit(Ingredient ingredient) throws IOException, SQLException {
         // returns quantity of given ingredient in unit saved for ingredient with this ingredient_list_id in database
         if (connection == null || connection.isClosed())
@@ -664,7 +654,7 @@ public class DatabaseConnection {
         ResultSet resultSet = statement.executeQuery("select INGREDIENT_UNIT from INGREDIENT_LIST where INGREDIENT_LIST_ID = " +ingredient.getId());
         resultSet.next();
         String defaultUnit = resultSet.getString("INGREDIENT_UNIT");
-        Double result = convertUnit(ingredient.getQuantity(), ingredient.getUnit(), defaultUnit);
+        Double result = units.convertUnit(ingredient.getUnit(), defaultUnit, ingredient.getQuantity());
         resultSet.close();
         statement.close();
         return result;

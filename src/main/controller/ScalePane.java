@@ -58,8 +58,8 @@ public class ScalePane extends BasicPaneActions {
             exitPic.setImage(new Image("icons/berryExit.png"));
         }
         exitButton.setOnAction(e -> onAction());
-        unitChoiceBox1.setItems(FXCollections.observableArrayList(DatabaseConnection.getUnits()));
-        unitChoiceBox2.setItems(FXCollections.observableArrayList(DatabaseConnection.getUnits()));
+        unitChoiceBox1.setItems(FXCollections.observableArrayList(DatabaseConnection.units.getUnits()));
+        unitChoiceBox2.setItems(FXCollections.observableArrayList(DatabaseConnection.units.getUnits()));
         IHaveBox.setItems(shapeList);
         inRecipeBox.setItems(shapeList);
         IHaveBox.setOnAction(e -> sizeBoxAction(IHaveBox));
@@ -102,7 +102,7 @@ public class ScalePane extends BasicPaneActions {
             unitLabel.setText("Wrong quantity");
             return;
         }
-        unitArea2.setText(Double.toString(DatabaseConnection.convertUnit(quantity,firstChoice,secondChoice)));
+        unitArea2.setText(Double.toString(DatabaseConnection.units.convertUnit(firstChoice, secondChoice, quantity)));
     }
 
     private void sizeBoxAction(ChoiceBox<String> box) {

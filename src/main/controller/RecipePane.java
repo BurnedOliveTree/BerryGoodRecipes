@@ -262,7 +262,7 @@ public class RecipePane  extends BasicPaneActions {
                     ingredientListView.getItems().add(ing);
                 } else {
                     bestUnit = DatabaseConnection.getBestUnit(activeUser.getDefaultUnitSystem(), ing.getUnit(), ing.getQuantity());
-                    ingredientListView.getItems().add(new Ingredient(ing.getId(), DatabaseConnection.convertUnit(ing.getQuantity(), ing.getUnit(), bestUnit), bestUnit, ing.getName()));
+                    ingredientListView.getItems().add(new Ingredient(ing.getId(), DatabaseConnection.units.convertUnit(ing.getUnit(), bestUnit, ing.getQuantity()), bestUnit, ing.getName()));
                 }
                 ingredientListView.setCellFactory(ingredientListView -> new ButtonCell(activeUser));
             }
@@ -322,7 +322,7 @@ public class RecipePane  extends BasicPaneActions {
         // give opportunity for changing unit more convenient for the user
         Menu change = new Menu("Change unit");
         change.getItems().clear();
-        for (String item : activeUser.getUnits()){
+        for (String item : DatabaseConnection.units.getUnits()){
             MenuItem temp = new MenuItem(item);
             change.getItems().add(temp);
             temp.setOnAction(e -> {
@@ -344,7 +344,7 @@ public class RecipePane  extends BasicPaneActions {
             if (selIngredients.contains(ingredient) && !ingredient.getUnit().equals("piece")){
                 String oldUnit = ingredient.getUnit();
                 Double oldQuantity = ingredient.getQuantity();
-                Double newQuantity = DatabaseConnection.convertUnit(oldQuantity, oldUnit, newUnit);
+                Double newQuantity = DatabaseConnection.units.convertUnit(oldUnit, newUnit, oldQuantity);
                 Ingredient tempIn = new Ingredient(ingredient.getId(), newQuantity, newUnit, ingredient.getName());
                 newList.add(tempIn);
             } else {

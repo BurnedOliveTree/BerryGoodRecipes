@@ -96,7 +96,7 @@ public class ShoppingListPane extends BasicPaneActions {
 
         //unit settings
         ChoiceBox<String> unit = new ChoiceBox<>();
-        unit.getItems().addAll(FXCollections.observableArrayList(activeUser.getUnits()));
+        unit.getItems().addAll(FXCollections.observableArrayList(DatabaseConnection.units.getUnits()));
         unit.setPrefWidth(newIngredient.getPrefWidth());
 
         // name settings
@@ -112,7 +112,7 @@ public class ShoppingListPane extends BasicPaneActions {
         addButton.setOnAction(actionEvent -> {
             if (!quantity.getText().equals("") && DatabaseConnection.checkDoubleDatabaseReduction(quantity.getText()) && quantity.getText().matches("\\d+(\\.\\d+)?") && !name.getText().equals("") && !(name.getText().length() > DatabaseConnection.shortTextFieldLength)) {
                 try {
-                    Ingredient ingredient = new Ingredient(null, DatabaseConnection.convertUnit(Double.parseDouble(quantity.getText()), unit.getSelectionModel().getSelectedItem(), "gram"),"gram", name.getText());
+                    Ingredient ingredient = new Ingredient(null, DatabaseConnection.units.convertUnit(unit.getSelectionModel().getSelectedItem(), "gram", Double.parseDouble(quantity.getText())),"gram", name.getText());
                     ingredient.setShoppingListStatus(Status.added);
                     if (activeUser.qualifiesToAdd(ingredient.getName())){
                         if(!activeUser.editQuantityInShopping(ingredient.getName(), ingredient.getQuantity())) showWarning("Too large quantity!");
@@ -206,7 +206,7 @@ public class ShoppingListPane extends BasicPaneActions {
             if (ingredient.getUnit().equals("piece")) {
                 shoppingList.getItems().add(String.format((ingredient.getQuantity() % 1 == 0) ? "%1.0f %s %s" : "%1.2f %s %s", ingredient.getQuantity(), "piece", ingredient.getName()));
             } else {
-                Ingredient temp = new Ingredient(0, DatabaseConnection.convertUnit(ingredient.getQuantity(), ingredient.getUnit(), "gram"), "gram", ingredient.getName());
+                Ingredient temp = new Ingredient(0, DatabaseConnection.units.convertUnit(ingredient.getUnit(), "gram", ingredient.getQuantity()), "gram", ingredient.getName());
                 shoppingList.getItems().add(String.format((temp.getQuantity() % 1 == 0) ? "%1.0f %s %s" : "%1.2f %s %s", temp.getQuantity(), "gram", temp.getName()));
             }
         }
@@ -222,7 +222,7 @@ public class ShoppingListPane extends BasicPaneActions {
             if (ingredient.getUnit().equals("piece")) {
                 shoppingList.getItems().add(String.format((ingredient.getQuantity() % 1 == 0) ? "%1.0f %s %s\t%s" : "%1.2f %s %s\t%s", ingredient.getQuantity(), "piece", ingredient.getName(), author));
             } else {
-                Ingredient temp = new Ingredient(0, DatabaseConnection.convertUnit(ingredient.getQuantity(), ingredient.getUnit(), "gram"), "gram", ingredient.getName());
+                Ingredient temp = new Ingredient(0, DatabaseConnection.units.convertUnit(ingredient.getUnit(), "gram", ingredient.getQuantity()), "gram", ingredient.getName());
                 shoppingList.getItems().add(String.format((temp.getQuantity() % 1 == 0) ? "%1.0f %s %s\t%s" : "%1.2f %s %s\t%s", temp.getQuantity(), "gram", temp.getName(), author));
             }
         }

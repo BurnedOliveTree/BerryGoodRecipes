@@ -62,7 +62,7 @@ public class Main extends Application {
         primaryStage.setMinHeight(520);
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, SQLException {
         new DatabaseConnection();
         System.setProperty("javafx.preloader", LoadingPane.class.getCanonicalName());
         launch(args);

@@ -25,24 +25,6 @@ create trigger tg_add_to_public
     after insert on "USER"
     for each row
     execute function add_to_public();
-create or replace function convert_unit(first_unit varchar, second_unit varchar, quantity numeric)
-    returns numeric
-    language plpgsql
-as
-$$
-declare
-    first_ratio numeric(9,5);
-    second_ratio numeric(9,5);
-begin
-    select liter_per_unit_ratio into first_ratio from unit where name = first_unit;
-    select liter_per_unit_ratio into second_ratio from unit where name = second_unit;
-    if second_ratio = 0 then
-        return (first_ratio*quantity) / (0.000001);
-    else
-        return (first_ratio*quantity)/second_ratio;
-    end if;
-end;
-$$;
 create or replace procedure add_group(u_id varchar, g_name varchar)
     language plpgsql
 as
